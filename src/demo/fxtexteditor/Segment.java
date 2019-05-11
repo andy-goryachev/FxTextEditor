@@ -1,7 +1,7 @@
 // Copyright © 2017-2019 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
-
 import javafx.scene.paint.Color;
+
 
 /**
  * Segment.
