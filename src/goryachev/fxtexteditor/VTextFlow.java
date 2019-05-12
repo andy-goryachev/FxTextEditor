@@ -253,11 +253,14 @@ public class VTextFlow
 		double px = x * m.cellWidth;
 		double py = y * m.cellHeight;
 		
+		// TODO line bg, selection bg, highlight bg
+		
 		Color bg = FX.gray(255 - ((c & 0xff)/8));
 		gx.setFill(bg);
 		gx.fillRect(px, py, m.cellWidth, m.cellHeight);
 		
 		gx.setFontSmoothingType(FontSmoothingType.GRAY);
+		// TODO font attributes
 		gx.setFont(getFont());
 		gx.setFill(Color.BLACK);
 		gx.fillText(s, px, py - m.baseline, m.cellWidth);
