@@ -1,0 +1,15 @@
+Моноширинный, или непропорциональный шрифт — это шрифт, в котором все знаки (точнее, кегельные площадки знаков) имеют одинаковую ширину.  Этим он отличается от пропорционального шрифта, в котором буквы отличаются по ширине друг от друга.
+等幅フォント（とうはばフォント、とうふくフォント、英: monospaced font）は、グリフ幅を固定された幅（モノスペース）で実装したフォント。 
+La chasse, ou avance, est, en typographie, la largeur du glyphe (dessin) d’un caractère, augmentée de ses approches (les petites espaces qui le séparent du caractère précédent et du caractère suivant). 
+Neproporcionální písmo (anglicky monospaced font), také označované jako písmo s pevnou šířkou, je druh fontu, v němž mají všechny znaky stejnou šířku. Protikladem je písmo proporcionální, kde jsou jednotlivá písmena a mezery mezi nimi různě široké. Například písmena „I“ a „E“ nevyžadují stejné množství prostoru, takže v písmech proporcionálních bude první z nich užší než to druhé. V písmu neproporcionálním by však každé z nich zabíralo stejný prostor.
+고정폭 글꼴(monospaced font, fixed-pitch, fixed-width, non-proportional font)은 각 글자가 동일한 양의 수평 공간을 차지하는 글꼴을 말한다.[1] 고정폭 폰트, 비례 글꼴, 비례폰트 등으로 불리는 서체이다. 
+Deutsch
+Español
+Français
+Italiano
+Bahasa Melayu
+Русский
+Українська
+日本語
+中文
+العربية  

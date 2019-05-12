@@ -4,6 +4,7 @@ import goryachev.fx.CInsets;
 import goryachev.fx.CPane;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
+import goryachev.fxtexteditor.FxTextEditor;
 import javafx.util.Duration;
 
 
@@ -14,19 +15,19 @@ public class MainPane
 	extends CPane
 {
 	public static final CssStyle PANE = new CssStyle("MainPane_PANE");
-//	public final FxEditor editor;
+	public final FxTextEditor editor;
 
 	
 	public MainPane()
 	{
 		FX.style(this, PANE);
 		
-//		editor = new FxEditor();
-//		editor.setContentPadding(new CInsets(2, 4));
-//		editor.setBlinkRate(Duration.millis(600));
-//		editor.setMultipleSelectionEnabled(true);
+		editor = new FxTextEditor();
+		editor.setContentPadding(new CInsets(2, 4));
+		editor.setBlinkRate(Duration.millis(600));
+		editor.setMultipleSelectionEnabled(true);
 		
-//		setCenter(editor);
+		setCenter(editor);
 		
 		showFindPane();
 	}
