@@ -20,7 +20,7 @@ import javafx.util.Duration;
 /**
  * Paints the text on canvas. 
  */
-public class VFlow
+public class VTextFlow
 	extends CPane
 {
 	public static final CssStyle PANE = new CssStyle("FxTermView_PANE");
@@ -39,7 +39,7 @@ public class VFlow
 	private String demoText;
 	
 	
-	public VFlow()
+	public VTextFlow()
 	{
 		FX.style(this, PANE);
 		

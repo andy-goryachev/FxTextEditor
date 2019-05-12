@@ -1,16 +1,23 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.CList;
-import goryachev.fx.CssStyle;
 import javafx.scene.paint.Color;
 
 
 /**
- * TextCells.
+ * Text Cells.
  */
 public class TextCells
 {
 	protected final CList<TCell> cells = new CList();
+	private Color lineBackground;
+	private Color backgroundColor;
+	private Color textColor;
+	private boolean hasRTL;
+	private boolean bold;
+	private boolean italic;
+	private boolean underline;
+	// TODO strikethrough
 	
 	
 	public TextCells()
@@ -18,38 +25,110 @@ public class TextCells
 	}
 	
 	
+	public int size()
+	{
+		return cells.size();
+	}
+	
+	
 	public void setLineBackground(Color c)
 	{
-		
+		lineBackground = c;
 	}
 	
 	
 	public void setBackground(Color c)
 	{
-		
+		backgroundColor = c;
 	}
 	
 	
 	public void setTextColor(Color c)
 	{
-		
+		textColor = c;
 	}
 	
 	
+	/** text must represent a complete set of glyphs, without hanging combining marks */  
 	public void addText(String text)
 	{
-		// TODO
+		// TODO break into strings that fit one cell
+		// set RTL flag
+		int start = 0;
+		for(int i=0; i<text.length(); i++)
+		{
+			int c = text.codePointAt(i);
+			if(c < 0)
+			{
+				continue;
+			}
+			
+			if(isCombiningChar(c))
+			{
+				continue;
+			}
+			
+			String s = text.substring(start, i);
+			boolean rtl = isRTLChar(c);
+			if(rtl)
+			{
+				hasRTL = true;
+			}
+			
+			cells.add(new TCell(s, rtl, backgroundColor, textColor));
+		}
+		
+		if(start < text.length())
+		{
+			throw new Error("dangling code points");
+		}
 	}
 	
 	
-	public void addText(String text, int offset, int length)
+	public static boolean isRTLChar(int c)
 	{
 		// TODO
+		return false;
 	}
 	
 	
-	public void addText(String text, CssStyle style)
+	public static boolean isCombiningChar(int c)
 	{
 		// TODO
+		int type = Character.getType(c);
+		switch(type)
+		{
+	     case Character.COMBINING_SPACING_MARK:
+	     case Character.CONNECTOR_PUNCTUATION:
+	     case Character.CONTROL:
+	     case Character.CURRENCY_SYMBOL:
+	     case Character.DASH_PUNCTUATION:
+	     case Character.DECIMAL_DIGIT_NUMBER:
+	     case Character.ENCLOSING_MARK:
+	     case Character.END_PUNCTUATION:
+	     case Character.FINAL_QUOTE_PUNCTUATION:
+	     case Character.FORMAT:
+	     case Character.INITIAL_QUOTE_PUNCTUATION:
+	     case Character.LETTER_NUMBER:
+	     case Character.LINE_SEPARATOR:
+	     case Character.LOWERCASE_LETTER: 
+	     case Character.MATH_SYMBOL:
+	     case Character.MODIFIER_LETTER:
+	     case Character.MODIFIER_SYMBOL: 
+	     case Character.NON_SPACING_MARK: 
+	     case Character.OTHER_LETTER:
+	     case Character.OTHER_NUMBER:
+	     case Character.OTHER_PUNCTUATION: 
+	     case Character.OTHER_SYMBOL:
+	     case Character.PARAGRAPH_SEPARATOR: 
+	     case Character.PRIVATE_USE:
+	     case Character.SPACE_SEPARATOR: 
+	     case Character.START_PUNCTUATION: 
+	     case Character.SURROGATE:
+	     case Character.TITLECASE_LETTER: 
+	     case Character.UNASSIGNED:
+	     case Character.UPPERCASE_LETTER: 
+		}
+		return false;
 	}
 }

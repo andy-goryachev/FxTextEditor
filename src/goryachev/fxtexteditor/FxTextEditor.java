@@ -51,7 +51,7 @@ public class FxTextEditor
 	protected final FxBoolean highlightCaretLineProperty = new FxBoolean(true);
 	protected final ReadOnlyObjectWrapper<Duration> caretBlinkRateProperty = new ReadOnlyObjectWrapper(Duration.millis(500));
 	protected final FxObject<FxFormatter> lineNumberFormatterProperty = new FxObject<>();
-	protected final VFlow canvas;
+	protected final VTextFlow canvas;
 	protected final ScrollBar vscroll;
 	protected final ScrollBar hscroll;
 	protected boolean handleScrollEvents = true;
@@ -61,7 +61,7 @@ public class FxTextEditor
 	{
 		// TODO model
 		
-		canvas = new VFlow();
+		canvas = new VTextFlow();
 		
 		vscroll = createVScrollBar();
 		vscroll.setOrientation(Orientation.VERTICAL);

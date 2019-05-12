@@ -1,13 +1,23 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
+import javafx.scene.paint.Color;
 
 
 /**
- * TCell.
+ * Text Cell.
  */
 public class TCell
 {
-	public TCell()
+	private String text;
+	private boolean rtl;
+	private Color backgroundColor;
+	private Color textColor;
+	
+	public TCell(String text, boolean rtl, Color bg, Color fg)
 	{
+		this.text = text;
+		this.rtl = rtl;
+		this.backgroundColor = bg;
+		this.textColor = fg;
 	}
 }
