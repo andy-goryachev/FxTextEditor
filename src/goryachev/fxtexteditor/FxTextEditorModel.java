@@ -1,5 +1,8 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
+import goryachev.common.util.CList;
+import goryachev.fx.FxBoolean;
+import javafx.beans.property.BooleanProperty;
 
 
 /**
@@ -33,4 +36,45 @@ public abstract class FxTextEditorModel
 	 * Throws an exception if this model is read-only.
 	 */
 	public abstract Edit edit(Edit ed) throws Exception;
+	
+	//
+	
+	protected final FxBoolean editableProperty = new FxBoolean(false);
+	protected final CList<FxTextEditorModelListener> listeners = new CList<>();
+	
+	
+	public FxTextEditorModel()
+	{
+	}
+	
+	
+
+	public void addListener(FxTextEditorModelListener li)
+	{
+		listeners.add(li);
+	}
+	
+	
+	public void removeListener(FxTextEditorModelListener li)
+	{
+		listeners.remove(li);
+	}
+	
+	
+	public boolean isEditable()
+	{
+		return editableProperty.get();
+	}
+	
+	
+	public void setEditable(boolean on)
+	{
+		editableProperty.set(on);
+	}
+	
+	
+	public BooleanProperty editableProperty()
+	{
+		return editableProperty;
+	}
 }

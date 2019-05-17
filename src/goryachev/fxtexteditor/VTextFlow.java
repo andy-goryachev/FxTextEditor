@@ -24,6 +24,7 @@ public class VTextFlow
 	extends CPane
 {
 	public static final CssStyle PANE = new CssStyle("FxTermView_PANE");
+	protected final FxTextEditor editor;
 	private Font font;
 	private Canvas canvas;
 	private Timeline cursorAnimation;
@@ -35,12 +36,16 @@ public class VTextFlow
 	private TextMetrics metrics;
 	protected final Text proto = new Text();
 	private Color backgroundColor = Color.WHITE;
-	private Color foregroundColor = Color.BLACK;
-	private String demoText;
+	private Color textColor = Color.BLACK;
+	private int topLine;
+	private int topOffset;
+	private FxTextEditorLayout layout;
 	
 	
-	public VTextFlow()
+	public VTextFlow(FxTextEditor ed)
 	{
+		this.editor = ed;
+		
 		FX.style(this, PANE);
 		
 		setMinWidth(0);
@@ -52,6 +57,38 @@ public class VTextFlow
 		
 		FX.listen(this::handleSizeChange, widthProperty());
 		FX.listen(this::handleSizeChange, heightProperty());
+		
+		// TODO clip rect
+	}
+	
+	
+	public FxTextEditor getEditor()
+	{
+		return editor;
+	}
+	
+	
+	public int getTopLine()
+	{
+		return topLine;
+	}
+	
+	
+	public int getTopOffset()
+	{
+		return topOffset;
+	}
+	
+	
+	public int getVisibleColumnCount()
+	{
+		return colCount;
+	}
+	
+	
+	public int getVisibleRowCount()
+	{
+		return rowCount;
 	}
 	
 	
@@ -69,6 +106,10 @@ public class VTextFlow
 	
 	public Font getFont()
 	{
+		if(font == null)
+		{
+			font = Font.font("Monospace", 12);
+		}
 		return font;
 	}
 	
@@ -76,7 +117,7 @@ public class VTextFlow
 	public void setBackgroundColor(Color c)
 	{
 		backgroundColor = c;
-		// TODO repaint
+		repaint();
 	}
 	
 	
@@ -86,16 +127,16 @@ public class VTextFlow
 	}
 	
 	
-	public void setForegroundColor(Color c)
+	public void setTextColor(Color c)
 	{
-		foregroundColor = c;
-		// TODO repaint
+		textColor = c;
+		repaint();
 	}
 	
 	
-	public Color getForegroundColor()
+	public Color getTextColor()
 	{
-		return foregroundColor;
+		return textColor;
 	}
 	
 	
@@ -103,14 +144,16 @@ public class VTextFlow
 	{
 		if(metrics == null)
 		{
+			Font f = getFont();
+			
 			proto.setText("8");
-			proto.setFont(font);
+			proto.setFont(f);
 			
 			Bounds b = proto.getBoundsInLocal();
 			int w = FX.round(b.getWidth());
 			int h = FX.round(b.getHeight());
 			
-			metrics = new TextMetrics(font, b.getMinY(), w, h);
+			metrics = new TextMetrics(f, b.getMinY(), w, h);
 		}
 		return metrics;
 	}
@@ -150,12 +193,14 @@ public class VTextFlow
 		canvas = cv;
 		setCenter(cv);
 		gx = canvas.getGraphicsContext2D();
+		gx.setFontSmoothingType(FontSmoothingType.GRAY);
 		
 		gx.setFill(getBackgroundColor());
 		gx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		
 		// FIX
-		demoPaint();
+		//demoPaint();
+		repaint();
 	}
 	
 	
@@ -165,6 +210,7 @@ public class VTextFlow
 	}
 	
 	
+	// TODO create canvas +1 size
 	protected Canvas createCanvas()
 	{
 		TextMetrics tm = textMetrics();
@@ -173,96 +219,102 @@ public class VTextFlow
 		double w = getWidth() - m.getLeft() - m.getRight();
 		double h = getHeight() - m.getTop() - m.getBottom();
 		
-		if((w < 1) || (h < 1))
-		{
-			setBufferSize(80, 25);
-		}
-		else
-		{
-			setBufferSize(CKit.floor(w / tm.cellWidth), CKit.floor(h / tm.cellHeight));
-		}
+		colCount = CKit.floor(w / tm.cellWidth);
+		rowCount = CKit.floor(h / tm.cellHeight);
 		
-		return new Canvas(w, h);
+		return new Canvas(w + 1, h + 1);
 	}
 	
 	
-	protected void setBufferSize(int w, int h)
+	// TODO in invoke later to coalesce multilpe repaints?
+	public void repaint()
 	{
-		// TODO update cursor!
-		//setCursorPrivate(curx, cury);
-		
-		colCount = w;
-		rowCount = h;
-
-//		buffer.updateSize(colCount, rowCount);
-	}
-	
-	
-	public void invalidateLayout()
-	{
-		// TODO
-	}
-	
-	
-	@Deprecated // FIX
-	protected void demoPaint()
-	{
-		if(demoText == null)
+		if((colCount == 0) || (rowCount == 0))
 		{
-			demoText = CKit.readStringQuiet(getClass(), "demo.txt");
+			return;
 		}
 		
-		int ix = 0;
-		for(int y=0; y<rowCount; )
+		if(editor.getModel() == null)
 		{
-			for(int x=0; x<colCount; )
+			return;
+		}
+		
+		if(layout == null)
+		{
+			layout = new FxTextEditorLayout(this);
+		}
+		
+		int x = 0;
+		int y = 0;
+		
+		for(;;)
+		{
+			TCell c = layout.getCell(x, y);
+			if(c == null)
 			{
-				if(ix >= demoText.length())
-				{
-					return;
-				}
-				
-				char c = demoText.charAt(ix++);
-				switch(c)
-				{
-				case '\n':
-					x = 0;
-					y++;
-					continue;
-				case '\r':
-					continue;
-				}
-				
+				clearToEndOfLine(x, y);
+			}
+			else
+			{
 				paintCell(x, y, c);
-				x++;
-				if(x >= colCount)
+			}
+			
+			x++;
+			if(x >= colCount)
+			{
+				x = 0;
+				y++;
+				if(y > rowCount)
 				{
-					x = 0;
-					y++;
+					break;
 				}
 			}
 		}
 	}
 	
 	
-	protected void paintCell(int x, int y, char c)
+	protected void clearToEndOfLine(int x, int y)
 	{
-		String s = String.valueOf(c);
-		
 		TextMetrics m = textMetrics();
 		double px = x * m.cellWidth;
 		double py = y * m.cellHeight;
 		
-		// TODO line bg, selection bg, highlight bg
+		// TODO selection color, line color
+		Color bg = backgroundColor;
+		gx.setFill(bg);
+		gx.fillRect(px, py,canvas.getWidth() - px, m.cellHeight);
+	}
+	
+	
+	protected void paintCell(int x, int y, TCell cell)
+	{		
+		TextMetrics m = textMetrics();
+		double px = x * m.cellWidth;
+		double py = y * m.cellHeight;
 		
-		Color bg = FX.gray(255 - ((c & 0xff)/8));
+		// TODO line bg
+		// TODO selection bg
+		// TODO highlight bg
+	
+		// background
+		Color bg = cell.getBackgroundColor();
+		if(bg == null)
+		{
+			bg = backgroundColor;
+		}
 		gx.setFill(bg);
 		gx.fillRect(px, py, m.cellWidth, m.cellHeight);
 		
-		gx.setFontSmoothingType(FontSmoothingType.GRAY);
-		// TODO font attributes
+		Color fg = cell.getTextColor();
+		if(fg == null)
+		{
+			fg = textColor;
+		}
+		
+		String text = cell.getText();
+		// TODO font attributes: bold, italic, underline, strikethrough
 		gx.setFont(getFont());
-		gx.setFill(Color.BLACK);
-		gx.fillText(s, px, py - m.baseline, m.cellWidth);
+		gx.setFill(fg);
+		gx.fillText(text, px, py - m.baseline, m.cellWidth);
 	}
 }

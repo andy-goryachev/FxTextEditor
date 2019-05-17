@@ -1,9 +1,11 @@
 // Copyright © 2017-2019 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
+import goryachev.common.util.CKit;
 import goryachev.fx.CInsets;
 import goryachev.fx.CPane;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
+import goryachev.fx.FxTask;
 import goryachev.fxtexteditor.FxTextEditor;
 import javafx.util.Duration;
 
@@ -30,6 +32,23 @@ public class MainPane
 		setCenter(editor);
 		
 		showFindPane();
+		
+		new FxTask<String>().
+			producer(this::loadDemo).
+			onSuccess(this::openText).
+			submit();
+	}
+	
+	
+	protected String loadDemo()
+	{
+		return CKit.readStringQuiet(getClass(), "demo.txt");
+	}
+	
+	
+	protected void openText(String text)
+	{
+		editor.setModel(new SimpleTextEditorModel(text));
 	}
 	
 	

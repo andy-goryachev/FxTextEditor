@@ -55,33 +55,38 @@ public class TextCells
 		// TODO break into strings that fit one cell
 		// set RTL flag
 		int start = 0;
-		for(int i=0; i<text.length(); i++)
+		for(int i=0; i<text.length();)
 		{
-			int c = text.codePointAt(i);
-			if(c < 0)
-			{
-				continue;
-			}
+			// FIX
+//			int c = text.codePointAt(i);
+//			if(c < 0)
+//			{
+//				continue;
+//			}
+
+			i++;
 			
-			if(isCombiningChar(c))
-			{
-				continue;
-			}
+			// TODO
+//			if(isCombiningChar(c))
+//			{
+//				continue;
+//			}
 			
 			String s = text.substring(start, i);
-			boolean rtl = isRTLChar(c);
+			boolean rtl = false; //isRTLChar(c);
 			if(rtl)
 			{
 				hasRTL = true;
 			}
 			
 			cells.add(new TCell(s, rtl, backgroundColor, textColor));
+			start = i;
 		}
 		
-		if(start < text.length())
-		{
-			throw new Error("dangling code points");
-		}
+//		if(start < text.length())
+//		{
+//			String text = text.substring(start);
+//		}
 	}
 	
 	
@@ -98,37 +103,47 @@ public class TextCells
 		int type = Character.getType(c);
 		switch(type)
 		{
-	     case Character.COMBINING_SPACING_MARK:
-	     case Character.CONNECTOR_PUNCTUATION:
-	     case Character.CONTROL:
-	     case Character.CURRENCY_SYMBOL:
-	     case Character.DASH_PUNCTUATION:
-	     case Character.DECIMAL_DIGIT_NUMBER:
-	     case Character.ENCLOSING_MARK:
-	     case Character.END_PUNCTUATION:
-	     case Character.FINAL_QUOTE_PUNCTUATION:
-	     case Character.FORMAT:
-	     case Character.INITIAL_QUOTE_PUNCTUATION:
-	     case Character.LETTER_NUMBER:
-	     case Character.LINE_SEPARATOR:
-	     case Character.LOWERCASE_LETTER: 
-	     case Character.MATH_SYMBOL:
-	     case Character.MODIFIER_LETTER:
-	     case Character.MODIFIER_SYMBOL: 
-	     case Character.NON_SPACING_MARK: 
-	     case Character.OTHER_LETTER:
-	     case Character.OTHER_NUMBER:
-	     case Character.OTHER_PUNCTUATION: 
-	     case Character.OTHER_SYMBOL:
-	     case Character.PARAGRAPH_SEPARATOR: 
-	     case Character.PRIVATE_USE:
-	     case Character.SPACE_SEPARATOR: 
-	     case Character.START_PUNCTUATION: 
-	     case Character.SURROGATE:
-	     case Character.TITLECASE_LETTER: 
-	     case Character.UNASSIGNED:
-	     case Character.UPPERCASE_LETTER: 
+		case Character.COMBINING_SPACING_MARK:
+		case Character.CONNECTOR_PUNCTUATION:
+		case Character.CONTROL:
+		case Character.CURRENCY_SYMBOL:
+		case Character.DASH_PUNCTUATION:
+		case Character.DECIMAL_DIGIT_NUMBER:
+		case Character.ENCLOSING_MARK:
+		case Character.END_PUNCTUATION:
+		case Character.FINAL_QUOTE_PUNCTUATION:
+		case Character.FORMAT:
+		case Character.INITIAL_QUOTE_PUNCTUATION:
+		case Character.LETTER_NUMBER:
+		case Character.LINE_SEPARATOR:
+		case Character.LOWERCASE_LETTER:
+		case Character.MATH_SYMBOL:
+		case Character.MODIFIER_LETTER:
+		case Character.MODIFIER_SYMBOL:
+		case Character.NON_SPACING_MARK:
+		case Character.OTHER_LETTER:
+		case Character.OTHER_NUMBER:
+		case Character.OTHER_PUNCTUATION:
+		case Character.OTHER_SYMBOL:
+		case Character.PARAGRAPH_SEPARATOR:
+		case Character.PRIVATE_USE:
+		case Character.SPACE_SEPARATOR:
+		case Character.START_PUNCTUATION:
+		case Character.SURROGATE:
+		case Character.TITLECASE_LETTER:
+		case Character.UNASSIGNED:
+		case Character.UPPERCASE_LETTER:
 		}
 		return false;
+	}
+
+
+	public TCell getCell(int ix)
+	{
+		if(ix < cells.size())
+		{
+			return cells.get(ix);
+		}
+		return null;
 	}
 }

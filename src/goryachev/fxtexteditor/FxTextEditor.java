@@ -11,6 +11,7 @@ import goryachev.fx.FxFormatter;
 import goryachev.fx.FxObject;
 import goryachev.fx.KeyMap;
 import goryachev.fx.XScrollBar;
+import goryachev.fxtexteditor.internal.Markers;
 import java.io.Writer;
 import java.util.function.Consumer;
 import javafx.beans.property.BooleanProperty;
@@ -44,14 +45,16 @@ public class FxTextEditor
 	
 	protected final FxBoolean editableProperty = new FxBoolean(false);
 	protected final ReadOnlyObjectWrapper<FxTextEditorModel> modelProperty = new ReadOnlyObjectWrapper<>();
-	protected final FxBoolean wordWrapProperty = new FxBoolean(true);
+	protected final FxBoolean wrapLinesProperty = new FxBoolean(true);
 	protected final ReadOnlyBooleanWrapper multipleSelectionProperty = new ReadOnlyBooleanWrapper(false);
 	protected final FxBoolean displayCaretProperty = new FxBoolean(true);
 	protected final FxBoolean showLineNumbersProperty = new FxBoolean(false);
 	protected final FxBoolean highlightCaretLineProperty = new FxBoolean(true);
 	protected final ReadOnlyObjectWrapper<Duration> caretBlinkRateProperty = new ReadOnlyObjectWrapper(Duration.millis(500));
 	protected final FxObject<FxFormatter> lineNumberFormatterProperty = new FxObject<>();
-	protected final VTextFlow canvas;
+	protected final FxTextEditorModelListener modelListener;
+	protected final Markers markers = new Markers(32);
+	protected final VTextFlow vflow;
 	protected final ScrollBar vscroll;
 	protected final ScrollBar hscroll;
 	protected boolean handleScrollEvents = true;
@@ -60,8 +63,20 @@ public class FxTextEditor
 	public FxTextEditor()
 	{
 		// TODO model
+		modelListener = new FxTextEditorModelListener()
+		{
+			public void eventAllLinesChanged()
+			{
+				handleAllLinesChanged();
+			}
+
+			public void eventTextUpdated(int startLine, int startPos, int startCharsInserted, int linesInserted, int endLine, int endPos, int endCharsInserted)
+			{
+				handleTextUpdated(startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted);
+			}
+		};
 		
-		canvas = new VTextFlow();
+		vflow = new VTextFlow(this);
 		
 		vscroll = createVScrollBar();
 		vscroll.setOrientation(Orientation.VERTICAL);
@@ -78,16 +93,16 @@ public class FxTextEditor
 		hscroll.setMax(1.0);
 		hscroll.valueProperty().addListener((src,old,val) -> setAbsolutePositionHorizontal(val.doubleValue()));
 		hscroll.addEventFilter(ScrollEvent.ANY, (ev) -> ev.consume());
-		hscroll.visibleProperty().bind(wordWrapProperty.not());
+		hscroll.visibleProperty().bind(wrapLinesProperty.not());
 		hscroll.valueProperty().addListener((s,p,c) -> handleHorizontalScroll(c.doubleValue()));
 		
-		getChildren().addAll(canvas, vscroll, hscroll);
+		getChildren().addAll(vflow, vscroll, hscroll);
 		
 //		selector.segments.addListener((Observable src) -> vflow.updateCaretAndSelection());
 		
 //		Binder.onChange(vflow::updateBlinkRate, true, blinkRateProperty());
 		Binder.onChange(this::updateLayout, widthProperty(), heightProperty(), showLineNumbersProperty);
-		wordWrapProperty.addListener((s,p,c) -> updateLayout());
+		wrapLinesProperty.addListener((s,p,c) -> updateLayout());
 		
 		// key map
 		KeyMap.onKeyPressed(this, KeyCode.A, KeyMap.SHORTCUT, this::selectAll);
@@ -108,7 +123,7 @@ public class FxTextEditor
 	
 	public void setFont(Font f)
 	{
-		canvas.setFont(f);
+		vflow.setFont(f);
 	}
 	
 	
@@ -201,12 +216,12 @@ public class FxTextEditor
 	
 	public void setModel(FxTextEditorModel m)
 	{
-//		markers.clear();
+		markers.clear();
 		
 		FxTextEditorModel old = getModel();
 		if(old != null)
 		{
-//			old.removeListener(modelListener);
+			old.removeListener(modelListener);
 //			old.loadStatus.removeListener(loadStatusListener);
 		}
 		
@@ -214,12 +229,12 @@ public class FxTextEditor
 		
 		if(m != null)
 		{
-//			m.addListener(modelListener);
+			m.addListener(modelListener);
 //			m.loadStatus.addListener(loadStatusListener);
 		}
 		
 //		selector.clear();
-		canvas.invalidateLayout();
+		vflow.repaint();
 		
 		handleAllLinesChanged();
 	}
@@ -299,21 +314,21 @@ public class FxTextEditor
 	}
 	
 	
-	public boolean isWordWrap()
+	public boolean isWrapLines()
 	{
-		return wordWrapProperty.get();
+		return wrapLinesProperty.get();
 	}
 	
 	
-	public void setWordWrap(boolean on)
+	public void setWrapLines(boolean on)
 	{
-		wordWrapProperty.set(on);
+		wrapLinesProperty.set(on);
 	}
 	
 	
-	public BooleanProperty wordWrapProperty()
+	public BooleanProperty wrapLinesProperty()
 	{
-		return wordWrapProperty;
+		return wrapLinesProperty;
 	}
 	
 	
@@ -388,7 +403,7 @@ public class FxTextEditor
 		// layout children
 		layoutInArea(vscroll, w, y0 + 1, vscrollWidth, h, 0, null, true, true, HPos.RIGHT, VPos.TOP);
 		layoutInArea(hscroll, x0 + 1, h, w, hscrollHeight, 0, null, true, true, HPos.LEFT, VPos.BOTTOM);
-		layoutInArea(canvas, x0, y0, w, h, 0, null, true, true, HPos.LEFT, VPos.TOP);
+		layoutInArea(vflow, x0, y0, w, h, 0, null, true, true, HPos.LEFT, VPos.TOP);
 	}
 	
 	
@@ -457,6 +472,8 @@ public class FxTextEditor
 //			vflow.invalidateLayout();
 //			vflow.reset();
 //		}
+		
+		vflow.repaint();
 		
 		if(vscroll != null)
 		{
@@ -826,9 +843,8 @@ public class FxTextEditor
 //	}
 
 
-	/** recreate visible area */
-	public void reloadVisibleArea()
+	public void repaint()
 	{
-		canvas.invalidateLayout();
+		vflow.repaint();
 	}
 }

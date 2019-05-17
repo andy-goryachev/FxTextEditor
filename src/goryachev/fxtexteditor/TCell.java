@@ -20,4 +20,22 @@ public class TCell
 		this.backgroundColor = bg;
 		this.textColor = fg;
 	}
+	
+	
+	public String getText()
+	{
+		return text;
+	}
+	
+	
+	public Color getBackgroundColor()
+	{
+		return backgroundColor;
+	}
+	
+	
+	public Color getTextColor()
+	{
+		return textColor;
+	}
 }
