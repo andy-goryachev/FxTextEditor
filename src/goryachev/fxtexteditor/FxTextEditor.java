@@ -365,15 +365,13 @@ public class FxTextEditor
 	
 	protected void updateLayout()
 	{
-//		if(vflow != null)
-//		{
 //			if(wordWrapProperty.get())
 //			{
 //				vflow.offsetx = 0;
 //			}
 //			vflow.requestLayout();
-//		}
-		requestLayout();
+		vflow.invalidate();
+		repaint();
 	}
 	
 	

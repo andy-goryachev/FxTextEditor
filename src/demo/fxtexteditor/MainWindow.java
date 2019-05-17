@@ -7,6 +7,7 @@ import goryachev.fx.FxDump;
 import goryachev.fx.FxMenuBar;
 import goryachev.fx.FxPopupMenu;
 import goryachev.fx.FxWindow;
+import goryachev.fxtexteditor.FxTextEditor;
 
 
 /**
@@ -71,10 +72,10 @@ public class MainWindow
 	}
 	
 	
-//	protected FxEditor editor()
-//	{
-//		return mainPane.editor;
-//	}
+	protected FxTextEditor editor()
+	{
+		return mainPane.editor;
+	}
 	
 	
 	protected FxPopupMenu createPopupMenu()
@@ -130,7 +131,7 @@ public class MainWindow
 		// view
 		m.menu("View");
 //		m.item("Show Line Numbers", editor().showLineNumbersProperty());
-//		m.item("Word Wrap", editor().wordWrapProperty());
+		m.item("Wrap Lines", editor().wrapLinesProperty());
 		// help
 		m.menu("Help");
 		m.item("About");

@@ -184,22 +184,14 @@ public class VTextFlow
 	
 	protected void handleSizeChange()
 	{
-		Canvas cv = createCanvas();
-		if(canvas != null)
-		{
-			getChildren().remove(canvas);
-		}
-		
-		canvas = cv;
-		setCenter(cv);
+		canvas = createCanvas();
+		setCenter(canvas);
 		gx = canvas.getGraphicsContext2D();
 		gx.setFontSmoothingType(FontSmoothingType.GRAY);
 		
 		gx.setFill(getBackgroundColor());
 		gx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		
-		// FIX
-		//demoPaint();
 		repaint();
 	}
 	
@@ -226,6 +218,83 @@ public class VTextFlow
 	}
 	
 	
+	public void invalidate()
+	{
+		layout = null;
+	}
+	
+	
+	protected FxTextEditorLayout createLayout()
+	{
+		int sz = getVisibleRowCount() + 1;
+		int[] offsets = new int[sz];
+		TextCells[] cells = new TextCells[sz];
+		FxTextEditorModel m = editor.getModel();
+		
+		int ix = getTopLine();
+		int y = 0;
+		
+		if(editor.isWrapLines())
+		{
+			int colCount = getVisibleColumnCount();
+			
+			for(;;)
+			{
+				TextCells tc = m.getTextCells(ix);
+				if(tc == null)
+				{
+					break;
+				}
+				
+				int len = tc.size();
+				int off = getTopOffset();
+				while(off < len)
+				{
+					cells[y] = tc;
+					offsets[y] = off;
+					
+					off += colCount;
+					y++;
+					
+					if(y >= sz)
+					{
+						break;
+					}
+				}
+				
+				ix++;
+			}
+		}
+		else
+		{
+			int off = getTopOffset();
+
+			for(;;)
+			{
+				TextCells tc = m.getTextCells(ix);
+				if(tc == null)
+				{
+					break;
+				}
+				
+				cells[y] = tc;
+				offsets[y] = off;
+					
+				y++;
+					
+				if(y >= sz)
+				{
+					break;
+				}
+				
+				ix++;
+			}
+		}
+		
+		return new FxTextEditorLayout(cells, offsets);
+	}
+	
+	
 	// TODO in invoke later to coalesce multilpe repaints?
 	public void repaint()
 	{
@@ -241,11 +310,13 @@ public class VTextFlow
 		
 		if(layout == null)
 		{
-			layout = new FxTextEditorLayout(this);
+			layout = createLayout();
 		}
 		
+		boolean wrap = editor.isWrapLines();
 		int x = 0;
 		int y = 0;
+		int max = wrap ? colCount : colCount + 1;
 		
 		for(;;)
 		{
@@ -260,8 +331,13 @@ public class VTextFlow
 			}
 			
 			x++;
-			if(x >= colCount)
+			if(x >= max)
 			{
+				if(wrap)
+				{
+					clearToEndOfLine(x, y);
+				}
+				
 				x = 0;
 				y++;
 				if(y > rowCount)

@@ -28,6 +28,7 @@ public class MainPane
 		editor.setContentPadding(new CInsets(2, 4));
 		editor.setBlinkRate(Duration.millis(600));
 		editor.setMultipleSelectionEnabled(true);
+		editor.setWrapLines(false);
 		
 		setCenter(editor);
 		
