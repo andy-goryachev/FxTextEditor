@@ -102,7 +102,7 @@ public class FxTextEditor
 		
 //		Binder.onChange(vflow::updateBlinkRate, true, blinkRateProperty());
 		Binder.onChange(this::updateLayout, widthProperty(), heightProperty(), showLineNumbersProperty);
-		wrapLinesProperty.addListener((s,p,c) -> updateLayout());
+		wrapLinesProperty.addListener((s,p,c) -> handleWrapChange());
 		
 		// key map
 		KeyMap.onKeyPressed(this, KeyCode.A, KeyMap.SHORTCUT, this::selectAll);
@@ -295,16 +295,16 @@ public class FxTextEditor
 		if(handleScrollEvents)
 		{
 			// TODO account for visible line count
-			int start = FX.round(pos); 
-				//FX.round(getModel().getLineCount() * pos);
-			setTopLineIndex(start);
+			int start = FX.round(getModel().getLineCount() * pos);
+			setTopLine(start);
 		}
 	}
 	
 	
 	protected void setAbsolutePositionHorizontal(double pos)
 	{
-		// TODO
+		int off = FX.round(vflow.getMaxColumnCount() * pos);
+		setTopOffset(off);
 	}
 	
 	
@@ -350,33 +350,52 @@ public class FxTextEditor
 	}
 	
 	
-//	public ReadOnlyObjectProperty<FxEditorModel> modelProperty()
-//	{
-//		return modelProperty.getReadOnlyProperty();
-//	}
-	
-	
-	protected void setTopLineIndex(int ix)
+	public ReadOnlyObjectProperty<FxTextEditorModel> modelProperty()
 	{
-//		vflow.setTopLineIndex(ix);
+		return modelProperty.getReadOnlyProperty();
+	}
+	
+	
+	protected void setTopLine(int ix)
+	{
+		vflow.setTopLine(ix);
 		updateLayout();
 	}
 	
 	
+	protected void setTopOffset(int off)
+	{
+		vflow.setTopOffset(off);
+		updateLayout();
+	}
+	
+	
+	// FIX rename invalidate?
 	protected void updateLayout()
 	{
+		// TODO
 //			if(wordWrapProperty.get())
 //			{
 //				vflow.offsetx = 0;
 //			}
-//			vflow.requestLayout();
 		vflow.invalidate();
+		repaint();
+	}
+	
+	
+	protected void handleWrapChange()
+	{
+		D.print("handleWrapChange", isWrapLines()); // FIX
+		vflow.invalidate();
+		requestLayout();
 		repaint();
 	}
 	
 	
 	protected void layoutChildren()
 	{
+		D.print("layoutChildren"); // FIX
+		
 		Insets m = getPadding();
 		double x0 = m.getLeft();
 		double y0 = m.getTop();
@@ -465,11 +484,8 @@ public class FxTextEditor
 	{
 		clearSelection();
 		
-//		if(vflow != null)
-//		{
 //			vflow.invalidateLayout();
 //			vflow.reset();
-//		}
 		
 		vflow.repaint();
 		
@@ -542,10 +558,10 @@ public class FxTextEditor
 	
 
 	/** returns plain text on the specified line */
-//	public String getPlainText(int line)
-//	{
-//		return getModel().getPlainText(line);
-//	}
+	public String getPlainText(int line)
+	{
+		return getModel().getPlainText(line);
+	}
 
 
 	/** returns selected plain text, concatenating multiple selection segments if necessary */
@@ -603,6 +619,7 @@ public class FxTextEditor
 	
 	public void scroll(double fractionOfHeight)
 	{
+		// TODO
 //		vflow.scroll(fractionOfHeight);
 	}
 	
@@ -610,6 +627,7 @@ public class FxTextEditor
 	/** scrolls up (deltaInPixels < 0) or down (deltaInPixels > 0) */
 	public void blockScroll(double deltaInPixels)
 	{
+		// TODO
 //		vflow.blockScroll(deltaInPixels);
 	}
 	
@@ -617,6 +635,7 @@ public class FxTextEditor
 	/** copies all supported formats */
 	public void copy()
 	{
+		// TODO
 //		copy(null, getModel().getSupportedFormats());
 	}
 	
@@ -624,12 +643,14 @@ public class FxTextEditor
 	/** copies specified formats to clipboard, using an error handler */
 	public void copy(Consumer<Throwable> errorHandler, DataFormat ... formats)
 	{
+		// TODO
 //		getModel().copy(getSelection(), errorHandler, formats);
 	}
 	
 	
 	public void selectAll()
 	{
+		// TODO
 //		int ix = getLineCount();
 //		if(ix > 0)
 //		{
@@ -644,7 +665,8 @@ public class FxTextEditor
 //		}
 	}
 	
-	
+
+	// TODO
 //	public void select(Marker start, Marker end)
 //	{
 //		selector.setSelection(start, end);
@@ -654,6 +676,7 @@ public class FxTextEditor
 	
 	protected void setSuppressBlink(boolean on)
 	{
+		// TODO
 //		vflow.setSuppressBlink(on);
 	}
 
@@ -833,8 +856,8 @@ public class FxTextEditor
 //	{
 //		wordSelector = s;
 //	}
-//	
-//	
+	
+	
 //	public int getTextLength(int line)
 //	{
 //		return getModel().getTextLength(line);

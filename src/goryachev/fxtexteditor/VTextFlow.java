@@ -1,6 +1,7 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.CKit;
+import goryachev.common.util.D;
 import goryachev.fx.CPane;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
@@ -74,9 +75,21 @@ public class VTextFlow
 	}
 	
 	
+	public void setTopLine(int y)
+	{
+		topLine = y;
+	}
+	
+	
 	public int getTopOffset()
 	{
 		return topOffset;
+	}
+	
+	
+	public void setTopOffset(int off)
+	{
+		topOffset = off;
 	}
 	
 	
@@ -89,6 +102,12 @@ public class VTextFlow
 	public int getVisibleRowCount()
 	{
 		return rowCount;
+	}
+	
+	
+	public int getMaxColumnCount()
+	{
+		return layout.getMaxColumnCount();
 	}
 	
 	
@@ -214,6 +233,7 @@ public class VTextFlow
 		colCount = CKit.floor(w / tm.cellWidth);
 		rowCount = CKit.floor(h / tm.cellHeight);
 		
+		D.print(rowCount); // FIX
 		return new Canvas(w + 1, h + 1);
 	}
 	
@@ -233,10 +253,12 @@ public class VTextFlow
 		
 		int ix = getTopLine();
 		int y = 0;
+		int max;
 		
 		if(editor.isWrapLines())
 		{
 			int colCount = getVisibleColumnCount();
+			max = colCount;
 			
 			for(;;)
 			{
@@ -268,6 +290,7 @@ public class VTextFlow
 		else
 		{
 			int off = getTopOffset();
+			max = 0;
 
 			for(;;)
 			{
@@ -279,6 +302,11 @@ public class VTextFlow
 				
 				cells[y] = tc;
 				offsets[y] = off;
+				int w = tc.getCellCount();
+				if(max < w)
+				{
+					max = w;
+				}
 					
 				y++;
 					
@@ -291,13 +319,15 @@ public class VTextFlow
 			}
 		}
 		
-		return new FxTextEditorLayout(cells, offsets);
+		return new FxTextEditorLayout(cells, offsets, max);
 	}
 	
 	
 	// TODO in invoke later to coalesce multilpe repaints?
 	public void repaint()
 	{
+		D.print(getVisibleRowCount()); // FIX 
+
 		if((colCount == 0) || (rowCount == 0))
 		{
 			return;

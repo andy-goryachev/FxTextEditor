@@ -1,6 +1,7 @@
 // Copyright © 2017-2019 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
 import goryachev.common.util.CList;
+import java.util.List;
 import javafx.scene.paint.Color;
 
 
@@ -21,7 +22,7 @@ public class DemoSyntax
 	}
 	
 	
-	public CList<Segment> generateSegments()
+	public List<Segment> generateSegments()
 	{
 		for(int i=0; i<text.length(); i++)
 		{

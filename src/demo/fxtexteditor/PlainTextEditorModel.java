@@ -5,19 +5,19 @@ import goryachev.fxtexteditor.Edit;
 import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.ITextCells;
 import goryachev.fxtexteditor.LoadInfo;
-import goryachev.fxtexteditor.SimpleTextCells;
+import goryachev.fxtexteditor.PlainTextCells;
 
 
 /**
  * Simple FxTextEditorModel.
  */
-public class SimpleTextEditorModel
+public class PlainTextEditorModel
 	extends FxTextEditorModel
 {
 	protected final String[] lines;
 
 
-	public SimpleTextEditorModel(String text)
+	public PlainTextEditorModel(String text)
 	{
 		lines = CKit.split(text, '\n');
 	}
@@ -52,10 +52,7 @@ public class SimpleTextEditorModel
 		if(line < getLineCount())
 		{
 			String text = getPlainText(line);
-			SimpleTextCells tc = new SimpleTextCells();
-			// TODO syntax
-			tc.addText(text);
-			return tc;
+			return new PlainTextCells(text);
 		}
 		return null;
 	}

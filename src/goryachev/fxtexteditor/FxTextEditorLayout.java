@@ -9,12 +9,14 @@ public class FxTextEditorLayout
 {
 	protected final ITextCells[] cells;
 	protected final int[] offsets;
+	protected final int maxColumns;
 	
 	
-	public FxTextEditorLayout(ITextCells[] cells, int[] offsets)
+	public FxTextEditorLayout(ITextCells[] cells, int[] offsets, int maxColumns)
 	{
 		this.cells = cells;
 		this.offsets = offsets;
+		this.maxColumns = maxColumns;
 	}
 	
 	
@@ -31,5 +33,11 @@ public class FxTextEditorLayout
 			}
 		}
 		return null;
+	}
+
+
+	public int getMaxColumnCount()
+	{
+		return maxColumns;
 	}
 }

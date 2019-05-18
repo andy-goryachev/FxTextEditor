@@ -7,6 +7,7 @@ import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
 import goryachev.fx.FxTask;
 import goryachev.fxtexteditor.FxTextEditor;
+import goryachev.fxtexteditor.FxTextEditorModel;
 import javafx.util.Duration;
 
 
@@ -49,14 +50,14 @@ public class MainPane
 	
 	protected void openText(String text)
 	{
-		editor.setModel(new SimpleTextEditorModel(text));
+		setModel(new PlainTextEditorModel(text));
 	}
 	
 	
-//	public void setModel(FxEditorModel m)
-//	{
-//		editor.setModel(m);
-//	}
+	public void setModel(FxTextEditorModel m)
+	{
+		editor.setModel(m);
+	}
 	
 	
 	public void showFindPane()
