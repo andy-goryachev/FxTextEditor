@@ -250,16 +250,16 @@ public class VTextFlow
 				int off = getTopOffset();
 				while(off < len)
 				{
+					if(y >= sz)
+					{
+						break;
+					}
+					
 					cells[y] = tc;
 					offsets[y] = off;
 					
 					off += colCount;
 					y++;
-					
-					if(y >= sz)
-					{
-						break;
-					}
 				}
 				
 				ix++;

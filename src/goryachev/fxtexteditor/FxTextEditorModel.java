@@ -26,7 +26,7 @@ public abstract class FxTextEditorModel
 	public abstract String getPlainText(int line);
 	
 	/** 
-	 * returns a non-null TextCells for the given line.
+	 * returns a TextCells for the given line, or null if beyond the end of file.
 	 */
 	public abstract TextCells getTextCells(int line);
 	
