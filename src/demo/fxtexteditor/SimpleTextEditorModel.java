@@ -52,9 +52,13 @@ public class SimpleTextEditorModel
 		if(line < getLineCount())
 		{
 			String text = getPlainText(line);
+			
 			SimpleTextCells tc = new SimpleTextCells();
-			// TODO syntax
-			tc.addText(text);
+			for(Segment seg: new DemoSyntax(text).generateSegments())
+			{
+				tc.setTextColor(seg.color);
+				tc.addText(seg.text);				
+			}
 			return tc;
 		}
 		return null;

@@ -35,22 +35,27 @@ public class MainPane
 		
 		showFindPane();
 		
-		new FxTask<String>().
-			producer(this::loadDemo).
-			onSuccess(this::openText).
-			submit();
+		boolean plain = false;
+		if(plain)
+		{
+			new FxTask<String>().
+				producer(() -> loadFile("million.txt")).
+				onSuccess((text) -> setModel(new PlainTextEditorModel(text))).
+				submit();
+		}
+		else
+		{
+			new FxTask<String>().
+				producer(() -> loadFile("demo.txt")).
+				onSuccess((text) -> setModel(new SimpleTextEditorModel(text))).
+				submit();
+		}
 	}
 	
 	
-	protected String loadDemo()
+	protected String loadFile(String name)
 	{
-		return CKit.readStringQuiet(getClass(), "demo.txt");
-	}
-	
-	
-	protected void openText(String text)
-	{
-		setModel(new PlainTextEditorModel(text));
+		return CKit.readStringQuiet(getClass(), name);
 	}
 	
 	
