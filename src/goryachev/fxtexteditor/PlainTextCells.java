@@ -28,7 +28,7 @@ public class PlainTextCells
 		if(ix < text.length())
 		{
 			String s = String.valueOf(text.charAt(ix));
-			return new TCell(s, false, null, null);
+			return new TCell(s);
 		}
 		return null;
 	}

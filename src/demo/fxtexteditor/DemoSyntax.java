@@ -14,6 +14,7 @@ public class DemoSyntax
 	private final CList<Segment> segments = new CList();
 	private int start;
 	private Color color = Color.BLACK;
+	private boolean bold;
 	
 	
 	public DemoSyntax(String text)
@@ -77,8 +78,9 @@ public class DemoSyntax
 		if(end > start)
 		{
 			String s = text.substring(start, end);
-			segments.add(new Segment(color, s));
+			segments.add(new Segment(color, s, bold));
 			start = end;
+			bold = false;
 		}
 	}
 	
@@ -87,6 +89,7 @@ public class DemoSyntax
 	{
 		if(Character.isDigit(c))
 		{
+			bold = true;
 			return Color.RED;
 		}
 		

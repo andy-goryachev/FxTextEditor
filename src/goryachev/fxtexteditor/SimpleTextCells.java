@@ -17,8 +17,8 @@ public class SimpleTextCells
 	private boolean hasRTL;
 	private boolean bold;
 	private boolean italic;
-	private boolean underline;
-	// TODO strikethrough
+	private boolean strikeThrough;
+	private boolean underscore;
 	
 	
 	public SimpleTextCells()
@@ -47,6 +47,30 @@ public class SimpleTextCells
 	public void setTextColor(Color c)
 	{
 		textColor = c;
+	}
+	
+	
+	public void setBold(boolean on)
+	{
+		bold = on;
+	}
+	
+	
+	public void setItalic(boolean on)
+	{
+		italic = on;
+	}
+	
+	
+	public void setStrikeThrough(boolean on)
+	{
+		strikeThrough = on;
+	}
+	
+	
+	public void setUnderscore(boolean on)
+	{
+		underscore = on;
 	}
 	
 	
@@ -80,7 +104,7 @@ public class SimpleTextCells
 				hasRTL = true;
 			}
 			
-			cells.add(new TCell(s, rtl, backgroundColor, textColor));
+			cells.add(new TCell(s, backgroundColor, textColor, bold, italic, strikeThrough, underscore));
 			start = i;
 		}
 		

@@ -57,6 +57,7 @@ public class SimpleTextEditorModel
 			for(Segment seg: new DemoSyntax(text).generateSegments())
 			{
 				tc.setTextColor(seg.color);
+				tc.setBold(seg.bold);
 				tc.addText(seg.text);				
 			}
 			return tc;

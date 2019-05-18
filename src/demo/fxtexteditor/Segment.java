@@ -10,11 +10,13 @@ public class Segment
 {
 	public final String text;
 	public final Color color;
+	public final boolean bold;
 	
 	
-	public Segment(Color color, String text)
+	public Segment(Color color, String text, boolean bold)
 	{
 		this.text = text;
 		this.color = color;
+		this.bold = bold;
 	}
 }

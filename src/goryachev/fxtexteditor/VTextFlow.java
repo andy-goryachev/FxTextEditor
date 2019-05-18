@@ -13,7 +13,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontSmoothingType;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -27,6 +29,9 @@ public class VTextFlow
 	public static final CssStyle PANE = new CssStyle("FxTermView_PANE");
 	protected final FxTextEditor editor;
 	private Font font;
+	private Font boldFont;
+	private Font boldItalicFont;
+	private Font italicFont;
 	private Canvas canvas;
 	private Timeline cursorAnimation;
 	private boolean cursorEnabled = true;
@@ -119,6 +124,7 @@ public class VTextFlow
 		}
 		
 		this.font = f;
+		updateFonts();
 		metrics = null;
 	}
 	
@@ -128,8 +134,17 @@ public class VTextFlow
 		if(font == null)
 		{
 			font = Font.font("Monospace", 12);
+			updateFonts();
 		}
 		return font;
+	}
+	
+	
+	protected void updateFonts()
+	{
+		boldFont = Font.font(font.getFamily(), FontWeight.BOLD, FontPosture.REGULAR, font.getSize());
+		boldItalicFont = Font.font(font.getFamily(), FontWeight.BOLD, FontPosture.ITALIC, font.getSize());
+		italicFont = Font.font(font.getFamily(), FontWeight.NORMAL, FontPosture.ITALIC, font.getSize());
 	}
 	
 	
@@ -323,6 +338,33 @@ public class VTextFlow
 	}
 	
 	
+	protected Font getFont(TCell c)
+	{
+		if(c.isBold())
+		{
+			if(c.isItalic())
+			{
+				return boldItalicFont;
+			}
+			else
+			{
+				return boldFont;
+			}
+		}
+		else
+		{
+			if(c.isItalic())
+			{
+				return italicFont;
+			}
+			else
+			{
+				return font;
+			}
+		}
+	}
+	
+	
 	// TODO in invoke later to coalesce multilpe repaints?
 	public void repaint()
 	{
@@ -419,7 +461,7 @@ public class VTextFlow
 		
 		String text = cell.getText();
 		// TODO font attributes: bold, italic, underline, strikethrough
-		gx.setFont(getFont());
+		gx.setFont(getFont(cell));
 		gx.setFill(fg);
 		gx.fillText(text, px, py - m.baseline, m.cellWidth);
 	}
