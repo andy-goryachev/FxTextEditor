@@ -228,7 +228,7 @@ public class VTextFlow
 	{
 		int sz = getVisibleRowCount() + 1;
 		int[] offsets = new int[sz];
-		TextCells[] cells = new TextCells[sz];
+		ITextCells[] cells = new ITextCells[sz];
 		FxTextEditorModel m = editor.getModel();
 		
 		int ix = getTopLine();
@@ -240,13 +240,13 @@ public class VTextFlow
 			
 			for(;;)
 			{
-				TextCells tc = m.getTextCells(ix);
+				ITextCells tc = m.getTextCells(ix);
 				if(tc == null)
 				{
 					break;
 				}
 				
-				int len = tc.size();
+				int len = tc.getCellCount();
 				int off = getTopOffset();
 				while(off < len)
 				{
@@ -271,7 +271,7 @@ public class VTextFlow
 
 			for(;;)
 			{
-				TextCells tc = m.getTextCells(ix);
+				ITextCells tc = m.getTextCells(ix);
 				if(tc == null)
 				{
 					break;

@@ -3,8 +3,10 @@ package demo.fxtexteditor;
 import goryachev.common.util.CKit;
 import goryachev.fxtexteditor.Edit;
 import goryachev.fxtexteditor.FxTextEditorModel;
+import goryachev.fxtexteditor.ITextCells;
 import goryachev.fxtexteditor.LoadInfo;
-import goryachev.fxtexteditor.TextCells;
+import goryachev.fxtexteditor.PlainTextCells;
+import goryachev.fxtexteditor.SimpleTextCells;
 
 /**
  * Simple FxTextEditorModel.
@@ -45,13 +47,12 @@ public class SimpleTextEditorModel
 	}
 
 
-	public TextCells getTextCells(int line)
+	public ITextCells getTextCells(int line)
 	{
 		if(line < getLineCount())
 		{
-			TextCells cells = new TextCells();
-			cells.addText(getPlainText(line));
-			return cells;
+			String text = getPlainText(line);
+			return new PlainTextCells(text);
 		}
 		return null;
 	}

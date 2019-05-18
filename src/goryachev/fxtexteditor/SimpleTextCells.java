@@ -7,7 +7,8 @@ import javafx.scene.paint.Color;
 /**
  * Text Cells.
  */
-public class TextCells
+public class SimpleTextCells
+	implements ITextCells
 {
 	protected final CList<TCell> cells = new CList();
 	private Color lineBackground;
@@ -20,12 +21,12 @@ public class TextCells
 	// TODO strikethrough
 	
 	
-	public TextCells()
+	public SimpleTextCells()
 	{
 	}
 	
 	
-	public int size()
+	public int getCellCount()
 	{
 		return cells.size();
 	}

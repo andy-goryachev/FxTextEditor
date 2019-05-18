@@ -7,11 +7,11 @@ package goryachev.fxtexteditor;
  */
 public class FxTextEditorLayout
 {
-	protected final TextCells[] cells;
+	protected final ITextCells[] cells;
 	protected final int[] offsets;
 	
 	
-	public FxTextEditorLayout(TextCells[] cells, int[] offsets)
+	public FxTextEditorLayout(ITextCells[] cells, int[] offsets)
 	{
 		this.cells = cells;
 		this.offsets = offsets;
@@ -22,7 +22,7 @@ public class FxTextEditorLayout
 	{
 		if(y < cells.length)
 		{
-			TextCells tc = cells[y];
+			ITextCells tc = cells[y];
 			if(tc != null)
 			{
 				int off = offsets[y];
