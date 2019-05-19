@@ -1,6 +1,6 @@
 # FxTextEditor
 
-![screenshot is coming](https://github.com/andy-goryachev/FxTextEditor/blob/master/doc/screenshot.png)
+![screenshot](https://github.com/andy-goryachev/FxTextEditor/blob/master/doc/screenshot.png)
 
 
 ## Why ##
@@ -19,7 +19,6 @@ embedded images and components, using monospaced font and rendering model.
 * efficiently handles very long lines
 * multiple selection and carets
 * supports syntax highlight
-* reasonably renders Unicode characters
  
 
 ## License
