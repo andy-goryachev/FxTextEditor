@@ -5,6 +5,7 @@ import goryachev.common.util.D;
 import goryachev.fx.CPane;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
+import goryachev.fxtexteditor.internal.Markers;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Bounds;
@@ -464,5 +465,30 @@ public class VTextFlow
 		gx.setFont(getFont(cell));
 		gx.setFill(fg);
 		gx.fillText(text, px, py - m.baseline, m.cellWidth);
+	}
+
+
+	public void updateCaretAndSelection()
+	{
+		// FIX
+		int ix = 0;
+		for(SelectionSegment s: editor.selector.segments)
+		{
+			Marker caret = s.getCaret();
+			D.print("caret=", ix, caret); // FIX
+			ix++;
+		}
+	}
+
+
+	public Marker getTextPos(double screenx, double screeny, Markers markers)
+	{
+		TextMetrics m = textMetrics();
+		// TODO padding
+		int y = FX.round(screeny / m.cellHeight);
+		int x = FX.round(screenx / m.cellWidth);
+		int pos = layout.getTextPos(x, y);
+		int line = topLine + y;
+		return markers.newMarker(line, pos, false);
 	}
 }

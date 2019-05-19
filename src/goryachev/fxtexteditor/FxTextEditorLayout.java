@@ -40,4 +40,35 @@ public class FxTextEditorLayout
 	{
 		return maxColumns;
 	}
+
+
+	public int getTextPos(int x, int y)
+	{
+		ITextCells tc;
+		
+		for(;;)
+		{
+			tc = cells[y];
+			if(tc == null)
+			{
+				// find
+				y--;
+				if(y < 0)
+				{
+					// should not happen
+					throw new Error();
+				}
+			}
+			else
+			{
+				int off = offsets[y];
+				int pos = x + off;
+				if(pos > tc.getCellCount())
+				{
+					return tc.getCellCount() - off;
+				}
+				return pos;
+			}
+		}
+	}
 }

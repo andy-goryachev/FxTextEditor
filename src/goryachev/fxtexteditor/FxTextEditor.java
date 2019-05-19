@@ -13,7 +13,9 @@ import goryachev.fx.KeyMap;
 import goryachev.fx.XScrollBar;
 import goryachev.fxtexteditor.internal.Markers;
 import java.io.Writer;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
@@ -29,6 +31,7 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -53,11 +56,13 @@ public class FxTextEditor
 	protected final ReadOnlyObjectWrapper<Duration> caretBlinkRateProperty = new ReadOnlyObjectWrapper(Duration.millis(500));
 	protected final FxObject<FxFormatter> lineNumberFormatterProperty = new FxObject<>();
 	protected final FxTextEditorModelListener modelListener;
+	protected final SelectionController selector;
 	protected final Markers markers = new Markers(32);
 	protected final VTextFlow vflow;
 	protected final ScrollBar vscroll;
 	protected final ScrollBar hscroll;
 	protected boolean handleScrollEvents = true;
+	protected BiConsumer<FxTextEditor,Marker> wordSelector = new SimpleWordSelector();
 
 	
 	public FxTextEditor()
@@ -75,6 +80,8 @@ public class FxTextEditor
 				handleTextUpdated(startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted);
 			}
 		};
+		
+		selector = createSelectionController();
 		
 		vflow = new VTextFlow(this);
 		
@@ -98,7 +105,7 @@ public class FxTextEditor
 		
 		getChildren().addAll(vflow, vscroll, hscroll);
 		
-//		selector.segments.addListener((Observable src) -> vflow.updateCaretAndSelection());
+		selector.segments.addListener((Observable src) -> vflow.updateCaretAndSelection());
 		
 //		Binder.onChange(vflow::updateBlinkRate, true, blinkRateProperty());
 		Binder.onChange(this::updateLayout, widthProperty(), heightProperty(), showLineNumbersProperty);
@@ -164,22 +171,22 @@ public class FxTextEditor
 	
 	
 	/** override to provide your own selection model */
-//	protected SelectionController createSelectionController()
-//	{
-//		return new SelectionController();
-//	}
+	protected SelectionController createSelectionController()
+	{
+		return new SelectionController();
+	}
 	
 	
 	/** override to provide your own mouse handler */
 	protected void initMouseController()
 	{
-//		FxEditorMouseHandler h = new FxEditorMouseHandler(this, selector);
-//		
-//		vflow.addEventFilter(MouseEvent.MOUSE_CLICKED, (ev) -> h.handleMouseClicked(ev));
-//		vflow.addEventFilter(MouseEvent.MOUSE_PRESSED, (ev) -> h.handleMousePressed(ev));
-//		vflow.addEventFilter(MouseEvent.MOUSE_RELEASED, (ev) -> h.handleMouseReleased(ev));
-//		vflow.addEventFilter(MouseEvent.MOUSE_DRAGGED, (ev) -> h.handleMouseDragged(ev));
-//		vflow.addEventFilter(ScrollEvent.ANY, (ev) -> h.handleScroll(ev));
+		FxTextEditorMouseHandler h = new FxTextEditorMouseHandler(this, selector);
+		
+		vflow.addEventFilter(MouseEvent.MOUSE_CLICKED, (ev) -> h.handleMouseClicked(ev));
+		vflow.addEventFilter(MouseEvent.MOUSE_PRESSED, (ev) -> h.handleMousePressed(ev));
+		vflow.addEventFilter(MouseEvent.MOUSE_RELEASED, (ev) -> h.handleMouseReleased(ev));
+		vflow.addEventFilter(MouseEvent.MOUSE_DRAGGED, (ev) -> h.handleMouseDragged(ev));
+		vflow.addEventFilter(ScrollEvent.ANY, (ev) -> h.handleScroll(ev));
 	}
 	
 	
@@ -246,11 +253,11 @@ public class FxTextEditor
 	}
 	
 	
-//	public int getLineCount()
-//	{
-//		FxEditorModel m = getModel();
-//		return m == null ? 0 : m.getLineCount();
-//	}
+	public int getLineCount()
+	{
+		FxTextEditorModel m = getModel();
+		return m == null ? 0 : m.getLineCount();
+	}
 	
 	
 	protected ScrollBar createVScrollBar()
@@ -425,18 +432,18 @@ public class FxTextEditor
 	
 	
 	/** returns text position at the specified screen coordinates */
-//	public Marker getTextPos(double screenx, double screeny)
-//	{
-//		return vflow.layout.getTextPos(screenx, screeny, markers);
-//	}
-//	
-//	
-//	public Marker newMarker(int lineNumber, int charIndex, boolean leading)
-//	{
-//		return markers.newMarker(lineNumber, charIndex, leading);
-//	}
-//	
-//	
+	public Marker getTextPos(double screenx, double screeny)
+	{
+		return vflow.getTextPos(screenx, screeny, markers);
+	}
+	
+	
+	public Marker newMarker(int lineNumber, int charIndex, boolean leading)
+	{
+		return markers.newMarker(lineNumber, charIndex, leading);
+	}
+	
+	
 //	protected CaretLocation getCaretLocation(Marker pos)
 //	{
 //		return vflow.layout.getCaretLocation(this, pos);
@@ -651,27 +658,26 @@ public class FxTextEditor
 	public void selectAll()
 	{
 		// TODO
-//		int ix = getLineCount();
-//		if(ix > 0)
-//		{
-//			--ix;
-//			
-//			String s = getModel().getPlainText(ix);
-//			Marker beg = markers.newMarker(0, 0, true);
-//			Marker end = markers.newMarker(ix, Math.max(0, s.length() - 1), false);
-//			
-//			selector.setSelection(beg, end);
-//			selector.commitSelection();
-//		}
+		int ix = getLineCount();
+		if(ix > 0)
+		{
+			--ix;
+			
+			String s = getModel().getPlainText(ix);
+			Marker beg = markers.newMarker(0, 0, true);
+			Marker end = markers.newMarker(ix, Math.max(0, s.length() - 1), false);
+			
+			selector.setSelection(beg, end);
+			selector.commitSelection();
+		}
 	}
 	
 
-	// TODO
-//	public void select(Marker start, Marker end)
-//	{
-//		selector.setSelection(start, end);
-//		selector.commitSelection();
-//	}
+	public void select(Marker start, Marker end)
+	{
+		selector.setSelection(start, end);
+		selector.commitSelection();
+	}
 	
 	
 	protected void setSuppressBlink(boolean on)
@@ -724,6 +730,7 @@ public class FxTextEditor
 	{
 		if(handleScrollEvents)
 		{
+			// TODO
 //			vflow.setHorizontalScroll(val);
 		}
 	}
@@ -825,43 +832,44 @@ public class FxTextEditor
 	}
 
 
-//	public void selectLine(Marker m)
-//	{
-//		if(m != null)
-//		{
-//			int line = m.getLine();
-//			Marker start = markers.newMarker(line, 0, true);
-//			
-//			int len = getModel().getTextLength(line);
-//			Marker end = markers.newMarker(line, len, false);
-//			
-//			selector.setSelection(start, end);
-//		}
-//	}
+	public void selectLine(Marker m)
+	
+	{
+		if(m != null)
+		{
+			int line = m.getLine();
+			Marker start = markers.newMarker(line, 0, true);
+			
+			int len = getModel().getCellCount(line);
+			Marker end = markers.newMarker(line, len, false);
+			
+			selector.setSelection(start, end);
+		}
+	}
 	
 	
-//	public void selectWord(Marker m)
-//	{
-//		if(m != null)
-//		{
-//			if(wordSelector != null)
-//			{
-//				wordSelector.accept(this, m);
-//			}
-//		}
-//	}
-//	
-//	
-//	public void setWordSelector(BiConsumer<FxEditor,Marker> s)
-//	{
-//		wordSelector = s;
-//	}
+	public void selectWord(Marker m)
+	{
+		if(m != null)
+		{
+			if(wordSelector != null)
+			{
+				wordSelector.accept(this, m);
+			}
+		}
+	}
 	
 	
-//	public int getTextLength(int line)
-//	{
-//		return getModel().getTextLength(line);
-//	}
+	public void setWordSelector(BiConsumer<FxTextEditor,Marker> s)
+	{
+		wordSelector = s;
+	}
+	
+	
+	public int getTextLength(int line)
+	{
+		return getModel().getCellCount(line);
+	}
 
 
 	public void repaint()

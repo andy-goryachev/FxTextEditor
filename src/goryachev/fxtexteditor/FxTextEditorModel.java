@@ -22,6 +22,11 @@ public abstract class FxTextEditorModel
 	 */
 	public abstract int getLineCount();
 	
+	
+	/** returns the number of cells on a particular line */
+	public abstract int getCellCount(int line);
+	
+	
 	/** returns plain text at the specified line, or null if unknown */
 	public abstract String getPlainText(int line);
 	

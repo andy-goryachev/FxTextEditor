@@ -41,9 +41,20 @@ public class SimpleTextEditorModel
 	}
 
 
+	public int getCellCount(int line)
+	{
+		String s = getPlainText(line);
+		return s == null ? 0 : s.length();
+	}
+	
+
 	public String getPlainText(int line)
 	{
-		return lines[line];
+		if(line < getLineCount())
+		{
+			return lines[line];
+		}
+		return null;
 	}
 
 
