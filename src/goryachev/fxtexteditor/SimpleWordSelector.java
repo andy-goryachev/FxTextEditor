@@ -99,8 +99,7 @@ public class SimpleWordSelector
 			return;
 		}
 
-		int pos = m.getCharIndex();
-
+		int pos = m.getPosition();
 		int start;
 		int end;
 		
@@ -145,8 +144,8 @@ public class SimpleWordSelector
 			}
 		}
 		
-		Marker m0 = ed.newMarker(line, start, true);
-		Marker m1 = ed.newMarker(line, end, false);
+		Marker m0 = ed.newMarker(line, start);
+		Marker m1 = ed.newMarker(line, end);
 		ed.select(m0, m1);
 	}
 }

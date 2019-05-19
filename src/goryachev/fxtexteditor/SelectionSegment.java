@@ -81,7 +81,7 @@ public class SelectionSegment
 	{
 		if(min.equals(max))
 		{
-			return "[" + min + "*]";
+			return "[" + min + "]";
 		}
 		
 		if(caretAtMin)
@@ -90,7 +90,7 @@ public class SelectionSegment
 		}
 		else
 		{
-			return "[" + min + "-" + max + "*)";
+			return "[" + min + "-" + max + "^)";
 		}
 	}
 	

@@ -12,7 +12,7 @@ import javafx.util.Duration;
 
 
 /**
- * FxEditor Mouse Handler.
+ * FxTextEditor Mouse Handler.
  */
 public class FxTextEditorMouseHandler
 {

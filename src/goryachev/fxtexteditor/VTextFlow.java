@@ -10,6 +10,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -364,6 +365,25 @@ public class VTextFlow
 			}
 		}
 	}
+
+
+	public void updateCaretAndSelection()
+	{
+		D.list(editor.selector.segments); // FIX
+	}
+
+
+	public Marker getTextPos(double screenx, double screeny, Markers markers)
+	{
+		Point2D p = canvas.screenToLocal(screenx, screeny);
+		TextMetrics m = textMetrics();
+		// TODO hor scrolling
+		int x = FX.round(p.getX() / m.cellWidth);
+		int y = FX.floor(p.getY() / m.cellHeight);
+		int pos = layout.getTextPos(x, y);
+		int line = topLine + y;
+		return markers.newMarker(line, pos);
+	}
 	
 	
 	// TODO in invoke later to coalesce multilpe repaints?
@@ -460,35 +480,14 @@ public class VTextFlow
 			fg = textColor;
 		}
 		
+		// TODO caret
+		
+		// text
 		String text = cell.getText();
-		// TODO font attributes: bold, italic, underline, strikethrough
 		gx.setFont(getFont(cell));
 		gx.setFill(fg);
 		gx.fillText(text, px, py - m.baseline, m.cellWidth);
-	}
-
-
-	public void updateCaretAndSelection()
-	{
-		// FIX
-		int ix = 0;
-		for(SelectionSegment s: editor.selector.segments)
-		{
-			Marker caret = s.getCaret();
-			D.print("caret=", ix, caret); // FIX
-			ix++;
-		}
-	}
-
-
-	public Marker getTextPos(double screenx, double screeny, Markers markers)
-	{
-		TextMetrics m = textMetrics();
-		// TODO padding
-		int y = FX.round(screeny / m.cellHeight);
-		int x = FX.round(screenx / m.cellWidth);
-		int pos = layout.getTextPos(x, y);
-		int line = topLine + y;
-		return markers.newMarker(line, pos, false);
+		
+		// TODO underline, strikethrough
 	}
 }

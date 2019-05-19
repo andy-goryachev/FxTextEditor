@@ -17,33 +17,22 @@ public class Marker
 {
 	public static final Marker ZERO = new Marker();
 	private int line;
-	private int charIndex;
-	private boolean leading;
+	private int position;
 	
 	
-	public Marker(Markers owner, int line, int charIndex, boolean leading)
+	public Marker(Markers owner, int line, int pos)
 	{
 		Assert.notNull(owner, "owner");
 		
 		this.line = line;
-		this.charIndex = charIndex;
-		this.leading = leading;		
+		this.position = pos;
 	}
 	
 	
 	private Marker()
 	{
 		this.line = 0;
-		this.charIndex = 0;
-		this.leading = true;	
-	}
-	
-	
-	public void reset(int line, int charIndex, boolean leading)
-	{
-		this.line = line;
-		this.charIndex = charIndex;
-		this.leading = leading;
+		this.position = 0;
 	}
 	
 
@@ -51,74 +40,9 @@ public class Marker
 	{
 		int h = FH.hash(Marker.class);
 		h = FH.hash(h, line);
-		h = FH.hash(h, charIndex);
-		return FH.hash(h, leading);
+		return FH.hash(h, position);
 	}
 
-
-	/** returns the line index */
-	public int getLine()
-	{
-		return line;
-	}
-	
-	
-	/** returns the effective caret position */
-	public int getLineOffset()
-	{
-		return leading ? charIndex : charIndex + 1;
-	}
-	
-	
-	public int getCharIndex()
-	{
-		return charIndex;
-	}
-	
-	
-	public boolean isLeading()
-	{
-		return leading;
-	}
-	
-	
-	public String toString()
-	{
-		SB sb = new SB(16);
-		sb.a(line);
-		sb.a(':');
-		sb.a(getCharIndex());
-		if(leading)
-		{
-			sb.a('L');
-		}
-		else
-		{
-			sb.a('T');
-		}
-		sb.a(':');
-		sb.a(getLineOffset());
-		return sb.toString();
-	}
-
-	
-	public int compareTo(Marker m)
-	{
-		int d = line - m.line;
-		if(d == 0)
-		{
-			d = getLineOffset() - m.getLineOffset();
-			if(d == 0)
-			{
-				if(leading != m.leading)
-				{
-					return leading ? -1 : 1;
-				}
-			}
-		}
-		return d;
-	}
-	
 	
 	public boolean equals(Object x)
 	{
@@ -129,12 +53,47 @@ public class Marker
 		else if(x instanceof Marker)
 		{
 			Marker m = (Marker)x;
-			return (leading == m.leading) && (line == m.line) && (charIndex == m.charIndex);
+			return (line == m.line) && (position == m.position);
 		}
 		else
 		{
 			return false;
 		}
+	}
+
+	
+	public int compareTo(Marker m)
+	{
+		int d = line - m.line;
+		if(d == 0)
+		{
+			return getPosition() - m.getPosition();
+		}
+		return d;
+	}
+	
+	
+	public void reset(int line, int pos)
+	{
+		this.line = line;
+		this.position = pos;
+	}
+	
+
+	/** returns the line index */
+	public int getLine()
+	{
+		return line;
+	}
+	
+	
+	public String toString()
+	{
+		SB sb = new SB(16);
+		sb.a(line);
+		sb.a(':');
+		sb.a(getPosition());
+		return sb.toString();
 	}
 
 
@@ -146,8 +105,7 @@ public class Marker
 		}
 		else if(line == m.line)
 		{
-			// TODO or use insertion index?
-			if(charIndex < m.charIndex)
+			if(position < m.position)
 			{
 				return true;
 			}
@@ -204,23 +162,15 @@ public class Marker
 	}
 	
 	
-	public void moveCharIndex(int delta)
+	public void movePosition(int delta)
 	{
 		// TODO validate
-		charIndex += delta;
+		position += delta;
 	}
 	
 	
 	public int getPosition()
 	{
-		// TODO perhaps I should use position only in the marker
-		if(leading)
-		{
-			return charIndex;
-		}
-		else
-		{
-			return charIndex + 1;
-		}
+		return position;
 	}
 }

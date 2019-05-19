@@ -12,6 +12,7 @@ import goryachev.fx.FxObject;
 import goryachev.fx.KeyMap;
 import goryachev.fx.XScrollBar;
 import goryachev.fxtexteditor.internal.Markers;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -67,7 +68,6 @@ public class FxTextEditor
 	
 	public FxTextEditor()
 	{
-		// TODO model
 		modelListener = new FxTextEditorModelListener()
 		{
 			public void eventAllLinesChanged()
@@ -190,28 +190,21 @@ public class FxTextEditor
 	}
 	
 	
-//	public ReadOnlyObjectProperty<EditorSelection> selectionProperty()
-//	{
-//		return selector.selectionProperty();
-//	}
-//	
-//	
-//	public EditorSelection getSelection()
-//	{
-//		return selector.getSelection();
-//	}
+	public ReadOnlyObjectProperty<EditorSelection> selectionProperty()
+	{
+		return selector.selectionProperty();
+	}
 	
 	
-	// TODO use selector for this
-//	protected void setSelection(EditorSelection es)
-//	{
-//		selectionProperty.set(es);
-//	}
+	public EditorSelection getSelection()
+	{
+		return selector.getSelection();
+	}
 	
 	
 	public void clearSelection()
 	{
-//		selector.clear();
+		selector.clear();
 	}
 
 	
@@ -240,7 +233,7 @@ public class FxTextEditor
 //			m.loadStatus.addListener(loadStatusListener);
 		}
 		
-//		selector.clear();
+		selector.clear();
 		vflow.repaint();
 		
 		handleAllLinesChanged();
@@ -438,9 +431,9 @@ public class FxTextEditor
 	}
 	
 	
-	public Marker newMarker(int lineNumber, int charIndex, boolean leading)
+	public Marker newMarker(int lineNumber, int position)
 	{
-		return markers.newMarker(lineNumber, charIndex, leading);
+		return markers.newMarker(lineNumber, position);
 	}
 	
 	
@@ -572,12 +565,13 @@ public class FxTextEditor
 
 
 	/** returns selected plain text, concatenating multiple selection segments if necessary */
-//	public String getSelectedText() throws Exception
-//	{
-//		StringWriter wr = new StringWriter();
+	public String getSelectedText() throws Exception
+	{
+		StringWriter wr = new StringWriter();
+		// TODO
 //		getModel().getPlainText(getSelection(), wr);
-//		return wr.toString();
-//	}
+		return wr.toString();
+	}
 	
 	
 	/** 
@@ -664,8 +658,8 @@ public class FxTextEditor
 			--ix;
 			
 			String s = getModel().getPlainText(ix);
-			Marker beg = markers.newMarker(0, 0, true);
-			Marker end = markers.newMarker(ix, Math.max(0, s.length() - 1), false);
+			Marker beg = markers.newMarker(0, 0);
+			Marker end = markers.newMarker(ix, Math.max(0, s.length()));
 			
 			selector.setSelection(beg, end);
 			selector.commitSelection();
@@ -825,23 +819,22 @@ public class FxTextEditor
 	}
 	
 	
-	public void setCaret(int row, int charIndex)
+	public void setCaret(int row, int position)
 	{
-//		Marker m = newMarker(row, charIndex, true);
-//		select(m, m);
+		Marker m = newMarker(row, position);
+		select(m, m);
 	}
 
 
 	public void selectLine(Marker m)
-	
 	{
 		if(m != null)
 		{
 			int line = m.getLine();
-			Marker start = markers.newMarker(line, 0, true);
+			Marker start = markers.newMarker(line, 0);
 			
 			int len = getModel().getCellCount(line);
-			Marker end = markers.newMarker(line, len, false);
+			Marker end = markers.newMarker(line, len);
 			
 			selector.setSelection(start, end);
 		}

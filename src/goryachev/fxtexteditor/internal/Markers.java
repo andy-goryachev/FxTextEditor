@@ -19,9 +19,9 @@ public class Markers
 	}
 
 
-	public Marker newMarker(int lineNumber, int charIndex, boolean leading)
+	public Marker newMarker(int lineNumber, int position)
 	{
-		Marker m = new Marker(this, lineNumber, charIndex, leading);
+		Marker m = new Marker(this, lineNumber, position);
 		markers.add(m);
 		
 		if(markers.size() > 1_000_000)
@@ -66,7 +66,7 @@ public class Markers
 					{
 						// marker on the end line 
 						int charDelta = endCharsInserted - (endPos - startPos);
-						m.moveCharIndex(charDelta);
+						m.movePosition(charDelta);
 					}
 
 					int lineDelta = linesInserted - (endLine - startLine);
@@ -75,7 +75,7 @@ public class Markers
 				else
 				{
 					// reset to start
-					m.reset(startLine, startPos, true);
+					m.reset(startLine, startPos);
 				}
 			}
 		}
