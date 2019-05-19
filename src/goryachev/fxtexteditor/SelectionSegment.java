@@ -145,6 +145,20 @@ public class SelectionSegment
 		return false;
 	}
 	
+	
+	public boolean contains(int line, int pos)
+	{
+		if(min.isAfter(line, pos))
+		{
+			return false;
+		}
+		else if(max.isBefore(line, pos))
+		{
+			return false;
+		}
+		return true;
+	}
+	
 
 	public boolean isEmpty()
 	{
@@ -197,5 +211,18 @@ public class SelectionSegment
 	public boolean overlaps(SelectionSegment s)
 	{
 		return contains(s.getMin()) || contains(s.getMax());
+	}
+
+
+	public boolean isCaretLine(int line)
+	{
+		if(caretAtMin)
+		{
+			return min.getLine() == line;
+		}
+		else
+		{
+			return max.getLine() == line;
+		}
 	}
 }

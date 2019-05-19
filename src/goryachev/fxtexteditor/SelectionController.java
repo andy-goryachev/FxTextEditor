@@ -43,7 +43,7 @@ public class SelectionController
 	
 	
 	/** returns true if marker is inside of any selection segment */
-	public boolean isInsideOfSelection(Marker pos)
+	public boolean isSelected(Marker pos)
 	{
 		for(SelectionSegment s: segments)
 		{
@@ -55,6 +55,32 @@ public class SelectionController
 		return false;
 	}
 	
+
+	public boolean isSelected(int line, int pos)
+	{
+		for(SelectionSegment s: segments)
+		{
+			if(s.contains(line, pos))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	public boolean isCaretLine(int line)
+	{
+		for(SelectionSegment s: segments)
+		{
+			if(s.isCaretLine(line))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	
 	public void setSelection(Marker anchor, Marker caret)
 	{

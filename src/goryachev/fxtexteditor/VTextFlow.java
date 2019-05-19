@@ -8,6 +8,7 @@ import goryachev.fx.FX;
 import goryachev.fxtexteditor.internal.Markers;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.ListChangeListener;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -48,6 +49,7 @@ public class VTextFlow
 	private int topLine;
 	private int topOffset;
 	private FxTextEditorLayout layout;
+	private boolean repaintRequested;
 	
 	
 	public VTextFlow(FxTextEditor ed)
@@ -163,6 +165,42 @@ public class VTextFlow
 	}
 	
 	
+	protected Color getBackgroundColor(TCell cell, int x, int y)
+	{
+		Color c = backgroundColor;
+		if(editor.isCaretLine(topLine + y))
+		{
+			c = mixColor(c, editor.getCaretLineColor());
+		}
+		if(editor.isSelectedCell(topLine + y, x + layout.getLineOffset(y)))
+		{
+			c = mixColor(c, editor.getSelectionBackgroundColor());
+		}
+		c = mixColor(c, cell.getBackgroundColor());
+		return c;
+	}
+	
+	
+	protected Color mixColor(Color base, Color added)
+	{
+		if(base == null)
+		{
+			return added;
+		}
+		else if(added == null)
+		{
+			return base;
+		}
+		
+		if(added.isOpaque())
+		{
+			return added;
+		}
+		
+		return FX.mix(base, added, 0.5);
+	}
+	
+	
 	public void setTextColor(Color c)
 	{
 		textColor = c;
@@ -228,7 +266,7 @@ public class VTextFlow
 		gx.setFill(getBackgroundColor());
 		gx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		
-		repaint();
+		draw();
 	}
 	
 	
@@ -367,12 +405,6 @@ public class VTextFlow
 	}
 
 
-	public void updateCaretAndSelection()
-	{
-		D.list(editor.selector.segments); // FIX
-	}
-
-
 	public Marker getTextPos(double screenx, double screeny, Markers markers)
 	{
 		Point2D p = canvas.screenToLocal(screenx, screeny);
@@ -386,11 +418,28 @@ public class VTextFlow
 	}
 	
 	
-	// TODO in invoke later to coalesce multilpe repaints?
+	public void repaintSegment(ListChangeListener.Change<? extends SelectionSegment> ch)
+	{
+		D.print(ch); // FIX
+		repaint();
+	}
+	
+
+	/** requests a repaint.  the actual drawing happens in runLater() */
 	public void repaint()
 	{
-		D.print(getVisibleRowCount()); // FIX 
-
+		if(!repaintRequested)
+		{
+			repaintRequested = true;
+			FX.later(this::draw);
+		}
+	}
+	
+	
+	protected void draw()
+	{
+		repaintRequested = false;
+		
 		if((colCount == 0) || (rowCount == 0))
 		{
 			return;
@@ -461,16 +510,8 @@ public class VTextFlow
 		double px = x * m.cellWidth;
 		double py = y * m.cellHeight;
 		
-		// TODO line bg
-		// TODO selection bg
-		// TODO highlight bg
-	
 		// background
-		Color bg = cell.getBackgroundColor();
-		if(bg == null)
-		{
-			bg = backgroundColor;
-		}
+		Color bg = getBackgroundColor(cell, x, y); 
 		gx.setFill(bg);
 		gx.fillRect(px, py, m.cellWidth, m.cellHeight);
 		

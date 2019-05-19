@@ -16,12 +16,12 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.collections.ListChangeListener;
 import javafx.event.EventType;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -34,6 +34,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
@@ -105,7 +106,13 @@ public class FxTextEditor
 		
 		getChildren().addAll(vflow, vscroll, hscroll);
 		
-		selector.segments.addListener((Observable src) -> vflow.updateCaretAndSelection());
+		selector.segments.addListener(new ListChangeListener<SelectionSegment>()
+		{
+			public void onChanged(Change<? extends SelectionSegment> ch)
+			{
+				vflow.repaintSegment(ch);
+			}
+		});
 		
 //		Binder.onChange(vflow::updateBlinkRate, true, blinkRateProperty());
 		Binder.onChange(this::updateLayout, widthProperty(), heightProperty(), showLineNumbersProperty);
@@ -868,5 +875,31 @@ public class FxTextEditor
 	public void repaint()
 	{
 		vflow.repaint();
+	}
+	
+	
+	public Color getCaretLineColor()
+	{
+		// TODO property
+		return FX.rgb(128, 255, 128, 0.1);
+	}
+	
+	
+	public Color getSelectionBackgroundColor()
+	{
+		// TODO property
+		return FX.rgb(255, 255, 128, 0.7);
+	}
+	
+	
+	public boolean isCaretLine(int line)
+	{
+		return selector.isCaretLine(line);
+	}
+
+
+	public boolean isSelectedCell(int line, int pos)
+	{
+		return selector.isSelected(line, pos);
 	}
 }

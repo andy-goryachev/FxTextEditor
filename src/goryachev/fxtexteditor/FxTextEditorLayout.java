@@ -34,6 +34,16 @@ public class FxTextEditorLayout
 		}
 		return null;
 	}
+	
+	
+	public int getLineOffset(int y)
+	{
+		if(y < offsets.length)
+		{
+			return offsets[y];
+		}
+		return 0;
+	}
 
 
 	public int getMaxColumnCount()
