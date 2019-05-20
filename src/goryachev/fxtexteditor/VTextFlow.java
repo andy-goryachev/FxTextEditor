@@ -165,7 +165,7 @@ public class VTextFlow
 	}
 	
 	
-	protected Color getBackgroundColor(TCell cell, int x, int y)
+	protected Color backgroundColor(TCell cell, int x, int y)
 	{
 		Color c = backgroundColor;
 		if(editor.isCaretLine(topLine + y))
@@ -176,7 +176,10 @@ public class VTextFlow
 		{
 			c = mixColor(c, editor.getSelectionBackgroundColor());
 		}
-		c = mixColor(c, cell.getBackgroundColor());
+		if(cell != null)
+		{
+			c = mixColor(c, cell.getBackgroundColor());
+		}
 		return c;
 	}
 	
@@ -197,6 +200,7 @@ public class VTextFlow
 			return added;
 		}
 		
+		// FIX this method mixes incorrectly 
 		return FX.mix(base, added, 0.5);
 	}
 	
@@ -498,7 +502,7 @@ public class VTextFlow
 		double py = y * m.cellHeight;
 		
 		// TODO selection color, line color
-		Color bg = backgroundColor;
+		Color bg = backgroundColor(null, x, y);
 		gx.setFill(bg);
 		gx.fillRect(px, py,canvas.getWidth() - px, m.cellHeight);
 	}
@@ -511,7 +515,7 @@ public class VTextFlow
 		double py = y * m.cellHeight;
 		
 		// background
-		Color bg = getBackgroundColor(cell, x, y); 
+		Color bg = backgroundColor(cell, x, y); 
 		gx.setFill(bg);
 		gx.fillRect(px, py, m.cellWidth, m.cellHeight);
 		

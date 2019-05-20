@@ -881,7 +881,7 @@ public class FxTextEditor
 	public Color getCaretLineColor()
 	{
 		// TODO property
-		return FX.rgb(128, 255, 128, 0.1);
+		return FX.rgb(200, 255, 200, 0.05);
 	}
 	
 	
