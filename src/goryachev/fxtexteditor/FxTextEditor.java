@@ -683,10 +683,9 @@ public class FxTextEditor
 	
 	protected void setSuppressBlink(boolean on)
 	{
-		// TODO
-//		vflow.setSuppressBlink(on);
+		vflow.setSuppressBlink(on);
 	}
-
+	
 
 //	public void scrollToVisible(int row)
 //	{
@@ -889,17 +888,5 @@ public class FxTextEditor
 	{
 		// TODO property
 		return FX.rgb(255, 255, 128, 0.7);
-	}
-	
-	
-	public boolean isCaretLine(int line)
-	{
-		return selector.isCaretLine(line);
-	}
-
-
-	public boolean isSelectedCell(int line, int pos)
-	{
-		return selector.isSelected(line, pos);
 	}
 }

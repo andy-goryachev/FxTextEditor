@@ -5,9 +5,12 @@ import goryachev.common.util.D;
 import goryachev.fx.CPane;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
+import goryachev.fx.FxBoolean;
 import goryachev.fxtexteditor.internal.Markers;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.BooleanExpression;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
@@ -31,14 +34,17 @@ public class VTextFlow
 {
 	public static final CssStyle PANE = new CssStyle("FxTermView_PANE");
 	protected final FxTextEditor editor;
+	protected final FxBoolean caretVisible = new FxBoolean(true);
+	protected final FxBoolean suppressBlink = new FxBoolean(false);
+	protected final BooleanExpression paintCaret;
+	private Timeline cursorAnimation;
+	private boolean cursorEnabled = true;
+	private boolean cursorOn = true;
 	private Font font;
 	private Font boldFont;
 	private Font boldItalicFont;
 	private Font italicFont;
 	private Canvas canvas;
-	private Timeline cursorAnimation;
-	private boolean cursorEnabled = true;
-	private boolean cursorOn = true;
 	private GraphicsContext gx;
 	private int colCount;
 	private int rowCount;
@@ -46,6 +52,7 @@ public class VTextFlow
 	protected final Text proto = new Text();
 	private Color backgroundColor = Color.WHITE;
 	private Color textColor = Color.BLACK;
+	private Color caretColor = Color.BLACK;
 	private int topLine;
 	private int topOffset;
 	private FxTextEditorLayout layout;
@@ -69,6 +76,19 @@ public class VTextFlow
 		FX.listen(this::handleSizeChange, heightProperty());
 		
 		// TODO clip rect
+		
+		paintCaret = new BooleanBinding()
+		{
+			{
+				bind(caretVisible, editor.displayCaretProperty, editor.focusedProperty(), editor.disabledProperty(), suppressBlink);
+			}
+
+			protected boolean computeValue()
+			{
+				return (isCaretVisible() || suppressBlink.get()) && editor.isDisplayCaret() && editor.isFocused() && (!editor.isDisabled());
+			}
+		};
+		paintCaret.addListener((s,p,c) -> refreshCursor());
 	}
 	
 	
@@ -120,6 +140,47 @@ public class VTextFlow
 	}
 	
 	
+	public void setSuppressBlink(boolean on)
+	{
+		suppressBlink.set(on);
+		
+		if(!on)
+		{
+			// restart animation cycle
+			updateBlinkRate();
+		}
+	}
+	
+	
+	public void updateBlinkRate()
+	{
+		Duration d = editor.getBlinkRate();
+		Duration period = d.multiply(2);
+		
+		cursorAnimation.stop();
+		cursorAnimation.getKeyFrames().setAll
+		(
+			new KeyFrame(Duration.ZERO, (ev) -> setCaretVisible(true)),
+			new KeyFrame(d, (ev) -> setCaretVisible(false)),
+			new KeyFrame(period)
+		);
+		cursorAnimation.play();
+	}
+	
+	
+	/** used for blinking animation */
+	protected void setCaretVisible(boolean on)
+	{
+		caretVisible.set(on);
+	}
+	
+	
+	public boolean isCaretVisible()
+	{
+		return caretVisible.get();
+	}
+	
+	
 	public void setFont(Font f)
 	{
 		if(f == null)
@@ -168,14 +229,20 @@ public class VTextFlow
 	protected Color backgroundColor(TCell cell, int x, int y)
 	{
 		Color c = backgroundColor;
-		if(editor.isCaretLine(topLine + y))
+		
+		if(editor.isHighlightCaretLine())
 		{
-			c = mixColor(c, editor.getCaretLineColor());
+			if(editor.selector.isCaretLine(topLine + y))
+			{
+				c = mixColor(c, editor.getCaretLineColor());
+			}
 		}
-		if(editor.isSelectedCell(topLine + y, x + layout.getLineOffset(y)))
+		
+		if(editor.selector.isSelected(topLine + y, x + layout.getLineOffset(y)))
 		{
 			c = mixColor(c, editor.getSelectionBackgroundColor());
 		}
+		
 		if(cell != null)
 		{
 			c = mixColor(c, cell.getBackgroundColor());
@@ -256,7 +323,7 @@ public class VTextFlow
 	protected void refreshCursor()
 	{
 		// TODO
-//		refreshLine(curx, 1, cury);
+		repaint();
 	}
 	
 	
@@ -526,6 +593,15 @@ public class VTextFlow
 		}
 		
 		// TODO caret
+		if(paintCaret.get())
+		{
+			if(editor.selector.isCaret(topLine + y, x + layout.getLineOffset(y)))
+			{
+				// TODO insert mode
+				gx.setFill(caretColor);
+				gx.fillRect(px, py, 2, m.cellHeight);
+			}
+		}
 		
 		// text
 		String text = cell.getText();

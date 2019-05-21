@@ -80,6 +80,19 @@ public class SelectionController
 		}
 		return false;
 	}
+	
+	
+	public boolean isCaret(int line, int pos)
+	{
+		for(SelectionSegment s: segments)
+		{
+			if(s.isCaret(line, pos))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
 	
 	public void setSelection(Marker anchor, Marker caret)

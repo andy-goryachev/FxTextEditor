@@ -216,13 +216,21 @@ public class SelectionSegment
 
 	public boolean isCaretLine(int line)
 	{
-		if(caretAtMin)
+		Marker m = getCaret();
+		return m.getLine() == line;
+	}
+	
+	
+	public boolean isCaret(int line, int pos)
+	{
+		Marker m = getCaret();
+		if(m.getLine() == line)
 		{
-			return min.getLine() == line;
+			if(m.getPosition() == pos)
+			{
+				return true;
+			}
 		}
-		else
-		{
-			return max.getLine() == line;
-		}
+		return false;
 	}
 }
