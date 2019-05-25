@@ -138,6 +138,23 @@ public class Marker
 	}
 	
 	
+	public boolean isAtOrBefore(int line, int pos)
+	{
+		if(this.line < line)
+		{
+			return true;
+		}
+		else if(this.line == line)
+		{
+			if(getPosition() <= pos)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
 	public boolean isAfter(int line, int pos)
 	{
 		if(this.line > line)
@@ -147,6 +164,24 @@ public class Marker
 		else if(this.line == line)
 		{
 			if(getPosition() > pos)
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	
+	public boolean isAtOrAfter(int line, int pos)
+	{
+		if(this.line > line)
+		{
+			return true;
+		}
+		else if(this.line == line)
+		{
+			if(getPosition() >= pos)
 			{
 				return true;
 			}

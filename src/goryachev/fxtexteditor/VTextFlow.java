@@ -247,6 +247,7 @@ public class VTextFlow
 		{
 			c = mixColor(c, cell.getBackgroundColor());
 		}
+		
 		return c;
 	}
 	
@@ -267,7 +268,6 @@ public class VTextFlow
 			return added;
 		}
 		
-		// FIX this method mixes incorrectly 
 		return FX.mix(base, added, 0.5);
 	}
 	
@@ -491,7 +491,7 @@ public class VTextFlow
 	
 	public void repaintSegment(ListChangeListener.Change<? extends SelectionSegment> ch)
 	{
-		D.print(ch); // FIX
+		// TODO repaint only the damaged area
 		repaint();
 	}
 	
@@ -572,6 +572,17 @@ public class VTextFlow
 		Color bg = backgroundColor(null, x, y);
 		gx.setFill(bg);
 		gx.fillRect(px, py,canvas.getWidth() - px, m.cellHeight);
+		
+		// caret
+		if(paintCaret.get())
+		{
+			if(editor.selector.isCaret(topLine + y, x + layout.getLineOffset(y)))
+			{
+				// TODO insert mode
+				gx.setFill(caretColor);
+				gx.fillRect(px, py, 2, m.cellHeight);
+			}
+		}
 	}
 	
 	
@@ -592,7 +603,7 @@ public class VTextFlow
 			fg = textColor;
 		}
 		
-		// TODO caret
+		// caret
 		if(paintCaret.get())
 		{
 			if(editor.selector.isCaret(topLine + y, x + layout.getLineOffset(y)))

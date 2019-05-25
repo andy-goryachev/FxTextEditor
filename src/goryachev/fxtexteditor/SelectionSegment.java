@@ -152,7 +152,7 @@ public class SelectionSegment
 		{
 			return false;
 		}
-		else if(max.isBefore(line, pos))
+		else if(max.isAtOrBefore(line, pos))
 		{
 			return false;
 		}

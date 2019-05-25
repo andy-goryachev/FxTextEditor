@@ -16,6 +16,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
@@ -113,6 +114,8 @@ public class FxTextEditor
 				vflow.repaintSegment(ch);
 			}
 		});
+		// TODO debug
+		selector.segments.addListener((Observable s) -> D.print(selector.segments));
 		
 //		Binder.onChange(vflow::updateBlinkRate, true, blinkRateProperty());
 		Binder.onChange(this::updateLayout, widthProperty(), heightProperty(), showLineNumbersProperty);
