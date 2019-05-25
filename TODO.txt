@@ -1,0 +1,5 @@
+TODO
+
+- sub-cell horizontal scrolling
+- sub-cell vertical scrolling
+- repaint damaged areas only

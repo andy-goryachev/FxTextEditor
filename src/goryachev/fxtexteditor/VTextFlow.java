@@ -136,7 +136,7 @@ public class VTextFlow
 	
 	public int getMaxColumnCount()
 	{
-		return layout.getMaxColumnCount();
+		return getLayout().getMaxColumnCount();
 	}
 	
 	
@@ -183,11 +183,6 @@ public class VTextFlow
 	
 	public void setFont(Font f)
 	{
-		if(f == null)
-		{
-			throw new NullPointerException("font");
-		}
-		
 		this.font = f;
 		updateFonts();
 		metrics = null;
@@ -484,6 +479,16 @@ public class VTextFlow
 	}
 	
 	
+	protected FxTextEditorLayout getLayout()
+	{
+		if(layout == null)
+		{
+			layout = createLayout();
+		}
+		return layout;
+	}
+	
+	
 	public void repaintSegment(ListChangeListener.Change<? extends SelectionSegment> ch)
 	{
 		// TODO repaint only the damaged area
@@ -516,11 +521,6 @@ public class VTextFlow
 			return;
 		}
 		
-		if(layout == null)
-		{
-			layout = createLayout();
-		}
-		
 		boolean wrap = editor.isWrapLines();
 		int x = 0;
 		int y = 0;
@@ -528,7 +528,7 @@ public class VTextFlow
 		
 		for(;;)
 		{
-			TCell c = layout.getCell(x, y);
+			TCell c = getLayout().getCell(x, y);
 			if(c == null)
 			{
 				clearToEndOfLine(x, y);

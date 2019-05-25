@@ -8,6 +8,7 @@ import goryachev.fx.FX;
 import goryachev.fx.FxTask;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.FxTextEditorModel;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 
@@ -30,6 +31,7 @@ public class MainPane
 		editor.setBlinkRate(Duration.millis(600));
 		editor.setMultipleSelectionEnabled(true);
 		editor.setWrapLines(false);
+//		editor.setFont(Font.font("Monospace", 18));
 		
 		setCenter(editor);
 		
