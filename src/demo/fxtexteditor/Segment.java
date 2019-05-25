@@ -9,14 +9,16 @@ import javafx.scene.paint.Color;
 public class Segment
 {
 	public final String text;
-	public final Color color;
+	public final Color textColor;
+	public final Color backgroundColor;
 	public final boolean bold;
 	
 	
-	public Segment(Color color, String text, boolean bold)
+	public Segment(Color textColor, Color bg, String text, boolean bold)
 	{
 		this.text = text;
-		this.color = color;
+		this.textColor = textColor;
+		this.backgroundColor = bg;
 		this.bold = bold;
 	}
 }

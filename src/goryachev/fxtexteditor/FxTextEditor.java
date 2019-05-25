@@ -883,13 +883,13 @@ public class FxTextEditor
 	public Color getCaretLineColor()
 	{
 		// TODO property
-		return FX.rgb(200, 255, 200, 0.05);
+		return FX.rgb(255, 200, 255);
 	}
 	
 	
 	public Color getSelectionBackgroundColor()
 	{
 		// TODO property
-		return FX.rgb(255, 255, 128, 0.7);
+		return FX.rgb(255, 255, 128);
 	}
 }

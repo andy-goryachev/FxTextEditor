@@ -67,9 +67,10 @@ public class SimpleTextEditorModel
 			SimpleTextCells tc = new SimpleTextCells();
 			for(Segment seg: new DemoSyntax(text).generateSegments())
 			{
-				tc.setTextColor(seg.color);
+				tc.setTextColor(seg.textColor);
+				tc.setBackground(seg.backgroundColor);
 				tc.setBold(seg.bold);
-				tc.addText(seg.text);				
+				tc.addText(seg.text);	
 			}
 			return tc;
 		}

@@ -749,7 +749,7 @@ public final class FX
 
 	private static double mix(double base, double over, double fraction)
 	{
-		double v = Math.pow(over, GAMMA) + Math.pow(base, GAMMA) * (1.0 - fraction);
+		double v = Math.pow(over, GAMMA) * fraction + Math.pow(base, GAMMA) * (1.0 - fraction);
 		v = Math.pow(v, ONE_OVER_GAMMA);
 		return clip(v);
 	}

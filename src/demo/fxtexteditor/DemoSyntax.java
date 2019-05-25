@@ -14,6 +14,7 @@ public class DemoSyntax
 	private final CList<Segment> segments = new CList();
 	private int start;
 	private Color color = Color.BLACK;
+	private Color bg = null;
 	private boolean bold;
 	
 	
@@ -37,6 +38,7 @@ public class DemoSyntax
 				{
 					addSegment(i);
 					color = Color.BLUE;
+					bg = Color.YELLOW;
 					i = ix;
 					
 					addSegment(i);
@@ -49,6 +51,7 @@ public class DemoSyntax
 			{
 				addSegment(i);
 				color = col;
+				bg = null;
 			}
 		}
 		
@@ -78,7 +81,7 @@ public class DemoSyntax
 		if(end > start)
 		{
 			String s = text.substring(start, end);
-			segments.add(new Segment(color, s, bold));
+			segments.add(new Segment(color, bg, s, bold));
 			start = end;
 			bold = false;
 		}

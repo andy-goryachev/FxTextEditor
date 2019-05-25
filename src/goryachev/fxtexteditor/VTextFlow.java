@@ -234,25 +234,25 @@ public class VTextFlow
 		{
 			if(editor.selector.isCaretLine(topLine + y))
 			{
-				c = mixColor(c, editor.getCaretLineColor());
+				c = mixColor(c, editor.getCaretLineColor(), 0.3);
 			}
 		}
 		
 		if(editor.selector.isSelected(topLine + y, x + layout.getLineOffset(y)))
 		{
-			c = mixColor(c, editor.getSelectionBackgroundColor());
+			c = mixColor(c, editor.getSelectionBackgroundColor(), 0.4);
 		}
 		
 		if(cell != null)
 		{
-			c = mixColor(c, cell.getBackgroundColor());
+			c = mixColor(c, cell.getBackgroundColor(), 0.8);
 		}
 		
 		return c;
 	}
 	
 	
-	protected Color mixColor(Color base, Color added)
+	protected Color mixColor(Color base, Color added, double fraction)
 	{
 		if(base == null)
 		{
@@ -263,12 +263,7 @@ public class VTextFlow
 			return base;
 		}
 		
-		if(added.isOpaque())
-		{
-			return added;
-		}
-		
-		return FX.mix(base, added, 0.5);
+		return FX.mix(base, added, fraction);
 	}
 	
 	
