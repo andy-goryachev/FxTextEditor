@@ -21,6 +21,8 @@ import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventType;
 import javafx.geometry.HPos;
@@ -28,6 +30,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
 import javafx.geometry.VPos;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.KeyCode;
@@ -64,6 +67,7 @@ public class FxTextEditor
 	protected final ScrollBar vscroll;
 	protected final ScrollBar hscroll;
 	protected boolean handleScrollEvents = true;
+	protected final ChangeListener<LoadStatus> loadStatusListener;
 	protected BiConsumer<FxTextEditor,Marker> wordSelector = new SimpleWordSelector();
 
 	
@@ -79,6 +83,14 @@ public class FxTextEditor
 			public void eventTextUpdated(int startLine, int startPos, int startCharsInserted, int linesInserted, int endLine, int endPos, int endCharsInserted)
 			{
 				handleTextUpdated(startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted);
+			}
+		};
+		
+		loadStatusListener = new ChangeListener<LoadStatus>()
+		{
+			public void changed(ObservableValue<? extends LoadStatus> observable, LoadStatus prev, LoadStatus cur)
+			{
+				updateLoadStatus(cur);
 			}
 		};
 		
@@ -230,7 +242,7 @@ public class FxTextEditor
 		if(old != null)
 		{
 			old.removeListener(modelListener);
-//			old.loadStatus.removeListener(loadStatusListener);
+			old.loadStatus().removeListener(loadStatusListener);
 		}
 		
 		modelProperty.set(m);
@@ -238,7 +250,7 @@ public class FxTextEditor
 		if(m != null)
 		{
 			m.addListener(modelListener);
-//			m.loadStatus.addListener(loadStatusListener);
+			m.loadStatus().addListener(loadStatusListener);
 		}
 		
 		selector.clear();
@@ -273,29 +285,29 @@ public class FxTextEditor
 	}
 	
 	
-//	protected void updateLoadStatus(LoadStatus s)
-//	{
-//		if(vscroll instanceof XScrollBar)
-//		{
-//			XScrollBar vs = (XScrollBar)vscroll;
-//			if(s.isValid())
-//			{
-//				vs.setPainer((canvas) ->
-//				{
-//					double w = canvas.getWidth();
-//					double h = canvas.getHeight();
-//					double y = s.getProgress() * h;
-//					GraphicsContext g = canvas.getGraphicsContext2D();
-//					g.setFill(Color.LIGHTGRAY);
-//					g.fillRect(0, y, w, h - y);
-//				});
-//			}
-//			else
-//			{
-//				vs.setPainer(null);
-//			}
-//		}
-//	}
+	protected void updateLoadStatus(LoadStatus s)
+	{
+		if(vscroll instanceof XScrollBar)
+		{
+			XScrollBar vs = (XScrollBar)vscroll;
+			if(s.isValid())
+			{
+				vs.setPainer((canvas) ->
+				{
+					double w = canvas.getWidth();
+					double h = canvas.getHeight();
+					double y = s.getProgress() * h;
+					GraphicsContext g = canvas.getGraphicsContext2D();
+					g.setFill(Color.LIGHTGRAY);
+					g.fillRect(0, y, w, h - y);
+				});
+			}
+			else
+			{
+				vs.setPainer(null);
+			}
+		}
+	}
 	
 	
 	protected void setAbsolutePositionVertical(double pos)

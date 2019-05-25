@@ -2,6 +2,7 @@
 package goryachev.fxtexteditor;
 import goryachev.common.util.CList;
 import goryachev.fx.FxBoolean;
+import goryachev.fx.FxObject;
 import javafx.beans.property.BooleanProperty;
 
 
@@ -45,6 +46,7 @@ public abstract class FxTextEditorModel
 	//
 	
 	protected final FxBoolean editableProperty = new FxBoolean(false);
+	protected final FxObject<LoadStatus> loadStatus = new FxObject(LoadStatus.UNKNOWN);
 	protected final CList<FxTextEditorModelListener> listeners = new CList<>();
 	
 	
@@ -52,6 +54,11 @@ public abstract class FxTextEditorModel
 	{
 	}
 	
+	
+	public FxObject<LoadStatus> loadStatus()
+	{
+		return loadStatus;
+	}
 	
 
 	public void addListener(FxTextEditorModelListener li)
