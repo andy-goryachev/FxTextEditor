@@ -9,14 +9,22 @@ public class FxTextEditorLayout
 {
 	protected final ITextCells[] cells;
 	protected final int[] offsets;
+	protected final int maxRows;
 	protected final int maxColumns;
 	
 	
-	public FxTextEditorLayout(ITextCells[] cells, int[] offsets, int maxColumns)
+	public FxTextEditorLayout(ITextCells[] cells, int[] offsets, int maxRows, int maxColumns)
 	{
 		this.cells = cells;
 		this.offsets = offsets;
+		this.maxRows = maxRows;
 		this.maxColumns = maxColumns;
+	}
+	
+	
+	public int getVisibleLineCount()
+	{
+		return maxRows;
 	}
 	
 	

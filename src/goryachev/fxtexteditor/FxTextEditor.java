@@ -529,9 +529,10 @@ public class FxTextEditor
 		D.print(startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted);
 		
 		// update markers
-//		markers.update(startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted);
-//		// update vflow
-//		vflow.update(startLine, linesInserted, endLine);
+		markers.update(startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted);
+		
+		// update vflow
+		vflow.update(startLine, linesInserted, endLine);
 	}
 
 	
@@ -708,15 +709,15 @@ public class FxTextEditor
 //			vflow.scrollToVisible(row);
 //		}
 //	}
-//	
-//	
-//	public void setOrigin(int row)
-//	{
-//		if((row >= 0) && (row < getLineCount()))
-//		{
-//			vflow.setOrigin(row, 0);
-//		}
-//	}
+	
+	
+	public void setOrigin(int row)
+	{
+		if((row >= 0) && (row < getLineCount()))
+		{
+			vflow.setOrigin(row, 0);
+		}
+	}
 	
 	
 	public void scrollToVisible(Point2D screenPoint)
@@ -901,5 +902,11 @@ public class FxTextEditor
 	{
 		// TODO property
 		return FX.rgb(255, 255, 128);
+	}
+	
+	
+	public void reloadVisibleArea()
+	{
+		vflow.repaint();
 	}
 }

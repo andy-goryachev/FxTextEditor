@@ -17,6 +17,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -119,6 +120,22 @@ public class VTextFlow
 	public void setTopOffset(int off)
 	{
 		topOffset = off;
+	}
+	
+	
+	public void setOrigin(int top, double offy)
+	{
+		topLine = top;
+		// FIX
+//		offsety = offy;
+		
+//		layoutChildren();
+		
+		// TODO
+//		updateVerticalScrollBar();
+		
+		invalidate();
+		repaint();
 	}
 	
 	
@@ -367,18 +384,23 @@ public class VTextFlow
 		ITextCells[] cells = new ITextCells[sz];
 		FxTextEditorModel m = editor.getModel();
 		
-		int ix = getTopLine();
+		int lineIndex = getTopLine();
 		int y = 0;
-		int max;
+		int maxColumns;
 		
 		if(editor.isWrapLines())
 		{
 			int colCount = getVisibleColumnCount();
-			max = colCount;
+			maxColumns = colCount;
 			
 			for(;;)
 			{
-				ITextCells tc = m.getTextCells(ix);
+				if(y >= sz)
+				{
+					break;
+				}
+
+				ITextCells tc = m.getTextCells(lineIndex);
 				if(tc == null)
 				{
 					break;
@@ -386,31 +408,40 @@ public class VTextFlow
 				
 				int len = tc.getCellCount();
 				int off = getTopOffset();
-				while(off < len)
+				
+				for(;;)
 				{
+					cells[y] = tc;
+					offsets[y] = off;
+					off += colCount;
+					y++;
+					
 					if(y >= sz)
 					{
 						break;
 					}
-					
-					cells[y] = tc;
-					offsets[y] = off;
-					
-					off += colCount;
-					y++;
+
+					if(off < len)
+					{
+						continue;
+					}
+					else
+					{
+						break;
+					}
 				}
 				
-				ix++;
+				lineIndex++;
 			}
 		}
 		else
 		{
 			int off = getTopOffset();
-			max = 0;
+			maxColumns = 0;
 
 			for(;;)
 			{
-				ITextCells tc = m.getTextCells(ix);
+				ITextCells tc = m.getTextCells(lineIndex);
 				if(tc == null)
 				{
 					break;
@@ -419,9 +450,9 @@ public class VTextFlow
 				cells[y] = tc;
 				offsets[y] = off;
 				int w = tc.getCellCount();
-				if(max < w)
+				if(maxColumns < w)
 				{
-					max = w;
+					maxColumns = w;
 				}
 					
 				y++;
@@ -431,11 +462,11 @@ public class VTextFlow
 					break;
 				}
 				
-				ix++;
+				lineIndex++;
 			}
 		}
 		
-		return new FxTextEditorLayout(cells, offsets, max);
+		return new FxTextEditorLayout(cells, offsets, rowCount, maxColumns);
 	}
 	
 	
@@ -486,6 +517,79 @@ public class VTextFlow
 			layout = createLayout();
 		}
 		return layout;
+	}
+	
+
+	/** returns true if update resulted in a visual change */
+	public boolean update(int startLine, int linesInserted, int endLine)
+	{
+		try
+		{
+			int max = Math.max(endLine, startLine + linesInserted);
+			if(max < topLine)
+			{
+				return false;
+			}
+			else if(startLine > (topLine + getVisibleLineCount()))
+			{
+				return false;
+			}
+			
+			// TODO optimize, but for now simply
+			invalidate();
+			requestLayout();
+			
+			return true;
+		}
+		finally
+		{
+			updateVerticalScrollBar();
+		}
+	}
+	
+	
+	protected void updateVerticalScrollBar()
+	{
+		editor.setHandleScrollEvents(false);
+		
+		int max;
+		int visible;
+		double val;
+		
+//		double v = (max == 0 ? 0.0 : topLine / (double)max); 
+//		editor.vscroll.setValue(v);
+		
+		FxTextEditorModel model = editor.getModel();
+		if(model == null)
+		{
+			visible = 1;
+			max = 1;
+			val = 0;
+		}
+		else
+		{
+			max = model.getLineCount();
+			visible = getVisibleLineCount();
+			val = topLine; //(max - visible);
+		}
+		
+		ScrollBar vscroll = editor.getVerticalScrollBar();
+		vscroll.setMin(0);
+        vscroll.setMax(max);
+        vscroll.setVisibleAmount(visible);
+        vscroll.setValue(val);
+        
+		editor.setHandleScrollEvents(true);
+	}
+	
+	
+	public int getVisibleLineCount()
+	{
+		if(layout == null)
+		{
+			return 0;
+		}
+		return layout.getVisibleLineCount();
 	}
 	
 	

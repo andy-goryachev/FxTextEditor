@@ -3,6 +3,7 @@ package goryachev.fxtexteditor;
 import goryachev.common.util.CList;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxObject;
+import java.util.function.Consumer;
 import javafx.beans.property.BooleanProperty;
 
 
@@ -88,5 +89,36 @@ public abstract class FxTextEditorModel
 	public BooleanProperty editableProperty()
 	{
 		return editableProperty;
+	}
+	
+	
+	public void fireAllChanged()
+	{
+		fireEvent((li) -> li.eventAllLinesChanged());
+	}
+	
+	
+	public void fireTextUpdated(int startLine, int startPos, int startCharsInserted, int linesInserted, int endLine, int endPos, int endCharsInserted)
+	{
+		fireEvent((li) -> li.eventTextUpdated(startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted));
+	}
+	
+	
+	protected void fireEvent(Consumer<FxTextEditorModelListener> f)
+	{
+		for(FxTextEditorModelListener li: listeners)
+		{
+			f.accept(li);
+		}
+	}
+	
+	
+	public void setLoadStatus(LoadStatus s)
+	{
+		if(s == null)
+		{
+			throw new NullPointerException("load status");
+		}
+		loadStatus.set(s);
 	}
 }
