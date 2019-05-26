@@ -8,6 +8,7 @@ import goryachev.fx.FX;
 import goryachev.fx.FxTask;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.FxTextEditorModel;
+import goryachev.fxtexteditor.SimplePlainTextEditorModel;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
@@ -42,14 +43,14 @@ public class MainPane
 		{
 			new FxTask<String>().
 				producer(() -> loadFile("million.txt")).
-				onSuccess((text) -> setModel(new PlainTextEditorModel(text))).
+				onSuccess((text) -> setModel(new SimplePlainTextEditorModel(text))).
 				submit();
 		}
 		else
 		{
 			new FxTask<String>().
 				producer(() -> loadFile("demo.txt")).
-				onSuccess((text) -> setModel(new SimpleTextEditorModel(text))).
+				onSuccess((text) -> setModel(new DemoTextEditorModel(text))).
 				submit();
 		}
 	}

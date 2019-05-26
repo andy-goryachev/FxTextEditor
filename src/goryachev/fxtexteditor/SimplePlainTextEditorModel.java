@@ -1,23 +1,18 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
-package demo.fxtexteditor;
+package goryachev.fxtexteditor;
 import goryachev.common.util.CKit;
-import goryachev.fxtexteditor.Edit;
-import goryachev.fxtexteditor.FxTextEditorModel;
-import goryachev.fxtexteditor.ITextCells;
-import goryachev.fxtexteditor.LoadInfo;
-import goryachev.fxtexteditor.SimpleTextCells;
 
 
 /**
- * Simple FxTextEditorModel.
+ * Simple Plain Text FxTextEditorModel.
  */
-public class SimpleTextEditorModel
+public class SimplePlainTextEditorModel
 	extends FxTextEditorModel
 {
 	protected final String[] lines;
 
 
-	public SimpleTextEditorModel(String text)
+	public SimplePlainTextEditorModel(String text)
 	{
 		lines = CKit.split(text, '\n');
 	}
@@ -63,16 +58,7 @@ public class SimpleTextEditorModel
 		if(line < getLineCount())
 		{
 			String text = getPlainText(line);
-			
-			SimpleTextCells tc = new SimpleTextCells();
-			for(Segment seg: new DemoSyntax(text).generateSegments())
-			{
-				tc.setTextColor(seg.textColor);
-				tc.setBackground(seg.backgroundColor);
-				tc.setBold(seg.bold);
-				tc.addText(seg.text);	
-			}
-			return tc;
+			return new PlainTextCells(text);
 		}
 		return null;
 	}
