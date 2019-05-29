@@ -66,7 +66,7 @@ public class FxTextEditorMouseHandler
 	}
 	
 	
-	protected Marker getTextPos(MouseEvent ev)
+	protected Marker getMarker(MouseEvent ev)
 	{
 		double x = ev.getScreenX();
 		double y = ev.getScreenY();
@@ -85,10 +85,10 @@ public class FxTextEditorMouseHandler
 		switch(clicks)
 		{
 		case 2:
-			editor.selectWord(getTextPos(ev));
+			editor.selectWord(getMarker(ev));
 			break;
 		case 3:
-			editor.selectLine(getTextPos(ev));
+			editor.selectLine(getMarker(ev));
 			ev.consume();
 			break;
 		}
@@ -104,7 +104,7 @@ public class FxTextEditorMouseHandler
 			return;
 		}
 
-		Marker pos = getTextPos(ev);
+		Marker pos = getMarker(ev);
 		editor.setSuppressBlink(true);
 		
 		if(ev.isShiftDown())
@@ -163,7 +163,7 @@ public class FxTextEditorMouseHandler
 			stopAutoScroll();
 		}
 		
-		Marker pos = getTextPos(ev);
+		Marker pos = getMarker(ev);
 		selector.extendLastSegment(pos);
 	}
 	

@@ -414,8 +414,6 @@ public class FxTextEditor
 	
 	protected void layoutChildren()
 	{
-		D.print("layoutChildren"); // FIX
-		
 		Insets m = getPadding();
 		double x0 = m.getLeft();
 		double y0 = m.getTop();
@@ -444,10 +442,11 @@ public class FxTextEditor
 	}
 	
 	
-	/** returns text position at the specified screen coordinates */
+	/** returns a new Marker at the specified screen coordinates */
 	public Marker getTextPos(double screenx, double screeny)
 	{
-		return vflow.getTextPos(screenx, screeny, markers);
+		TextPos pos = vflow.getTextPos(screenx, screeny);
+		return markers.newMarker(pos.getLine(), pos.getCaret());
 	}
 	
 	

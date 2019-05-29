@@ -7,38 +7,33 @@ import goryachev.fxtexteditor.internal.Markers;
 
 
 /**
- * Marker represents a position in the text model maintained 
- * in the presence of insertion and removals.
+ * Text position is represented by model line and insert position within the line.
+ * 
+ * Unlike Marker, the text position is a simple holder and does not move after an 
+ * insert or delete operation.
  */
-public class Marker
-	implements Comparable<Marker>
+public class TextPos
+	implements Comparable<TextPos>
 {
-	public static final Marker ZERO = new Marker();
-	private int line;
-	private int position;
+	private final int line;
+	private final int position;
+	private final int caret;
 	
 	
-	public Marker(Markers owner, int line, int pos)
+	public TextPos(int line, int pos, int caret)
 	{
-		Assert.notNull(owner, "owner");
-		
 		this.line = line;
 		this.position = pos;
-	}
-	
-	
-	private Marker()
-	{
-		this.line = 0;
-		this.position = 0;
+		this.caret = caret;
 	}
 	
 
 	public int hashCode()
 	{
-		int h = FH.hash(Marker.class);
+		int h = FH.hash(TextPos.class);
 		h = FH.hash(h, line);
-		return FH.hash(h, position);
+		h = FH.hash(h, position);
+		return FH.hash(h, caret);
 	}
 
 	
@@ -48,10 +43,13 @@ public class Marker
 		{
 			return true;
 		}
-		else if(x instanceof Marker)
+		else if(x instanceof TextPos)
 		{
-			Marker m = (Marker)x;
-			return (line == m.line) && (position == m.position);
+			TextPos m = (TextPos)x;
+			return
+				(line == m.line) && 
+				(position == m.position) &&
+				(caret == m.caret);
 		}
 		else
 		{
@@ -60,7 +58,7 @@ public class Marker
 	}
 
 	
-	public int compareTo(Marker m)
+	public int compareTo(TextPos m)
 	{
 		int d = line - m.line;
 		if(d == 0)
@@ -70,15 +68,7 @@ public class Marker
 		return d;
 	}
 	
-	
-	public void reset(int line, int pos)
-	{
-		this.line = line;
-		this.position = pos;
-	}
-	
 
-	/** returns the line index */
 	public int getLine()
 	{
 		return line;
@@ -88,6 +78,18 @@ public class Marker
 	public int getPosition()
 	{
 		return position;
+	}
+	
+	
+	public int getCaret()
+	{
+		return caret;
+	}
+	
+	
+	public boolean isValidCaret()
+	{
+		return (caret == position);
 	}
 	
 	
@@ -101,7 +103,7 @@ public class Marker
 	}
 
 
-	public boolean isBefore(Marker m)
+	public boolean isBefore(TextPos m)
 	{
 		if(line < m.line)
 		{
@@ -192,18 +194,5 @@ public class Marker
 		}
 		
 		return false;
-	}
-	
-	
-	public void moveLine(int delta)
-	{
-		line += delta;
-	}
-	
-	
-	public void movePosition(int delta)
-	{
-		// TODO validate
-		position += delta;
 	}
 }

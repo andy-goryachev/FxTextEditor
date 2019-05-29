@@ -1,12 +1,10 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.CKit;
-import goryachev.common.util.D;
 import goryachev.fx.CPane;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
-import goryachev.fxtexteditor.internal.Markers;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.BooleanBinding;
@@ -34,6 +32,9 @@ public class VTextFlow
 	extends CPane
 {
 	public static final CssStyle PANE = new CssStyle("FxTermView_PANE");
+	private static final double CARET_LINE_OPACITY = 0.3;
+	private static final double SELECTION_BACKGROUND_OPACITY = 0.4;
+	private static final double CELL_BACKGROUND_OPACITY = 0.8;
 	protected final FxTextEditor editor;
 	protected final FxBoolean caretVisible = new FxBoolean(true);
 	protected final FxBoolean suppressBlink = new FxBoolean(false);
@@ -56,7 +57,7 @@ public class VTextFlow
 	private Color caretColor = Color.BLACK;
 	private int topLine;
 	private int topOffset;
-	private FxTextEditorLayout layout;
+	private FxTextEditorLayout layout; // TODO reuse layout instance: invalidate(), reset()
 	private boolean repaintRequested;
 	
 	
@@ -238,26 +239,26 @@ public class VTextFlow
 	}
 	
 	
-	protected Color backgroundColor(TCell cell, int x, int y)
+	protected Color backgroundColor(TCell cell, TextPos pos)
 	{
 		Color c = backgroundColor;
 		
 		if(editor.isHighlightCaretLine())
 		{
-			if(editor.selector.isCaretLine(topLine + y))
+			if(editor.selector.isCaretLine(pos.getLine()))
 			{
-				c = mixColor(c, editor.getCaretLineColor(), 0.3);
+				c = mixColor(c, editor.getCaretLineColor(), CARET_LINE_OPACITY);
 			}
 		}
 		
-		if(editor.selector.isSelected(topLine + y, x + layout.getLineOffset(y)))
+		if(editor.selector.isSelected(pos.getLine(), pos.getPosition()))
 		{
-			c = mixColor(c, editor.getSelectionBackgroundColor(), 0.4);
+			c = mixColor(c, editor.getSelectionBackgroundColor(), SELECTION_BACKGROUND_OPACITY);
 		}
 		
 		if(cell != null)
 		{
-			c = mixColor(c, cell.getBackgroundColor(), 0.8);
+			c = mixColor(c, cell.getBackgroundColor(), CELL_BACKGROUND_OPACITY);
 		}
 		
 		return c;
@@ -366,7 +367,6 @@ public class VTextFlow
 		colCount = CKit.floor(w / tm.cellWidth);
 		rowCount = CKit.floor(h / tm.cellHeight);
 		
-		D.print(rowCount); // FIX
 		return new Canvas(w + 1, h + 1);
 	}
 	
@@ -380,6 +380,7 @@ public class VTextFlow
 	protected FxTextEditorLayout createLayout()
 	{
 		int sz = getVisibleRowCount() + 1;
+		int[] lines = new int[sz];
 		int[] offsets = new int[sz];
 		ITextCells[] cells = new ITextCells[sz];
 		FxTextEditorModel m = editor.getModel();
@@ -401,18 +402,24 @@ public class VTextFlow
 				}
 
 				ITextCells tc = m.getTextCells(lineIndex);
+				int len;
 				if(tc == null)
 				{
-					break;
+					len = 0;
+				}
+				else
+				{
+					len = tc.getCellCount();
 				}
 				
-				int len = tc.getCellCount();
 				int off = getTopOffset();
 				
 				for(;;)
 				{
 					cells[y] = tc;
+					lines[y] = lineIndex;
 					offsets[y] = off;
+					
 					off += colCount;
 					y++;
 					
@@ -448,6 +455,7 @@ public class VTextFlow
 				}
 				
 				cells[y] = tc;
+				lines[y] = lineIndex;
 				offsets[y] = off;
 				int w = tc.getCellCount();
 				if(maxColumns < w)
@@ -466,7 +474,7 @@ public class VTextFlow
 			}
 		}
 		
-		return new FxTextEditorLayout(cells, offsets, rowCount, maxColumns);
+		return new FxTextEditorLayout(cells, lines, offsets, rowCount, maxColumns);
 	}
 	
 	
@@ -497,16 +505,14 @@ public class VTextFlow
 	}
 
 
-	public Marker getTextPos(double screenx, double screeny, Markers markers)
+	public TextPos getTextPos(double screenx, double screeny)
 	{
 		Point2D p = canvas.screenToLocal(screenx, screeny);
 		TextMetrics m = textMetrics();
 		// TODO hor scrolling
 		int x = FX.round(p.getX() / m.cellWidth);
 		int y = FX.floor(p.getY() / m.cellHeight);
-		int pos = layout.getTextPos(x, y);
-		int line = topLine + y;
-		return markers.newMarker(line, pos);
+		return layout.getPosition(x, y);
 	}
 	
 	
@@ -666,16 +672,17 @@ public class VTextFlow
 		TextMetrics m = textMetrics();
 		double px = x * m.cellWidth;
 		double py = y * m.cellHeight;
-		
+		TextPos p = getLayout().getPosition(x, y);
+
 		// TODO selection color, line color
-		Color bg = backgroundColor(null, x, y);
+		Color bg = backgroundColor(null, p);
 		gx.setFill(bg);
-		gx.fillRect(px, py,canvas.getWidth() - px, m.cellHeight);
-		
+		gx.fillRect(px, py, canvas.getWidth() - px, m.cellHeight);
+
 		// caret
 		if(paintCaret.get())
 		{
-			if(editor.selector.isCaret(topLine + y, x + layout.getLineOffset(y)))
+			if(editor.selector.isCaret(p.getLine(), p.getPosition()))
 			{
 				// TODO insert mode
 				gx.setFill(caretColor);
@@ -684,18 +691,19 @@ public class VTextFlow
 		}
 	}
 	
-	
+
 	protected void paintCell(int x, int y, TCell cell)
-	{		
+	{
 		TextMetrics m = textMetrics();
 		double px = x * m.cellWidth;
 		double py = y * m.cellHeight;
-		
+		TextPos p = getLayout().getPosition(x, y);
+
 		// background
-		Color bg = backgroundColor(cell, x, y); 
+		Color bg = backgroundColor(cell, p);
 		gx.setFill(bg);
 		gx.fillRect(px, py, m.cellWidth, m.cellHeight);
-		
+
 		Color fg = cell.getTextColor();
 		if(fg == null)
 		{
@@ -705,11 +713,14 @@ public class VTextFlow
 		// caret
 		if(paintCaret.get())
 		{
-			if(editor.selector.isCaret(topLine + y, x + layout.getLineOffset(y)))
+			if(editor.selector.isCaret(p.getLine(), p.getPosition()))
 			{
-				// TODO insert mode
-				gx.setFill(caretColor);
-				gx.fillRect(px, py, 2, m.cellHeight);
+				if(p.isValidCaret())
+				{
+					// TODO insert mode
+					gx.setFill(caretColor);
+					gx.fillRect(px, py, 2, m.cellHeight);
+				}
 			}
 		}
 		

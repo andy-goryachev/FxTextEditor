@@ -1,3 +1,4 @@
 BUGS
 
-- wrapping mode on, select line, reduce window width: incorrect selection highlight, caret is lost 
+- click beyond last line
+- tabs!

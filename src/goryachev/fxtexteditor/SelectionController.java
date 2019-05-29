@@ -71,11 +71,14 @@ public class SelectionController
 	
 	public boolean isCaretLine(int line)
 	{
-		for(SelectionSegment s: segments)
+		if(line >= 0)
 		{
-			if(s.isCaretLine(line))
+			for(SelectionSegment s: segments)
 			{
-				return true;
+				if(s.isCaretLine(line))
+				{
+					return true;
+				}
 			}
 		}
 		return false;
