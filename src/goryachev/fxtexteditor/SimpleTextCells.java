@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
  * Text Cells.
  */
 public class SimpleTextCells
-	implements ITextCells
+	implements ITextLine
 {
 	protected final CList<TCell> cells = new CList();
 	private Color lineBackground;

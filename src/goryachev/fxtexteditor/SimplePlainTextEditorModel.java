@@ -53,7 +53,7 @@ public class SimplePlainTextEditorModel
 	}
 
 
-	public ITextCells getTextCells(int line)
+	public ITextLine getTextCells(int line)
 	{
 		if(line < getLineCount())
 		{

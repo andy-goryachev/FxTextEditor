@@ -3,7 +3,7 @@ package demo.fxtexteditor;
 import goryachev.common.util.CKit;
 import goryachev.fxtexteditor.Edit;
 import goryachev.fxtexteditor.FxTextEditorModel;
-import goryachev.fxtexteditor.ITextCells;
+import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.LoadInfo;
 import goryachev.fxtexteditor.SimpleTextCells;
 
@@ -58,7 +58,7 @@ public class DemoTextEditorModel
 	}
 
 
-	public ITextCells getTextCells(int line)
+	public ITextLine getTextCells(int line)
 	{
 		if(line < getLineCount())
 		{

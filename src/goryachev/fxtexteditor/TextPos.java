@@ -13,12 +13,16 @@ public class TextPos
 {
 	private final int line;
 	private final int offset;
+	private final boolean validCaretLine;
+	private final boolean validCaretOffset;
 	
 	
-	public TextPos(int line, int offset)
+	public TextPos(int line, int offset, boolean validCaretLine, boolean validCaretOffset)
 	{
 		this.line = line;
 		this.offset = offset;
+		this.validCaretLine = validCaretLine;
+		this.validCaretOffset = validCaretOffset;
 	}
 	
 
@@ -31,6 +35,18 @@ public class TextPos
 	public int getOffset()
 	{
 		return offset;
+	}
+	
+	
+	public boolean isValidCaretLine()
+	{
+		return validCaretLine;
+	}
+	
+	
+	public boolean isValidCaretOffset()
+	{
+		return validCaretOffset;
 	}
 	
 	

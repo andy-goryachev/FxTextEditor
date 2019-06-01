@@ -10,14 +10,14 @@ package goryachev.fxtexteditor;
  */
 public class FxTextEditorLayout
 {
-	protected final ITextCells[] cells;
+	protected final ITextLine[] cells;
 	protected final int[] lines;
 	protected final int[] offsets;
 	protected final int maxRows;
 	protected final int maxColumns;
 	
 	
-	public FxTextEditorLayout(ITextCells[] cells, int[] lines, int[] offsets, int maxRows, int maxColumns)
+	public FxTextEditorLayout(ITextLine[] cells, int[] lines, int[] offsets, int maxRows, int maxColumns)
 	{
 		this.cells = cells;
 		this.lines = lines;
@@ -33,13 +33,18 @@ public class FxTextEditorLayout
 	 */
 	public TextPos getInsertPosition(int x, int y)
 	{
+		// TODO horizontal scrolling?
 		int line;
 		int off;
-		ITextCells cell = cells[y];
+		boolean validCaretLine = true;
+		boolean validCaretOffset = true;
+		
+		ITextLine cell = cells[y];
 		if(cell == null)
 		{
 			line = lastLine();
 			off = 0;
+			validCaretLine = false; // FIX
 		}
 		else
 		{
@@ -48,9 +53,10 @@ public class FxTextEditorLayout
 			if(off > cell.getCellCount())
 			{
 				off = cell.getCellCount();
+				validCaretOffset = false;
 			}
 		}
-		return new TextPos(line, off);
+		return new TextPos(line, off, validCaretLine, validCaretOffset);
 	}
 	
 	
@@ -77,11 +83,11 @@ public class FxTextEditorLayout
 	{
 		if(y < cells.length)
 		{
-			ITextCells tc = cells[y];
+			ITextLine tc = cells[y];
 			if(tc != null)
 			{
 				int off = offsets[y];
-				int ix = x + off;
+				int ix = x + off; // TODO hor scroll, tabs
 				return tc.getCell(ix);
 			}
 		}

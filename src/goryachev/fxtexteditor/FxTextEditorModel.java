@@ -35,7 +35,7 @@ public abstract class FxTextEditorModel
 	/** 
 	 * returns an instance of ITextCells for the given line, or null if beyond the end of file.
 	 */
-	public abstract ITextCells getTextCells(int line);
+	public abstract ITextLine getTextCells(int line);
 	
 	/**
 	 * Applies modification to the model.  The model makes necessary changes to its internal state, 

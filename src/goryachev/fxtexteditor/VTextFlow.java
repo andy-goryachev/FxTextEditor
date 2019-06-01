@@ -249,13 +249,13 @@ public class VTextFlow
 		
 		if(editor.isHighlightCaretLine())
 		{
-			if(editor.selector.isCaretLine(pos.getLine())) // FIX
+			if(pos.isValidCaretLine() && editor.selector.isCaretLine(pos.getLine()))
 			{
 				c = mixColor(c, editor.getCaretLineColor(), CARET_LINE_OPACITY);
 			}
 		}
 		
-		if(editor.selector.isSelected(pos.getLine(), pos.getOffset())) // FIX
+		if(pos.isValidCaretOffset() && editor.selector.isSelected(pos.getLine(), pos.getOffset()))
 		{
 			c = mixColor(c, editor.getSelectionBackgroundColor(), SELECTION_BACKGROUND_OPACITY);
 		}
@@ -408,7 +408,7 @@ public class VTextFlow
 		int sz = getVisibleRowCount() + 1;
 		int[] lines = new int[sz];
 		int[] offsets = new int[sz];
-		ITextCells[] cells = new ITextCells[sz];
+		ITextLine[] cells = new ITextLine[sz];
 		FxTextEditorModel m = editor.getModel();
 		
 		int lineIndex = getTopLine();
@@ -427,7 +427,7 @@ public class VTextFlow
 					break;
 				}
 
-				ITextCells tc = m.getTextCells(lineIndex);
+				ITextLine tc = m.getTextCells(lineIndex);
 				int len;
 				if(tc == null)
 				{
@@ -474,7 +474,7 @@ public class VTextFlow
 
 			for(;;)
 			{
-				ITextCells tc = m.getTextCells(lineIndex);
+				ITextLine tc = m.getTextCells(lineIndex);
 				if(tc == null)
 				{
 					break;

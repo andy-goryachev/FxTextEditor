@@ -6,7 +6,7 @@ package goryachev.fxtexteditor;
  * Plain (no colors, no font attributes) ITextCells.
  */
 public class PlainTextCells
-	implements ITextCells
+	implements ITextLine
 {
 	protected final String text;
 	
