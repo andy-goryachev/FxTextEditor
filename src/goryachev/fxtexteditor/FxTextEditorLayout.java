@@ -27,32 +27,43 @@ public class FxTextEditorLayout
 	}
 	
 
-	public TextPos getPosition(int x, int y)
+	/** 
+	 * returns a non-null insert position in model coordinates (line,offset) corresponding to the specified cell location.
+	 * the actual location may be different due to end of line, end of file, or a tab.
+	 */
+	public TextPos getInsertPosition(int x, int y)
 	{
 		int line;
 		int off;
-		int caret;
 		ITextCells cell = cells[y];
 		if(cell == null)
 		{
-			line = -1;
-			off = -2;
-			caret = -3;
+			line = lastLine();
+			off = 0;
 		}
 		else
 		{
 			line = lines[y];
-			off = offsets[y] + x;
+			off = offsets[y] + x; // TODO tabs
 			if(off > cell.getCellCount())
 			{
-				caret = cell.getCellCount();
-			}
-			else
-			{
-				caret = off;
+				off = cell.getCellCount();
 			}
 		}
-		return new TextPos(line, off, caret);
+		return new TextPos(line, off);
+	}
+	
+	
+	protected int lastLine()
+	{
+		for(int i=cells.length-1; i>=0; i--)
+		{
+			if(cells[i] != null)
+			{
+				return lines[i] + 1; 
+			}
+		}
+		return -1;
 	}
 	
 	

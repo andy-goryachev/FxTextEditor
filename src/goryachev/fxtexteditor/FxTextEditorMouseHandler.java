@@ -70,7 +70,7 @@ public class FxTextEditorMouseHandler
 	{
 		double x = ev.getScreenX();
 		double y = ev.getScreenY();
-		return editor.getTextPos(x, y);
+		return editor.getInsertPosition(x, y);
 	}
 	
 	
@@ -212,7 +212,7 @@ public class FxTextEditorMouseHandler
 		// TODO this could be done on mouse released!
 		editor.scrollToVisible(p);
 		
-		Marker pos = editor.getTextPos(p.getX(), p.getY());
+		Marker pos = editor.getInsertPosition(p.getX(), p.getY());
 		selector.extendLastSegment(pos);
 	}
 }

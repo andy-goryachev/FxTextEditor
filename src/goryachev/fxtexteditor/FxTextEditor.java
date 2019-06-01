@@ -172,6 +172,12 @@ public class FxTextEditor
 	}
 	
 	
+	public FxObject<FxFormatter> lineNumberFormatterProperty()
+	{
+		return lineNumberFormatterProperty;
+	}
+	
+	
 	public FxFormatter getLineNumberFormatter()
 	{
 		FxFormatter f = lineNumberFormatterProperty.get();
@@ -443,10 +449,10 @@ public class FxTextEditor
 	
 	
 	/** returns a new Marker at the specified screen coordinates */
-	public Marker getTextPos(double screenx, double screeny)
+	public Marker getInsertPosition(double screenx, double screeny)
 	{
-		TextPos pos = vflow.getTextPos(screenx, screeny);
-		return markers.newMarker(pos.getLine(), pos.getCaret());
+		TextPos pos = vflow.getInsertPosition(screenx, screeny);
+		return markers.newMarker(pos.getLine(), pos.getOffset());
 	}
 	
 	

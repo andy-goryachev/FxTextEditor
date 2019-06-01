@@ -1,6 +1,7 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.CKit;
+import goryachev.fx.Binder;
 import goryachev.fx.CPane;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
@@ -46,6 +47,8 @@ public class VTextFlow
 	private Font boldFont;
 	private Font boldItalicFont;
 	private Font italicFont;
+	private Canvas lineNumberCanvas;
+	private GraphicsContext lineNumberGx;
 	private Canvas canvas;
 	private GraphicsContext gx;
 	private int colCount;
@@ -76,6 +79,7 @@ public class VTextFlow
 		
 		FX.listen(this::handleSizeChange, widthProperty());
 		FX.listen(this::handleSizeChange, heightProperty());
+		Binder.onChange(this::updateLineNumbers, ed.showLineNumbersProperty(), ed.lineNumberFormatterProperty());
 		
 		// TODO clip rect
 		
@@ -245,13 +249,13 @@ public class VTextFlow
 		
 		if(editor.isHighlightCaretLine())
 		{
-			if(editor.selector.isCaretLine(pos.getLine()))
+			if(editor.selector.isCaretLine(pos.getLine())) // FIX
 			{
 				c = mixColor(c, editor.getCaretLineColor(), CARET_LINE_OPACITY);
 			}
 		}
 		
-		if(editor.selector.isSelected(pos.getLine(), pos.getPosition()))
+		if(editor.selector.isSelected(pos.getLine(), pos.getOffset())) // FIX
 		{
 			c = mixColor(c, editor.getSelectionBackgroundColor(), SELECTION_BACKGROUND_OPACITY);
 		}
@@ -332,6 +336,28 @@ public class VTextFlow
 	{
 		// TODO
 		repaint();
+	}
+	
+	
+	protected void updateLineNumbers()
+	{
+		if(editor.isShowLineNumbers())
+		{
+			if(lineNumberCanvas != null)
+			{
+				// TODO check w,h,format
+			}
+			
+			// TODO create canvas, context
+		}
+		else
+		{
+			if(lineNumberCanvas != null)
+			{
+				setLeft(null);
+				lineNumberCanvas = null;
+			}
+		}
 	}
 	
 	
@@ -505,14 +531,14 @@ public class VTextFlow
 	}
 
 
-	public TextPos getTextPos(double screenx, double screeny)
+	public TextPos getInsertPosition(double screenx, double screeny)
 	{
 		Point2D p = canvas.screenToLocal(screenx, screeny);
 		TextMetrics m = textMetrics();
 		// TODO hor scrolling
 		int x = FX.round(p.getX() / m.cellWidth);
 		int y = FX.floor(p.getY() / m.cellHeight);
-		return layout.getPosition(x, y);
+		return layout.getInsertPosition(x, y);
 	}
 	
 	
@@ -672,7 +698,7 @@ public class VTextFlow
 		TextMetrics m = textMetrics();
 		double px = x * m.cellWidth;
 		double py = y * m.cellHeight;
-		TextPos p = getLayout().getPosition(x, y);
+		TextPos p = getLayout().getInsertPosition(x, y);
 
 		// TODO selection color, line color
 		Color bg = backgroundColor(null, p);
@@ -682,7 +708,7 @@ public class VTextFlow
 		// caret
 		if(paintCaret.get())
 		{
-			if(editor.selector.isCaret(p.getLine(), p.getPosition()))
+			if(editor.selector.isCaret(p.getLine(), p.getOffset()))
 			{
 				// TODO insert mode
 				gx.setFill(caretColor);
@@ -697,10 +723,10 @@ public class VTextFlow
 		TextMetrics m = textMetrics();
 		double px = x * m.cellWidth;
 		double py = y * m.cellHeight;
-		TextPos p = getLayout().getPosition(x, y);
+		TextPos pos = getLayout().getInsertPosition(x, y);
 
 		// background
-		Color bg = backgroundColor(cell, p);
+		Color bg = backgroundColor(cell, pos);
 		gx.setFill(bg);
 		gx.fillRect(px, py, m.cellWidth, m.cellHeight);
 
@@ -713,9 +739,10 @@ public class VTextFlow
 		// caret
 		if(paintCaret.get())
 		{
-			if(editor.selector.isCaret(p.getLine(), p.getPosition()))
+			if(editor.selector.isCaret(pos.getLine(), pos.getOffset()))
 			{
-				if(p.isValidCaret())
+				// FIX
+//				if(pos.isValidCaret())
 				{
 					// TODO insert mode
 					gx.setFill(caretColor);
