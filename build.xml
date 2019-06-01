@@ -5,14 +5,12 @@
 <project default="build-all" basedir=".">
 
 	<!-- project config -->
-	<property name="TARGET" value="FxTextEditor" />
-	<property name="MAIN_CLASS" value="demo.fxtexteditor.FxTextEditorApp"/>
+	<property name="TARGET" value="FxTextEditorDemoApp" />
+	<property name="MAIN_CLASS" value="demo.fxtexteditor.FxTextEditorDemoApp"/>
 	
 	<!-- libraries -->
 	<path id="libs">
-		<!--
-		<pathelement location="lib/bouncycastle/bcprov-jdk15on-157.jar" />
-		-->
+		<pathelement location="lib/icu4j/icu4j-64.2.jar" />
 	</path>
 
 
@@ -42,7 +40,6 @@
 			includeantruntime="false"
 		>
 			<compilerarg value="-Xlint:none"/>
-		
 			<classpath refid="libs" />
 		</javac>
 	</target>
