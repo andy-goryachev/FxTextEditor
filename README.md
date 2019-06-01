@@ -6,11 +6,10 @@
 ## Why ##
 
 Nearly all Java text editors, Swing and JavaFX alike, suffer from one deficiency: inability to work with large 
-data models, such as logs or query results.
+data models such as logs or query results.
 
-The goal of this project is to provide a professional FX text component that is capable of handling billions of 
-lines of text, works with very long lines, provides syntax highlighting, multiple carets and multiple selection, basic text attributes,
-embedded images and components, using monospaced font and rendering model.
+The goal of this project is to provide a professional FX text component capable of handling billions of 
+lines of text, works with very long lines, provides syntax highlighting, multiple carets and multiple selection segments, and supporting basic text attributes.  This is achieved using monospaced font and rendering model, unlike its sibling, [FxEditor](https://github.com/andy-goryachev/FxEditor).
 
 
 ## Features
@@ -19,6 +18,13 @@ embedded images and components, using monospaced font and rendering model.
 * efficiently handles very long lines
 * multiple selection and carets
 * supports syntax highlight
+* basic text attributes: bold, italic, underline, strikethrough
+* variable tab width
+
+
+## Warning
+
+This project is currently in the early development stage.  Do not even think of using it in production.
  
 
 ## License
