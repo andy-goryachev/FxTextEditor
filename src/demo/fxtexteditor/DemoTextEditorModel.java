@@ -58,7 +58,7 @@ public class DemoTextEditorModel
 	}
 
 
-	public ITextLine getTextCells(int line)
+	public ITextLine getTextLine(int line)
 	{
 		if(line < getLineCount())
 		{

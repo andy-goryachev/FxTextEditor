@@ -12,6 +12,7 @@ import goryachev.fx.FxObject;
 import goryachev.fx.KeyMap;
 import goryachev.fx.XScrollBar;
 import goryachev.fxtexteditor.internal.Markers;
+import goryachev.fxtexteditor.internal.TabPolicy;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.function.BiConsumer;
@@ -60,6 +61,7 @@ public class FxTextEditor
 	protected final FxBoolean highlightCaretLineProperty = new FxBoolean(true);
 	protected final ReadOnlyObjectWrapper<Duration> caretBlinkRateProperty = new ReadOnlyObjectWrapper(Duration.millis(500));
 	protected final FxObject<FxFormatter> lineNumberFormatterProperty = new FxObject<>();
+	protected final FxObject<ITabPolicy> tabPolicy = new FxObject(TabPolicy.get(4));
 	protected final FxTextEditorModelListener modelListener;
 	protected final SelectionController selector;
 	protected final Markers markers = new Markers(32);
@@ -913,5 +915,11 @@ public class FxTextEditor
 	public void reloadVisibleArea()
 	{
 		vflow.repaint();
+	}
+
+
+	public ITabPolicy getTabPolicy()
+	{
+		return tabPolicy.get();
 	}
 }
