@@ -7,6 +7,9 @@ import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
 import goryachev.fxtexteditor.internal.ScreenCell;
+import goryachev.fxtexteditor.internal.TextCells;
+import java.util.Locale;
+import com.ibm.icu.text.BreakIterator;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -64,6 +67,9 @@ public class VTextFlow
 	private int topLine;
 	private int topOffset;
 	private boolean repaintRequested;
+	private BreakIterator breakIterator;
+	protected final TextDecor decor = new TextDecor();
+	private boolean screenBufferValid;
 	
 	
 	public VTextFlow(FxTextEditor ed)
@@ -82,6 +88,7 @@ public class VTextFlow
 		FX.listen(this::handleSizeChange, widthProperty());
 		FX.listen(this::handleSizeChange, heightProperty());
 		Binder.onChange(this::updateLineNumbers, ed.showLineNumbersProperty(), ed.lineNumberFormatterProperty());
+		Binder.onChange(this::updateModel, ed.modelProperty());
 		
 		// TODO clip rect
 		
@@ -363,6 +370,13 @@ public class VTextFlow
 	}
 	
 	
+	protected void updateModel()
+	{
+		// TODO from model
+		breakIterator = BreakIterator.getCharacterInstance(Locale.US);
+	}
+	
+	
 	protected void handleSizeChange()
 	{
 		canvas = createCanvas();
@@ -396,7 +410,7 @@ public class VTextFlow
 	
 	public void invalidate()
 	{
-		buffer.invalidate();
+		screenBufferValid = false;
 	}
 	
 	
@@ -440,14 +454,125 @@ public class VTextFlow
 	
 	protected ScreenBuffer buffer()
 	{
-		if(!buffer.isValid())
+		if(!screenBufferValid)
 		{
-			buffer.reflow(this);
+			reflow();
 		}
 		return buffer;
 	}
 	
+	
+	protected void reflow()
+	{
+		int w = getColumnCount() + 1;
+		int h = getLineCount() + 1;
+		
+		int sz = buffer.setSize(w, h);
+		
+		FxTextEditor ed = getEditor();
+		boolean wrap = ed.isWrapLines();
+		FxTextEditorModel m = ed.getModel();
+		int lineIndex = getTopLine();
+		int topOffset = getTopOffset();
+		int y = 0;
+		int x = 0;
+		int off = topOffset;
+		boolean eof = false;
+		boolean eol = false;
+		boolean caretLine = false;
+		Color bg = Color.WHITE; // TODO null;
+		Color fg = Color.BLACK; // TODO
+		Color textColor = Color.BLACK; // FIX null
+		TextCells textLine = null;
+		TextCells.LCell cell = null;
+		
+		for(int ix=0; ix<sz; ix++)
+		{
+			ScreenCell screenCell = buffer.getCell(ix);
+			
+			String text;
+			if(eof)
+			{
+				text = null;
+			}
+			else if(eol)
+			{
+				text = null;
+			}
+			else
+			{
+				if(textLine == null)
+				{
+					if(lineIndex >= m.getLineCount())
+					{
+						eof = true;
+					}
+					else
+					{
+						String s = m.getPlainText(lineIndex);
+						TextDecor d = m.getTextLine(lineIndex, s, decor);
+						textLine = createTextLine(lineIndex, s, d);
+					}
+				}
+				
+				if(eof || eol || (textLine == null))
+				{
+					cell = null;
+				}
+				else 
+				{
+					cell = textLine.getCell(off);
+					off++;
+					
+					// TODO tabs
+				}
+			}
+			
+			screenCell.setCell(cell);
+			screenCell.setBackgroundColor(bg);
+			screenCell.setTextColor(textColor);
+			// TODO colors
+			x++;
+				
+			if(x > w)
+			{
+				x = 0;
+				y++;
+				lineIndex++;
+				textLine = null;
+				
+				if(y > h)
+				{
+					break;
+				}
+			}
+		}
+		
+		screenBufferValid = true;
+	}
+	
+	
+	protected TextCells createTextLine(int lineIndex, String text, TextDecor d)
+	{
+		TextCells cs = new TextCells();
+		breakIterator.setText(text);
 
+		int start = breakIterator.first();
+		for(int end=breakIterator.next(); end!=BreakIterator.DONE; start=end, end=breakIterator.next())
+		{
+			String s = text.substring(start,end);
+			cs.addCell(start, end, s);
+		}
+		
+		if(d != null)
+		{
+			// TODO populate styles
+		}
+		
+		return cs;
+	}
+	
+	
 	/** returns true if update resulted in a visual change */
 	public boolean update(int startLine, int linesInserted, int endLine)
 	{
