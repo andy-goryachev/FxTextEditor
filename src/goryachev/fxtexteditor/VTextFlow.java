@@ -400,31 +400,31 @@ public class VTextFlow
 	}
 	
 	
-//	protected Font getFont(TCell c)
-//	{
-//		if(c.isBold())
-//		{
-//			if(c.isItalic())
-//			{
-//				return boldItalicFont;
-//			}
-//			else
-//			{
-//				return boldFont;
-//			}
-//		}
-//		else
-//		{
-//			if(c.isItalic())
-//			{
-//				return italicFont;
-//			}
-//			else
-//			{
-//				return font;
-//			}
-//		}
-//	}
+	protected Font getFont(ScreenCell c)
+	{
+		if(c.isBold())
+		{
+			if(c.isItalic())
+			{
+				return boldItalicFont;
+			}
+			else
+			{
+				return boldFont;
+			}
+		}
+		else
+		{
+			if(c.isItalic())
+			{
+				return italicFont;
+			}
+			else
+			{
+				return font;
+			}
+		}
+	}
 
 
 	public TextPos getInsertPosition(double screenx, double screeny)
@@ -564,32 +564,6 @@ public class VTextFlow
 		}
 	}
 	
-	
-//	protected void clearToEndOfLine(int x, int y)
-//	{
-//		Cell cell = buffer().getCell(x, y);
-//		
-//		TextMetrics m = textMetrics();
-//		double px = x * m.cellWidth;
-//		double py = y * m.cellHeight;
-//
-//		// background
-//		Color bg = cell.getBackgroundColor();
-//		gx.setFill(bg);
-//		gx.fillRect(px, py, canvas.getWidth() - px, m.cellHeight);
-//
-//		// caret
-//		if(paintCaret.get())
-//		{
-//			if(cell.isCaret())
-//			{
-//				// TODO insert mode
-//				gx.setFill(caretColor);
-//				gx.fillRect(px, py, 2, m.cellHeight);
-//			}
-//		}
-//	}
-	
 
 	protected ScreenCell paintCell(int x, int y)
 	{
@@ -622,7 +596,8 @@ public class VTextFlow
 		if(text != null)
 		{
 			Color fg = cell.getTextColor();
-			gx.setFont(cell.getFont());
+			Font f = getFont(cell);
+			gx.setFont(f);
 			gx.setFill(fg);
 			gx.fillText(text, cx, cy - m.baseline, m.cellWidth);
 		

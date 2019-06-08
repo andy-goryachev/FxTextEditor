@@ -171,9 +171,10 @@ public class ScreenBuffer
 				}
 			}
 			
-			screenCell.setText(cell == null ? null : cell.getText());
+			screenCell.setCell(cell);
 			screenCell.setBackgroundColor(bg);
 			screenCell.setTextColor(textColor);
+			// TODO colors
 			x++;
 				
 			if(x > width)

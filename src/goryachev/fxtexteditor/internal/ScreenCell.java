@@ -9,13 +9,12 @@ import javafx.scene.text.Font;
  */
 public class ScreenCell
 {
-	private String text;
-	private Font font;
 	private Color backgroundColor;
 	private Color textColor;
 	private boolean caret;
 	private int line;
 	private int offset;
+	private TextCells.LCell cell;
 	
 	
 	public ScreenCell()
@@ -35,27 +34,9 @@ public class ScreenCell
 	}
 	
 	
-	public Font getFont()
-	{
-		return font;
-	}
-	
-	
-	public void setFont(Font f)
-	{
-		font = f;
-	}
-	
-	
 	public String getText()
 	{
-		return text;
-	}
-	
-	
-	public void setText(String text)
-	{
-		this.text = text;
+		return cell == null ? null : cell.getText();
 	}
 	
 	
@@ -107,8 +88,20 @@ public class ScreenCell
 	}
 	
 
-	public boolean isTab()
+	public void setCell(TextCells.LCell cell)
 	{
-		return false;
+		this.cell = cell;
+	}
+	
+	
+	public boolean isBold()
+	{
+		return false; // TODO
+	}
+	
+	
+	public boolean isItalic()
+	{
+		return false; // TODO
 	}
 }
