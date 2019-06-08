@@ -36,13 +36,6 @@ public class SimplePlainTextEditorModel
 	}
 
 
-	public int getCellCount(int line)
-	{
-		String s = getPlainText(line);
-		return s == null ? 0 : s.length();
-	}
-	
-
 	public String getPlainText(int line)
 	{
 		if(line < getLineCount())
@@ -53,13 +46,8 @@ public class SimplePlainTextEditorModel
 	}
 
 
-	public ITextLine getTextLine(int line)
+	public TextDecor getTextLine(int line, String text, TextDecor d)
 	{
-		if(line < getLineCount())
-		{
-			String text = getPlainText(line);
-			return new PlainTextCells(text);
-		}
 		return null;
 	}
 }

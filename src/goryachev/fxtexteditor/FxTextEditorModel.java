@@ -24,18 +24,23 @@ public abstract class FxTextEditorModel
 	 */
 	public abstract int getLineCount();
 	
-	
 	/** returns the number of cells on a particular line */
-	public abstract int getCellCount(int line);
-	
+	public final void getCellCount(int line) { } // FIX remove
 	
 	/** returns plain text at the specified line, or null if unknown */
 	public abstract String getPlainText(int line);
 	
-	/** 
-	 * returns an instance of ITextLine for the given line, or null if beyond the end of file.
+	/**
+	 * returns styling information for a particular line:
+	 * style segments in terms of string characters and not grapheme blocks.
+	 * The editor will use this information to decorate grapheme blocks extracted
+	 * from the plain text.
+	 * @param line - text line index
+	 * @param text - plain text obtained earlier from getPlainText()
+	 * @param d - pre-allocated and reset object that receives styling info
+	 * @return the styling info object or null if no styling is desired or available
 	 */
-	public abstract ITextLine getTextLine(int line);
+	public abstract TextDecor getTextLine(int line, String text, TextDecor d);
 	
 	/**
 	 * Applies modification to the model.  The model makes necessary changes to its internal state, 

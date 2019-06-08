@@ -2,10 +2,11 @@
 package goryachev.fxtexteditor.internal;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.FxTextEditorModel;
-import goryachev.fxtexteditor.ITextLine;
-import goryachev.fxtexteditor.TCell;
+import goryachev.fxtexteditor.TextDecor;
 import goryachev.fxtexteditor.TextPos;
 import goryachev.fxtexteditor.VTextFlow;
+import java.util.Locale;
+import com.ibm.icu.text.BreakIterator;
 import javafx.scene.paint.Color;
 
 
@@ -14,14 +15,18 @@ import javafx.scene.paint.Color;
  */
 public class ScreenBuffer
 {
-	private Cell[] cells;
+	private ScreenCell[] cells;
 	private boolean valid;
 	private int height;
 	private int width;
+	private BreakIterator breakIterator;
+	protected final TextDecor decor = new TextDecor();
 	
 	
 	public ScreenBuffer()
 	{
+		// TODO get locale from the model
+		breakIterator = BreakIterator.getCharacterInstance(Locale.US);
 	}
 	
 	
@@ -49,7 +54,7 @@ public class ScreenBuffer
 	}
 
 
-	public Cell getCell(int x, int y)
+	public ScreenCell getCell(int x, int y)
 	{
 		int ix = y * width + x;
 		return cells[ix];
@@ -58,27 +63,48 @@ public class ScreenBuffer
 
 	public TextPos getInsertPosition(int x, int y)
 	{
-		Cell c = getCell(x, y);
+		ScreenCell c = getCell(x, y);
 		int line = c.getLine();
 		int off = c.getOffset();
 		return new TextPos(line, off);
 	}
+	
+	
+	protected TextCells createTextLine(int lineIndex, String text, TextDecor d)
+	{
+		TextCells cs = new TextCells();
+		breakIterator.setText(text);
+
+		int start = breakIterator.first();
+		for(int end=breakIterator.next(); end!=BreakIterator.DONE; start=end, end=breakIterator.next())
+		{
+			String s = text.substring(start,end);
+			cs.addCell(start, end, s);
+		}
+		
+		if(d != null)
+		{
+			// TODO populate styles
+		}
+		
+		return cs;
+	}
 
 
-	public void validate(VTextFlow vflow)
+	public void reflow(VTextFlow vflow)
 	{
 		int w = vflow.getColumnCount() + 1;
-		int h = vflow.getLineCount();
+		int h = vflow.getLineCount() + 1;
 		int sz = w * h;
 		
 		if((w != width) || (h != height))
 		{
 			if((cells == null) || (cells.length < sz))
 			{
-				cells = new Cell[sz];
+				cells = new ScreenCell[sz];
 				for(int i=0; i<sz; i++)
 				{
-					cells[i] = new Cell();
+					cells[i] = new ScreenCell();
 				}
 			}
 			
@@ -97,15 +123,15 @@ public class ScreenBuffer
 		boolean eof = false;
 		boolean eol = false;
 		boolean caretLine = false;
-		Color bg = null;
-		Color fg = null;
-		Color textColor = null;
-		ITextLine textLine = null;
-		TCell cell = null;
+		Color bg = Color.WHITE; // TODO null;
+		Color fg = Color.BLACK; // TODO
+		Color textColor = Color.BLACK; // FIX null
+		TextCells textLine = null;
+		TextCells.LCell cell = null;
 		
 		for(int ix=0; ix<sz; ix++)
 		{
-			Cell c = cells[ix];
+			ScreenCell screenCell = cells[ix];
 			
 			String text;
 			if(eof)
@@ -118,53 +144,52 @@ public class ScreenBuffer
 			}
 			else
 			{
-				if(cell == null)
+				if(textLine == null)
 				{
-					if(textLine == null)
-					{
-						textLine = m.getTextLine(lineIndex);
-					}
-					
-					if(textLine == null)
+					if(lineIndex >= m.getLineCount())
 					{
 						eof = true;
 					}
 					else
 					{
-						cell = textLine.getCell(off);
+						String s = m.getPlainText(lineIndex);
+						TextDecor d = m.getTextLine(lineIndex, s, decor);
+						textLine = createTextLine(lineIndex, s, d);
 					}
+				}
+				
+				if(eof || eol || (textLine == null))
+				{
+					cell = null;
+				}
+				else 
+				{
+					cell = textLine.getCell(off);
+					off++;
+					
+					// TODO tabs
 				}
 			}
 			
-			c.setBackgroundColor(bg);
-//			c.setText(text);
-//			
-//			int cellWidth;
-//			if("\t".equals(text))
-//			{
-//				int toNextTab = ed.getTabPolicy().distanceToNextTabStop(topOffset + x);
-//				cellWidth = toNextTab;
-//				text = null;
-//				
-//				for(int i=0; i<toNextTab; i++)
-//				{
-//					// TODO move to main loop instead
-//				}
-//			}
-//				
-//			// text width
-//			c.setWidth(cellWidth);
+			screenCell.setText(cell == null ? null : cell.getText());
+			screenCell.setBackgroundColor(bg);
+			screenCell.setTextColor(textColor);
+			x++;
 				
 			if(x > width)
 			{
 				x = 0;
 				y++;
+				lineIndex++;
+				textLine = null;
 				
 				if(y > height)
 				{
-					return;
+					break;
 				}
 			}
 		}
+		
+		valid = true;
 	}
 }

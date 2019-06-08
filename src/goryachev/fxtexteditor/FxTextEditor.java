@@ -860,7 +860,7 @@ public class FxTextEditor
 			int line = m.getLine();
 			Marker start = markers.newMarker(line, 0);
 			
-			int len = getModel().getCellCount(line);
+			int len = getTextLength(line);
 			Marker end = markers.newMarker(line, len);
 			
 			selector.setSelection(start, end);
@@ -888,7 +888,8 @@ public class FxTextEditor
 	
 	public int getTextLength(int line)
 	{
-		return getModel().getCellCount(line);
+		String s = getModel().getPlainText(line);
+		return s == null ? 0 : s.length();
 	}
 
 

@@ -6,7 +6,7 @@ import goryachev.fx.CPane;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
-import goryachev.fxtexteditor.internal.Cell;
+import goryachev.fxtexteditor.internal.ScreenCell;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -370,16 +370,11 @@ public class VTextFlow
 		gx = canvas.getGraphicsContext2D();
 		gx.setFontSmoothingType(FontSmoothingType.GRAY);
 		
-		gx.setFill(getBackgroundColor());
-		gx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		// TODO perhaps not needed
+//		gx.setFill(getBackgroundColor());
+//		gx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		
 		draw();
-	}
-	
-	
-	protected GraphicsContext getGraphicsContext()
-	{
-		return gx;
 	}
 	
 	
@@ -447,7 +442,7 @@ public class VTextFlow
 	{
 		if(!buffer.isValid())
 		{
-			buffer.validate(this);
+			buffer.reflow(this);
 		}
 		return buffer;
 	}
@@ -555,8 +550,8 @@ public class VTextFlow
 		
 		for(;;)
 		{
-			Cell c = paintCell(x, y);
-			x += c.getWidth();
+			ScreenCell c = paintCell(x, y);
+			x++;
 			if(x >= max)
 			{
 				x = 0;
@@ -596,19 +591,20 @@ public class VTextFlow
 //	}
 	
 
-	protected Cell paintCell(int x, int y)
+	protected ScreenCell paintCell(int x, int y)
 	{
-		Cell cell = buffer().getCell(x, y);
+		ScreenCell cell = buffer().getCell(x, y);
 		
 		TextMetrics m = textMetrics();
-		double cx = x * m.cellWidth;
-		double cy = y * m.cellHeight;
-		double cw = cell.getWidth() * m.cellWidth;
+		double ch = m.cellHeight;
+		double cw = m.cellWidth;
+		double cx = x * cw;
+		double cy = y * ch;
 
 		// background
 		Color bg = cell.getBackgroundColor();
 		gx.setFill(bg);
-		gx.fillRect(cx, cy, cw, m.cellHeight);
+		gx.fillRect(cx, cy, cw, ch);
 		
 		// caret
 		if(paintCaret.get())
@@ -617,7 +613,7 @@ public class VTextFlow
 			{
 				// TODO insert mode
 				gx.setFill(caretColor);
-				gx.fillRect(cx, cy, 2, m.cellHeight);
+				gx.fillRect(cx, cy, 2, ch);
 			}
 		}
 		

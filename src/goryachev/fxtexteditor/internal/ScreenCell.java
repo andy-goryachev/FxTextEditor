@@ -6,12 +6,9 @@ import javafx.scene.text.Font;
 
 /**
  * Screen Buffer Cell.
- * 
- * may take more than one screen cell rectangle (tab, end of line)
  */
-public class Cell
+public class ScreenCell
 {
-	private int width;
 	private String text;
 	private Font font;
 	private Color backgroundColor;
@@ -21,7 +18,7 @@ public class Cell
 	private int offset;
 	
 	
-	public Cell()
+	public ScreenCell()
 	{
 	}
 	
@@ -109,18 +106,6 @@ public class Cell
 		this.offset = offset;
 	}
 	
-	
-	public int getWidth()
-	{
-		return width;
-	}
-	
-	
-	public void setWidth(int w)
-	{
-		width = w;
-	}
-
 
 	public boolean isTab()
 	{
