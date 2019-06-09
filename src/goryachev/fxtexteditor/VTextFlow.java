@@ -85,8 +85,7 @@ public class VTextFlow
 		
 		setFocusTraversable(true);
 		
-		FX.listen(this::handleSizeChange, widthProperty());
-		FX.listen(this::handleSizeChange, heightProperty());
+		Binder.onChange(this::handleSizeChange,  widthProperty(), heightProperty());
 		Binder.onChange(this::updateLineNumbers, ed.showLineNumbersProperty(), ed.lineNumberFormatterProperty());
 		Binder.onChange(this::updateModel, ed.modelProperty());
 		
@@ -379,6 +378,8 @@ public class VTextFlow
 	
 	protected void handleSizeChange()
 	{
+		invalidate();
+		
 		canvas = createCanvas();
 		setCenter(canvas);
 		gx = canvas.getGraphicsContext2D();
@@ -468,17 +469,17 @@ public class VTextFlow
 		FxTextEditorModel m = ed.getModel();
 		boolean wrap = ed.isWrapLines();
 
-		int w = getColumnCount() + 1;
-		int h = getLineCount() + 1;
-		int sz = buffer.setSize(w, h);
+		int bufferWidth = getColumnCount() + 1;
+		int bufferHeight = getLineCount() + 1;
 		
-		int maxx = wrap ? getColumnCount() : w;
-		int maxy = h;
+		buffer.setSize(bufferWidth, bufferHeight);
+		
+		int maxx = wrap ? getColumnCount() : bufferWidth;
+		int maxy = bufferHeight;
 		
 		int lineIndex = getTopLine();
 		int topOffset = getTopOffset();
-		int y = 0;
-		int x = 0;
+		int screenBufferIndex = 0;
 		int off = topOffset;
 		boolean eof = false;
 		boolean eol = false;
@@ -489,73 +490,80 @@ public class VTextFlow
 		TextCells textLine = null;
 		TextCells.LCell cell = null;
 		
-		for(int ix=0; ix<sz; ix++)
-		{			
-			if(eof)
+		for(int y=0; y<maxy; y++)
+		{
+			for(int x=0; x<maxx; x++)
 			{
-				cell = null;
-			}
-			else if(eol)
-			{
-				cell = null;
-			}
-			else
-			{
-				if(textLine == null)
-				{
-					if(lineIndex >= m.getLineCount())
-					{
-						eof = true;
-					}
-					else
-					{
-						String s = m.getPlainText(lineIndex);
-						TextDecor d = m.getTextLine(lineIndex, s, decor);
-						textLine = createTextLine(lineIndex, s, d);
-					}
-				}
-				
-				if(eof || eol || (textLine == null))
+				if(eof)
 				{
 					cell = null;
 				}
-				else 
+				else if(eol)
 				{
-					cell = textLine.getCell(off);
-					if(cell == null)
+					cell = null;
+				}
+				else
+				{
+					if(textLine == null)
 					{
-						eol = true;
-					}
-					else
-					{
-						off++;
+						if(lineIndex >= m.getLineCount())
+						{
+							eof = true;
+						}
+						else
+						{
+							String s = m.getPlainText(lineIndex);
+							TextDecor d = m.getTextLine(lineIndex, s, decor);
+							textLine = createTextLine(lineIndex, s, d);
+						}
 					}
 					
-					// TODO tabs
+					if(eof || eol || (textLine == null))
+					{
+						cell = null;
+						textLine = null;
+					}
+					else 
+					{
+						cell = textLine.getCell(off);
+						if(cell == null)
+						{
+							eol = true;
+						}
+						else
+						{
+							off++;
+						}
+						
+						// TODO tabs
+					}
 				}
+				
+				ScreenCell screenCell = buffer.getCell(screenBufferIndex);
+				screenCell.setCell(cell);
+				screenCell.setBackgroundColor(bg);
+				screenCell.setTextColor(textColor);
+				// TODO colors
+				screenBufferIndex++;
 			}
 			
-			ScreenCell screenCell = buffer.getCell(ix);
-			screenCell.setCell(cell);
-			screenCell.setBackgroundColor(bg);
-			screenCell.setTextColor(textColor);
-			// TODO colors
-			x++;
-				
-			if(x > maxx)
+			if(!eof)
 			{
-				x = 0;
-				y++;
-				if(!wrap && !eol)
+				if(wrap)
+				{
+					if(eol)
+					{
+						lineIndex++;
+						textLine = null;
+						eol = false;
+					}
+				}
+				else
 				{
 					lineIndex++;
 					textLine = null;
 					eol = false;
-				}
-				
-				if(y > maxy)
-				{
-					break;
+					off = topOffset;
 				}
 			}
 		}

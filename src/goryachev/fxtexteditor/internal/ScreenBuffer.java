@@ -18,12 +18,12 @@ public class ScreenBuffer
 	}
 	
 	
-	public int setSize(int w, int h)
+	public void setSize(int w, int h)
 	{
-		int sz = w * h;
-
 		if((w != width) || (h != height))
 		{
+			int sz = w * h;
+			
 			if((cells == null) || (cells.length < sz))
 			{
 				cells = new ScreenCell[sz];
@@ -36,7 +36,6 @@ public class ScreenBuffer
 			width = w;
 			height = h;
 		}
-		return sz;
 	}
 	
 	
