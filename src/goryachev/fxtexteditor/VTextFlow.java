@@ -6,11 +6,11 @@ import goryachev.fx.CPane;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
+import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenCell;
 import goryachev.fxtexteditor.internal.TextCells;
 import java.util.Locale;
 import com.ibm.icu.text.BreakIterator;
-import goryachev.fxtexteditor.internal.ScreenBuffer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.BooleanBinding;
@@ -474,8 +474,8 @@ public class VTextFlow
 		
 		buffer.setSize(bufferWidth, bufferHeight);
 		
-		int maxx = wrap ? getColumnCount() : bufferWidth;
-		int maxy = bufferHeight;
+		int xmax = wrap ? getColumnCount() : bufferWidth;
+		int ymax = bufferHeight;
 		
 		int lineIndex = getTopLine();
 		int topOffset = getTopOffset();
@@ -490,9 +490,9 @@ public class VTextFlow
 		TextCells textLine = null;
 		TextCells.LCell cell = null;
 		
-		for(int y=0; y<maxy; y++)
+		for(int y=0; y<ymax; y++)
 		{
-			for(int x=0; x<maxx; x++)
+			for(int x=0; x<xmax; x++)
 			{
 				if(eof)
 				{
@@ -539,23 +539,30 @@ public class VTextFlow
 					}
 				}
 				
-				ScreenCell screenCell = buffer.getCell(screenBufferIndex);
+				ScreenCell screenCell = buffer.getCell(screenBufferIndex++);
 				screenCell.setCell(cell);
 				screenCell.setBackgroundColor(bg);
 				screenCell.setTextColor(textColor);
 				// TODO colors
-				screenBufferIndex++;
 			}
 			
 			if(!eof)
 			{
 				if(wrap)
 				{
+					// extra cell when wrap is on
+					ScreenCell screenCell = buffer.getCell(screenBufferIndex++);
+					screenCell.setCell(null);
+					screenCell.setBackgroundColor(bg);
+					screenCell.setTextColor(null);
+					// TODO colors
+					
 					if(eol)
 					{
 						lineIndex++;
 						textLine = null;
 						eol = false;
+						off = 0;
 					}
 				}
 				else
@@ -691,13 +698,13 @@ public class VTextFlow
 		boolean wrap = editor.isWrapLines();
 		int x = 0;
 		int y = 0;
-		int max = wrap ? colCount : colCount + 1;
+		int xmax = colCount + 1;
 		
 		for(;;)
 		{
 			ScreenCell c = paintCell(x, y);
 			x++;
-			if(x >= max)
+			if(x >= xmax)
 			{
 				x = 0;
 				y++;
