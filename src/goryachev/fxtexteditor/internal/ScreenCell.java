@@ -14,7 +14,7 @@ public class ScreenCell
 	private boolean caret;
 	private int line;
 	private int offset;
-	private TextCells.LCell cell;
+	private TextCell cell;
 	
 	
 	public ScreenCell()
@@ -88,7 +88,7 @@ public class ScreenCell
 	}
 	
 
-	public void setCell(TextCells.LCell cell)
+	public void setCell(TextCell cell)
 	{
 		this.cell = cell;
 	}

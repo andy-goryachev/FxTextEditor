@@ -50,7 +50,7 @@ public class DemoTextEditorModel
 	}
 
 
-	public TextDecor getTextLine(int line, String text, TextDecor d)
+	public TextDecor getTextDecor(int line, String text, TextDecor d)
 	{
 		if(line < getLineCount())
 		{

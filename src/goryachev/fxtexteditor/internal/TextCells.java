@@ -8,7 +8,7 @@ import goryachev.common.util.CList;
  */
 public class TextCells
 {
-	protected final CList<LCell> cells = new CList();
+	protected final CList<TextCell> cells = new CList();
 	
 	
 	public TextCells()
@@ -16,43 +16,24 @@ public class TextCells
 	}
 	
 	
-	public void addCell(int start, int end, String s)
+	public int getLength()
 	{
-		cells.add(new LCell(start, end, s));
+		return cells.size();
 	}
 	
 	
-	public LCell getCell(int off)
+	public void addCell(int start, int end, String s)
+	{
+		cells.add(new TextCell(start, end, s));
+	}
+	
+	
+	public TextCell getCell(int off)
 	{
 		if(off < cells.size())
 		{
 			return cells.get(off);
 		}
 		return null;
-	}
-	
-	
-	//
-	
-	
-	public static class LCell
-	{
-		public final int start;
-		public final int end;
-		public final String text;
-		
-		
-		public LCell(int start, int end, String text)
-		{
-			this.start = start;
-			this.end = end;
-			this.text = text;
-		}
-
-
-		public String getText()
-		{
-			return text;
-		}
 	}
 }

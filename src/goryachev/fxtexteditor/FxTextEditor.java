@@ -923,4 +923,16 @@ public class FxTextEditor
 	{
 		return tabPolicy.get();
 	}
+	
+	
+	public boolean isCaretLine(int line)
+	{
+		return selector.isCaretLine(line);
+	}
+	
+	
+	public boolean isCaret(int line, int pos)
+	{
+		return selector.isCaret(line, pos);
+	}
 }

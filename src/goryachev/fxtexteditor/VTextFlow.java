@@ -8,6 +8,7 @@ import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenCell;
+import goryachev.fxtexteditor.internal.TextCell;
 import goryachev.fxtexteditor.internal.TextCells;
 import java.util.Locale;
 import com.ibm.icu.text.BreakIterator;
@@ -42,7 +43,7 @@ public class VTextFlow
 	private static final double SELECTION_BACKGROUND_OPACITY = 0.4;
 	private static final double CELL_BACKGROUND_OPACITY = 0.8;
 	protected final FxTextEditor editor;
-	protected final FxBoolean caretVisible = new FxBoolean(true);
+	protected final FxBoolean caretVisible = new FxBoolean(true); // FIX move to the editor
 	protected final FxBoolean suppressBlink = new FxBoolean(false);
 	protected final BooleanExpression paintCaret;
 	protected final ScreenBuffer buffer = new ScreenBuffer();
@@ -251,32 +252,6 @@ public class VTextFlow
 	}
 	
 	
-//	protected Color backgroundColor(TCell cell, TextPos pos)
-//	{
-//		Color c = backgroundColor;
-//		
-//		if(editor.isHighlightCaretLine())
-//		{
-//			if(pos.isValidCaretLine() && editor.selector.isCaretLine(pos.getLine()))
-//			{
-//				c = mixColor(c, editor.getCaretLineColor(), CARET_LINE_OPACITY);
-//			}
-//		}
-//		
-//		if(pos.isValidCaretOffset() && editor.selector.isSelected(pos.getLine(), pos.getOffset()))
-//		{
-//			c = mixColor(c, editor.getSelectionBackgroundColor(), SELECTION_BACKGROUND_OPACITY);
-//		}
-//		
-//		if(cell != null)
-//		{
-//			c = mixColor(c, cell.getBackgroundColor(), CELL_BACKGROUND_OPACITY);
-//		}
-//		
-//		return c;
-//	}
-	
-	
 	protected Color mixColor(Color base, Color added, double fraction)
 	{
 		if(base == null)
@@ -463,11 +438,33 @@ public class VTextFlow
 	}
 	
 	
+	protected Color backgroundColor(boolean caretLine, boolean selected, TextCell cell)
+	{
+		Color c = backgroundColor;
+		
+		if(caretLine)
+		{
+			c = mixColor(c, editor.getCaretLineColor(), CARET_LINE_OPACITY);
+		}
+		
+		if(selected) // pos.isValidCaretOffset() && editor.selector.isSelected(pos.getLine(), pos.getOffset()))
+		{
+			c = mixColor(c, editor.getSelectionBackgroundColor(), SELECTION_BACKGROUND_OPACITY);
+		}
+		
+		if(cell != null)
+		{
+			c = mixColor(c, cell.getBackgroundColor(), CELL_BACKGROUND_OPACITY);
+		}
+		
+		return c;
+	}
+	
+
 	protected void reflow()
 	{
-		FxTextEditor ed = getEditor();
-		FxTextEditorModel m = ed.getModel();
-		boolean wrap = ed.isWrapLines();
+		FxTextEditorModel model = editor.getModel();
+		boolean wrap = editor.isWrapLines();
 
 		int bufferWidth = getColumnCount() + 1;
 		int bufferHeight = getLineCount() + 1;
@@ -484,14 +481,18 @@ public class VTextFlow
 		boolean eof = false;
 		boolean eol = false;
 		boolean caretLine = false;
-		Color bg = Color.WHITE; // TODO null;
+		boolean selected = false; // TODO
+		boolean highlightCaretLine = editor.isHighlightCaretLine();
+		Color bg = null;
 		Color fg = Color.BLACK; // TODO
 		Color textColor = Color.BLACK; // FIX null
 		TextCells textLine = null;
-		TextCells.LCell cell = null;
+		TextCell cell = null;
 		
 		for(int y=0; y<ymax; y++)
 		{
+			caretLine = highlightCaretLine && editor.isCaretLine(lineIndex); 
+				
 			for(int x=0; x<xmax; x++)
 			{
 				if(eof)
@@ -506,14 +507,15 @@ public class VTextFlow
 				{
 					if(textLine == null)
 					{
-						if(lineIndex >= m.getLineCount())
+						if(lineIndex >= model.getLineCount())
 						{
 							eof = true;
 						}
 						else
 						{
-							String s = m.getPlainText(lineIndex);
-							TextDecor d = m.getTextLine(lineIndex, s, decor);
+							decor.reset();
+							String s = model.getPlainText(lineIndex);
+							TextDecor d = model.getTextDecor(lineIndex, s, decor);
 							textLine = createTextLine(lineIndex, s, d);
 						}
 					}
@@ -538,6 +540,9 @@ public class VTextFlow
 						// TODO tabs
 					}
 				}
+				
+				bg = backgroundColor(caretLine, selected, cell);
+				selected = caretLine && editor.isCaret(lineIndex, off);
 				
 				ScreenCell screenCell = buffer.getCell(screenBufferIndex++);
 				screenCell.setCell(cell);
@@ -587,13 +592,13 @@ public class VTextFlow
 		int start = breakIterator.first();
 		for(int end=breakIterator.next(); end!=BreakIterator.DONE; start=end, end=breakIterator.next())
 		{
-			String s = text.substring(start,end);
+			String s = text.substring(start, end);
 			cs.addCell(start, end, s);
 		}
 		
 		if(d != null)
 		{
-			// TODO populate styles
+			d.applyStyles(cs);
 		}
 		
 		return cs;

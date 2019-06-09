@@ -1,6 +1,10 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.CList;
+import goryachev.common.util.D;
+import goryachev.fxtexteditor.internal.TAttrs;
+import goryachev.fxtexteditor.internal.TextCell;
+import goryachev.fxtexteditor.internal.TextCells;
 import javafx.scene.paint.Color;
 
 
@@ -22,6 +26,12 @@ public class TextDecor
 	
 	public TextDecor()
 	{
+	}
+	
+	
+	public void reset()
+	{
+		segments.clear();
 	}
 	
 	
@@ -67,12 +77,36 @@ public class TextDecor
 	}
 	
 	
+	protected TAttrs getAttributes()
+	{
+		return new TAttrs(lineBackground, backgroundColor, textColor, bold, italic, strikeThrough, underscore);
+	}
+	
+	
 	public void addSegment(int length)
 	{
+		TAttrs a = getAttributes();
+		
 		Segment s = new Segment();
-//		s.setStyle(); // TODO
+		s.attrs = a;
 		s.length = length;
 		segments.add(s);
+	}
+	
+	
+	public void applyStyles(TextCells cs)
+	{
+		int pos = 0;
+		for(Segment s: segments)
+		{
+			TAttrs a = s.attrs;
+			for(int i=0; i<s.length; i++)
+			{
+				TextCell c = cs.getCell(pos);
+				c.setStyle(a);
+				pos++;
+			}
+		}
 	}
 	
 	
@@ -82,5 +116,6 @@ public class TextDecor
 	protected static class Segment
 	{
 		public int length;
+		public TAttrs attrs;
 	}
 }

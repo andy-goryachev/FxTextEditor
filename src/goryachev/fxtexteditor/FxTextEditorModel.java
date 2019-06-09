@@ -40,7 +40,7 @@ public abstract class FxTextEditorModel
 	 * @param d - pre-allocated and reset object that receives styling info
 	 * @return the styling info object or null if no styling is desired or available
 	 */
-	public abstract TextDecor getTextLine(int line, String text, TextDecor d);
+	public abstract TextDecor getTextDecor(int line, String text, TextDecor d);
 	
 	/**
 	 * Applies modification to the model.  The model makes necessary changes to its internal state, 
