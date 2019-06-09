@@ -464,14 +464,17 @@ public class VTextFlow
 	
 	protected void reflow()
 	{
+		FxTextEditor ed = getEditor();
+		FxTextEditorModel m = ed.getModel();
+		boolean wrap = ed.isWrapLines();
+
 		int w = getColumnCount() + 1;
 		int h = getLineCount() + 1;
-		
 		int sz = buffer.setSize(w, h);
 		
-		FxTextEditor ed = getEditor();
-		boolean wrap = ed.isWrapLines();
-		FxTextEditorModel m = ed.getModel();
+		int maxx = wrap ? getColumnCount() : w;
+		int maxy = h;
+		
 		int lineIndex = getTopLine();
 		int topOffset = getTopOffset();
 		int y = 0;
@@ -487,17 +490,14 @@ public class VTextFlow
 		TextCells.LCell cell = null;
 		
 		for(int ix=0; ix<sz; ix++)
-		{
-			ScreenCell screenCell = buffer.getCell(ix);
-			
-			String text;
+		{			
 			if(eof)
 			{
-				text = null;
+				cell = null;
 			}
 			else if(eol)
 			{
-				text = null;
+				cell = null;
 			}
 			else
 			{
@@ -522,26 +522,38 @@ public class VTextFlow
 				else 
 				{
 					cell = textLine.getCell(off);
-					off++;
+					if(cell == null)
+					{
+						eol = true;
+					}
+					else
+					{
+						off++;
+					}
 					
 					// TODO tabs
 				}
 			}
 			
+			ScreenCell screenCell = buffer.getCell(ix);
 			screenCell.setCell(cell);
 			screenCell.setBackgroundColor(bg);
 			screenCell.setTextColor(textColor);
 			// TODO colors
 			x++;
 				
-			if(x > w)
+			if(x > maxx)
 			{
 				x = 0;
 				y++;
-				lineIndex++;
-				textLine = null;
+				if(!wrap && !eol)
+				{
+					lineIndex++;
+					textLine = null;
+					eol = false;
+				}
 				
-				if(y > h)
+				if(y > maxy)
 				{
 					break;
 				}
