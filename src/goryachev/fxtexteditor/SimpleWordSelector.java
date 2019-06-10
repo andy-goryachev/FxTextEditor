@@ -103,7 +103,7 @@ public class SimpleWordSelector
 		int start;
 		int end;
 		
-		if(isWordChar(text.charAt(pos)))
+		if(pos < text.length() && isWordChar(text.charAt(pos)))
 		{
 			start = skipWordCharsBackward(text, pos) + 1;
 			end = skipWordCharsForward(text, pos) - 1;

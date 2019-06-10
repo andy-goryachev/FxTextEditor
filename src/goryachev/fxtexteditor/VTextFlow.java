@@ -481,7 +481,8 @@ public class VTextFlow
 		boolean eof = false;
 		boolean eol = false;
 		boolean caretLine = false;
-		boolean selected = false; // TODO
+		boolean selected = false;
+		boolean isCaret = false;
 		boolean highlightCaretLine = editor.isHighlightCaretLine();
 		Color bg = null;
 		Color fg = Color.BLACK; // TODO
@@ -541,10 +542,16 @@ public class VTextFlow
 					}
 				}
 				
+				selected = editor.isSelected(lineIndex, off);
 				bg = backgroundColor(caretLine, selected, cell);
-				selected = caretLine && editor.isCaret(lineIndex, off);
+				
+				// FIX eof: allow caret on last line
+				isCaret = caretLine && editor.isCaret(lineIndex, off) && !eol && !eof; // FIX boolean to indicate that we are pass the end of line
 				
 				ScreenCell screenCell = buffer.getCell(screenBufferIndex++);
+				screenCell.setLine(lineIndex);
+				screenCell.setOffset(off);
+				screenCell.setCaret(isCaret);
 				screenCell.setCell(cell);
 				screenCell.setBackgroundColor(bg);
 				screenCell.setTextColor(textColor);
@@ -557,6 +564,8 @@ public class VTextFlow
 				{
 					// extra cell when wrap is on
 					ScreenCell screenCell = buffer.getCell(screenBufferIndex++);
+					screenCell.setLine(lineIndex);
+					screenCell.setOffset(off);
 					screenCell.setCell(null);
 					screenCell.setBackgroundColor(bg);
 					screenCell.setTextColor(null);
@@ -680,7 +689,8 @@ public class VTextFlow
 	{
 		if(!repaintRequested)
 		{
-			repaintRequested = true;
+			screenBufferValid = false;
+			repaintRequested = true; // TODO this variable is not needed
 			FX.later(this::draw);
 		}
 	}
@@ -700,23 +710,12 @@ public class VTextFlow
 			return;
 		}
 		
-		boolean wrap = editor.isWrapLines();
-		int x = 0;
-		int y = 0;
 		int xmax = colCount + 1;
-		
-		for(;;)
+		for(int y=0; y<rowCount; y++)
 		{
-			ScreenCell c = paintCell(x, y);
-			x++;
-			if(x >= xmax)
+			for(int x=0; x<xmax; x++)
 			{
-				x = 0;
-				y++;
-				if(y > rowCount)
-				{
-					break;
-				}
+				paintCell(x, y);
 			}
 		}
 	}
@@ -738,7 +737,7 @@ public class VTextFlow
 		gx.fillRect(cx, cy, cw, ch);
 		
 		// caret
-		if(paintCaret.get())
+		if(paintCaret.get()) // TODO move to screen buffer
 		{
 			if(cell.isCaret())
 			{

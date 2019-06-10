@@ -464,18 +464,6 @@ public class FxTextEditor
 	}
 	
 	
-//	protected CaretLocation getCaretLocation(Marker pos)
-//	{
-//		return vflow.layout.getCaretLocation(this, pos);
-//	}
-	
-	
-//	protected int getViewStartLine()
-//	{
-//		return vflow.layout.getTopLine();
-//	}
-	
-	
 	public ReadOnlyObjectProperty<Duration> blinkRateProperty()
 	{
 		return caretBlinkRateProperty.getReadOnlyProperty();
@@ -934,5 +922,11 @@ public class FxTextEditor
 	public boolean isCaret(int line, int pos)
 	{
 		return selector.isCaret(line, pos);
+	}
+	
+	
+	public boolean isSelected(int line, int pos)
+	{
+		return selector.isSelected(line, pos);
 	}
 }
