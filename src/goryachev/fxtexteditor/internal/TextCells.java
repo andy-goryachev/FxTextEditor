@@ -8,7 +8,7 @@ import goryachev.common.util.CList;
  */
 public class TextCells
 {
-	protected final CList<TextCell> cells = new CList();
+	protected final CList<Grapheme> cells = new CList();
 	
 	
 	public TextCells()
@@ -24,11 +24,11 @@ public class TextCells
 	
 	public void addCell(int start, int end, String s)
 	{
-		cells.add(new TextCell(start, end, s));
+		cells.add(new Grapheme(start, end, s));
 	}
 	
 	
-	public TextCell getCell(int off)
+	public Grapheme getCell(int off)
 	{
 		if(off < cells.size())
 		{

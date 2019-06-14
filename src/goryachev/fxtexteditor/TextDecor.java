@@ -3,7 +3,7 @@ package goryachev.fxtexteditor;
 import goryachev.common.util.CList;
 import goryachev.common.util.D;
 import goryachev.fxtexteditor.internal.TAttrs;
-import goryachev.fxtexteditor.internal.TextCell;
+import goryachev.fxtexteditor.internal.Grapheme;
 import goryachev.fxtexteditor.internal.TextCells;
 import javafx.scene.paint.Color;
 
@@ -102,7 +102,7 @@ public class TextDecor
 			TAttrs a = s.attrs;
 			for(int i=0; i<s.length; i++)
 			{
-				TextCell c = cs.getCell(pos);
+				Grapheme c = cs.getCell(pos);
 				c.setStyle(a);
 				pos++;
 			}

@@ -8,7 +8,7 @@ import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenCell;
-import goryachev.fxtexteditor.internal.TextCell;
+import goryachev.fxtexteditor.internal.Grapheme;
 import goryachev.fxtexteditor.internal.TextCells;
 import java.util.Locale;
 import com.ibm.icu.text.BreakIterator;
@@ -438,7 +438,7 @@ public class VTextFlow
 	}
 	
 	
-	protected Color backgroundColor(boolean caretLine, boolean selected, TextCell cell)
+	protected Color backgroundColor(boolean caretLine, boolean selected, Grapheme cell)
 	{
 		Color c = backgroundColor;
 		
@@ -488,7 +488,7 @@ public class VTextFlow
 		Color fg = Color.BLACK; // TODO
 		Color textColor = Color.BLACK; // FIX null
 		TextCells textLine = null;
-		TextCell cell = null;
+		Grapheme gr = null;
 		
 		for(int y=0; y<ymax; y++)
 		{
@@ -498,11 +498,11 @@ public class VTextFlow
 			{
 				if(eof)
 				{
-					cell = null;
+					gr = null;
 				}
 				else if(eol)
 				{
-					cell = null;
+					gr = null;
 				}
 				else
 				{
@@ -523,13 +523,13 @@ public class VTextFlow
 					
 					if(eof || eol || (textLine == null))
 					{
-						cell = null;
+						gr = null;
 						textLine = null;
 					}
 					else 
 					{
-						cell = textLine.getCell(off);
-						if(cell == null)
+						gr = textLine.getCell(off);
+						if(gr == null)
 						{
 							eol = true;
 						}
@@ -543,18 +543,18 @@ public class VTextFlow
 				}
 				
 				selected = editor.isSelected(lineIndex, off);
-				bg = backgroundColor(caretLine, selected, cell);
+				bg = backgroundColor(caretLine, selected, gr);
 				
 				// FIX eof: allow caret on last line
 				isCaret = caretLine && editor.isCaret(lineIndex, off) && !eol && !eof; // FIX boolean to indicate that we are pass the end of line
 				
-				ScreenCell screenCell = buffer.getCell(screenBufferIndex++);
-				screenCell.setLine(lineIndex);
-				screenCell.setOffset(off);
-				screenCell.setCaret(isCaret);
-				screenCell.setCell(cell);
-				screenCell.setBackgroundColor(bg);
-				screenCell.setTextColor(textColor);
+				ScreenCell cell = buffer.getCell(screenBufferIndex++);
+				cell.setLine(lineIndex);
+				cell.setOffset(off);
+				cell.setCaret(isCaret);
+				cell.setCell(gr);
+				cell.setBackgroundColor(bg);
+				cell.setTextColor(textColor);
 				// TODO colors
 			}
 			

@@ -4,9 +4,9 @@ import javafx.scene.paint.Color;
 
 
 /**
- * Text Cell.  TODO rename: grapheme cluster
+ * Grapheme Cluster fits into one ScreenCell.
  */
-public class TextCell
+public class Grapheme
 {
 	public final int start;
 	public final int end;
@@ -14,7 +14,7 @@ public class TextCell
 	private TAttrs attrs;
 	
 	
-	public TextCell(int start, int end, String text)
+	public Grapheme(int start, int end, String text)
 	{
 		this.start = start;
 		this.end = end;

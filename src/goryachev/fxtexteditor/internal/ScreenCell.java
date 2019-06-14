@@ -14,7 +14,7 @@ public class ScreenCell
 	private boolean caret;
 	private int line;
 	private int offset;
-	private TextCell cell;
+	private Grapheme cell;
 	
 	
 	public ScreenCell()
@@ -88,7 +88,7 @@ public class ScreenCell
 	}
 	
 
-	public void setCell(TextCell cell)
+	public void setCell(Grapheme cell)
 	{
 		this.cell = cell;
 	}
