@@ -258,9 +258,6 @@ public class FxTextEditor
 			m.loadStatus().addListener(loadStatusListener);
 		}
 		
-		selector.clear();
-		vflow.repaint();
-		
 		handleAllLinesChanged();
 	}
 	
@@ -398,7 +395,6 @@ public class FxTextEditor
 	protected void invalidate()
 	{
 		vflow.invalidate();
-		vflow.repaint();
 	}
 	
 	

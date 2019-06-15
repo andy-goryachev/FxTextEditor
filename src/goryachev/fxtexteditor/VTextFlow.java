@@ -6,9 +6,9 @@ import goryachev.fx.CPane;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
+import goryachev.fxtexteditor.internal.Grapheme;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenCell;
-import goryachev.fxtexteditor.internal.Grapheme;
 import goryachev.fxtexteditor.internal.TextCells;
 import java.util.Locale;
 import com.ibm.icu.text.BreakIterator;
@@ -67,10 +67,10 @@ public class VTextFlow
 	private Color caretColor = Color.BLACK;
 	private int topLine;
 	private int topOffset;
-	private boolean repaintRequested;
 	private BreakIterator breakIterator;
 	protected final TextDecor decor = new TextDecor();
 	private boolean screenBufferValid;
+	private boolean repaintRequested;
 	
 	
 	public VTextFlow(FxTextEditor ed)
@@ -348,6 +348,7 @@ public class VTextFlow
 	{
 		// TODO from model
 		breakIterator = BreakIterator.getCharacterInstance(Locale.US);
+		invalidate();
 	}
 	
 	
@@ -355,6 +356,7 @@ public class VTextFlow
 	{
 		invalidate();
 		
+		// TODO move ?
 		canvas = createCanvas();
 		setCenter(canvas);
 		gx = canvas.getGraphicsContext2D();
@@ -364,7 +366,7 @@ public class VTextFlow
 //		gx.setFill(getBackgroundColor());
 //		gx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		
-		draw();
+		paintAll();
 	}
 	
 	
@@ -384,9 +386,33 @@ public class VTextFlow
 	}
 	
 	
+	/** makes screen buffer invalid.  triggers full screen update */
 	public void invalidate()
 	{
 		screenBufferValid = false;
+		repaint();
+	}
+	
+
+	/** requests a repaint.  the actual drawing happens in runLater() */
+	protected void repaint()
+	{
+		if(!repaintRequested)
+		{
+			repaintRequested = true;
+			FX.later(() ->
+			{
+				paintAll();
+				repaintRequested = false;
+			});
+		}
+	}
+	
+	
+	public void repaintSegment(ListChangeListener.Change<? extends SelectionSegment> ch)
+	{
+		// TODO repaint only the damaged area
+		repaint();
 	}
 	
 	
@@ -428,16 +454,6 @@ public class VTextFlow
 	}
 	
 	
-	protected ScreenBuffer buffer()
-	{
-		if(!screenBufferValid)
-		{
-			reflow();
-		}
-		return buffer;
-	}
-	
-	
 	protected Color backgroundColor(boolean caretLine, boolean selected, Grapheme cell)
 	{
 		Color c = backgroundColor;
@@ -460,8 +476,19 @@ public class VTextFlow
 		return c;
 	}
 	
+	
+	protected ScreenBuffer buffer()
+	{
+		if(!screenBufferValid)
+		{
+			reflowScreenBuffer();
+			screenBufferValid = true;
+		}
+		return buffer;
+	}
+	
 
-	protected void reflow()
+	protected void reflowScreenBuffer()
 	{
 		FxTextEditorModel model = editor.getModel();
 		boolean wrap = editor.isWrapLines();
@@ -588,8 +615,6 @@ public class VTextFlow
 				}
 			}
 		}
-		
-		screenBufferValid = true;
 	}
 	
 	
@@ -677,29 +702,8 @@ public class VTextFlow
 	}
 	
 	
-	public void repaintSegment(ListChangeListener.Change<? extends SelectionSegment> ch)
+	protected void paintAll()
 	{
-		// TODO repaint only the damaged area
-		repaint();
-	}
-	
-
-	/** requests a repaint.  the actual drawing happens in runLater() */
-	public void repaint()
-	{
-		if(!repaintRequested)
-		{
-			screenBufferValid = false;
-			repaintRequested = true; // TODO this variable is not needed
-			FX.later(this::draw);
-		}
-	}
-	
-	
-	protected void draw()
-	{
-		repaintRequested = false;
-		
 		if((colCount == 0) || (rowCount == 0))
 		{
 			return;
@@ -711,7 +715,8 @@ public class VTextFlow
 		}
 		
 		int xmax = colCount + 1;
-		for(int y=0; y<rowCount; y++)
+		int ymax = rowCount + 1;
+		for(int y=0; y<ymax; y++)
 		{
 			for(int x=0; x<xmax; x++)
 			{
