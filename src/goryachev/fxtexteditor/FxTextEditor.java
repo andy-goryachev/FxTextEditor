@@ -128,11 +128,8 @@ public class FxTextEditor
 			}
 		});
 		
-		// debug
-//		selector.segments.addListener((Observable s) -> D.print(selector.segments));
-		
 //		Binder.onChange(vflow::updateBlinkRate, true, blinkRateProperty());
-		Binder.onChange(this::updateLayout, widthProperty(), heightProperty(), showLineNumbersProperty);
+		Binder.onChange(this::invalidate, widthProperty(), heightProperty(), showLineNumbersProperty);
 		wrapLinesProperty.addListener((s,p,c) -> handleWrapChange());
 		
 		// key map
@@ -194,7 +191,7 @@ public class FxTextEditor
 	public void setLineNumberFormatter(FxFormatter f)
 	{
 		lineNumberFormatterProperty.set(f);
-		requestLayout();
+		invalidate();
 	}
 	
 	
@@ -387,36 +384,28 @@ public class FxTextEditor
 	protected void setTopLine(int ix)
 	{
 		vflow.setTopLine(ix);
-		updateLayout();
+		invalidate();
 	}
 	
 	
 	protected void setTopOffset(int off)
 	{
 		vflow.setTopOffset(off);
-		updateLayout();
+		invalidate();
 	}
 	
 	
-	// FIX rename invalidate?
-	protected void updateLayout()
+	protected void invalidate()
 	{
-		// TODO
-//			if(wordWrapProperty.get())
-//			{
-//				vflow.offsetx = 0;
-//			}
 		vflow.invalidate();
-		repaint();
+		vflow.repaint();
 	}
 	
 	
 	protected void handleWrapChange()
 	{
-		D.print("handleWrapChange", isWrapLines()); // FIX
-		vflow.invalidate();
 		requestLayout();
-		repaint();
+		invalidate();
 	}
 	
 	
@@ -499,11 +488,6 @@ public class FxTextEditor
 	{
 		clearSelection();
 		
-//			vflow.invalidateLayout();
-//			vflow.reset();
-		
-		vflow.repaint();
-		
 		if(vscroll != null)
 		{
 			vscroll.setValue(0);
@@ -514,7 +498,7 @@ public class FxTextEditor
 			hscroll.setValue(0);
 		}
 		
-		updateLayout();
+		invalidate();
 	}
 
 
@@ -610,12 +594,14 @@ public class FxTextEditor
 	
 	public void pageUp()
 	{
+		// TODO
 //		vflow.pageUp();
 	}
 	
 	
 	public void pageDown()
 	{
+		// TODO
 //		vflow.pageDown();
 	}
 	
@@ -623,14 +609,14 @@ public class FxTextEditor
 	public void moveUp()
 	{
 		// TODO
-		D.print("moveUp");
+//		vflow.moveUp();
 	}
 	
 	
 	public void moveDown()
 	{
 		// TODO
-		D.print("moveDown");
+//		vflow.moveDown();
 	}
 	
 	
@@ -695,7 +681,17 @@ public class FxTextEditor
 		vflow.setSuppressBlink(on);
 	}
 	
+	
+	public void setOrigin(int row)
+	{
+		if((row >= 0) && (row < getLineCount()))
+		{
+			vflow.setOrigin(row, 0);
+		}
+	}
+	
 
+	// TODO
 //	public void scrollToVisible(int row)
 //	{
 //		if((row >= 0) && (row < getLineCount()))
@@ -706,15 +702,7 @@ public class FxTextEditor
 //	}
 	
 	
-	public void setOrigin(int row)
-	{
-		if((row >= 0) && (row < getLineCount()))
-		{
-			vflow.setOrigin(row, 0);
-		}
-	}
-	
-	
+	// TODO
 	public void scrollToVisible(Point2D screenPoint)
 	{
 //		Point2D p = vflow.screenToLocal(screenPoint);
@@ -778,6 +766,7 @@ public class FxTextEditor
 	
 	protected void handleKeyTyped(KeyEvent ev)
 	{
+		// TODO
 //		FxEditorModel m = getModel();
 //		if(m.isEditable())
 //		{
@@ -880,12 +869,6 @@ public class FxTextEditor
 		return s == null ? 0 : s.length();
 	}
 
-
-	public void repaint()
-	{
-		vflow.repaint();
-	}
-	
 	
 	public Color getCaretLineColor()
 	{
