@@ -760,7 +760,7 @@ public class VTextFlow
 			Font f = getFont(cell);
 			gx.setFont(f);
 			gx.setFill(fg);
-			gx.fillText(text, cx, cy - m.baseline, m.cellWidth);
+			gx.fillText(text, cx, cy - m.baseline, cw);
 		
 			// TODO underline, strikethrough
 		}
