@@ -38,4 +38,28 @@ public class Grapheme
 	{
 		attrs = a;
 	}
+	
+	
+	public boolean isBold()
+	{
+		return attrs.isBold();
+	}
+	
+	
+	public boolean isItalic()
+	{
+		return attrs.isItalic();
+	}
+	
+	
+	public boolean isStrikeThrough()
+	{
+		return attrs.isStrikeThrough();
+	}
+	
+	
+	public boolean isUnderscore()
+	{
+		return attrs.isUnderscore();
+	}
 }

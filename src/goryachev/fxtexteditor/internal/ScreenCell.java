@@ -1,7 +1,6 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 
 /**
@@ -14,7 +13,7 @@ public class ScreenCell
 	private boolean caret;
 	private int line;
 	private int offset;
-	private Grapheme cell;
+	private Grapheme grapheme;
 	
 	
 	public ScreenCell()
@@ -36,7 +35,7 @@ public class ScreenCell
 	
 	public String getText()
 	{
-		return cell == null ? null : cell.getText();
+		return grapheme == null ? null : grapheme.getText();
 	}
 	
 	
@@ -88,20 +87,32 @@ public class ScreenCell
 	}
 	
 
-	public void setCell(Grapheme cell)
+	public void setCell(Grapheme gr)
 	{
-		this.cell = cell;
+		this.grapheme = gr;
 	}
 	
 	
 	public boolean isBold()
 	{
-		return false; // TODO
+		return grapheme.isBold();
 	}
 	
 	
 	public boolean isItalic()
 	{
-		return false; // TODO
+		return grapheme.isItalic();
+	}
+	
+	
+	public boolean isStrikeThrough()
+	{
+		return grapheme.isStrikeThrough();
+	}
+	
+	
+	public boolean isUnderscore()
+	{
+		return grapheme.isUnderscore();
 	}
 }
