@@ -454,7 +454,7 @@ public class VTextFlow
 	}
 	
 	
-	protected Color backgroundColor(boolean caretLine, boolean selected, Grapheme cell)
+	protected Color backgroundColor(boolean caretLine, boolean selected, Color cellBG)
 	{
 		Color c = backgroundColor;
 		
@@ -468,9 +468,9 @@ public class VTextFlow
 			c = mixColor(c, editor.getSelectionBackgroundColor(), SELECTION_BACKGROUND_OPACITY);
 		}
 		
-		if(cell != null)
+		if(cellBG != null)
 		{
-			c = mixColor(c, cell.getBackgroundColor(), CELL_BACKGROUND_OPACITY);
+			c = mixColor(c, cellBG, CELL_BACKGROUND_OPACITY);
 		}
 		
 		return c;
@@ -507,20 +507,13 @@ public class VTextFlow
 		int off = topOffset;
 		boolean eof = false;
 		boolean eol = false;
-		boolean caretLine = false;
 		boolean selected = false;
-		boolean isCaret = false;
 		boolean highlightCaretLine = editor.isHighlightCaretLine();
-		Color bg = null;
-		Color fg = Color.BLACK; // TODO
-		Color textColor = Color.BLACK; // FIX null
 		TextCells textLine = null;
 		Grapheme gr = null;
 		
 		for(int y=0; y<ymax; y++)
 		{
-			caretLine = highlightCaretLine && editor.isCaretLine(lineIndex); 
-				
 			for(int x=0; x<xmax; x++)
 			{
 				if(eof)
@@ -570,19 +563,16 @@ public class VTextFlow
 				}
 				
 				selected = editor.isSelected(lineIndex, off);
-				bg = backgroundColor(caretLine, selected, gr);
+//				bg = backgroundColor(caretLine, selected, gr);
 				
 				// FIX eof: allow caret on last line
-				isCaret = caretLine && editor.isCaret(lineIndex, off) && !eol && !eof; // FIX boolean to indicate that we are pass the end of line
+//				isCaret = caretLine && editor.isCaret(lineIndex, off) && !eol && !eof; // FIX boolean to indicate that we are pass the end of line
 				
 				ScreenCell cell = buffer.getCell(screenBufferIndex++);
 				cell.setLine(lineIndex);
 				cell.setOffset(off);
-				cell.setCaret(isCaret);
 				cell.setCell(gr);
-				cell.setBackgroundColor(bg);
-				cell.setTextColor(textColor);
-				// TODO colors
+				cell.setValidLine(!eof);
 			}
 			
 			if(!eof)
@@ -590,13 +580,11 @@ public class VTextFlow
 				if(wrap)
 				{
 					// extra cell when wrap is on
-					ScreenCell screenCell = buffer.getCell(screenBufferIndex++);
-					screenCell.setLine(lineIndex);
-					screenCell.setOffset(off);
-					screenCell.setCell(null);
-					screenCell.setBackgroundColor(bg);
-					screenCell.setTextColor(null);
-					// TODO colors
+					ScreenCell cell = buffer.getCell(screenBufferIndex++);
+					cell.setLine(lineIndex);
+					cell.setOffset(off);
+					cell.setCell(null);
+					cell.setValidLine(!eof);
 					
 					if(eol)
 					{
@@ -736,15 +724,40 @@ public class VTextFlow
 		double cx = x * cw;
 		double cy = y * ch;
 
+		boolean caretLine = false;
+		boolean caret = false;
+		boolean selected = false;
+
+		int line = cell.getLine();
+		int pos = cell.getOffset();
+		// TODO this can be optimized by returning an int bitmap? maybe... isValid*
+		for(SelectionSegment ss: editor.selector.segments)
+		{
+			if(cell.isValidLine() && ss.isCaretLine(line))
+			{
+				caretLine = true;
+				
+				if(cell.isValidCaret() && ss.isCaret(line, pos))
+				{
+					caret = true;
+				}
+			}
+			
+			if(ss.contains(line, pos))
+			{
+				selected = true;
+			}
+		}
+		
 		// background
-		Color bg = cell.getBackgroundColor();
+		Color bg = backgroundColor(caretLine, selected, cell.getBackgroundColor());
 		gx.setFill(bg);
 		gx.fillRect(cx, cy, cw, ch);
 		
 		// caret
 		if(paintCaret.get()) // TODO move to screen buffer
 		{
-			if(cell.isCaret())
+			if(caret)
 			{
 				// TODO insert mode
 				gx.setFill(caretColor);

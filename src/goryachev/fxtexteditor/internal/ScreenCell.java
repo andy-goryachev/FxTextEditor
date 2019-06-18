@@ -5,31 +5,19 @@ import javafx.scene.paint.Color;
 
 /**
  * Screen Buffer Cell.
+ * Usually contains a grapheme, but not always - inside a tab, for example,
+ * or after an end of line, or after an end of file.
  */
 public class ScreenCell
 {
-	private Color backgroundColor;
-	private Color textColor;
-	private boolean caret;
 	private int line;
 	private int offset;
+	private boolean validLine;
 	private Grapheme grapheme;
 	
 	
 	public ScreenCell()
 	{
-	}
-	
-	
-	public Color getBackgroundColor()
-	{
-		return backgroundColor;
-	}
-	
-	
-	public void setBackgroundColor(Color c)
-	{
-		backgroundColor = c;
 	}
 	
 	
@@ -39,27 +27,15 @@ public class ScreenCell
 	}
 	
 	
+	public Color getBackgroundColor()
+	{
+		return grapheme == null ? null : grapheme.getBackgroundColor();
+	}
+	
+	
 	public Color getTextColor()
 	{
-		return textColor;
-	}
-	
-	
-	public void setTextColor(Color c)
-	{
-		textColor = c;
-	}
-	
-	
-	public boolean isCaret()
-	{
-		return caret;
-	}
-	
-	
-	public void setCaret(boolean on)
-	{
-		caret = on;
+		return grapheme == null ? null : grapheme.getTextColor();
 	}
 	
 	
@@ -72,6 +48,24 @@ public class ScreenCell
 	public void setLine(int line)
 	{
 		this.line = line;
+	}
+	
+	
+	public boolean isValidLine()
+	{
+		return validLine;
+	}
+	
+	
+	public void setValidLine(boolean on)
+	{
+		this.validLine = on;
+	}
+	
+	
+	public boolean isValidCaret()
+	{
+		return grapheme != null;
 	}
 	
 	

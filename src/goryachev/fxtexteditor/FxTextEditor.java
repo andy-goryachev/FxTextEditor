@@ -120,13 +120,7 @@ public class FxTextEditor
 		
 		getChildren().addAll(vflow, vscroll, hscroll);
 		
-		selector.segments.addListener(new ListChangeListener<SelectionSegment>()
-		{
-			public void onChanged(Change<? extends SelectionSegment> ch)
-			{
-				vflow.repaintSegment(ch);
-			}
-		});
+		selector.segments.addListener((ListChangeListener.Change<? extends SelectionSegment> ch) -> vflow.repaintSegment(ch));
 		
 //		Binder.onChange(vflow::updateBlinkRate, true, blinkRateProperty());
 		Binder.onChange(this::invalidate, widthProperty(), heightProperty(), showLineNumbersProperty);

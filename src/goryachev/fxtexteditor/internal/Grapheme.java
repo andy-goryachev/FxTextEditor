@@ -32,6 +32,12 @@ public class Grapheme
 	{
 		return attrs == null ? null : attrs.getBackgroundColor();
 	}
+	
+	
+	public Color getTextColor()
+	{
+		return attrs == null ? null : attrs.getTextColor();
+	}
 
 
 	public void setStyle(TAttrs a)
