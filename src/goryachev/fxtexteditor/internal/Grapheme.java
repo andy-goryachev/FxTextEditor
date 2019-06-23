@@ -11,7 +11,8 @@ public class Grapheme
 	public final int start;
 	public final int end;
 	public final String text;
-	private TAttrs attrs;
+	private static final TAttrs EMPTY = new TAttrs();
+	private TAttrs attrs = EMPTY;
 	
 	
 	public Grapheme(int start, int end, String text)

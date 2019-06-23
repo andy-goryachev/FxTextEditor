@@ -13,6 +13,7 @@ public class ScreenCell
 	private int line;
 	private int offset;
 	private boolean validLine;
+	private boolean validCaret;
 	private Grapheme grapheme;
 	
 	
@@ -65,7 +66,13 @@ public class ScreenCell
 	
 	public boolean isValidCaret()
 	{
-		return grapheme != null;
+		return validCaret;
+	}
+	
+	
+	public void setValidCaret(boolean on)
+	{
+		this.validCaret = on;
 	}
 	
 	

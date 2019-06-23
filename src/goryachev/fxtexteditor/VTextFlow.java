@@ -23,6 +23,8 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -62,7 +64,7 @@ public class VTextFlow
 	private int rowCount;
 	private TextMetrics metrics;
 	protected final Text proto = new Text();
-	private Color backgroundColor = Color.WHITE;
+	private Color backgroundColor = Color.WHITE; // TODO properties
 	private Color textColor = Color.BLACK;
 	private Color caretColor = Color.BLACK;
 	private int topLine;
@@ -104,6 +106,29 @@ public class VTextFlow
 			}
 		};
 		paintCaret.addListener((s,p,c) -> refreshCursor());
+		
+		// FIX
+		Tooltip.install(this, tooltip);
+		addEventFilter(MouseEvent.MOUSE_MOVED, (ev) -> 
+		{
+			tooltip.setText(getToolTipText(ev.getX(), ev.getY()));
+		});
+	}
+	// FIX remove later
+	Tooltip tooltip = new Tooltip();
+	protected String getToolTipText(double x, double y)
+	{
+		TextMetrics m = textMetrics();
+		int cx = FX.round(x / m.cellWidth);
+		int cy = FX.floor(y / m.cellHeight);
+		ScreenCell c = buffer.getCell(cx, cy);
+		return 
+			"(" + cx + "," + cy +
+			" line=" + c.getLine() +
+			" off=" + c.getOffset() +
+			" validCaret=" + c.isValidCaret() +
+			" validLine=" + c.isValidLine()
+			;
 	}
 	
 	
@@ -508,7 +533,7 @@ public class VTextFlow
 		boolean eof = false;
 		boolean eol = false;
 		boolean selected = false;
-		boolean highlightCaretLine = editor.isHighlightCaretLine();
+		boolean validCaret = true;
 		TextCells textLine = null;
 		Grapheme gr = null;
 		
@@ -516,13 +541,10 @@ public class VTextFlow
 		{
 			for(int x=0; x<xmax; x++)
 			{
-				if(eof)
+				if(eof || eol)
 				{
 					gr = null;
-				}
-				else if(eol)
-				{
-					gr = null;
+					validCaret = false;
 				}
 				else
 				{
@@ -545,34 +567,30 @@ public class VTextFlow
 					{
 						gr = null;
 						textLine = null;
+						validCaret = false;
 					}
 					else 
 					{
 						gr = textLine.getCell(off);
+						off++;
 						if(gr == null)
 						{
 							eol = true;
 						}
-						else
-						{
-							off++;
-						}
+						validCaret = true;
 						
 						// TODO tabs
 					}
 				}
 				
 				selected = editor.isSelected(lineIndex, off);
-//				bg = backgroundColor(caretLine, selected, gr);
-				
-				// FIX eof: allow caret on last line
-//				isCaret = caretLine && editor.isCaret(lineIndex, off) && !eol && !eof; // FIX boolean to indicate that we are pass the end of line
 				
 				ScreenCell cell = buffer.getCell(screenBufferIndex++);
 				cell.setLine(lineIndex);
 				cell.setOffset(off);
 				cell.setCell(gr);
 				cell.setValidLine(!eof);
+				cell.setValidCaret(validCaret);
 			}
 			
 			if(!eof)
@@ -770,6 +788,10 @@ public class VTextFlow
 		if(text != null)
 		{
 			Color fg = cell.getTextColor();
+			if(fg == null)
+			{
+				fg = getTextColor();
+			}
 			Font f = getFont(cell);
 			gx.setFont(f);
 			gx.setFill(fg);

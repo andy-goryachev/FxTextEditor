@@ -39,19 +39,28 @@ public class MainPane
 		showFindPane();
 		
 		boolean plain = false;
-		if(plain)
+		boolean special = true;
+		
+		if(special)
 		{
-			new FxTask<String>().
-				producer(() -> loadFile("million.txt")).
-				onSuccess((text) -> setModel(new SimplePlainTextEditorModel(text))).
-				submit();
+			setModel(new SimplePlainTextEditorModel("333\n22\n1"));
 		}
 		else
 		{
-			new FxTask<String>().
-				producer(() -> loadFile("demo.txt")).
-				onSuccess((text) -> setModel(new DemoTextEditorModel(text))).
-				submit();
+			if(plain)
+			{
+					new FxTask<String>().
+						producer(() -> loadFile("million.txt")).
+						onSuccess((text) -> setModel(new SimplePlainTextEditorModel(text))).
+						submit();
+			}
+			else
+			{
+				new FxTask<String>().
+					producer(() -> loadFile("demo.txt")).
+					onSuccess((text) -> setModel(new DemoTextEditorModel(text))).
+					submit();
+			}
 		}
 	}
 	
