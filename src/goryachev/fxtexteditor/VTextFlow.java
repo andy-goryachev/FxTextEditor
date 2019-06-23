@@ -534,6 +534,7 @@ public class VTextFlow
 		boolean eol = false;
 		boolean selected = false;
 		boolean validCaret = true;
+		boolean validLine = true;
 		TextCells textLine = null;
 		Grapheme gr = null;
 		
@@ -541,7 +542,21 @@ public class VTextFlow
 		{
 			for(int x=0; x<xmax; x++)
 			{
-				if(eof || eol)
+				if(eof)
+				{
+					gr = null;
+					validCaret = false;
+					
+					if(lineIndex == model.getLineCount())
+					{
+						validLine = true;
+					}
+					else
+					{
+						validLine = false;
+					}
+				}
+				else if(eol)
 				{
 					gr = null;
 					validCaret = false;
@@ -550,9 +565,17 @@ public class VTextFlow
 				{
 					if(textLine == null)
 					{
-						if(lineIndex >= model.getLineCount())
+						if(lineIndex == model.getLineCount())
 						{
 							eof = true;
+							validCaret = (x == 0) && (topOffset == 0);
+							validLine = true;
+						}
+						else if(lineIndex > model.getLineCount())
+						{
+							eof = true;
+							validCaret = false;
+							validLine = false;
 						}
 						else
 						{
@@ -567,7 +590,6 @@ public class VTextFlow
 					{
 						gr = null;
 						textLine = null;
-						validCaret = false;
 					}
 					else 
 					{
@@ -589,11 +611,15 @@ public class VTextFlow
 				cell.setLine(lineIndex);
 				cell.setOffset(off);
 				cell.setCell(gr);
-				cell.setValidLine(!eof);
 				cell.setValidCaret(validCaret);
+				cell.setValidLine(validLine);
 			}
 			
-			if(!eof)
+			if(eof)
+			{
+				lineIndex++;
+			}
+			else
 			{
 				if(wrap)
 				{
