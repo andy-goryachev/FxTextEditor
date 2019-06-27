@@ -5,6 +5,7 @@ import java.util.function.BiConsumer;
 
 /**
  * Simple Word Selector uses whitespace and punctuation to delimit words.
+ * FIX use break iterator
  */
 public class SimpleWordSelector
 	implements BiConsumer<FxTextEditor,Marker>

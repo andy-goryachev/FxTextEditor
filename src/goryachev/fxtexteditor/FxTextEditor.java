@@ -433,7 +433,28 @@ public class FxTextEditor
 	public Marker getInsertPosition(double screenx, double screeny)
 	{
 		TextPos pos = vflow.getInsertPosition(screenx, screeny);
-		return markers.newMarker(pos.getLine(), pos.getOffset());
+		int line = pos.getLine();
+		int off = pos.getOffset();
+		
+		if(line < 0)
+		{
+			line = getLineCount();
+			off = 0;
+		}
+		else if(off < 0)
+		{
+			String s = getPlainText(line);
+			if(s == null)
+			{
+				off = 0;
+			}
+			else
+			{
+				off = s.length();
+			}
+		}
+		
+		return markers.newMarker(line, off);
 	}
 	
 	

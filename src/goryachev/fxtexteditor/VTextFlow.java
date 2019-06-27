@@ -468,6 +468,7 @@ public class VTextFlow
 	}
 
 
+	/** returns insert position or null if cannot find */
 	public TextPos getInsertPosition(double screenx, double screeny)
 	{
 		Point2D p = canvas.screenToLocal(screenx, screeny);
@@ -594,7 +595,6 @@ public class VTextFlow
 					else 
 					{
 						gr = textLine.getCell(off);
-						off++;
 						if(gr == null)
 						{
 							eol = true;
@@ -613,6 +613,11 @@ public class VTextFlow
 				cell.setCell(gr);
 				cell.setValidCaret(validCaret);
 				cell.setValidLine(validLine);
+				
+				if(gr != null)
+				{
+					off++;
+				}
 			}
 			
 			if(eof)
@@ -773,7 +778,7 @@ public class VTextFlow
 		boolean selected = false;
 
 		int line = cell.getLine();
-		int pos = cell.getOffset();
+		int off = cell.getOffset();
 		// TODO this can be optimized by returning an int bitmap? maybe... isValid*
 		for(SelectionSegment ss: editor.selector.segments)
 		{
@@ -781,13 +786,13 @@ public class VTextFlow
 			{
 				caretLine = true;
 				
-				if(cell.isValidCaret() && ss.isCaret(line, pos))
+				if(cell.isValidCaret() && ss.isCaret(line, off))
 				{
 					caret = true;
 				}
 			}
 			
-			if(ss.contains(line, pos))
+			if(ss.contains(line, off))
 			{
 				selected = true;
 			}

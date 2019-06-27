@@ -71,13 +71,36 @@ public class ScreenBuffer
 	{
 		return cells[index];
 	}
+	
 
-
+	/** returns insert position.  might contain negative values for line or offset. */
 	public TextPos getInsertPosition(int x, int y)
 	{
 		ScreenCell c = getCell(x, y);
-		int line = c.getLine();
-		int off = c.getOffset();
+		
+		int line;
+		int off;
+		
+		if(c.isValidLine())
+		{
+			line = c.getLine();
+		}
+		else
+		{
+			// beyond eof
+			line = -1;
+		}
+		
+		if(c.isValidCaret())
+		{
+			off = c.getOffset();
+		}
+		else
+		{
+			// beyond eol
+			off = -1;
+		}
+		
 		return new TextPos(line, off);
 	}
 }
