@@ -9,7 +9,8 @@ import goryachev.fx.FxTask;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.SimplePlainTextEditorModel;
-import javafx.scene.text.Font;
+import goryachev.ibm.icu.IcuBreakIterator;
+import java.util.Locale;
 import javafx.util.Duration;
 
 
@@ -28,6 +29,7 @@ public class MainPane
 		FX.style(this, PANE);
 		
 		editor = new FxTextEditor();
+		editor.setBreakIterator(new IcuBreakIterator(Locale.US));
 		editor.setContentPadding(new CInsets(2, 4));
 		editor.setBlinkRate(Duration.millis(600));
 		editor.setMultipleSelectionEnabled(true);

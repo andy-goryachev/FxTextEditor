@@ -10,8 +10,8 @@ import goryachev.fxtexteditor.internal.Grapheme;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenCell;
 import goryachev.fxtexteditor.internal.TextCells;
+import java.text.BreakIterator;
 import java.util.Locale;
-import com.ibm.icu.text.BreakIterator;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.BooleanBinding;
@@ -69,7 +69,7 @@ public class VTextFlow
 	private Color caretColor = Color.BLACK;
 	private int topLine;
 	private int topOffset;
-	private BreakIterator breakIterator;
+	private IBreakIterator breakIterator;
 	protected final TextDecor decor = new TextDecor();
 	private boolean screenBufferValid;
 	private boolean repaintRequested;
@@ -371,8 +371,6 @@ public class VTextFlow
 	
 	protected void updateModel()
 	{
-		// TODO from model
-		breakIterator = BreakIterator.getCharacterInstance(Locale.US);
 		invalidate();
 	}
 	
@@ -655,13 +653,30 @@ public class VTextFlow
 	}
 	
 	
+	public void setBreakIterator(IBreakIterator b)
+	{
+		breakIterator = b;
+	}
+	
+	
+	protected IBreakIterator createBreakIterator()
+	{
+		return IBreakIterator.wrap(BreakIterator.getCharacterInstance(Locale.US));
+	}
+	
+	
 	protected TextCells createTextLine(int lineIndex, String text, TextDecor d)
 	{
 		TextCells cs = new TextCells();
+		
+		if(breakIterator == null)
+		{
+			breakIterator = createBreakIterator();
+		}
 		breakIterator.setText(text);
 
 		int start = breakIterator.first();
-		for(int end=breakIterator.next(); end!=BreakIterator.DONE; start=end, end=breakIterator.next())
+		for(int end=breakIterator.next(); end!=IBreakIterator.DONE; start=end, end=breakIterator.next())
 		{
 			String s = text.substring(start, end);
 			cs.addCell(start, end, s);

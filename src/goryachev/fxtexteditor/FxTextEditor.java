@@ -923,4 +923,10 @@ public class FxTextEditor
 	{
 		return selector.isSelected(line, pos);
 	}
+	
+	
+	public void setBreakIterator(IBreakIterator b)
+	{
+		vflow.setBreakIterator(b);
+	}
 }
