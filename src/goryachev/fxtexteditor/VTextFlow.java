@@ -23,8 +23,6 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollBar;
-import javafx.scene.control.Tooltip;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -106,29 +104,6 @@ public class VTextFlow
 			}
 		};
 		paintCaret.addListener((s,p,c) -> refreshCursor());
-		
-		// FIX
-		Tooltip.install(this, tooltip);
-		addEventFilter(MouseEvent.MOUSE_MOVED, (ev) -> 
-		{
-			tooltip.setText(getToolTipText(ev.getX(), ev.getY()));
-		});
-	}
-	// FIX remove later
-	Tooltip tooltip = new Tooltip();
-	protected String getToolTipText(double x, double y)
-	{
-		TextMetrics m = textMetrics();
-		int cx = FX.round(x / m.cellWidth);
-		int cy = FX.floor(y / m.cellHeight);
-		ScreenCell c = buffer.getCell(cx, cy);
-		return 
-			"(" + cx + "," + cy +
-			" line=" + c.getLine() +
-			" off=" + c.getOffset() +
-			" validCaret=" + c.isValidCaret() +
-			" validLine=" + c.isValidLine()
-			;
 	}
 	
 	

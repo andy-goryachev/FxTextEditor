@@ -14,11 +14,13 @@ public class DemoTextEditorModel
 	extends FxTextEditorModel
 {
 	protected final String[] lines;
+	protected final int repeats;
 
 
-	public DemoTextEditorModel(String text)
+	public DemoTextEditorModel(String text, int repeats)
 	{
 		lines = CKit.split(text, '\n');
+		this.repeats = repeats;
 	}
 	
 	
@@ -36,7 +38,7 @@ public class DemoTextEditorModel
 
 	public int getLineCount()
 	{
-		return lines.length;
+		return lines.length * repeats;
 	}
 
 
@@ -44,7 +46,7 @@ public class DemoTextEditorModel
 	{
 		if(line < getLineCount())
 		{
-			return lines[line];
+			return lines[line % lines.length];
 		}
 		return null;
 	}
