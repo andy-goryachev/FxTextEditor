@@ -3,7 +3,6 @@ package goryachev.fxtexteditor;
 import goryachev.common.util.CKit;
 import goryachev.fx.Binder;
 import goryachev.fx.CPane;
-import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
 import goryachev.fxtexteditor.internal.Grapheme;
@@ -38,7 +37,6 @@ import javafx.util.Duration;
 public class VTextFlow
 	extends CPane
 {
-	public static final CssStyle PANE = new CssStyle("FxTermView_PANE");
 	private static final double CARET_LINE_OPACITY = 0.3;
 	private static final double SELECTION_BACKGROUND_OPACITY = 0.4;
 	private static final double CELL_BACKGROUND_OPACITY = 0.8;
@@ -76,8 +74,6 @@ public class VTextFlow
 	public VTextFlow(FxTextEditor ed)
 	{
 		this.editor = ed;
-		
-		FX.style(this, PANE);
 		
 		setMinWidth(0);
 		setMinHeight(0);

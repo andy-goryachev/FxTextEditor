@@ -105,15 +105,14 @@ public class FxTextEditor
 		vscroll.setManaged(true);
 		vscroll.setMin(0.0);
 		vscroll.setMax(1.0);
-		vscroll.valueProperty().addListener((src,old,val) -> setAbsolutePositionVertical(val.doubleValue()));
 		vscroll.addEventFilter(ScrollEvent.ANY, (ev) -> ev.consume());
+		vscroll.valueProperty().addListener((s,p,c) -> handleVerticalScroll(c.doubleValue()));
 		
 		hscroll = createHScrollBar();
 		hscroll.setOrientation(Orientation.HORIZONTAL);
 		hscroll.setManaged(true);
 		hscroll.setMin(0.0);
 		hscroll.setMax(1.0);
-		hscroll.valueProperty().addListener((src,old,val) -> setAbsolutePositionHorizontal(val.doubleValue()));
 		hscroll.addEventFilter(ScrollEvent.ANY, (ev) -> ev.consume());
 		hscroll.visibleProperty().bind(wrapLinesProperty.not());
 		hscroll.valueProperty().addListener((s,p,c) -> handleHorizontalScroll(c.doubleValue()));
@@ -303,24 +302,6 @@ public class FxTextEditor
 				vs.setPainer(null);
 			}
 		}
-	}
-	
-	
-	protected void setAbsolutePositionVertical(double pos)
-	{
-		if(handleScrollEvents)
-		{
-			// TODO account for visible line count
-			int start = FX.round(getModel().getLineCount() * pos);
-			setTopLine(start);
-		}
-	}
-	
-	
-	protected void setAbsolutePositionHorizontal(double pos)
-	{
-		int off = FX.round(vflow.getMaxColumnCount() * pos);
-		setTopOffset(off);
 	}
 	
 	
@@ -734,12 +715,50 @@ public class FxTextEditor
 	}
 	
 	
+	/** 
+	 * returns approximate text line length, which must always exceed the number of 
+	 * screen cells needed to represent the visible text segment 
+	 */
+	protected int getVisibleTextWidthApprox()
+	{
+		int w = 0;
+		int start = vflow.getTopLine();
+		int sz = vflow.getLineCount();
+		for(int i=0; i<=sz; i++)
+		{
+			int line = start + i;
+			int len = getTextLength(line);
+			if(len > w)
+			{
+				w = len;
+			}
+		}
+		return w;
+	}
+	
+	
 	protected void handleHorizontalScroll(double val)
 	{
 		if(handleScrollEvents)
 		{
-			// TODO
-//			vflow.setHorizontalScroll(val);
+			// TODO account for visible area
+			int max = getVisibleTextWidthApprox() + 1;
+			int vis = vflow.getMaxColumnCount(); // account for this
+			
+			max = Math.max(0, max - vis);
+			int off = FX.round(max * val);
+			setTopOffset(off);
+		}
+	}
+	
+	
+	protected void handleVerticalScroll(double val)
+	{
+		if(handleScrollEvents)
+		{
+			// TODO account for visible line count
+			int start = FX.round(getModel().getLineCount() * val);
+			setTopLine(start);
 		}
 	}
 	
