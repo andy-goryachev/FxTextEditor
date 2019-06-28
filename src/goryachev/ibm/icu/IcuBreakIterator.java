@@ -34,7 +34,7 @@ public class IcuBreakIterator
 
 	public int next()
 	{
-		int rv = next();
+		int rv = b.next();
 		if(rv == BreakIterator.DONE)
 		{
 			return DONE;
