@@ -27,25 +27,25 @@ public interface IBreakIterator
 	 * it is recommended to use com.ibm.icu.text.BreakIterator instead because
 	 * the stock java one is not complete (emoji!)
 	 */
-	public static IBreakIterator wrap(BreakIterator b)
+	public static IBreakIterator wrap(BreakIterator br)
 	{
 		return new IBreakIterator()
 		{
 			public void setText(String text)
 			{
-				b.setText(text);
+				br.setText(text);
 			}
 
 
 			public int first()
 			{
-				return b.first();
+				return br.first();
 			}
 
 
 			public int next()
 			{
-				int rv = b.next();
+				int rv = br.next();
 				if(rv == BreakIterator.DONE)
 				{
 					return DONE;
@@ -56,7 +56,7 @@ public interface IBreakIterator
 			
 			public IBreakIterator copy()
 			{
-				return (IBreakIterator)b.clone();
+				return (IBreakIterator)br.clone();
 			}
 		};
 	}

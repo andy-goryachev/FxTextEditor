@@ -11,30 +11,30 @@ import com.ibm.icu.text.BreakIterator;
 public class IcuBreakIterator
 	implements IBreakIterator
 {
-	private final BreakIterator b;
+	private final BreakIterator br;
 	
 	
 	public IcuBreakIterator(Locale locale)
 	{
-		b = BreakIterator.getCharacterInstance(locale);
+		br = BreakIterator.getCharacterInstance(locale);
 	}
 
 
 	public void setText(String text)
 	{
-		b.setText(text);
+		br.setText(text);
 	}
 
 
 	public int first()
 	{
-		return b.first();
+		return br.first();
 	}
 
 
 	public int next()
 	{
-		int rv = b.next();
+		int rv = br.next();
 		if(rv == BreakIterator.DONE)
 		{
 			return DONE;
@@ -45,6 +45,6 @@ public class IcuBreakIterator
 	
 	public IBreakIterator copy()
 	{
-		return (IBreakIterator)b.clone();
+		return (IBreakIterator)br.clone();
 	}
 }
