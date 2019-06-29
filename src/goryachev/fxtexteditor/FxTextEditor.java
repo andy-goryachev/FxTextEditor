@@ -741,11 +741,11 @@ public class FxTextEditor
 	{
 		if(handleScrollEvents)
 		{
-			// TODO account for visible area
 			int max = getVisibleTextWidthApprox() + 1;
-			int vis = vflow.getMaxColumnCount(); // account for this
+			int vis = vflow.getMaxColumnCount();
 			
 			max = Math.max(0, max - vis);
+			
 			int off = FX.round(max * val);
 			setTopOffset(off);
 		}
@@ -756,13 +756,62 @@ public class FxTextEditor
 	{
 		if(handleScrollEvents)
 		{
-			// TODO account for visible line count
-			int start = FX.round(getModel().getLineCount() * val);
-			setTopLine(start);
+			int lineCount = getLineCount();
+			int vis = vflow.getLineCount();
+
+			if(isWrapLines())
+			{
+				int threshold = 200;
+				
+				if(lineCount < threshold)
+				{
+					// compute all
+					FlowHelper h = createFlowHelper(0, lineCount);
+					int max = Math.max(0, h.getRowCount() + 1 - vis);
+					int ix = FX.round(max * val);
+					int top = h.getLineAt(ix);
+					int off = h.getOffsetAt(ix);
+					setTopLine(top);
+					setTopOffset(off);
+					D.print(lineCount, top, off); // FIX
+					return;
+				}
+				else if(((1 - val) * lineCount) < threshold)
+				{
+					// compute tail
+					int start = lineCount - threshold;
+					FlowHelper h = createFlowHelper(start, threshold);
+					int max = start + h.getRowCount() + 1 - vis;
+					int ix = FX.round(max * val) - start;
+					int top = h.getLineAt(ix);
+					int off = h.getOffsetAt(ix);
+					setTopLine(top);
+					setTopOffset(off);
+					D.print(lineCount, top, off); // FIX
+					return;
+				}
+			}
+			
+			int max = Math.max(0, lineCount + 1 - vis);
+			int top = FX.round(max * val);
+			setTopLine(top);
 		}
 	}
 	
 	
+	private FlowHelper createFlowHelper(int start, int lineCount)
+	{
+		int w = vflow.getColumnCount();
+		FlowHelper h = new FlowHelper(w, start, vflow.getBreakIterator());
+		for(int i=0; i<lineCount; i++)
+		{
+			String s = getPlainText(start + i);
+			h.addLine(s);
+		}
+		return h;
+	}
+
+
 	protected void handleKeyEvent(KeyEvent ev)
 	{
 		if(!ev.isConsumed())

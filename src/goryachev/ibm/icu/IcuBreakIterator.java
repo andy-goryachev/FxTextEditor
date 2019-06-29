@@ -41,4 +41,10 @@ public class IcuBreakIterator
 		}
 		return rv;
 	}
+	
+	
+	public IBreakIterator copy()
+	{
+		return (IBreakIterator)b.clone();
+	}
 }

@@ -636,18 +636,29 @@ public class VTextFlow
 	}
 	
 	
-	protected TextCells createTextLine(int lineIndex, String text, TextDecor d)
+	/** 
+	 * use this instance ONLY if it will be immediately used.  
+	 * otherwise, create a copy of it
+	 */
+	public IBreakIterator getBreakIterator()
 	{
-		TextCells cs = new TextCells();
-		
 		if(breakIterator == null)
 		{
 			breakIterator = createBreakIterator();
 		}
-		breakIterator.setText(text);
+		return breakIterator;
+	}
+	
+	
+	protected TextCells createTextLine(int lineIndex, String text, TextDecor d)
+	{
+		TextCells cs = new TextCells();
+		
+		IBreakIterator br = getBreakIterator();
+		br.setText(text);
 
-		int start = breakIterator.first();
-		for(int end=breakIterator.next(); end!=IBreakIterator.DONE; start=end, end=breakIterator.next())
+		int start = br.first();
+		for(int end=br.next(); end!=IBreakIterator.DONE; start=end, end=br.next())
 		{
 			String s = text.substring(start, end);
 			cs.addCell(start, end, s);

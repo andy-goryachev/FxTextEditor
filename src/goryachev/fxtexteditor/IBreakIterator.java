@@ -18,6 +18,8 @@ public interface IBreakIterator
 
 	public int next();
 	
+	public IBreakIterator copy();
+	
 	//
 
 	/** 
@@ -49,6 +51,12 @@ public interface IBreakIterator
 					return DONE;
 				}
 				return rv;
+			}
+			
+			
+			public IBreakIterator copy()
+			{
+				return (IBreakIterator)b.clone();
 			}
 		};
 	}
