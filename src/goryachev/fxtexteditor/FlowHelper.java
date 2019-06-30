@@ -27,7 +27,7 @@ public class FlowHelper
 	{
 		off = 0;
 		
-		lineOffsetArray.add(line++);
+		lineOffsetArray.add(line);
 		lineOffsetArray.add(off);
 		
 		br.setText(text);
@@ -42,10 +42,11 @@ public class FlowHelper
 			{
 				lineOffsetArray.add(line);
 				lineOffsetArray.add(off);
-				line++;
 				col = 0;
 			}
 		}
+		
+		line++;
 	}
 	
 	

@@ -476,14 +476,14 @@ public class VTextFlow
 	{
 		if(!screenBufferValid)
 		{
-			reflowScreenBuffer();
+			reflow();
 			screenBufferValid = true;
 		}
 		return buffer;
 	}
 	
 
-	protected void reflowScreenBuffer()
+	protected void reflow()
 	{
 		FxTextEditorModel model = editor.getModel();
 		boolean wrap = editor.isWrapLines();
