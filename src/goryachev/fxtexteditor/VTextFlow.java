@@ -5,6 +5,7 @@ import goryachev.fx.Binder;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
+import goryachev.fx.FxBooleanBinding;
 import goryachev.fxtexteditor.internal.Grapheme;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenCell;
@@ -13,7 +14,6 @@ import java.text.BreakIterator;
 import java.util.Locale;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.BooleanExpression;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Bounds;
@@ -41,7 +41,7 @@ public class VTextFlow
 	private static final double SELECTION_BACKGROUND_OPACITY = 0.4;
 	private static final double CELL_BACKGROUND_OPACITY = 0.8;
 	protected final FxTextEditor editor;
-	protected final FxBoolean caretVisible = new FxBoolean(true); // FIX move to the editor
+	protected final FxBoolean showCaret = new FxBoolean(true);
 	protected final FxBoolean suppressBlink = new FxBoolean(false);
 	protected final BooleanExpression paintCaret;
 	protected final ScreenBuffer buffer = new ScreenBuffer();
@@ -88,15 +88,11 @@ public class VTextFlow
 		
 		// TODO clip rect
 		
-		paintCaret = new BooleanBinding()
+		paintCaret = new FxBooleanBinding(showCaret, editor.displayCaretProperty, editor.focusedProperty(), editor.disabledProperty(), suppressBlink)
 		{
-			{
-				bind(caretVisible, editor.displayCaretProperty, editor.focusedProperty(), editor.disabledProperty(), suppressBlink);
-			}
-
 			protected boolean computeValue()
 			{
-				return (isCaretVisible() || suppressBlink.get()) && editor.isDisplayCaret() && editor.isFocused() && (!editor.isDisabled());
+				return (isShowCaret() || suppressBlink.get()) && editor.isDisplayCaret() && editor.isFocused() && (!editor.isDisabled());
 			}
 		};
 		paintCaret.addListener((s,p,c) -> refreshCursor());
@@ -187,8 +183,8 @@ public class VTextFlow
 		cursorAnimation.stop();
 		cursorAnimation.getKeyFrames().setAll
 		(
-			new KeyFrame(Duration.ZERO, (ev) -> setCaretVisible(true)),
-			new KeyFrame(d, (ev) -> setCaretVisible(false)),
+			new KeyFrame(Duration.ZERO, (ev) -> setShowCaret(true)),
+			new KeyFrame(d, (ev) -> setShowCaret(false)),
 			new KeyFrame(period)
 		);
 		cursorAnimation.play();
@@ -196,15 +192,15 @@ public class VTextFlow
 	
 	
 	/** used for blinking animation */
-	protected void setCaretVisible(boolean on)
+	protected void setShowCaret(boolean on)
 	{
-		caretVisible.set(on);
+		showCaret.set(on);
 	}
 	
 	
-	public boolean isCaretVisible()
+	public boolean isShowCaret()
 	{
-		return caretVisible.get();
+		return showCaret.get();
 	}
 	
 	
