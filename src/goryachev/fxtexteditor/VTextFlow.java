@@ -650,19 +650,22 @@ public class VTextFlow
 	{
 		TextCells cs = new TextCells();
 		
-		IBreakIterator br = getBreakIterator();
-		br.setText(text);
-
-		int start = br.first();
-		for(int end=br.next(); end!=IBreakIterator.DONE; start=end, end=br.next())
+		if(text != null)
 		{
-			String s = text.substring(start, end);
-			cs.addCell(start, end, s);
-		}
-		
-		if(d != null)
-		{
-			d.applyStyles(cs);
+			IBreakIterator br = getBreakIterator();
+			br.setText(text);
+	
+			int start = br.first();
+			for(int end=br.next(); end!=IBreakIterator.DONE; start=end, end=br.next())
+			{
+				String s = text.substring(start, end);
+				cs.addCell(start, end, s);
+			}
+			
+			if(d != null)
+			{
+				d.applyStyles(cs);
+			}
 		}
 		
 		return cs;
