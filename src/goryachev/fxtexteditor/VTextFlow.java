@@ -346,15 +346,11 @@ public class VTextFlow
 	{
 		invalidate();
 		
-		// TODO move ?
 		canvas = createCanvas();
 		setCenter(canvas);
+		
 		gx = canvas.getGraphicsContext2D();
 		gx.setFontSmoothingType(FontSmoothingType.GRAY);
-		
-		// TODO perhaps not needed
-//		gx.setFill(getBackgroundColor());
-//		gx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		
 		paintAll();
 	}

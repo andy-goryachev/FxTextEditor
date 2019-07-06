@@ -2,9 +2,12 @@
 package goryachev.fxtexteditor;
 import goryachev.common.util.D;
 import goryachev.fx.FX;
+import goryachev.fx.KeyMap;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Point2D;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -14,7 +17,7 @@ import javafx.util.Duration;
 /**
  * FxTextEditor Mouse Handler.
  */
-public class FxTextEditorMouseHandler
+public class InputHandler
 {
 	protected final FxTextEditor editor;
 	protected final SelectionController selector;
@@ -28,13 +31,38 @@ public class FxTextEditorMouseHandler
 	private double scrollWheelStepSize = 0.1;
 
 
-	public FxTextEditorMouseHandler(FxTextEditor ed, SelectionController sel)
+	public InputHandler(FxTextEditor ed, SelectionController sel)
 	{
 		this.editor = ed;
 		this.selector = sel;
 		
 		autoScrollTimer = new Timeline(new KeyFrame(autoScrollPeriod, (ev) -> autoScroll()));
 		autoScrollTimer.setCycleCount(Timeline.INDEFINITE);
+	}
+	
+	
+	public static void init(FxTextEditor ed, SelectionController sel)
+	{
+		VTextFlow vflow = ed.vflow;
+		InputHandler h = new InputHandler(ed, sel);
+		
+		vflow.addEventFilter(MouseEvent.MOUSE_CLICKED, (ev) -> h.handleMouseClicked(ev));
+		vflow.addEventFilter(MouseEvent.MOUSE_PRESSED, (ev) -> h.handleMousePressed(ev));
+		vflow.addEventFilter(MouseEvent.MOUSE_RELEASED, (ev) -> h.handleMouseReleased(ev));
+		vflow.addEventFilter(MouseEvent.MOUSE_DRAGGED, (ev) -> h.handleMouseDragged(ev));
+		vflow.addEventFilter(ScrollEvent.ANY, (ev) -> h.handleScroll(ev));
+		
+		// key map
+		KeyMap.onKeyPressed(ed, KeyCode.A, KeyMap.SHORTCUT, ed::selectAll);
+		KeyMap.onKeyPressed(ed, KeyCode.C, KeyMap.SHORTCUT, ed::copy);
+		KeyMap.onKeyPressed(ed, KeyCode.DOWN, ed::moveDown);
+		KeyMap.onKeyPressed(ed, KeyCode.PAGE_DOWN, ed::pageDown);
+		KeyMap.onKeyPressed(ed, KeyCode.PAGE_UP, ed::pageUp);
+		KeyMap.onKeyPressed(ed, KeyCode.UP, ed::moveUp);
+		
+		ed.addEventFilter(KeyEvent.KEY_PRESSED, (ev) -> h.handleKeyPressed(ev));
+		ed.addEventFilter(KeyEvent.KEY_RELEASED, (ev) -> h.handleKeyReleased(ev));
+		ed.addEventFilter(KeyEvent.KEY_TYPED, (ev) -> h.handleKeyTyped(ev));
 	}
 	
 	
@@ -97,6 +125,8 @@ public class FxTextEditorMouseHandler
 	
 	public void handleMousePressed(MouseEvent ev)
 	{
+		editor.vflow.requestFocus();
+		
 		// not sure - perhaps only ignore if the mouse press is within a selection
 		// and reset selection if outside?
 		if(FX.isPopupTrigger(ev))
@@ -214,5 +244,87 @@ public class FxTextEditorMouseHandler
 		
 		Marker pos = editor.getInsertPosition(p.getX(), p.getY());
 		selector.extendLastSegment(pos);
+	}
+	
+
+	public void handleKeyPressed(KeyEvent ev)
+	{
+		if(ev.isConsumed())
+		{
+			return; // is this needed?
+		}
+	}
+	
+	
+	public void handleKeyReleased(KeyEvent ev)
+	{
+		if(ev.isConsumed())
+		{
+			return; // is this needed?
+		}
+	}
+	
+	
+	public void handleKeyTyped(KeyEvent ev)
+	{
+		if(ev.isConsumed())
+		{
+			return; // is this needed?
+		}
+		
+		// TODO
+//		FxEditorModel m = getModel();
+//		if(m.isEditable())
+//		{
+//			String ch = ev.getCharacter();
+//			if(isTypedCharacter(ch))
+//			{
+//				Edit ed = new Edit(getSelection(), ch);
+//				try
+//				{
+//					Edit undo = m.edit(ed);
+//					// TODO add to undo manager
+//				}
+//				catch(Exception e)
+//				{
+//					// TODO provide user feedback
+//					Log.ex(e);
+//				}
+//			}
+//		}
+	}
+
+
+	protected boolean isTypedCharacter(String ch)
+	{
+		if(KeyEvent.CHAR_UNDEFINED.equals(ch))
+		{
+			return false;
+		}
+		
+		int len = ch.length();
+		switch(len)
+		{
+		case 0:
+			return false;
+		case 1:
+			break;
+		default:
+			return true;
+		}
+		
+		char c = ch.charAt(0);
+		if(c < ' ')
+		{
+			return false;
+		}
+		
+		switch(c)
+		{
+		case 0x7f:
+			return false;
+		default:
+			return true;
+		}
 	}
 }

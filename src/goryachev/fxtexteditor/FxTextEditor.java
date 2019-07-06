@@ -9,7 +9,6 @@ import goryachev.fx.FxAction;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxFormatter;
 import goryachev.fx.FxObject;
-import goryachev.fx.KeyMap;
 import goryachev.fx.XScrollBar;
 import goryachev.fxtexteditor.internal.Markers;
 import goryachev.fxtexteditor.internal.TabPolicy;
@@ -25,7 +24,6 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
-import javafx.event.EventType;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -34,9 +32,6 @@ import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.input.DataFormat;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -125,21 +120,18 @@ public class FxTextEditor
 		Binder.onChange(this::invalidate, widthProperty(), heightProperty(), showLineNumbersProperty);
 		wrapLinesProperty.addListener((s,p,c) -> handleWrapChange());
 		
-		// key map
-		KeyMap.onKeyPressed(this, KeyCode.A, KeyMap.SHORTCUT, this::selectAll);
-		KeyMap.onKeyPressed(this, KeyCode.C, KeyMap.SHORTCUT, this::copy);
-		KeyMap.onKeyPressed(this, KeyCode.DOWN, this::moveDown);
-		KeyMap.onKeyPressed(this, KeyCode.PAGE_DOWN, this::pageDown);
-		KeyMap.onKeyPressed(this, KeyCode.PAGE_UP, this::pageUp);
-		KeyMap.onKeyPressed(this, KeyCode.UP, this::moveUp);
-		
-		initMouseController();
-		
-		// init key handler
-		addEventFilter(KeyEvent.ANY, (ev) -> handleKeyEvent(ev));
+		initInputHandler();
+		setFocusTraversable(true);
 	}
 	
 	
+	/** override to provide your own input handler */
+	protected void initInputHandler()
+	{
+		InputHandler.init(this, selector);
+	}
+	
+
 	public void setFont(Font f)
 	{
 		vflow.setFont(f);
@@ -195,19 +187,6 @@ public class FxTextEditor
 	}
 	
 	
-	/** override to provide your own mouse handler */
-	protected void initMouseController()
-	{
-		FxTextEditorMouseHandler h = new FxTextEditorMouseHandler(this, selector);
-		
-		vflow.addEventFilter(MouseEvent.MOUSE_CLICKED, (ev) -> h.handleMouseClicked(ev));
-		vflow.addEventFilter(MouseEvent.MOUSE_PRESSED, (ev) -> h.handleMousePressed(ev));
-		vflow.addEventFilter(MouseEvent.MOUSE_RELEASED, (ev) -> h.handleMouseReleased(ev));
-		vflow.addEventFilter(MouseEvent.MOUSE_DRAGGED, (ev) -> h.handleMouseDragged(ev));
-		vflow.addEventFilter(ScrollEvent.ANY, (ev) -> h.handleScroll(ev));
-	}
-	
-	
 	public ReadOnlyObjectProperty<EditorSelection> selectionProperty()
 	{
 		return selector.selectionProperty();
@@ -225,12 +204,6 @@ public class FxTextEditor
 		selector.clear();
 	}
 
-	
-	protected Runnable getActionForKeyEvent(KeyEvent ev)
-	{
-		return null;
-	}
-	
 	
 	public void setModel(FxTextEditorModel m)
 	{
@@ -593,8 +566,7 @@ public class FxTextEditor
 	
 	public void pageDown()
 	{
-		// TODO
-//		vflow.pageDown();
+		D.print("pageDown"); // FIX
 	}
 	
 	
@@ -809,96 +781,6 @@ public class FxTextEditor
 		return h;
 	}
 
-
-	protected void handleKeyEvent(KeyEvent ev)
-	{
-		if(!ev.isConsumed())
-		{
-			EventType<KeyEvent> t = ev.getEventType();
-			if(t == KeyEvent.KEY_PRESSED)
-			{
-				handleKeyPressed(ev);
-			}
-			else if(t == KeyEvent.KEY_RELEASED)
-			{
-				handleKeyReleased(ev);
-			}
-			else if(t == KeyEvent.KEY_TYPED)
-			{
-				handleKeyTyped(ev);
-			}
-		}
-	}
-
-
-	protected void handleKeyPressed(KeyEvent ev)
-	{
-	}
-	
-	
-	protected void handleKeyReleased(KeyEvent ev)
-	{
-	}
-	
-	
-	protected void handleKeyTyped(KeyEvent ev)
-	{
-		// TODO
-//		FxEditorModel m = getModel();
-//		if(m.isEditable())
-//		{
-//			String ch = ev.getCharacter();
-//			if(isTypedCharacter(ch))
-//			{
-//				Edit ed = new Edit(getSelection(), ch);
-//				try
-//				{
-//					Edit undo = m.edit(ed);
-//					// TODO add to undo manager
-//				}
-//				catch(Exception e)
-//				{
-//					// TODO provide user feedback
-//					Log.ex(e);
-//				}
-//			}
-//		}
-	}
-
-
-	protected boolean isTypedCharacter(String ch)
-	{
-		if(KeyEvent.CHAR_UNDEFINED.equals(ch))
-		{
-			return false;
-		}
-		
-		int len = ch.length();
-		switch(len)
-		{
-		case 0:
-			return false;
-		case 1:
-			break;
-		default:
-			return true;
-		}
-		
-		char c = ch.charAt(0);
-		if(c < ' ')
-		{
-			return false;
-		}
-		
-		switch(c)
-		{
-		case 0x7f:
-			return false;
-		default:
-			return true;
-		}
-	}
-	
 	
 	public void setCaret(int row, int position)
 	{

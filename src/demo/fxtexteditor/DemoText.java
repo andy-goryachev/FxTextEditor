@@ -12,12 +12,14 @@ public class DemoText
 {
 	public static void load(MainPane p)
 	{
-		switch(2)
+		switch(4)
 		{
 		case 1:
+			// hsort text
 			p.setModel(new SimplePlainTextEditorModel("333\n22\n1"));
 			break;
 		case 2:
+			// very long lines
 			new FxTask<String>().
 				producer(() -> loadFile("million.txt")).
 				onSuccess((text) -> p.setModel(new SimplePlainTextEditorModel(text))).
@@ -30,6 +32,7 @@ public class DemoText
 				submit();
 			break;
 		case 4:
+			// large model
 			new FxTask<String>().
 				producer(() -> loadFile("demo.txt")).
 				onSuccess((text) -> p.setModel(new DemoTextEditorModel(text, 100))).
