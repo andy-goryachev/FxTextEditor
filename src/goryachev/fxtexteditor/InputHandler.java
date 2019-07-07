@@ -29,6 +29,8 @@ public class InputHandler
 	private double autoScrollStepSlow = 20; // arbitrary
 	private boolean autoScrollUp;
 	private double scrollWheelStepSize = 0.1;
+	private int lastx = -1;
+	private int lasty = -1;
 
 
 	public InputHandler(FxTextEditor ed, SelectionController sel)
@@ -125,8 +127,6 @@ public class InputHandler
 	
 	public void handleMousePressed(MouseEvent ev)
 	{
-		editor.vflow.requestFocus();
-		
 		// not sure - perhaps only ignore if the mouse press is within a selection
 		// and reset selection if outside?
 		if(FX.isPopupTrigger(ev))

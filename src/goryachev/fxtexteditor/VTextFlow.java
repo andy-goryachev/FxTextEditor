@@ -395,7 +395,7 @@ public class VTextFlow
 	}
 	
 	
-	public void repaintSegment(ListChangeListener.Change<? extends SelectionSegment> ch)
+	public void repaintSegment(ListChangeListener.Change<? extends SelectionSegment> ss)
 	{
 		// TODO repaint only the damaged area
 		repaint();

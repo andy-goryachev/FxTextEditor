@@ -114,7 +114,7 @@ public class FxTextEditor
 		
 		getChildren().addAll(vflow, vscroll, hscroll);
 		
-		selector.segments.addListener((ListChangeListener.Change<? extends SelectionSegment> ch) -> vflow.repaintSegment(ch));
+		selector.segments.addListener((ListChangeListener.Change<? extends SelectionSegment> ss) -> handleSelectionSegmentUpdate(ss)); 
 		
 //		Binder.onChange(vflow::updateBlinkRate, true, blinkRateProperty());
 		Binder.onChange(this::invalidate, widthProperty(), heightProperty(), showLineNumbersProperty);
@@ -353,6 +353,12 @@ public class FxTextEditor
 	}
 	
 	
+	protected void handleSelectionSegmentUpdate(ListChangeListener.Change<? extends SelectionSegment> ss)
+	{
+		vflow.repaintSegment(ss);
+	}
+	
+	
 	protected void layoutChildren()
 	{
 		Insets m = getPadding();
@@ -566,6 +572,9 @@ public class FxTextEditor
 	
 	public void pageDown()
 	{
+		// TODO need the concept of last caret
+		// single caret: create phantom x position, move caret + screen height
+		// multiple carets: reset to a single caret using last caret, then follow the single caret logic
 		D.print("pageDown"); // FIX
 	}
 	
@@ -617,7 +626,6 @@ public class FxTextEditor
 	
 	public void selectAll()
 	{
-		// TODO
 		int ix = getLineCount();
 		if(ix > 0)
 		{
