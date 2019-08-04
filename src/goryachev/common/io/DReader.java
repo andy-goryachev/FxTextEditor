@@ -223,8 +223,16 @@ public class DReader
 	}
 	
 	
-	public long skip(long nbytes) throws IOException
+	public void skip(long nbytes) throws IOException
 	{
-		return in.skip(nbytes);
+		while(nbytes > 0)
+		{
+			long skipped = in.skip(nbytes);
+			if(skipped == 0)
+			{
+				throw new EOFException();
+			}
+			nbytes -= skipped;
+		}
 	}
 }
