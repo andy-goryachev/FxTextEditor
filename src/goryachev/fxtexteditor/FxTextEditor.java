@@ -593,6 +593,30 @@ public class FxTextEditor
 	}
 	
 	
+	public void moveHome()
+	{
+		// TODO
+	}
+	
+	
+	public void moveEnd()
+	{
+		// TODO
+	}
+	
+	
+	public void keyBackspace()
+	{
+		// TODO
+	}
+	
+	
+	public void keyDelete()
+	{
+		// TODO
+	}
+	
+	
 	public void scroll(double fractionOfHeight)
 	{
 		// TODO

@@ -543,6 +543,7 @@ public class VTextFlow
 						{
 							decor.reset();
 							String s = model.getPlainText(lineIndex);
+							// TODO possibly cache these two
 							TextDecor d = model.getTextDecor(lineIndex, s, decor);
 							textLine = createTextLine(lineIndex, s, d);
 						}

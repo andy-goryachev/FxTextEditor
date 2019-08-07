@@ -15,7 +15,7 @@ import javafx.util.Duration;
 
 
 /**
- * FxTextEditor Mouse Handler.
+ * FxTextEditor keyboard and Mouse Handler.
  */
 public class InputHandler
 {
@@ -43,6 +43,7 @@ public class InputHandler
 	}
 	
 	
+	// TODO remove static?
 	public static void init(FxTextEditor ed, SelectionController sel)
 	{
 		VTextFlow vflow = ed.vflow;
@@ -61,7 +62,12 @@ public class InputHandler
 		KeyMap.onKeyPressed(ed, KeyCode.PAGE_DOWN, ed::pageDown);
 		KeyMap.onKeyPressed(ed, KeyCode.PAGE_UP, ed::pageUp);
 		KeyMap.onKeyPressed(ed, KeyCode.UP, ed::moveUp);
+		KeyMap.onKeyPressed(ed, KeyCode.HOME, ed::moveHome);
+		KeyMap.onKeyPressed(ed, KeyCode.END, ed::moveEnd);
+		KeyMap.onKeyPressed(ed, KeyCode.DELETE, ed::keyDelete);
+		KeyMap.onKeyPressed(ed, KeyCode.BACK_SPACE, ed::keyBackspace);
 		
+		// TODO remove?
 		ed.addEventFilter(KeyEvent.KEY_PRESSED, (ev) -> h.handleKeyPressed(ev));
 		ed.addEventFilter(KeyEvent.KEY_RELEASED, (ev) -> h.handleKeyReleased(ev));
 		ed.addEventFilter(KeyEvent.KEY_TYPED, (ev) -> h.handleKeyTyped(ev));
