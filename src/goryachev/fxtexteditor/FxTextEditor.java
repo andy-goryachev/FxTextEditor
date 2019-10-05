@@ -68,6 +68,8 @@ public class FxTextEditor
 	protected BiConsumer<FxTextEditor,Marker> wordSelector = new SimpleWordSelector();
 
 	
+	// TODO perhaps pass final Capabilities object that defines basic parameters
+	// such as cache size, various limits, behaviors, etc.
 	public FxTextEditor()
 	{
 		modelListener = new FxTextEditorModelListener()

@@ -130,7 +130,7 @@ public class MainWindow
 		m.item("Find and Select");
 		// view
 		m.menu("View");
-//		m.item("Show Line Numbers", editor().showLineNumbersProperty());
+		m.item("Show Line Numbers", editor().showLineNumbersProperty());
 		m.item("Wrap Lines", editor().wrapLinesProperty());
 		// help
 		m.menu("Help");

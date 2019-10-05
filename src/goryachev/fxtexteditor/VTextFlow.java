@@ -1,7 +1,6 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.CKit;
-import goryachev.common.util.CMap;
 import goryachev.fx.Binder;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
@@ -11,6 +10,7 @@ import goryachev.fxtexteditor.internal.Grapheme;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenCell;
 import goryachev.fxtexteditor.internal.TextCells;
+import goryachev.fxtexteditor.internal.TextCellsCache;
 import java.text.BreakIterator;
 import java.util.Locale;
 import javafx.animation.KeyFrame;
@@ -70,7 +70,7 @@ public class VTextFlow
 	protected final TextDecor decor = new TextDecor();
 	private boolean screenBufferValid;
 	private boolean repaintRequested;
-	protected final CMap<Integer,TextCells> cache = new CMap();
+	protected final TextCellsCache cache = new TextCellsCache(256);
 	
 	
 	public VTextFlow(FxTextEditor ed)
