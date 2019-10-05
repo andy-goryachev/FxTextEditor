@@ -1,6 +1,7 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.CKit;
+import goryachev.common.util.CMap;
 import goryachev.fx.Binder;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
@@ -69,6 +70,7 @@ public class VTextFlow
 	protected final TextDecor decor = new TextDecor();
 	private boolean screenBufferValid;
 	private boolean repaintRequested;
+	protected final CMap<Integer,TextCells> cache = new CMap();
 	
 	
 	public VTextFlow(FxTextEditor ed)
@@ -474,6 +476,31 @@ public class VTextFlow
 		return buffer;
 	}
 	
+	
+	protected TextCells getTextCellsLine(int lineIndex)
+	{
+		TextCells rv = cache.get(lineIndex);
+		if(rv == null)
+		{
+			FxTextEditorModel model = editor.getModel();
+			decor.reset();
+			String s = model.getPlainText(lineIndex);
+			TextDecor d = model.getTextDecor(lineIndex, s, decor);
+			rv = createTextLine(lineIndex, s, d);
+			
+			// TODO bound size!
+			// TODO own class
+			cache.put(lineIndex, rv);
+		}
+		return rv;
+	}
+	
+	
+	public void clearTextCellsCache()
+	{
+		cache.clear();
+	}
+	
 
 	protected void reflow()
 	{
@@ -541,11 +568,7 @@ public class VTextFlow
 						}
 						else
 						{
-							decor.reset();
-							String s = model.getPlainText(lineIndex);
-							// TODO possibly cache these two
-							TextDecor d = model.getTextDecor(lineIndex, s, decor);
-							textLine = createTextLine(lineIndex, s, d);
+							textLine = getTextCellsLine(lineIndex);
 						}
 					}
 					
@@ -633,6 +656,7 @@ public class VTextFlow
 	 * use this instance ONLY if it will be immediately used.  
 	 * otherwise, create a copy of it
 	 */
+	// TODO option to return null or a simple break iterator
 	public IBreakIterator getBreakIterator()
 	{
 		if(breakIterator == null)
@@ -643,7 +667,8 @@ public class VTextFlow
 	}
 	
 	
-	protected TextCells createTextLine(int lineIndex, String text, TextDecor d)
+	// TODO add cache
+	protected TextCells createTextLine(int lineIndex, String text, TextDecor decor)
 	{
 		TextCells cs = new TextCells();
 		
@@ -659,9 +684,9 @@ public class VTextFlow
 				cs.addCell(start, end, s);
 			}
 			
-			if(d != null)
+			if(decor != null)
 			{
-				d.applyStyles(cs);
+				decor.applyStyles(cs);
 			}
 		}
 		
