@@ -358,7 +358,6 @@ public class VTextFlow
 	}
 	
 	
-	// TODO create canvas +1 size
 	protected Canvas createCanvas()
 	{
 		TextMetrics tm = textMetrics();
