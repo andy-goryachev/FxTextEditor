@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
  * Usually contains a grapheme, but not always - inside a tab, for example,
  * or after an end of line, or after an end of file.
  */
+@Deprecated // TODO replace
 public class ScreenCell
 {
 	private int line;

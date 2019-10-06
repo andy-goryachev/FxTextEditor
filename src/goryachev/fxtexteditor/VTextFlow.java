@@ -487,9 +487,6 @@ public class VTextFlow
 			String s = model.getPlainText(lineIndex);
 			TextDecor d = model.getTextDecor(lineIndex, s, decor);
 			rv = createTextLine(lineIndex, s, d);
-			
-			// TODO bound size!
-			// TODO own class
 			cache.put(lineIndex, rv);
 		}
 		return rv;
@@ -502,6 +499,8 @@ public class VTextFlow
 	}
 	
 
+	// TODO get rid of ScreenBuffer, instead keep track of
+	// TextCells, offset, hasSelection (perhaps in other object)
 	protected void reflow()
 	{
 		FxTextEditorModel model = editor.getModel();
