@@ -11,7 +11,7 @@ import java.util.Random;
 public class TextCellsCache
 {
 	private final int capacity;
-	private final CMap<Integer,TextCells> cache;
+	private final CMap<Integer,ITextCells> cache;
 	private final CList<Integer> keys;
 	
 	
@@ -34,7 +34,7 @@ public class TextCellsCache
 	}
 	
 
-	public TextCells get(int key)
+	public ITextCells get(int key)
 	{
 		return cache.get(key);
 	}
@@ -53,7 +53,7 @@ public class TextCellsCache
 	}
 	
 	
-	public TextCells put(int key, TextCells value)
+	public ITextCells put(int key, ITextCells value)
 	{
 		if(size() >= (capacity - 1))
 		{

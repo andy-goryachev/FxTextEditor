@@ -7,6 +7,7 @@ import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxBooleanBinding;
 import goryachev.fxtexteditor.internal.Grapheme;
+import goryachev.fxtexteditor.internal.ITextCells;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenCell;
 import goryachev.fxtexteditor.internal.TextCells;
@@ -476,9 +477,9 @@ public class VTextFlow
 	}
 	
 	
-	protected TextCells getTextCellsLine(int lineIndex)
+	protected ITextCells getTextCellsLine(int lineIndex)
 	{
-		TextCells rv = cache.get(lineIndex);
+		ITextCells rv = cache.get(lineIndex);
 		if(rv == null)
 		{
 			FxTextEditorModel model = editor.getModel();
@@ -522,7 +523,7 @@ public class VTextFlow
 		boolean selected = false;
 		boolean validCaret = true;
 		boolean validLine = true;
-		TextCells textLine = null;
+		ITextCells textLine = null;
 		Grapheme gr = null;
 		
 		for(int y=0; y<ymax; y++)
@@ -666,8 +667,9 @@ public class VTextFlow
 	
 	
 	// TODO add cache
-	protected TextCells createTextLine(int lineIndex, String text, TextDecor decor)
+	protected ITextCells createTextLine(int lineIndex, String text, TextDecor decor)
 	{
+		// TODO depending on the model, may create a more lightweight implementation
 		TextCells cs = new TextCells();
 		
 		if(text != null)

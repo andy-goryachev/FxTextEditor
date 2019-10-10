@@ -8,13 +8,13 @@ package goryachev.fxtexteditor.internal;
 public class TLayout
 {
 	private final int width;
-	private final TextCells[] lines;
+	private final ITextCells[] lines;
 	private final int[] offsets;
 	private boolean[] selection;
 	private boolean[] carets;
 	
 	
-	public TLayout(int width, TextCells[] lines, int[] offsets)
+	public TLayout(int width, ITextCells[] lines, int[] offsets)
 	{
 		this.width = width;
 		this.lines = lines;

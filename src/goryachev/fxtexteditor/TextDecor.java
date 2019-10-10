@@ -1,10 +1,9 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.CList;
-import goryachev.common.util.D;
-import goryachev.fxtexteditor.internal.TAttrs;
 import goryachev.fxtexteditor.internal.Grapheme;
-import goryachev.fxtexteditor.internal.TextCells;
+import goryachev.fxtexteditor.internal.ITextCells;
+import goryachev.fxtexteditor.internal.TAttrs;
 import javafx.scene.paint.Color;
 
 
@@ -94,7 +93,7 @@ public class TextDecor
 	}
 	
 	
-	public void applyStyles(TextCells cs)
+	public void applyStyles(ITextCells cs)
 	{
 		int pos = 0;
 		for(Segment s: segments)

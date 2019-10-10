@@ -7,7 +7,9 @@ import goryachev.common.util.CList;
  * Collection of Text Cells representing one line of text in the model.
  */
 public class TextCells
+	implements ITextCells
 {
+	// TODO store attributes separately from text, or move it to model
 	protected final CList<Grapheme> cells = new CList();
 	
 	
