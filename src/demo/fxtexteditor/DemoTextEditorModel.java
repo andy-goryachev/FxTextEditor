@@ -3,7 +3,9 @@ package demo.fxtexteditor;
 import goryachev.common.util.CKit;
 import goryachev.fxtexteditor.Edit;
 import goryachev.fxtexteditor.FxTextEditorModel;
+import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.LoadInfo;
+import goryachev.fxtexteditor.StyleInfo;
 import goryachev.fxtexteditor.TextDecor;
 
 
@@ -44,6 +46,12 @@ public class DemoTextEditorModel
 
 	public String getPlainText(int line)
 	{
+		return plainText(line);
+	}
+	
+	
+	protected String plainText(int line)
+	{
 		if(line < getLineCount())
 		{
 			return lines[line % lines.length];
@@ -66,5 +74,47 @@ public class DemoTextEditorModel
 			return d;
 		}
 		return null;
+	}
+	
+	
+	public ITextLine getTextLine(int line)
+	{
+		String text = plainText(line);
+		if(text == null)
+		{
+			return null;
+		}
+		
+		return new ITextLine()
+		{
+			public int getLineNumber()
+			{
+				return line;
+			}
+
+
+			public String getPlainText()
+			{
+				return text;
+			}
+
+
+			public int getCellCount()
+			{
+				return text.length();
+			}
+
+
+			public String getCellText(int offset)
+			{
+				return text.substring(offset, offset + 1);
+			}
+
+
+			public void getStyle(StyleInfo s, int offset)
+			{
+				// TODO style
+			}
+		};
 	}
 }

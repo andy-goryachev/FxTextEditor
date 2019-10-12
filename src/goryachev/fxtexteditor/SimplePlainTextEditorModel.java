@@ -50,4 +50,15 @@ public class SimplePlainTextEditorModel
 	{
 		return null;
 	}
+
+
+	public ITextLine getTextLine(int line)
+	{
+		if(line < getLineCount())
+		{
+			String text = lines[line];
+			return new PlainTextLine(line, text);
+		}
+		return null;
+	}
 }

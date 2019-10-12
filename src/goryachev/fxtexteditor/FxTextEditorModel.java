@@ -24,10 +24,15 @@ public abstract class FxTextEditorModel
 	 */
 	public abstract int getLineCount();
 	
+	// TODO
+	public abstract ITextLine getTextLine(int line);
+	
 	/** returns the number of cells on a particular line */
+	@Deprecated // FIX remove
 	public final void getCellCount(int line) { } // FIX remove
 	
 	/** returns plain text at the specified line, or null if unknown */
+	@Deprecated // FIX remove
 	public abstract String getPlainText(int line);
 	
 	/**
@@ -40,6 +45,7 @@ public abstract class FxTextEditorModel
 	 * @param d - pre-allocated and reset object that receives styling info
 	 * @return the styling info object or null if no styling is desired or available
 	 */
+	@Deprecated // FIX remove
 	public abstract TextDecor getTextDecor(int line, String text, TextDecor d);
 	
 	/**
