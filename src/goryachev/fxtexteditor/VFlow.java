@@ -65,7 +65,7 @@ public class VFlow
 	private boolean screenBufferValid;
 	private boolean repaintRequested;
 	protected final TextCellsCache cache = new TextCellsCache(256);
-	protected final ScreenCell cell = new ScreenCell();
+	protected final CellStyles cell = new CellStyles();
 	
 	
 	public VFlow(FxTextEditor ed)
@@ -398,7 +398,7 @@ public class VFlow
 	}
 	
 	
-	protected Font getFont(ScreenCell st)
+	protected Font getFont(CellStyles st)
 	{
 		if(st.isBold())
 		{
@@ -851,7 +851,6 @@ public class VFlow
 		
 		boolean caretLine = false;
 		boolean caret = false;
-		
 		boolean selected = false;
 //		if(row.hasSelection())
 //		{
@@ -903,7 +902,7 @@ public class VFlow
 		}
 		
 		// text
-		String text = cell.getText();
+		String text = row.getCellText(x);
 		if(text != null)
 		{
 			Color fg = cell.getTextColor();

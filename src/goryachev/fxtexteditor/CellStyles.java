@@ -4,11 +4,10 @@ import javafx.scene.paint.Color;
 
 
 /**
- * A single instance of Screen Cell holds cell values during paintCell().
+ * A single instance of this object holds cell attributes during paintCell().
  */
-public class ScreenCell
+public class CellStyles
 {
-	private String text;
 	private Color backgroundColor;
 	private Color textColor;
 	private boolean bold;
@@ -17,14 +16,13 @@ public class ScreenCell
 	private boolean underscore;
 	
 	
-	public ScreenCell()
+	public CellStyles()
 	{
 	}
 	
 	
-	public void update(String text, Color bg, Color fg, boolean bold, boolean italic, boolean strikeThrough, boolean underscore)
+	public void update(Color bg, Color fg, boolean bold, boolean italic, boolean strikeThrough, boolean underscore)
 	{
-		this.text = text;
 		this.backgroundColor = bg;
 		this.textColor = fg;
 		this.bold = bold;
@@ -34,16 +32,15 @@ public class ScreenCell
 	}
 	
 	
-	public String getText()
+	public void clear()
 	{
-		return text;
+		this.backgroundColor = null;
+		this.textColor = null;
+		this.bold = false;
+		this.italic = false;
+		this.strikeThrough = false;
+		this.underscore = false;
 	}
-	
-	
-//	public void setText(String s)
-//	{
-//		text = s;
-//	}
 	
 	
 	public Color getBackgroundColor()

@@ -1,7 +1,7 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.fxtexteditor.ITextLine;
-import goryachev.fxtexteditor.ScreenCell;
+import goryachev.fxtexteditor.CellStyles;
 
 
 /**
@@ -53,7 +53,7 @@ public class ScreenRow
 	}
 
 
-	public void updateStyle(int x, ScreenCell style)
+	public void updateStyle(int x, CellStyles style)
 	{
 		textLine.updateStyle(x, style);
 	}
@@ -62,5 +62,11 @@ public class ScreenRow
 	public int getModelIndex()
 	{
 		return textLine.getModelIndex();
+	}
+
+
+	public String getCellText(int x)
+	{
+		return textLine.getCellText(startOffset + x);
 	}
 }

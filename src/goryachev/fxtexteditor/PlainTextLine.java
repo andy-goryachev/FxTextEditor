@@ -54,11 +54,10 @@ public class PlainTextLine
 	}
 
 
-	public void updateStyle(int offset, ScreenCell cell)
+	public void updateStyle(int offset, CellStyles styles)
 	{
-		cell.update
+		styles.update
 		(
-			getCellText(offset),
 			null,
 			null,
 			false,

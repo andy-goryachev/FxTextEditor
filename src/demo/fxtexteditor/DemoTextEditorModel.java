@@ -1,12 +1,11 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
 import goryachev.common.util.CKit;
+import goryachev.fxtexteditor.CellStyles;
 import goryachev.fxtexteditor.Edit;
 import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.LoadInfo;
-import goryachev.fxtexteditor.ScreenCell;
-import goryachev.fxtexteditor.DELETE.TextDecor;
 
 
 /**
@@ -54,6 +53,7 @@ public class DemoTextEditorModel
 	}
 
 
+	// TODO
 //	public TextDecor getTextDecor(int line, String text, TextDecor d)
 //	{
 //		if(line < getLineCount())
@@ -116,11 +116,10 @@ public class DemoTextEditorModel
 			}
 
 
-			public void updateStyle(int off, ScreenCell cell)
+			public void updateStyle(int off, CellStyles styles)
 			{
-				cell.update
+				styles.update
 				(
-					getCellText(off),
 					null,
 					null,
 					false,
