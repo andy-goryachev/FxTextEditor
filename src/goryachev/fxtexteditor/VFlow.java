@@ -33,7 +33,7 @@ import javafx.util.Duration;
 /**
  * Paints the text on canvas. 
  */
-public class VTextFlow
+public class VFlow
 	extends CPane
 {
 	private static final double CARET_LINE_OPACITY = 0.3;
@@ -71,7 +71,7 @@ public class VTextFlow
 	protected final ScreenCell cell = new ScreenCell();
 	
 	
-	public VTextFlow(FxTextEditor ed)
+	public VFlow(FxTextEditor ed)
 	{
 		this.editor = ed;
 		

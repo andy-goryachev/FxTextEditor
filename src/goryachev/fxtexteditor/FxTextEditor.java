@@ -60,7 +60,7 @@ public class FxTextEditor
 	protected final FxTextEditorModelListener modelListener;
 	protected final SelectionController selector;
 	protected final Markers markers = new Markers(32);
-	protected final VTextFlow vflow;
+	protected final VFlow vflow;
 	protected final ScrollBar vscroll;
 	protected final ScrollBar hscroll;
 	protected boolean handleScrollEvents = true;
@@ -95,7 +95,7 @@ public class FxTextEditor
 		
 		selector = createSelectionController();
 		
-		vflow = new VTextFlow(this);
+		vflow = new VFlow(this);
 		
 		vscroll = createVScrollBar();
 		vscroll.setOrientation(Orientation.VERTICAL);

@@ -46,7 +46,7 @@ public class InputHandler
 	// TODO remove static?
 	public static void init(FxTextEditor ed, SelectionController sel)
 	{
-		VTextFlow vflow = ed.vflow;
+		VFlow vflow = ed.vflow;
 		InputHandler h = new InputHandler(ed, sel);
 		
 		vflow.addEventFilter(MouseEvent.MOUSE_CLICKED, (ev) -> h.handleMouseClicked(ev));
