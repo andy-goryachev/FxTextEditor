@@ -1,8 +1,6 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
-package goryachev.fxtexteditor;
+package goryachev.fxtexteditor.DELETE;
 import goryachev.common.util.CList;
-import goryachev.fxtexteditor.internal.Grapheme;
-import goryachev.fxtexteditor.internal.ITextCells;
 import goryachev.fxtexteditor.internal.TAttrs;
 import javafx.scene.paint.Color;
 
@@ -10,6 +8,7 @@ import javafx.scene.paint.Color;
 /**
  * Text Decorations.
  */
+@Deprecated // FIX remove
 public class TextDecor
 {
 	protected final CList<Segment> segments = new CList();
@@ -93,20 +92,20 @@ public class TextDecor
 	}
 	
 	
-	public void applyStyles(ITextCells cs)
-	{
-		int pos = 0;
-		for(Segment s: segments)
-		{
-			TAttrs a = s.attrs;
-			for(int i=0; i<s.length; i++)
-			{
-				Grapheme c = cs.getCell(pos);
-				c.setStyle(a);
-				pos++;
-			}
-		}
-	}
+//	public void applyStyles(ITextCells cs)
+//	{
+//		int pos = 0;
+//		for(Segment s: segments)
+//		{
+//			TAttrs a = s.attrs;
+//			for(int i=0; i<s.length; i++)
+//			{
+//				Grapheme c = cs.getCell(pos);
+//				c.setStyle(a);
+//				pos++;
+//			}
+//		}
+//	}
 	
 	
 	//

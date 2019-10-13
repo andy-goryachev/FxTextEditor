@@ -10,7 +10,7 @@ import goryachev.fxtexteditor.ScreenCell;
  */
 public class ScreenRow
 {
-	private TextCells cells;
+	private ITextLine textLine;
 	private int startOffset;
 	
 	
@@ -19,17 +19,17 @@ public class ScreenRow
 	}
 	
 	
-	public void setStart(TextCells t, int off)
+	public void setStart(ITextLine t, int off)
 	{
-		cells = t;
+		textLine = t;
 		startOffset = off;
 		// TODO populate?
 	}
 
 
-	public TextCells getTextLine()
+	public ITextLine getTextLine()
 	{
-		return cells;
+		return textLine;
 	}
 
 
@@ -62,6 +62,6 @@ public class ScreenRow
 
 	public int getModelIndex()
 	{
-		return cells.getModelIndex();
+		return textLine.getModelIndex();
 	}
 }

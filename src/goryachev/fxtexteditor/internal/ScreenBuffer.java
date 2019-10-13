@@ -60,9 +60,9 @@ public class ScreenBuffer
 	}
 	
 	
-	public void addRow(int ix, TextCells cells, int off)
+	public void addRow(int ix, ITextLine textLine, int off)
 	{
-		rows[ix].setStart(cells, off);
+		rows[ix].setStart(textLine, off);
 	}
 	
 

@@ -4,7 +4,6 @@ import goryachev.common.util.CList;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxObject;
 import java.util.function.Consumer;
-import javafx.beans.property.BooleanProperty;
 
 
 /**
@@ -25,26 +24,10 @@ public abstract class FxTextEditorModel
 	public abstract int getLineCount();
 	
 	/**
-	 * Returns the representaion of text on the specified line.
+	 * Returns the representaion of text on the specified line, or null.
+	 * TODO make not nullable
 	 */
 	public abstract ITextLine getTextLine(int line);
-	
-	/** returns plain text at the specified line, or null if not loaded */
-	@Deprecated // FIX remove
-	public abstract String getPlainText(int line);
-	
-	/**
-	 * returns styling information for a particular line:
-	 * style segments in terms of string characters and not grapheme blocks.
-	 * The editor will use this information to decorate grapheme blocks extracted
-	 * from the plain text.
-	 * @param line - text line index
-	 * @param text - plain text obtained earlier from getPlainText()
-	 * @param d - pre-allocated and reset object that receives styling info
-	 * @return the styling info object or null if no styling is desired or available
-	 */
-	@Deprecated // FIX remove
-	public final void getTextDecor(int line, String text, TextDecor d) { }
 	
 	/**
 	 * Applies modification to the model.  The model makes necessary changes to its internal state, 
@@ -95,7 +78,7 @@ public abstract class FxTextEditorModel
 	}
 	
 	
-	public BooleanProperty editableProperty()
+	public FxBoolean editableProperty()
 	{
 		return editableProperty;
 	}
@@ -129,5 +112,17 @@ public abstract class FxTextEditorModel
 			throw new NullPointerException("load status");
 		}
 		loadStatus.set(s);
+	}
+	
+	
+	/** returns plain text at the specified line, or null if not loaded */
+	public final String getPlainText(int line)
+	{
+		ITextLine t = getTextLine(line);
+		if(t == null)
+		{
+			return null;
+		}
+		return t.getPlainText();
 	}
 }

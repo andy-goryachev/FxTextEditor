@@ -36,22 +36,6 @@ public class SimplePlainTextEditorModel
 	}
 
 
-	public String getPlainText(int line)
-	{
-		if(line < getLineCount())
-		{
-			return lines[line];
-		}
-		return null;
-	}
-
-
-	public TextDecor getTextDecor(int line, String text, TextDecor d)
-	{
-		return null;
-	}
-
-
 	public ITextLine getTextLine(int line)
 	{
 		if(line < getLineCount())

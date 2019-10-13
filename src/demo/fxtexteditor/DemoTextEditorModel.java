@@ -6,7 +6,7 @@ import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.LoadInfo;
 import goryachev.fxtexteditor.ScreenCell;
-import goryachev.fxtexteditor.TextDecor;
+import goryachev.fxtexteditor.DELETE.TextDecor;
 
 
 /**
@@ -43,12 +43,6 @@ public class DemoTextEditorModel
 		return lines.length * repeats;
 	}
 
-
-	public String getPlainText(int line)
-	{
-		return plainText(line);
-	}
-	
 	
 	protected String plainText(int line)
 	{
@@ -60,21 +54,21 @@ public class DemoTextEditorModel
 	}
 
 
-	public TextDecor getTextDecor(int line, String text, TextDecor d)
-	{
-		if(line < getLineCount())
-		{
-			for(Segment seg: new DemoSyntax(text).generateSegments())
-			{
-				d.setTextColor(seg.textColor);
-				d.setBackground(seg.backgroundColor);
-				d.setBold(seg.bold);
-				d.addSegment(seg.text.length());	
-			}
-			return d;
-		}
-		return null;
-	}
+//	public TextDecor getTextDecor(int line, String text, TextDecor d)
+//	{
+//		if(line < getLineCount())
+//		{
+//			for(Segment seg: new DemoSyntax(text).generateSegments())
+//			{
+//				d.setTextColor(seg.textColor);
+//				d.setBackground(seg.backgroundColor);
+//				d.setBold(seg.bold);
+//				d.addSegment(seg.text.length());	
+//			}
+//			return d;
+//		}
+//		return null;
+//	}
 	
 	
 	public ITextLine getTextLine(int line)

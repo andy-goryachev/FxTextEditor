@@ -2,6 +2,7 @@
 package goryachev.fxtexteditor.internal;
 import goryachev.common.util.CList;
 import goryachev.common.util.CMap;
+import goryachev.fxtexteditor.ITextLine;
 import java.util.Random;
 
 
@@ -11,7 +12,7 @@ import java.util.Random;
 public class TextCellsCache
 {
 	private final int capacity;
-	private final CMap<Integer,ITextCells> cache;
+	private final CMap<Integer,ITextLine> cache;
 	private final CList<Integer> keys;
 	
 	
@@ -34,7 +35,7 @@ public class TextCellsCache
 	}
 	
 
-	public ITextCells get(int key)
+	public ITextLine get(int key)
 	{
 		return cache.get(key);
 	}
@@ -53,7 +54,7 @@ public class TextCellsCache
 	}
 	
 	
-	public ITextCells put(int key, ITextCells value)
+	public ITextLine put(int key, ITextLine value)
 	{
 		if(size() >= (capacity - 1))
 		{

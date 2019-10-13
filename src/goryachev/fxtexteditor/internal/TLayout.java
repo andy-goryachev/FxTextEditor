@@ -1,5 +1,6 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.fxtexteditor.ITextLine;
 
 
 /**
@@ -8,13 +9,13 @@ package goryachev.fxtexteditor.internal;
 public class TLayout
 {
 	private final int width;
-	private final ITextCells[] lines;
+	private final ITextLine[] lines;
 	private final int[] offsets;
 	private boolean[] selection;
 	private boolean[] carets;
 	
 	
-	public TLayout(int width, ITextCells[] lines, int[] offsets)
+	public TLayout(int width, ITextLine[] lines, int[] offsets)
 	{
 		this.width = width;
 		this.lines = lines;

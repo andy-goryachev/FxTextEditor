@@ -6,12 +6,8 @@ import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxBooleanBinding;
-import goryachev.fxtexteditor.internal.Grapheme;
-import goryachev.fxtexteditor.internal.ITextCells;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
-import goryachev.fxtexteditor.internal.ScreenCell_DELETE;
 import goryachev.fxtexteditor.internal.ScreenRow;
-import goryachev.fxtexteditor.internal.TextCells;
 import goryachev.fxtexteditor.internal.TextCellsCache;
 import java.text.BreakIterator;
 import java.util.Locale;
@@ -69,7 +65,6 @@ public class VTextFlow
 	private int topLine;
 	private int topOffset;
 	private IBreakIterator breakIterator;
-	protected final TextDecor decor = new TextDecor();
 	private boolean screenBufferValid;
 	private boolean repaintRequested;
 	protected final TextCellsCache cache = new TextCellsCache(256);
@@ -479,19 +474,16 @@ public class VTextFlow
 	}
 	
 	
-	protected ITextCells getTextCellsLine(int lineIndex)
+	protected ITextLine getTextLine(int lineIndex)
 	{
-		ITextCells cells = cache.get(lineIndex);
-		if(cells == null)
+		ITextLine t = cache.get(lineIndex);
+		if(t == null)
 		{
-			FxTextEditorModel model = editor.getModel();
-			decor.reset();
-			String s = model.getPlainText(lineIndex);
-			TextDecor d = model.getTextDecor(lineIndex, s, decor);
-			cells = createTextCells(lineIndex, s, d);
-			cache.put(lineIndex, cells);
+			FxTextEditorModel m = editor.getModel();
+			t = m.getTextLine(lineIndex);
+			cache.put(lineIndex, t);
 		}
-		return cells;
+		return t;
 	}
 	
 	
@@ -517,24 +509,25 @@ public class VTextFlow
 		int lineIndex = getTopLine();
 		int topOffset = getTopOffset();
 		int off = topOffset;
-		ITextCells cells = null;
+		ITextLine tline = null;
 		
 		for(int y=0; y<ymax; y++)
 		{
 			if(lineIndex < model.getLineCount())
 			{
-				cells = getTextCellsLine(lineIndex);
+				tline = getTextLine(lineIndex);
 			}
 			else
 			{
-				cells = null;
+				tline = null;
 			}
 			
-			buffer.addRow(cells, off);
+			buffer.addRow(y, tline, off);
 		}
 	}
 	
 
+	/* TODO
 	protected void reflow_DELETE()
 	{
 		FxTextEditorModel model = editor.getModel();
@@ -677,6 +670,7 @@ public class VTextFlow
 			}
 		}
 	}
+	*/
 	
 	
 	public void setBreakIterator(IBreakIterator b)
@@ -706,14 +700,15 @@ public class VTextFlow
 	}
 	
 	
+	/* TODO move to model
 	protected ITextCells createTextCells(int lineIndex, String text, TextDecor decor)
 	{
 		// TODO depending on the model, may create a more lightweight implementation
-		TextCells cs = new TextCells();
+		TextCells cs = new TextCells(lineIndex);
 		
 		if(text != null)
 		{
-			// TODO add option to skip iterator
+			// TODO add option to skip iterator... or move it to the model
 			IBreakIterator br = getBreakIterator();
 			br.setText(text);
 	
@@ -732,6 +727,7 @@ public class VTextFlow
 		
 		return cs;
 	}
+	*/
 	
 	
 	/** returns true if update resulted in a visual change */
