@@ -3,7 +3,7 @@ package goryachev.fxtexteditor.internal;
 
 
 /**
- * Represents a chain of grapheme taken from the model text line.
+ * Represents a chain of graphemes taken from the model text line.
  * 
  * A single grapheme may contain multiple surrogate pairs or even chars (emoji),
  * and is expected to be rendered in one text cell, with the exception of TAB characters

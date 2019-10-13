@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 /**
  * Grapheme Cluster fits into one ScreenCell.
  */
+@Deprecated // TODO remove
 public class Grapheme
 {
 	public final int start;

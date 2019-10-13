@@ -1,5 +1,6 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.TextPos;
 
 
@@ -8,9 +9,13 @@ import goryachev.fxtexteditor.TextPos;
  */
 public class ScreenBuffer
 {
-	private ScreenCell[] cells;
+	public static final int EOL = -1;
+	public static final int EOF = -2;
 	private int height;
 	private int width;
+	private ScreenRow[] rows;
+	// offsets into ITextLine, or EOL/EOF.  or possibly a delta to the last valid position TODO
+	private int[] offsets;
 	
 	
 	public ScreenBuffer()
@@ -20,17 +25,21 @@ public class ScreenBuffer
 	
 	public void setSize(int w, int h)
 	{
+		if(h > height)
+		{
+			rows = new ScreenRow[h];
+			for(int i=0; i<h; i++)
+			{
+				rows[i] = new ScreenRow();
+			}
+		}
+		
 		if((w != width) || (h != height))
 		{
 			int sz = w * h;
-			
-			if((cells == null) || (cells.length < sz))
+			if((offsets == null) || (offsets.length < sz))
 			{
-				cells = new ScreenCell[sz];
-				for(int i=0; i<sz; i++)
-				{
-					cells[i] = new ScreenCell();
-				}
+				offsets = new int[sz];
 			}
 			
 			width = w;
@@ -50,8 +59,14 @@ public class ScreenBuffer
 		return width;
 	}
 	
+	
+	public void addRow(int ix, TextCells cells, int off)
+	{
+		rows[ix].setStart(cells, off);
+	}
+	
 
-	public ScreenCell getCell(int x, int y)
+	public int getOffset(int x, int y)
 	{
 		if(x < 0)
 		{
@@ -63,42 +78,56 @@ public class ScreenBuffer
 		}
 		
 		int ix = y * width + x;
-		return cells[ix];
+		return offsets[ix];
 	}
 	
 	
-	public ScreenCell getCell(int index)
+	public ScreenRow getScreenRow(int y)
 	{
-		return cells[index];
+		if(y < height)
+		{
+			return rows[y];
+		}
+		return null;
 	}
 	
 
-	/** returns insert position.  might contain negative values for line or offset. */
+	/** 
+	 * returns an insert position for the given screen coordinates.
+	 * might contain negative values for line or offset TODO explain. 
+	 */
 	public TextPos getInsertPosition(int x, int y)
 	{
-		ScreenCell c = getCell(x, y);
-		
 		int line;
 		int off;
 		
-		if(c.isValidLine())
+		ScreenRow row = getScreenRow(y);
+		if(row == null)
 		{
-			line = c.getLine();
+			// TODO scan back to find the end of last text line
+			// FIX
+			line = 0;
+			off = 0;
 		}
 		else
 		{
-			// beyond eof
-			line = -1;
-		}
-		
-		if(c.isValidCaret())
-		{
-			off = c.getOffset();
-		}
-		else
-		{
-			// beyond eol
-			off = -1;
+			line = row.getModelIndex();
+			off = getOffset(x, y);
+			if(off < 0)
+			{
+				if(off == EOF)
+				{
+					
+				}
+				else if(off == EOL)
+				{
+					
+				}
+				// TODO tab, eol, eof
+				// FIX
+				line = 0;
+				off = 0;
+			}
 		}
 		
 		return new TextPos(line, off);

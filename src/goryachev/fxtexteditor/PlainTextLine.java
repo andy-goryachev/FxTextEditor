@@ -23,6 +23,12 @@ public class PlainTextLine
 	{
 		return line;
 	}
+	
+	
+	public int getModelIndex()
+	{
+		return line;
+	}
 
 
 	public String getPlainText()
@@ -43,7 +49,7 @@ public class PlainTextLine
 	}
 
 
-	public void getStyle(StyleInfo s, int offset)
+	public void getStyle(ScreenCell s, int offset)
 	{
 	}
 }

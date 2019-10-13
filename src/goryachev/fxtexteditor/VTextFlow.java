@@ -9,7 +9,8 @@ import goryachev.fx.FxBooleanBinding;
 import goryachev.fxtexteditor.internal.Grapheme;
 import goryachev.fxtexteditor.internal.ITextCells;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
-import goryachev.fxtexteditor.internal.ScreenCell;
+import goryachev.fxtexteditor.internal.ScreenCell_DELETE;
+import goryachev.fxtexteditor.internal.ScreenRow;
 import goryachev.fxtexteditor.internal.TextCells;
 import goryachev.fxtexteditor.internal.TextCellsCache;
 import java.text.BreakIterator;
@@ -72,6 +73,7 @@ public class VTextFlow
 	private boolean screenBufferValid;
 	private boolean repaintRequested;
 	protected final TextCellsCache cache = new TextCellsCache(256);
+	protected final ScreenCell cell = new ScreenCell();
 	
 	
 	public VTextFlow(FxTextEditor ed)
@@ -404,11 +406,11 @@ public class VTextFlow
 	}
 	
 	
-	protected Font getFont(ScreenCell c)
+	protected Font getFont(ScreenCell st)
 	{
-		if(c.isBold())
+		if(st.isBold())
 		{
-			if(c.isItalic())
+			if(st.isItalic())
 			{
 				return boldItalicFont;
 			}
@@ -419,7 +421,7 @@ public class VTextFlow
 		}
 		else
 		{
-			if(c.isItalic())
+			if(st.isItalic())
 			{
 				return italicFont;
 			}
@@ -479,17 +481,17 @@ public class VTextFlow
 	
 	protected ITextCells getTextCellsLine(int lineIndex)
 	{
-		ITextCells rv = cache.get(lineIndex);
-		if(rv == null)
+		ITextCells cells = cache.get(lineIndex);
+		if(cells == null)
 		{
 			FxTextEditorModel model = editor.getModel();
 			decor.reset();
 			String s = model.getPlainText(lineIndex);
 			TextDecor d = model.getTextDecor(lineIndex, s, decor);
-			rv = createTextLine(lineIndex, s, d);
-			cache.put(lineIndex, rv);
+			cells = createTextCells(lineIndex, s, d);
+			cache.put(lineIndex, cells);
 		}
-		return rv;
+		return cells;
 	}
 	
 	
@@ -498,10 +500,42 @@ public class VTextFlow
 		cache.clear();
 	}
 	
-
-	// TODO get rid of ScreenBuffer, instead keep track of
-	// TextCells, offset, hasSelection (perhaps in other object)
+	
 	protected void reflow()
+	{
+		FxTextEditorModel model = editor.getModel();
+		boolean wrap = editor.isWrapLines();
+
+		int bufferWidth = getColumnCount() + 1;
+		int bufferHeight = getLineCount() + 1;
+		
+		buffer.setSize(bufferWidth, bufferHeight);
+		
+		int xmax = wrap ? getColumnCount() : bufferWidth;
+		int ymax = bufferHeight;
+		
+		int lineIndex = getTopLine();
+		int topOffset = getTopOffset();
+		int off = topOffset;
+		ITextCells cells = null;
+		
+		for(int y=0; y<ymax; y++)
+		{
+			if(lineIndex < model.getLineCount())
+			{
+				cells = getTextCellsLine(lineIndex);
+			}
+			else
+			{
+				cells = null;
+			}
+			
+			buffer.addRow(cells, off);
+		}
+	}
+	
+
+	protected void reflow_DELETE()
 	{
 		FxTextEditorModel model = editor.getModel();
 		boolean wrap = editor.isWrapLines();
@@ -518,10 +552,16 @@ public class VTextFlow
 		int topOffset = getTopOffset();
 		int screenBufferIndex = 0;
 		int off = topOffset;
+		
+		@Deprecated
 		boolean eof = false;
+		@Deprecated
 		boolean eol = false;
+		@Deprecated
 		boolean selected = false;
+		@Deprecated
 		boolean validCaret = true;
+		@Deprecated
 		boolean validLine = true;
 		ITextCells textLine = null;
 		Grapheme gr = null;
@@ -591,12 +631,12 @@ public class VTextFlow
 				
 				selected = editor.isSelected(lineIndex, off);
 				
-				ScreenCell cell = buffer.getCell(screenBufferIndex++);
-				cell.setLine(lineIndex);
-				cell.setOffset(off);
-				cell.setCell(gr);
-				cell.setValidCaret(validCaret);
-				cell.setValidLine(validLine);
+//				ScreenCell_DELETE cell = buffer.getCell(screenBufferIndex++);
+//				cell.setLine(lineIndex);
+//				cell.setOffset(off);
+//				cell.setCell(gr);
+//				cell.setValidCaret(validCaret);
+//				cell.setValidLine(validLine);
 				
 				if(gr != null)
 				{
@@ -613,11 +653,11 @@ public class VTextFlow
 				if(wrap)
 				{
 					// extra cell when wrap is on
-					ScreenCell cell = buffer.getCell(screenBufferIndex++);
-					cell.setLine(lineIndex);
-					cell.setOffset(off);
-					cell.setCell(null);
-					cell.setValidLine(!eof);
+//					ScreenCell_DELETE cell = buffer.getCell(screenBufferIndex++);
+//					cell.setLine(lineIndex);
+//					cell.setOffset(off);
+//					cell.setCell(null);
+//					cell.setValidLine(!eof);
 					
 					if(eol)
 					{
@@ -666,14 +706,14 @@ public class VTextFlow
 	}
 	
 	
-	// TODO add cache
-	protected ITextCells createTextLine(int lineIndex, String text, TextDecor decor)
+	protected ITextCells createTextCells(int lineIndex, String text, TextDecor decor)
 	{
 		// TODO depending on the model, may create a more lightweight implementation
 		TextCells cs = new TextCells();
 		
 		if(text != null)
 		{
+			// TODO add option to skip iterator
 			IBreakIterator br = getBreakIterator();
 			br.setText(text);
 	
@@ -769,52 +809,95 @@ public class VTextFlow
 			return;
 		}
 		
+		ScreenBuffer b = buffer();
 		int xmax = colCount + 1;
 		int ymax = rowCount + 1;
 		for(int y=0; y<ymax; y++)
 		{
-			for(int x=0; x<xmax; x++)
+			// TODO or TextRow?
+			ScreenRow row = b.getScreenRow(y);
+			if(row == null)
 			{
-				paintCell(x, y);
+				paintBlank(0, y, xmax);
+			}
+			else
+			{
+				int offset = row.getStartOffset();
+				for(int x=0; x<xmax; x++)
+				{
+					if(row.isEOL(x))
+					{
+						paintBlank(x, y, xmax - x);
+						break;
+					}
+					
+					int span = row.getTabSpan(x);
+					if(span > 0)
+					{
+						paintBlank(x, y, span);
+					}
+					else
+					{
+						paintCell(row, x, y);	
+					}
+				}
 			}
 		}
 	}
 	
-
-	protected ScreenCell paintCell(int x, int y)
+	
+	protected void paintBlank(int x, int y, int count)
 	{
-		ScreenCell cell = buffer().getCell(x, y);
-		
+		// TODO
+	}
+	
+
+	protected void paintCell(ScreenRow row, int x, int y)
+	{
+		// TODO optimize, we could get this into a structure at the start of paint* methods
 		TextMetrics m = textMetrics();
 		double ch = m.cellHeight;
 		double cw = m.cellWidth;
 		double cx = x * cw;
 		double cy = y * ch;
-
+		
 		boolean caretLine = false;
 		boolean caret = false;
+		
 		boolean selected = false;
+//		if(row.hasSelection())
+//		{
+//			selected = row.
+//		}
+//		else
+//		{
+//			selected = false;
+//		}
 
-		int line = cell.getLine();
-		int off = cell.getOffset();
+//		int line = cell.getLine();
+//		int off = cell.getOffset();
 		// TODO this can be optimized by returning an int bitmap? maybe... isValid*
-		for(SelectionSegment ss: editor.selector.segments)
-		{
-			if(cell.isValidLine() && ss.isCaretLine(line))
-			{
-				caretLine = true;
-				
-				if(cell.isValidCaret() && ss.isCaret(line, off))
-				{
-					caret = true;
-				}
-			}
-			
-			if(ss.contains(line, off))
-			{
-				selected = true;
-			}
-		}
+//		for(SelectionSegment ss: editor.selector.segments)
+//		{
+//			if(cell.isValidLine() && ss.isCaretLine(line))
+//			{
+//				caretLine = true;
+//				
+//				if(cell.isValidCaret() && ss.isCaret(line, off))
+//				{
+//					caret = true;
+//				}
+//			}
+//			
+//			if(ss.contains(line, off))
+//			{
+//				selected = true;
+//			}
+//		}
+		
+		// style
+		cell.reset();
+		row.updateStyle(cell, x);
 		
 		// background
 		Color bg = backgroundColor(caretLine, selected, cell.getBackgroundColor());
@@ -841,6 +924,7 @@ public class VTextFlow
 			{
 				fg = getTextColor();
 			}
+			
 			Font f = getFont(cell);
 			gx.setFont(f);
 			gx.setFill(fg);
@@ -848,7 +932,5 @@ public class VTextFlow
 		
 			// TODO underline, strikethrough
 		}
-		
-		return cell;
 	}
 }

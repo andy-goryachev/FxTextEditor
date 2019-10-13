@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
  * or after an end of line, or after an end of file.
  */
 @Deprecated // TODO replace
-public class ScreenCell
+public class ScreenCell_DELETE
 {
 	private int line;
 	private int offset;
@@ -18,7 +18,7 @@ public class ScreenCell
 	private Grapheme grapheme;
 	
 	
-	public ScreenCell()
+	public ScreenCell_DELETE()
 	{
 	}
 	

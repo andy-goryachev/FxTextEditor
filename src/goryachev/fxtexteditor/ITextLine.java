@@ -13,6 +13,9 @@ public interface ITextLine
 	/** underlying line number, or -1 if the model line does not correspond to a text line */
 	public int getLineNumber();
 	
+	/** returns index of this text line in the model */
+	public int getModelIndex();
+	
 	/** returns the plain text, null permitted */
 	public String getPlainText();
 	
@@ -20,5 +23,5 @@ public interface ITextLine
 	
 	public String getCellText(int offset);
 	
-	public void getStyle(StyleInfo s, int offset);
+	public void getStyle(ScreenCell s, int offset);
 }
