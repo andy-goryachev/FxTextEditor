@@ -12,16 +12,36 @@ public interface ITextLine
 {
 	/** underlying line number, or -1 if the model line does not correspond to a text line */
 	public int getLineNumber();
-	
-	/** returns index of this text line in the model */
+
+
+	/** 
+	 * returns index of this text line in the model.
+	 * this number may be different from line number reported by getLineNumber()
+	 * when the model inserts additional text lines.
+	 */
 	public int getModelIndex();
-	
-	/** returns the plain text, null permitted */
+
+
+	/** returns the plain text, or null */
 	public String getPlainText();
-	
+
+
+	/** 
+	 * returns the number of glyphs in the text line.  
+	 * one glyph is rendered in one fixed width cell.
+	 * this code does not support rendering of double width symbols such as full-width CJK.
+	 */
 	public int getCellCount();
-	
+
+
+	/** 
+	 * returns the text to be rendered in one cell
+	 */
 	public String getCellText(int offset);
-	
+
+
+	/**
+	 * populates the ScreenCell object with the cell text and styles
+	 */
 	public void getStyle(ScreenCell s, int offset);
 }

@@ -13,6 +13,8 @@ public class ScreenCell
 	private Color textColor;
 	private boolean bold;
 	private boolean italic;
+	private boolean strikeThrough;
+	private boolean underscore;
 	
 	
 	public ScreenCell()
@@ -27,6 +29,8 @@ public class ScreenCell
 		textColor = null;
 		bold = false;
 		italic = false;
+		strikeThrough = false;
+		underscore = false;
 	}
 	
 	
@@ -87,5 +91,29 @@ public class ScreenCell
 	public void setItalic(boolean on)
 	{
 		italic = on;
+	}
+	
+	
+	public boolean isStrikeThrough()
+	{
+		return strikeThrough;
+	}
+	
+	
+	public void setStrikeThrough(boolean on)
+	{
+		strikeThrough = on;
+	}
+	
+	
+	public boolean isUnderscore()
+	{
+		return underscore;
+	}
+	
+	
+	public void setUnderscore(boolean on)
+	{
+		underscore = on;
 	}
 }
