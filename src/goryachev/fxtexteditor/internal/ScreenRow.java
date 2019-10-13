@@ -53,10 +53,9 @@ public class ScreenRow
 	}
 
 
-	// TODO maybe include text as well?
-	public void updateStyle(ScreenCell style, int x)
+	public void updateStyle(int x, ScreenCell style)
 	{
-		// TODO need screen buffer to get offset
+		textLine.updateStyle(x, style);
 	}
 
 

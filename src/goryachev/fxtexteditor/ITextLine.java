@@ -43,5 +43,5 @@ public interface ITextLine
 	/**
 	 * populates the ScreenCell object with the cell text and styles
 	 */
-	public void getStyle(ScreenCell s, int offset);
+	public void updateStyle(int offset, ScreenCell s);
 }

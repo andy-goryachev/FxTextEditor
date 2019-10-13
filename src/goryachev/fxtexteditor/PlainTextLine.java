@@ -45,11 +45,26 @@ public class PlainTextLine
 
 	public String getCellText(int offset)
 	{
-		return text.substring(offset, offset + 1);
+		int len = text.length();
+		if((offset >= 0) && (offset + 1 <= len))
+		{
+			return text.substring(offset, offset + 1);
+		}
+		return null;
 	}
 
 
-	public void getStyle(ScreenCell s, int offset)
+	public void updateStyle(int offset, ScreenCell cell)
 	{
+		cell.update
+		(
+			getCellText(offset),
+			null,
+			null,
+			false,
+			false,
+			false,
+			false
+		);
 	}
 }

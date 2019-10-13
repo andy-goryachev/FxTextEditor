@@ -22,15 +22,15 @@ public class ScreenCell
 	}
 	
 	
-	public void reset()
+	public void update(String text, Color bg, Color fg, boolean bold, boolean italic, boolean strikeThrough, boolean underscore)
 	{
-		text = null;
-		backgroundColor = null;
-		textColor = null;
-		bold = false;
-		italic = false;
-		strikeThrough = false;
-		underscore = false;
+		this.text = text;
+		this.backgroundColor = bg;
+		this.textColor = fg;
+		this.bold = bold;
+		this.italic = italic;
+		this.strikeThrough = strikeThrough;
+		this.underscore = underscore;
 	}
 	
 	
@@ -40,10 +40,10 @@ public class ScreenCell
 	}
 	
 	
-	public void setText(String s)
-	{
-		text = s;
-	}
+//	public void setText(String s)
+//	{
+//		text = s;
+//	}
 	
 	
 	public Color getBackgroundColor()
@@ -52,10 +52,10 @@ public class ScreenCell
 	}
 	
 	
-	public void setBackgroundColor(Color c)
-	{
-		backgroundColor = c;
-	}
+//	public void setBackgroundColor(Color c)
+//	{
+//		backgroundColor = c;
+//	}
 	
 	
 	public Color getTextColor()
@@ -64,10 +64,10 @@ public class ScreenCell
 	}
 	
 	
-	public void setTextColor(Color c)
-	{
-		textColor = c;
-	}
+//	public void setTextColor(Color c)
+//	{
+//		textColor = c;
+//	}
 
 
 	public boolean isBold()
@@ -76,10 +76,10 @@ public class ScreenCell
 	}
 	
 	
-	public void setBold(boolean on)
-	{
-		bold = on;
-	}
+//	public void setBold(boolean on)
+//	{
+//		bold = on;
+//	}
 
 
 	public boolean isItalic()
@@ -88,10 +88,10 @@ public class ScreenCell
 	}
 	
 	
-	public void setItalic(boolean on)
-	{
-		italic = on;
-	}
+//	public void setItalic(boolean on)
+//	{
+//		italic = on;
+//	}
 	
 	
 	public boolean isStrikeThrough()
@@ -100,10 +100,10 @@ public class ScreenCell
 	}
 	
 	
-	public void setStrikeThrough(boolean on)
-	{
-		strikeThrough = on;
-	}
+//	public void setStrikeThrough(boolean on)
+//	{
+//		strikeThrough = on;
+//	}
 	
 	
 	public boolean isUnderscore()
@@ -112,8 +112,8 @@ public class ScreenCell
 	}
 	
 	
-	public void setUnderscore(boolean on)
-	{
-		underscore = on;
-	}
+//	public void setUnderscore(boolean on)
+//	{
+//		underscore = on;
+//	}
 }

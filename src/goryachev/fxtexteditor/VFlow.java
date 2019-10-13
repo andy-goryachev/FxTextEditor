@@ -518,16 +518,29 @@ public class VFlow
 			{
 				tline = null;
 			}
-			
+
+			if(tline == null)
+			{
+				off = ScreenBuffer.EOF;
+			}
 			buffer.addRow(y, tline, off);
 			
-			if(wrap)
+			if(wrap && (tline != null))
 			{
-				
+				if(off + xmax < tline.getCellCount())
+				{
+					off += xmax;
+				}
+				else
+				{
+					lineIndex++;
+					off = topOffset;
+				}
 			}
 			else
 			{
-				
+				lineIndex++;
+				off = topOffset;
 			}
 		}
 	}
@@ -871,8 +884,7 @@ public class VFlow
 //		}
 		
 		// style
-		cell.reset();
-		row.updateStyle(cell, x);
+		row.updateStyle(x, cell);
 		
 		// background
 		Color bg = backgroundColor(caretLine, selected, cell.getBackgroundColor());
