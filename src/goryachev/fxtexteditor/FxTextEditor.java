@@ -762,58 +762,59 @@ public class FxTextEditor
 	{
 		if(handleScrollEvents)
 		{
-			int lineCount = getLineCount();
-			int vis = vflow.getLineCount();
-
-			if(isWrapLines())
-			{
-				int threshold = 200;
-				
-				if(lineCount < threshold)
-				{
-					// compute all
-					FlowHelper helper = createFlowHelper(0, lineCount);
-					int max = Math.max(0, helper.getRowCount() + 1 - vis);
-					int ix = FX.round(max * val);
-					int top = helper.getLineAt(ix);
-					int off = helper.getOffsetAt(ix);
-					setTopLine(top);
-					setTopOffset(off);
-					return;
-				}
-				else if(((1 - val) * lineCount) < threshold)
-				{
-					// compute tail
-					int start = lineCount - threshold;
-					FlowHelper helper = createFlowHelper(start, threshold);
-					int max = start + helper.getRowCount() + 1 - vis;
-					int ix = FX.round(max * val) - start;
-					int top = helper.getLineAt(ix);
-					int off = helper.getOffsetAt(ix);
-					setTopLine(top);
-					setTopOffset(off);
-					return;
-				}
-			}
-			
-			int max = Math.max(0, lineCount + 1 - vis);
-			int top = FX.round(max * val);
-			setTopLine(top);
+			// FIX
+//			int lineCount = getLineCount();
+//			int vis = vflow.getLineCount();
+//
+//			if(isWrapLines())
+//			{
+//				int threshold = 200;
+//				
+//				if(lineCount < threshold)
+//				{
+//					// compute all
+//					FlowHelper helper = createFlowHelper(0, lineCount);
+//					int max = Math.max(0, helper.getRowCount() + 1 - vis);
+//					int ix = FX.round(max * val);
+//					int top = helper.getLineAt(ix);
+//					int off = helper.getOffsetAt(ix);
+//					setTopLine(top);
+//					setTopOffset(off);
+//					return;
+//				}
+//				else if(((1 - val) * lineCount) < threshold)
+//				{
+//					// compute tail
+//					int start = lineCount - threshold;
+//					FlowHelper helper = createFlowHelper(start, threshold);
+//					int max = start + helper.getRowCount() + 1 - vis;
+//					int ix = FX.round(max * val) - start;
+//					int top = helper.getLineAt(ix);
+//					int off = helper.getOffsetAt(ix);
+//					setTopLine(top);
+//					setTopOffset(off);
+//					return;
+//				}
+//			}
+//			
+//			int max = Math.max(0, lineCount + 1 - vis);
+//			int top = FX.round(max * val);
+//			setTopLine(top);
 		}
 	}
 	
 	
-	private FlowHelper createFlowHelper(int start, int lineCount)
-	{
-		int w = vflow.getColumnCount();
-		FlowHelper h = new FlowHelper(w, start, vflow.getBreakIterator());
-		for(int i=0; i<lineCount; i++)
-		{
-			String s = getPlainText(start + i);
-			h.addLine(s);
-		}
-		return h;
-	}
+//	private FlowHelper createFlowHelper(int start, int lineCount)
+//	{
+//		int w = vflow.getColumnCount();
+//		FlowHelper h = new FlowHelper(w, start, vflow.getBreakIterator());
+//		for(int i=0; i<lineCount; i++)
+//		{
+//			String s = getPlainText(start + i);
+//			h.addLine(s);
+//		}
+//		return h;
+//	}
 
 	
 	public void setCaret(int row, int position)
@@ -904,11 +905,5 @@ public class FxTextEditor
 	public boolean isSelected(int line, int pos)
 	{
 		return selector.isSelected(line, pos);
-	}
-	
-	
-	public void setBreakIterator(IBreakIterator b)
-	{
-		vflow.setBreakIterator(b);
 	}
 }

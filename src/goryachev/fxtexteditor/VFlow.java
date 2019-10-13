@@ -9,8 +9,6 @@ import goryachev.fx.FxBooleanBinding;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenRow;
 import goryachev.fxtexteditor.internal.TextCellsCache;
-import java.text.BreakIterator;
-import java.util.Locale;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.BooleanExpression;
@@ -64,7 +62,6 @@ public class VFlow
 	private Color caretColor = Color.BLACK;
 	private int topLine;
 	private int topOffset;
-	private IBreakIterator breakIterator;
 	private boolean screenBufferValid;
 	private boolean repaintRequested;
 	protected final TextCellsCache cache = new TextCellsCache(256);
@@ -523,6 +520,15 @@ public class VFlow
 			}
 			
 			buffer.addRow(y, tline, off);
+			
+			if(wrap)
+			{
+				
+			}
+			else
+			{
+				
+			}
 		}
 	}
 	
@@ -671,33 +677,6 @@ public class VFlow
 		}
 	}
 	*/
-	
-	
-	public void setBreakIterator(IBreakIterator b)
-	{
-		breakIterator = b;
-	}
-	
-	
-	protected IBreakIterator createBreakIterator()
-	{
-		return IBreakIterator.wrap(BreakIterator.getCharacterInstance(Locale.US));
-	}
-	
-	
-	/** 
-	 * use this instance ONLY if it will be immediately used.  
-	 * otherwise, create a copy of it
-	 */
-	// TODO option to return null or a simple break iterator
-	public IBreakIterator getBreakIterator()
-	{
-		if(breakIterator == null)
-		{
-			breakIterator = createBreakIterator();
-		}
-		return breakIterator;
-	}
 	
 	
 	/* TODO move to model
