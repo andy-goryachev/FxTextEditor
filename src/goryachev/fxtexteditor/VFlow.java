@@ -810,7 +810,6 @@ public class VFlow
 			}
 			else
 			{
-				int offset = row.getStartOffset();
 				for(int x=0; x<xmax; x++)
 				{
 					if(row.isEOL(x))

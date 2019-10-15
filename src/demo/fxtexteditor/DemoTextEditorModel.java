@@ -128,6 +128,12 @@ public class DemoTextEditorModel
 					false
 				);
 			}
+
+
+			public boolean hasComplexGlyphLogic()
+			{
+				return false;
+			}
 		};
 	}
 }

@@ -2,6 +2,7 @@
 package goryachev.fxtexteditor.internal;
 import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.CellStyles;
+import goryachev.fxtexteditor.ITabPolicy;
 
 
 /**
@@ -12,6 +13,8 @@ public class ScreenRow
 {
 	private ITextLine textLine;
 	private int startOffset;
+	private int[] offsets;
+	private boolean complex;
 	
 	
 	public ScreenRow()
@@ -19,11 +22,43 @@ public class ScreenRow
 	}
 	
 	
-	public void setStart(ITextLine t, int off)
+	public void setStart(ITextLine t, int off, ITabPolicy tabs, int width)
 	{
 		textLine = t;
 		startOffset = off;
-		// TODO populate?
+		
+		// TODO if line has no tabs, no double chars -> set simple
+		complex = t.hasComplexGlyphLogic();
+		
+		if(complex)
+		{
+			if((offsets == null) || (offsets.length < width))
+			{
+				offsets = new int[width];
+			}
+			
+			// TODO populate using start offset, tab policy
+			for(int i=0; i<width; i++)
+			{
+				
+				
+			}
+			
+			throw new Error(); // TODO
+		}
+	}
+	
+	
+	public int getCellOffset(int x)
+	{
+		if(complex)
+		{
+			return offsets[x];
+		}
+		else
+		{
+			return startOffset + x; 
+		}
 	}
 
 
@@ -39,6 +74,7 @@ public class ScreenRow
 	}
 
 
+	// TODO perhaps merge the two?
 	public boolean isEOL(int x)
 	{
 		// TODO

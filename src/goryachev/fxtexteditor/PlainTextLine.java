@@ -35,6 +35,12 @@ public class PlainTextLine
 	{
 		return text;
 	}
+	
+	
+	public boolean hasComplexGlyphLogic()
+	{
+		return false;
+	}
 
 
 	public int getCellCount()

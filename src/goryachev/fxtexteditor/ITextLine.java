@@ -44,4 +44,11 @@ public interface ITextLine
 	 * updates cell styles.
 	 */
 	public void updateStyle(int offset, CellStyles styles);
+
+
+	/** 
+	 * returns true if translation from text to glyphs is not 1:1 (i.e. has tabs, modifying characters,
+	 * surrogate pairs, etc.
+	 */ 
+	public boolean hasComplexGlyphLogic();
 }

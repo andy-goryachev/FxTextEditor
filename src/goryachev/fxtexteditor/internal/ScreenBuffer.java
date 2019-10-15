@@ -1,5 +1,6 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.fxtexteditor.ITabPolicy;
 import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.TextPos;
 
@@ -14,12 +15,17 @@ public class ScreenBuffer
 	private int height;
 	private int width;
 	private ScreenRow[] rows;
-	// offsets into ITextLine, or EOL/EOF.  or possibly a delta to the last valid position TODO
-	private int[] offsets;
+	private ITabPolicy tabPolicy;
 	
 	
 	public ScreenBuffer()
 	{
+	}
+	
+	
+	public void setTabPolicy(ITabPolicy p)
+	{
+		tabPolicy = p;
 	}
 	
 	
@@ -34,17 +40,8 @@ public class ScreenBuffer
 			}
 		}
 		
-		if((w != width) || (h != height))
-		{
-			int sz = w * h;
-			if((offsets == null) || (offsets.length < sz))
-			{
-				offsets = new int[sz];
-			}
-			
-			width = w;
-			height = h;
-		}
+		width = w;
+		height = h;
 	}
 	
 	
@@ -62,7 +59,7 @@ public class ScreenBuffer
 	
 	public void addRow(int ix, ITextLine textLine, int off)
 	{
-		rows[ix].setStart(textLine, off);
+		rows[ix].setStart(textLine, off, tabPolicy, width);
 	}
 	
 
@@ -77,8 +74,13 @@ public class ScreenBuffer
 			y = 0;
 		}
 		
-		int ix = y * width + x;
-		return offsets[ix];
+		ScreenRow r = getScreenRow(y);
+		if(r == null)
+		{
+			return EOF;
+		}
+		
+		return r.getCellOffset(x);
 	}
 	
 	
