@@ -18,7 +18,7 @@ public class TabPolicy
 	}
 	
 	
-	public static TabPolicy get(int tabWidth)
+	public static TabPolicy create(int tabWidth)
 	{
 		return new TabPolicy(tabWidth);
 	}

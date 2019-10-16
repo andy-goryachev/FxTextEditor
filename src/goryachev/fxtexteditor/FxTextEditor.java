@@ -56,7 +56,7 @@ public class FxTextEditor
 	protected final FxBoolean highlightCaretLineProperty = new FxBoolean(true);
 	protected final ReadOnlyObjectWrapper<Duration> caretBlinkRateProperty = new ReadOnlyObjectWrapper(Duration.millis(500));
 	protected final FxObject<FxFormatter> lineNumberFormatterProperty = new FxObject<>();
-	protected final FxObject<ITabPolicy> tabPolicy = new FxObject(TabPolicy.get(4));
+	protected final FxObject<ITabPolicy> tabPolicy = new FxObject(TabPolicy.create(4));
 	protected final FxTextEditorModelListener modelListener;
 	protected final SelectionController selector;
 	protected final Markers markers = new Markers(32);
@@ -889,6 +889,22 @@ public class FxTextEditor
 		return tabPolicy.get();
 	}
 	
+
+	public void setTabPolicy(ITabPolicy p)
+	{
+		if(p == null)
+		{
+			p = TabPolicy.create(1);
+		}
+		setTabPolicy(p);
+	}
+	
+	
+	public void setTabSize(int size)
+	{
+		setTabPolicy(TabPolicy.create(size));
+	}
+
 	
 	public boolean isCaretLine(int line)
 	{

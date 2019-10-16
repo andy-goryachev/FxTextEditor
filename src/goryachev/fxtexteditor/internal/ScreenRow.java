@@ -40,8 +40,9 @@ public class ScreenRow
 			// TODO populate using start offset, tab policy
 			for(int i=0; i<width; i++)
 			{
-				
-				
+				// if eof: end
+				// if tab: policy.next tab
+				// else: off++;
 			}
 			
 			throw new Error(); // TODO
@@ -78,21 +79,6 @@ public class ScreenRow
 	{
 		return startOffset;
 	}
-
-
-	// TODO perhaps merge the two?
-//	public boolean isEOL(int x)
-//	{
-//		// TODO
-//		return false;
-//	}
-//
-//
-//	public int getTabSpan(int x)
-//	{
-//		// TODO
-//		return 0;
-//	}
 
 
 	public void updateStyle(int x, CellStyles style)
