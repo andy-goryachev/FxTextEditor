@@ -14,6 +14,10 @@ public class TabPolicy
 	
 	public TabPolicy(int tabWidth)
 	{
+		if(tabWidth <= 0)
+		{
+			throw new IllegalArgumentException("tabWidth must be >0: " + tabWidth);
+		}
 		this.tabWidth = tabWidth;
 	}
 	
@@ -24,9 +28,22 @@ public class TabPolicy
 	}
 
 
-	public int distanceToNextTabStop(int offset)
+	public int distanceToNextTabStop(int position)
 	{
-		int rv = tabWidth - (offset % tabWidth);
+		int rv = tabWidth - (position % tabWidth);
 		return rv == 0 ? tabWidth : rv;
+	}
+
+
+	public int nextTabStop(int position)
+	{
+		int d = distanceToNextTabStop(position);
+		return position + d;
+	}
+
+
+	public boolean isSimple()
+	{
+		return tabWidth == 1;
 	}
 }

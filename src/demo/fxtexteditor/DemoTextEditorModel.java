@@ -1,10 +1,8 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
 import goryachev.common.util.CKit;
-import goryachev.fxtexteditor.CellStyles;
 import goryachev.fxtexteditor.Edit;
 import goryachev.fxtexteditor.FxTextEditorModel;
-import goryachev.fxtexteditor.GlyptType;
 import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.LoadInfo;
 
@@ -53,24 +51,6 @@ public class DemoTextEditorModel
 		return null;
 	}
 
-
-	// TODO
-//	public TextDecor getTextDecor(int line, String text, TextDecor d)
-//	{
-//		if(line < getLineCount())
-//		{
-//			for(Segment seg: new DemoSyntax(text).generateSegments())
-//			{
-//				d.setTextColor(seg.textColor);
-//				d.setBackground(seg.backgroundColor);
-//				d.setBold(seg.bold);
-//				d.addSegment(seg.text.length());	
-//			}
-//			return d;
-//		}
-//		return null;
-//	}
-	
 	
 	public ITextLine getTextLine(int line)
 	{
@@ -80,79 +60,6 @@ public class DemoTextEditorModel
 			return null;
 		}
 		
-		return new ITextLine()
-		{
-			public int getModelIndex()
-			{
-				return line;
-			}
-			
-			
-			public int getLineNumber()
-			{
-				return line;
-			}
-
-
-			public String getPlainText()
-			{
-				return text;
-			}
-
-
-			public int getCellCount()
-			{
-				return text.length();
-			}
-
-
-			public String getCellText(int offset)
-			{
-				int len = text.length();
-				if((offset >= 0) && (offset + 1 <= len))
-				{
-					return text.substring(offset, offset + 1);
-				}
-				return null;
-			}
-
-
-			public void updateStyle(int off, CellStyles styles)
-			{
-				styles.update
-				(
-					null,
-					null,
-					false,
-					false, 
-					false,
-					false
-				);
-			}
-
-
-			public boolean hasComplexGlyphLogic()
-			{
-				return false;
-			}
-			
-			
-			public GlyptType getGlyphType(int cellIndex)
-			{
-				if((cellIndex >= 0) && (cellIndex  < text.length()))
-				{
-					char c = text.charAt(cellIndex);
-					if(c == '\t')
-					{
-						return GlyptType.TAB;
-					}
-					else
-					{
-						return GlyptType.NORMAL;
-					}
-				}
-				return GlyptType.EOL;
-			}
-		};
+		return new DemoTextLine(text, line);
 	}
 }

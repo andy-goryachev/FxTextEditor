@@ -24,13 +24,16 @@ public class ScreenRow
 	}
 	
 	
-	public void setStart(ITextLine t, int startCellOffset, ITabPolicy tabs, int width)
+	public void setStart(ITextLine t, int startCellOffset, ITabPolicy tabPolicy, int width)
 	{
 		textLine = t;
 		startOffset = startCellOffset;
 		
-		// TODO if line has no tabs, no double chars -> set simple
-		complex = t.hasComplexGlyphLogic();
+		complex = t.hasComplexGlyphs();
+		if(!tabPolicy.isSimple())
+		{
+			complex |= t.hasTabs();
+		}
 		
 		if(complex)
 		{
@@ -39,7 +42,6 @@ public class ScreenRow
 				offsets = new int[width];
 			}
 			
-			// TODO populate using start offset, tab policy
 			for(int i=0; i<width; i++)
 			{
 				int off = startCellOffset + i;
@@ -50,8 +52,13 @@ public class ScreenRow
 					size = i;
 					return;
 				case TAB:
-					// TODO tab policy
-					throw new Error("?todo: tab policy");
+					int d = tabPolicy.nextTabStop(off);
+					int ct = d - off;
+					for( ; ct>0; ct--,i++)
+					{
+						offsets[i] = ct;
+					}
+					continue;
 				case NORMAL:
 					offsets[i] = off;
 					size = i;
@@ -59,9 +66,6 @@ public class ScreenRow
 				default:
 					throw new Error("?" + gt);
 				}
-				// if eof: end
-				// if tab: policy.next tab
-				// else: off++;
 			}
 		}
 	}

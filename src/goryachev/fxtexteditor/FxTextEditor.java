@@ -56,7 +56,7 @@ public class FxTextEditor
 	protected final FxBoolean highlightCaretLineProperty = new FxBoolean(true);
 	protected final ReadOnlyObjectWrapper<Duration> caretBlinkRateProperty = new ReadOnlyObjectWrapper(Duration.millis(500));
 	protected final FxObject<FxFormatter> lineNumberFormatterProperty = new FxObject<>();
-	protected final FxObject<ITabPolicy> tabPolicy = new FxObject(TabPolicy.create(4));
+	protected final FxObject<ITabPolicy> tabPolicy = new FxObject();
 	protected final FxTextEditorModelListener modelListener;
 	protected final SelectionController selector;
 	protected final Markers markers = new Markers(32);
@@ -124,6 +124,8 @@ public class FxTextEditor
 		
 		initInputHandler();
 		setFocusTraversable(true);
+		
+		setTabPolicy(TabPolicy.create(4));
 	}
 	
 	
@@ -896,7 +898,8 @@ public class FxTextEditor
 		{
 			p = TabPolicy.create(1);
 		}
-		setTabPolicy(p);
+		tabPolicy.set(p);
+		vflow.buffer.setTabPolicy(p);
 	}
 	
 	

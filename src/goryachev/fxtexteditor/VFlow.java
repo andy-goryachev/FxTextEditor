@@ -807,7 +807,6 @@ public class VFlow
 		int ymax = rowCount + 1;
 		for(int y=0; y<ymax; y++)
 		{
-			// TODO or TextRow?
 			ScreenRow row = b.getScreenRow(y);
 			if(row == null)
 			{

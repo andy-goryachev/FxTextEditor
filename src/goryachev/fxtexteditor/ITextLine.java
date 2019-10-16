@@ -47,10 +47,14 @@ public interface ITextLine
 
 
 	/** 
-	 * returns true if translation from text to glyphs is not 1:1 (i.e. has tabs, modifying characters,
-	 * surrogate pairs, etc.
+	 * returns true if translation from text to glyphs is not 1:1 
+	 * (i.e. has modifying characters, surrogate pairs, emojis, etc.
 	 */ 
-	public boolean hasComplexGlyphLogic();
+	public boolean hasComplexGlyphs();
+	
+	
+	/** returns true if the text contains tab characters */
+	public boolean hasTabs();
 
 
 	/** returns the type of a glyph at the specified cell index.  this method should be fast */

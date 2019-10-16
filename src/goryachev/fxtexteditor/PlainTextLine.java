@@ -10,12 +10,14 @@ public class PlainTextLine
 {
 	private final int line;
 	private final String text;
+	private final boolean hasTabs;
 	
 	
 	public PlainTextLine(int line, String text)
 	{
 		this.line = line;
 		this.text = text;
+		this.hasTabs = (text == null ? false : (text.indexOf('\t') >= 0));
 	}
 
 
@@ -37,7 +39,7 @@ public class PlainTextLine
 	}
 	
 	
-	public boolean hasComplexGlyphLogic()
+	public boolean hasComplexGlyphs()
 	{
 		return false;
 	}
@@ -88,5 +90,11 @@ public class PlainTextLine
 			}
 		}
 		return GlyptType.EOL;
+	}
+
+
+	public boolean hasTabs()
+	{
+		return hasTabs;
 	}
 }
