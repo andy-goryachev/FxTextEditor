@@ -1,8 +1,9 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
-import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.CellStyles;
+import goryachev.fxtexteditor.GlyptType;
 import goryachev.fxtexteditor.ITabPolicy;
+import goryachev.fxtexteditor.ITextLine;
 
 
 /**
@@ -14,6 +15,7 @@ public class ScreenRow
 	private ITextLine textLine;
 	private int startOffset;
 	private int[] offsets;
+	private int size;
 	private boolean complex;
 	
 	
@@ -40,12 +42,27 @@ public class ScreenRow
 			// TODO populate using start offset, tab policy
 			for(int i=0; i<width; i++)
 			{
+				int off = startCellOffset + i;
+				GlyptType gt = t.getGlyphType(off);
+				switch(gt)
+				{
+				case EOL:
+					size = i;
+					return;
+				case TAB:
+					// TODO tab policy
+					throw new Error("?todo: tab policy");
+				case NORMAL:
+					offsets[i] = off;
+					size = i;
+					break;
+				default:
+					throw new Error("?" + gt);
+				}
 				// if eof: end
 				// if tab: policy.next tab
 				// else: off++;
 			}
-			
-			throw new Error(); // TODO
 		}
 	}
 	
@@ -60,7 +77,14 @@ public class ScreenRow
 	{
 		if(complex)
 		{
-			return offsets[x];
+			if(x < size)
+			{
+				return offsets[x];
+			}
+			else
+			{
+				return ScreenBuffer.EOL;
+			}
 		}
 		else
 		{

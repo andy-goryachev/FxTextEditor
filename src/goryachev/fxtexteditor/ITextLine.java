@@ -51,4 +51,8 @@ public interface ITextLine
 	 * surrogate pairs, etc.
 	 */ 
 	public boolean hasComplexGlyphLogic();
+
+
+	/** returns the type of a glyph at the specified cell index.  this method should be fast */
+	public GlyptType getGlyphType(int cellIndex);
 }

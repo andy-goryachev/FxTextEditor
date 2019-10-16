@@ -49,12 +49,11 @@ public class PlainTextLine
 	}
 
 
-	public String getCellText(int offset)
+	public String getCellText(int cellIndex)
 	{
-		int len = text.length();
-		if((offset >= 0) && (offset + 1 <= len))
+		if((cellIndex >= 0) && (cellIndex  < text.length()))
 		{
-			return text.substring(offset, offset + 1);
+			return text.substring(cellIndex, cellIndex + 1);
 		}
 		return null;
 	}
@@ -71,5 +70,23 @@ public class PlainTextLine
 			false,
 			false
 		);
+	}
+
+
+	public GlyptType getGlyphType(int cellIndex)
+	{
+		if((cellIndex >= 0) && (cellIndex  < text.length()))
+		{
+			char c = text.charAt(cellIndex);
+			if(c == '\t')
+			{
+				return GlyptType.TAB;
+			}
+			else
+			{
+				return GlyptType.NORMAL;
+			}
+		}
+		return GlyptType.EOL;
 	}
 }
