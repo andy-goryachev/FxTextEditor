@@ -846,9 +846,11 @@ public class VFlow
 	{
 		TextMetrics m = textMetrics();
 		double ch = m.cellHeight;
-		double cw = m.cellWidth * count;
+		double cw = m.cellWidth;
 		double cx = x * cw;
 		double cy = y * ch;
+		
+		cw *= count;
 		
 		// TODO bg
 		boolean selected = false;
