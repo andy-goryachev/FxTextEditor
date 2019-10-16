@@ -508,6 +508,11 @@ public class VFlow
 		int off = topOffset;
 		ITextLine tline = null;
 		
+		if(wrap)
+		{
+			// TODO topOffset might change as a result of resizing
+		}
+		
 		for(int y=0; y<ymax; y++)
 		{
 			if(lineIndex < model.getLineCount())
@@ -812,15 +817,20 @@ public class VFlow
 			{
 				for(int x=0; x<xmax; x++)
 				{
-					if(row.isEOL(x))
+					int off = row.getCellOffset(x);
+					if(off == ScreenBuffer.EOF)
 					{
 						paintBlank(x, y, xmax - x);
 						break;
 					}
 					
-					int span = row.getTabSpan(x);
-					if(span > 0)
+					if(off == ScreenBuffer.EOL)
 					{
+						paintBlank(x, y, xmax - x);
+					}
+					else if(off < 0)
+					{
+						int span = (-off - row.getStartOffset());
 						paintBlank(x, y, span);
 					}
 					else
@@ -835,7 +845,17 @@ public class VFlow
 	
 	protected void paintBlank(int x, int y, int count)
 	{
-		// TODO
+		TextMetrics m = textMetrics();
+		double ch = m.cellHeight;
+		double cw = m.cellWidth * count;
+		double cx = x * cw;
+		double cy = y * ch;
+		
+		// TODO bg
+		boolean selected = false;
+		Color bg = backgroundColor(false, selected, null);
+		gx.setFill(bg);
+		gx.fillRect(cx, cy, cw, ch);
 	}
 	
 

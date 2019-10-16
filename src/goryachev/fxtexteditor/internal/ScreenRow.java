@@ -22,10 +22,10 @@ public class ScreenRow
 	}
 	
 	
-	public void setStart(ITextLine t, int off, ITabPolicy tabs, int width)
+	public void setStart(ITextLine t, int startCellOffset, ITabPolicy tabs, int width)
 	{
 		textLine = t;
-		startOffset = off;
+		startOffset = startCellOffset;
 		
 		// TODO if line has no tabs, no double chars -> set simple
 		complex = t.hasComplexGlyphLogic();
@@ -49,6 +49,12 @@ public class ScreenRow
 	}
 	
 	
+	/**
+	 * returns a cell offset, 
+	 * or a negative offset to the position after a tab (if inside a tab),
+	 * or ScreenBuffer.EOL if past the end of given line,
+	 * or ScreenBuffer.EOF if past the end of file
+	 */
 	public int getCellOffset(int x)
 	{
 		if(complex)
@@ -75,18 +81,18 @@ public class ScreenRow
 
 
 	// TODO perhaps merge the two?
-	public boolean isEOL(int x)
-	{
-		// TODO
-		return false;
-	}
-
-
-	public int getTabSpan(int x)
-	{
-		// TODO
-		return 0;
-	}
+//	public boolean isEOL(int x)
+//	{
+//		// TODO
+//		return false;
+//	}
+//
+//
+//	public int getTabSpan(int x)
+//	{
+//		// TODO
+//		return 0;
+//	}
 
 
 	public void updateStyle(int x, CellStyles style)
@@ -104,5 +110,11 @@ public class ScreenRow
 	public String getCellText(int x)
 	{
 		return textLine.getCellText(startOffset + x);
+	}
+
+
+	public int getCellCount()
+	{
+		return textLine.getCellCount();
 	}
 }

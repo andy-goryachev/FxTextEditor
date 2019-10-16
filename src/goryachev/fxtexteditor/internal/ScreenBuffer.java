@@ -10,8 +10,8 @@ import goryachev.fxtexteditor.TextPos;
  */
 public class ScreenBuffer
 {
-	public static final int EOL = -1;
-	public static final int EOF = -2;
+	public static final int EOF = Integer.MIN_VALUE;
+	public static final int EOL = Integer.MIN_VALUE + 1;
 	private int height;
 	private int width;
 	private ScreenRow[] rows;
@@ -57,9 +57,9 @@ public class ScreenBuffer
 	}
 	
 	
-	public void addRow(int ix, ITextLine textLine, int off)
+	public void addRow(int ix, ITextLine textLine, int startCellOffset)
 	{
-		rows[ix].setStart(textLine, off, tabPolicy, width);
+		rows[ix].setStart(textLine, startCellOffset, tabPolicy, width);
 	}
 	
 
@@ -119,16 +119,18 @@ public class ScreenBuffer
 			{
 				if(off == EOF)
 				{
-					
+					// can't happen
+					throw new Error();
 				}
 				else if(off == EOL)
 				{
-					
+					off = row.getCellCount();
 				}
-				// TODO tab, eol, eof
-				// FIX
-				line = 0;
-				off = 0;
+				else if(off < 0)
+				{
+					// inside a tab
+					off = -off;
+				}
 			}
 		}
 		
