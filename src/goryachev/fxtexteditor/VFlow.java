@@ -492,26 +492,32 @@ public class VFlow
 	
 	protected void reflow()
 	{
-		FxTextEditorModel model = editor.getModel();
 		boolean wrap = editor.isWrapLines();
-
 		int bufferWidth = getColumnCount() + 1;
 		int bufferHeight = getLineCount() + 1;
 		
 		buffer.setSize(bufferWidth, bufferHeight);
 		
-		int xmax = wrap ? getColumnCount() : bufferWidth;
-		int ymax = bufferHeight;
-		
+		if(wrap)
+		{
+			reflowWrapped(getColumnCount(), bufferHeight);
+		}
+		else
+		{
+			reflowNonWrapped(bufferWidth, bufferHeight);
+		}
+	}
+	
+	
+	protected void reflowWrapped(int xmax, int ymax)
+	{
+		FxTextEditorModel model = editor.getModel();
 		int lineIndex = getTopLine();
 		int topOffset = getTopOffset();
 		int off = topOffset;
 		ITextLine tline = null;
 		
-		if(wrap)
-		{
-			// TODO topOffset might change as a result of resizing
-		}
+		// TODO topOffset might change as a result of resizing
 		
 		for(int y=0; y<ymax; y++)
 		{
@@ -530,7 +536,7 @@ public class VFlow
 			}
 			buffer.addRow(y, tline, off);
 			
-			if(wrap && (tline != null))
+			if(tline != null)
 			{
 				if(off + xmax < tline.getCellCount())
 				{
@@ -550,181 +556,36 @@ public class VFlow
 		}
 	}
 	
-
-	/* TODO
-	protected void reflow_DELETE()
+	
+	protected void reflowNonWrapped(int xmax, int ymax)
 	{
 		FxTextEditorModel model = editor.getModel();
-		boolean wrap = editor.isWrapLines();
-
-		int bufferWidth = getColumnCount() + 1;
-		int bufferHeight = getLineCount() + 1;
-		
-		buffer.setSize(bufferWidth, bufferHeight);
-		
-		int xmax = wrap ? getColumnCount() : bufferWidth;
-		int ymax = bufferHeight;
-		
 		int lineIndex = getTopLine();
 		int topOffset = getTopOffset();
-		int screenBufferIndex = 0;
 		int off = topOffset;
-		
-		@Deprecated
-		boolean eof = false;
-		@Deprecated
-		boolean eol = false;
-		@Deprecated
-		boolean selected = false;
-		@Deprecated
-		boolean validCaret = true;
-		@Deprecated
-		boolean validLine = true;
-		ITextCells textLine = null;
-		Grapheme gr = null;
+		ITextLine tline = null;
 		
 		for(int y=0; y<ymax; y++)
 		{
-			for(int x=0; x<xmax; x++)
+			if(lineIndex < model.getLineCount())
 			{
-				if(eof)
-				{
-					gr = null;
-					validCaret = false;
-					
-					if(lineIndex == model.getLineCount())
-					{
-						validLine = true;
-					}
-					else
-					{
-						validLine = false;
-					}
-				}
-				else if(eol)
-				{
-					gr = null;
-					validCaret = false;
-				}
-				else
-				{
-					if(textLine == null)
-					{
-						if(lineIndex == model.getLineCount())
-						{
-							eof = true;
-							validCaret = (x == 0) && (topOffset == 0);
-							validLine = true;
-						}
-						else if(lineIndex > model.getLineCount())
-						{
-							eof = true;
-							validCaret = false;
-							validLine = false;
-						}
-						else
-						{
-							textLine = getTextCellsLine(lineIndex);
-						}
-					}
-					
-					if(eof || eol || (textLine == null))
-					{
-						gr = null;
-						textLine = null;
-					}
-					else 
-					{
-						gr = textLine.getCell(off);
-						if(gr == null)
-						{
-							eol = true;
-						}
-						validCaret = true;
-						
-						// TODO tabs
-					}
-				}
-				
-				selected = editor.isSelected(lineIndex, off);
-				
-//				ScreenCell_DELETE cell = buffer.getCell(screenBufferIndex++);
-//				cell.setLine(lineIndex);
-//				cell.setOffset(off);
-//				cell.setCell(gr);
-//				cell.setValidCaret(validCaret);
-//				cell.setValidLine(validLine);
-				
-				if(gr != null)
-				{
-					off++;
-				}
-			}
-			
-			if(eof)
-			{
-				lineIndex++;
+				tline = getTextLine(lineIndex);
 			}
 			else
 			{
-				if(wrap)
-				{
-					// extra cell when wrap is on
-//					ScreenCell_DELETE cell = buffer.getCell(screenBufferIndex++);
-//					cell.setLine(lineIndex);
-//					cell.setOffset(off);
-//					cell.setCell(null);
-//					cell.setValidLine(!eof);
-					
-					if(eol)
-					{
-						lineIndex++;
-						textLine = null;
-						eol = false;
-						off = 0;
-					}
-				}
-				else
-				{
-					lineIndex++;
-					textLine = null;
-					eol = false;
-					off = topOffset;
-				}
+				tline = null;
 			}
-		}
-	}
-	*/
-	
-	
-	/* TODO move to model
-	protected ITextCells createTextCells(int lineIndex, String text, TextDecor decor)
-	{
-		// TODO depending on the model, may create a more lightweight implementation
-		TextCells cs = new TextCells(lineIndex);
-		
-		if(text != null)
-		{
-			// TODO add option to skip iterator... or move it to the model
-			IBreakIterator br = getBreakIterator();
-			br.setText(text);
-	
-			int start = br.first();
-			for(int end=br.next(); end!=IBreakIterator.DONE; start=end, end=br.next())
+
+			if(tline == null)
 			{
-				String s = text.substring(start, end);
-				cs.addCell(start, end, s);
+				off = ScreenBuffer.EOF;
 			}
+			buffer.addRow(y, tline, off);
 			
-			if(decor != null)
-			{
-				decor.applyStyles(cs);
-			}
+			lineIndex++;
+			off = topOffset;
 		}
-		
-		return cs;
 	}
-	*/
 	
 	
 	/** returns true if update resulted in a visual change */
