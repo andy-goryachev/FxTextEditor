@@ -56,7 +56,7 @@ public class ScreenRow
 					int ct = d - off;
 					for( ; ct>0; ct--,i++)
 					{
-						offsets[i] = ct;
+						offsets[i] = -ct;
 					}
 					continue;
 				case NORMAL:
