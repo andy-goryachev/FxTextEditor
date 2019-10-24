@@ -46,7 +46,17 @@ public class DemoTextEditorModel
 	{
 		if(line < getLineCount())
 		{
-			return lines[line % lines.length];
+			String s = lines[line % lines.length];
+			if(s.length() > 0)
+			{
+				switch(s.charAt(s.length() - 1))
+				{
+				case '\r':
+				case '\n':
+					return s.substring(0, s.length() - 1);
+				}
+			}
+			return s;
 		}
 		return null;
 	}

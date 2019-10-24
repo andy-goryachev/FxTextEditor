@@ -24,8 +24,8 @@ public abstract class FxTextEditorModel
 	public abstract int getLineCount();
 	
 	/**
-	 * Returns the representaion of text on the specified line, or null.
-	 * TODO make not nullable
+	 * Returns the representaion of text on the specified line, 
+	 * or null if lineIndex is outside of 0...getLineCount()-1
 	 */
 	public abstract ITextLine getTextLine(int line);
 	

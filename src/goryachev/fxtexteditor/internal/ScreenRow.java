@@ -1,8 +1,7 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.common.util.SB;
 import goryachev.fxtexteditor.CellStyles;
-import goryachev.fxtexteditor.GlyptType;
-import goryachev.fxtexteditor.ITabPolicy;
 import goryachev.fxtexteditor.ITextLine;
 
 
@@ -24,6 +23,38 @@ public class ScreenRow
 	}
 	
 	
+	public void setSize(int sz)
+	{
+		size = sz;
+	}
+	
+	
+	public void setComplex(boolean on)
+	{
+		complex = on;;
+	}
+	
+	
+	public void setTextLine(ITextLine t, int startCellOffset)
+	{
+		textLine = t;
+		startOffset = startCellOffset;
+	}
+	
+	
+	public int[] getOffsets(int width)
+	{
+		if((offsets == null) || (offsets.length < width))
+		{
+			offsets = new int[width];
+		}
+		return offsets;
+	}
+	
+	
+	/*
+	// TODO return oofset of the first cell to the right of the screen edge
+	@Deprecated // TODO remove
 	public void setStart(ITextLine t, int startCellOffset, ITabPolicy tabPolicy, int width)
 	{
 		textLine = t;
@@ -69,6 +100,7 @@ public class ScreenRow
 			}
 		}
 	}
+	*/
 	
 	
 	/**
@@ -123,12 +155,28 @@ public class ScreenRow
 
 	public String getCellText(int x)
 	{
-		return textLine.getCellText(startOffset + x);
+		int ix = getCellOffset(x);
+		return textLine.getCellText(ix);
 	}
 
 
 	public int getCellCount()
 	{
 		return textLine.getCellCount();
+	}
+
+
+	public String printOffsets()
+	{
+		SB sb = new SB();
+		for(int i=0; i<size; i++)
+		{
+			if(i > 0)
+			{
+				sb.append(',');
+			}
+			sb.append(offsets[i]);
+		}
+		return sb.toString();
 	}
 }

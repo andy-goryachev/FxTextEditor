@@ -30,7 +30,9 @@ public interface ITextLine
 	 * returns the number of glyphs in the text line.  
 	 * one glyph is rendered in one fixed width cell.
 	 * this code does not support rendering of double width symbols such as full-width CJK.
+	 * A tab is one glyph.
 	 */
+	// TODO getGlyphCount()
 	public int getCellCount();
 
 

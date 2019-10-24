@@ -23,6 +23,7 @@ public class ScreenBuffer
 	}
 	
 	
+	@Deprecated // TODO remove
 	public void setTabPolicy(ITabPolicy p)
 	{
 		tabPolicy = p;
@@ -57,10 +58,35 @@ public class ScreenBuffer
 	}
 	
 	
-	public void addRow(int ix, ITextLine textLine, int startCellOffset)
+	public ScreenRow getRow(int ix)
 	{
-		rows[ix].setStart(textLine, startCellOffset, tabPolicy, width);
+		return rows[ix];
 	}
+	
+	
+//	public void setEmptyLine(int ix)
+//	{
+//		rows[ix].setSize(0);
+//	}
+//	
+//	
+//	public void setComplexLine(int ix, boolean on)
+//	{
+//		rows[ix].setComplex(on);
+//	}
+	
+	
+//	@Deprecated // TODO remove
+//	public void addRow(int ix, ITextLine textLine, int startCellOffset)
+//	{
+//		rows[ix].setStart(textLine, startCellOffset, tabPolicy, width);
+//	}
+	
+	
+//	public int[] setTextLine(int ix, ITextLine textLine, int startCellOffset)
+//	{
+//		return rows[ix].setTextLine(textLine, startCellOffset, width);
+//	}
 	
 
 	public int getOffset(int x, int y)

@@ -339,7 +339,7 @@ public class FxTextEditor
 	
 	protected void setTopOffset(int off)
 	{
-		vflow.setTopOffset(off);
+		vflow.setTopCellIndex(off);
 		invalidate();
 	}
 	
