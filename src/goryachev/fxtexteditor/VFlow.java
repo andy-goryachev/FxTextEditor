@@ -2,7 +2,6 @@
 package goryachev.fxtexteditor;
 import goryachev.common.util.CKit;
 import goryachev.common.util.D;
-import goryachev.common.util.Dump;
 import goryachev.fx.Binder;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
@@ -510,6 +509,8 @@ public class VFlow
 		if(wrap)
 		{
 			reflowWrapped(getColumnCount(), bufferHeight, tabPolicy);
+			D.print(buffer.dump());
+//			System.exit(0); // FIX
 		}
 		else
 		{
@@ -519,51 +520,200 @@ public class VFlow
 	
 	
 	// TODO
+	@SuppressWarnings("null") // due to offsets
 	protected void reflowWrapped(int xmax, int ymax, ITabPolicy tabPolicy)
 	{
-		FxTextEditorModel model = editor.getModel();
 		int lineIndex = getTopLine();
-		int topOffset = getTopCellIndex();
-		int off = topOffset;
+		int topCellIndex = getTopCellIndex();
+		boolean run = true;
+		int x = 0;
+		int y = 0;
+		ScreenRow r = null;
 		ITextLine tline = null;
+		int cellIndex = 0;
+		int glyphIndex = 0;
+		int glyphCount = 0;
+		int tabDistance = 0;
+		boolean complex = false;
+		int[] offsets = null;
+		int rowSize = 0;
 		
-		// TODO topOffset might change as a result of resizing
-		
-		for(int y=0; y<ymax; y++)
+		while(y < ymax)
 		{
-			if(lineIndex < model.getLineCount())
+			if(r == null)
 			{
-				tline = getTextLine(lineIndex);
+				r = buffer.getRow(y);
 			}
-			else
-			{
-				tline = null;
-			}
-
+			
 			if(tline == null)
 			{
-				off = ScreenBuffer.EOF;
-			}
-			
-			// FIX
-//			buffer.addRow(y, tline, off);
-			
-			if(tline != null)
-			{
-				if(off + xmax < tline.getCellCount())
+				tline = getTextLine(lineIndex);
+				if(tline == null)
 				{
-					off += xmax;
+					complex = false;
 				}
 				else
 				{
-					lineIndex++;
-					off = topOffset;
+					complex = tline.hasComplexGlyphs();
+					if(!complex)
+					{
+						if(!tabPolicy.isSimple())
+						{
+							complex |= tline.hasTabs();
+						}
+					}
+					
+					if(complex)
+					{
+						offsets = r.getOffsets(xmax);
+						glyphCount = tline.getGlyphCount();
+						rowSize = 0;
+					}
 				}
+				
+				r.setComplex(complex);
+			}
+			
+			// main FSM loop
+				
+			if(tline == null)
+			{
+				// next line
+				r.setSize(0);
+				r = null;
+				x = 0;
+				y++;
+				lineIndex++;
+			}
+			else if(tabDistance > 0)
+			{
+				// TODO in tabs
+			}
+			else if(complex)
+			{
+				GlyptType gt = tline.getGlyphType(glyphIndex);
+				switch(gt)
+				{
+				case EOL:
+					r.setSize(rowSize);
+					r = null;
+					tline = null;
+					lineIndex++;
+					y++;
+					break;
+				case TAB:
+					tabDistance = tabPolicy.nextTabStop(cellIndex) - cellIndex;
+					glyphIndex++;
+					offsets[cellIndex - topCellIndex] = -tabDistance;
+					--tabDistance;
+					cellIndex++;
+					break;
+				case NORMAL:
+					if(offsets == null)
+					{
+						throw new Error();
+					}
+					offsets[cellIndex - topCellIndex] = glyphIndex;
+					rowSize++;
+					break;
+				default:
+					throw new Error("?" + gt);
+				}
+				
+				// FIX
+//				int maxCellIndex = topCellIndex + xmax;
+//				int size = 0;
+//				boolean run2 = true;
+//					
+//				while(run2)
+//				{
+//					GlyptType gt = tline.getGlyphType(glyphIndex);
+//					switch(gt)
+//					{
+//					case EOL:
+//						run = false;
+//						break;
+//					case TAB:
+//						int d = tabPolicy.nextTabStop(cellIndex);
+//						int ct = d - cellIndex;
+//						for( ; ct>0; ct--)
+//						{
+//							if(cellIndex >= maxCellIndex)
+//							{
+//								break;
+//							}
+//							
+//							if(cellIndex >= topCellIndex)
+//							{
+//								offsets[cellIndex - topCellIndex] = -ct;
+//								size++;
+//							}
+//							cellIndex++;
+//						}
+//						glyphIndex++;
+//						break;
+//					case NORMAL:
+//						if(cellIndex >= maxCellIndex)
+//						{
+//							break;
+//						}
+//						else if(cellIndex >= topCellIndex)
+//						{
+//							offsets[cellIndex - topCellIndex] = glyphIndex;
+//							size++;
+//						}
+//						glyphIndex++;
+//						cellIndex++;
+//						break;
+//					default:
+//						throw new Error("?" + gt);
+//					}
+//				
+////					r.setSize(size);
+//					//D.print(r.printOffsets(), Dump.toPrintable(r.getTextLine().getPlainText()));
+//					
+//					if(glyphIndex >= glyphCount)
+//					{
+//						run2 = false;
+//						lineIndex++;
+//						y++;
+//						r = null;
+//						tline = null;
+//						glyphIndex = 0;
+//					}
+//					else if(cellIndex >= maxCellIndex)
+//					{
+//						run2 = false;
+//						r = null;
+//						y++;
+//					}
+//				}
 			}
 			else
 			{
-				lineIndex++;
-				off = topOffset;
+				r.setTextLine(tline, cellIndex);
+				
+				if(cellIndex + xmax > tline.getGlyphCount())
+				{
+					// middle of line
+					r.setSize(xmax);
+					
+					cellIndex++;
+					x = 0;
+					y++;
+				}
+				else
+				{
+					// end of line
+					int sz = tline.getGlyphCount() - cellIndex;
+					r.setSize(sz);
+					
+					r = null;
+					tline = null;
+					x = 0;
+					y++;
+					lineIndex++;
+				}
 			}
 		}
 	}
@@ -571,7 +721,6 @@ public class VFlow
 	
 	protected void reflowNonWrapped(int xmax, int ymax, ITabPolicy tabPolicy)
 	{
-		FxTextEditorModel model = editor.getModel();
 		int lineIndex = getTopLine();
 		int topCellIndex = getTopCellIndex();
 		
@@ -602,7 +751,7 @@ public class VFlow
 					r.setComplex(true);
 					int[] offsets = r.getOffsets(xmax);
 					
-					int glyphCount = tline.getCellCount();
+					int glyphCount = tline.getGlyphCount();
 					int maxCellIndex = topCellIndex + xmax;
 					int size = 0;
 					int glyphIndex = 0;

@@ -162,20 +162,23 @@ public class ScreenRow
 
 	public int getCellCount()
 	{
-		return textLine.getCellCount();
+		return textLine.getGlyphCount();
 	}
 
 
 	public String printOffsets()
 	{
 		SB sb = new SB();
-		for(int i=0; i<size; i++)
+		if(offsets != null)
 		{
-			if(i > 0)
+			for(int i=0; i<size; i++)
 			{
-				sb.append(',');
+				if(i > 0)
+				{
+					sb.append(',');
+				}
+				sb.append(offsets[i]);
 			}
-			sb.append(offsets[i]);
 		}
 		return sb.toString();
 	}

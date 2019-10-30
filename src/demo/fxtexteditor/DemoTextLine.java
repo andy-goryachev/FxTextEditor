@@ -42,7 +42,7 @@ public class DemoTextLine
 	}
 
 
-	public int getCellCount()
+	public int getGlyphCount()
 	{
 		return text.length();
 	}

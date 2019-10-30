@@ -899,7 +899,6 @@ public class FxTextEditor
 			p = TabPolicy.create(1);
 		}
 		tabPolicy.set(p);
-		vflow.buffer.setTabPolicy(p);
 	}
 	
 	

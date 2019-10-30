@@ -1,7 +1,6 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
-import goryachev.fxtexteditor.ITabPolicy;
-import goryachev.fxtexteditor.ITextLine;
+import goryachev.common.util.SB;
 import goryachev.fxtexteditor.TextPos;
 
 
@@ -15,18 +14,10 @@ public class ScreenBuffer
 	private int height;
 	private int width;
 	private ScreenRow[] rows;
-	private ITabPolicy tabPolicy;
 	
 	
 	public ScreenBuffer()
 	{
-	}
-	
-	
-	@Deprecated // TODO remove
-	public void setTabPolicy(ITabPolicy p)
-	{
-		tabPolicy = p;
 	}
 	
 	
@@ -161,5 +152,16 @@ public class ScreenBuffer
 		}
 		
 		return new TextPos(line, off);
+	}
+	
+	
+	public String dump()
+	{
+		SB sb = new SB();
+		for(int i=0; i<getHeight(); i++)
+		{
+			sb.format("%02d %s\n", i, rows[i].printOffsets());
+		}
+		return sb.toString();
 	}
 }

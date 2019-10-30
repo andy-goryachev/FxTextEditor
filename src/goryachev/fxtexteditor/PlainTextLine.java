@@ -45,7 +45,7 @@ public class PlainTextLine
 	}
 
 
-	public int getCellCount()
+	public int getGlyphCount()
 	{
 		return text.length();
 	}
