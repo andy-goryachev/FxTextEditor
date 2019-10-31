@@ -1,5 +1,6 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
-package goryachev.fxtexteditor.internal;
+package goryachev.fxtexteditor.DELETE;
+import goryachev.fxtexteditor.internal.TAttrs;
 import javafx.scene.paint.Color;
 
 

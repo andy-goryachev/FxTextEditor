@@ -24,7 +24,6 @@ public class WrappedReflowHelper
 	private ScreenRow r;
 	private ITextLine tline;
 	private int glyphIndex;
-	private int glyphCount;
 	private int tabDistance;
 	private boolean complex;
 	private int[] offsets;
@@ -54,7 +53,6 @@ public class WrappedReflowHelper
 		tline = null;
 		offsets = null;
 		glyphIndex = 0;
-		glyphCount = 0;
 		tabDistance = 0;
 		complex = false;
 	}
@@ -93,7 +91,6 @@ public class WrappedReflowHelper
 					if(complex)
 					{
 						offsets = r.prepareOffsetsForWidth(xmax);
-						glyphCount = tline.getGlyphCount();
 					}
 				}
 				
@@ -126,11 +123,12 @@ public class WrappedReflowHelper
 				{
 					// next line
 					r.setSize(x);
+					// FIX is this right?  cells and glyph
 					startCellIndex = glyphIndex;
 					tabDistance = 0;
-					x = 0;
 					// FIX line disappears
 					r = null;
+					x = 0;
 					y++;
 				}
 				else
