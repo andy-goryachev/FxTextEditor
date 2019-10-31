@@ -39,6 +39,7 @@ public class WrappedReflowHelper
 	
 	protected void reset(VFlow flow, ScreenBuffer buffer, int xmax, int ymax, ITabPolicy tabPolicy)
 	{
+		// TODO check if local vars are sufficient (tabPolicy?)
 		this.flow = flow;
 		this.buffer = buffer;
 		this.xmax = xmax;
@@ -61,7 +62,7 @@ public class WrappedReflowHelper
 	}
 
 	
-	public void reflow(VFlow flow, ScreenBuffer buffer,  int xmax, int ymax, ITabPolicy tabPolicy)
+	public void reflow(VFlow flow, ScreenBuffer buffer, int xmax, int ymax, ITabPolicy tabPolicy)
 	{
 		reset(flow, buffer, xmax, ymax, tabPolicy);
 		
@@ -93,7 +94,7 @@ public class WrappedReflowHelper
 					
 					if(complex)
 					{
-						offsets = r.getOffsets(xmax);
+						offsets = r.prepareOffsetsForWidth(xmax);
 						glyphCount = tline.getGlyphCount();
 						rowSize = 0;
 					}
@@ -108,7 +109,7 @@ public class WrappedReflowHelper
 				r.setTextLine(tline, startOffset);
 			}
 			
-			int cellIndex2 = startOffset + x;
+			int cellIndex = startOffset + x;
 			
 			// main FSM loop
 				
@@ -126,7 +127,7 @@ public class WrappedReflowHelper
 				if(x >= xmax)
 				{
 					// next line
-					startOffset = cellIndex2 + tabDistance;
+					startOffset = cellIndex + tabDistance;
 					tabDistance = 0;
 					x = 0;
 					y++;
@@ -140,7 +141,7 @@ public class WrappedReflowHelper
 			}
 			else if(complex)
 			{
-				if(x > xmax)
+				if(x >= xmax)
 				{
 					// next line
 					startOffset = 0;
@@ -161,15 +162,16 @@ public class WrappedReflowHelper
 						y++;
 						break;
 					case TAB:
-						tabDistance = tabPolicy.nextTabStop(cellIndex2) - cellIndex2;
-						glyphIndex++;
+						tabDistance = tabPolicy.nextTabStop(cellIndex) - cellIndex;
 						offsets[x] = -tabDistance;
 						--tabDistance;
+						glyphIndex++;
 						rowSize++;
 						x++;
 						break;
 					case NORMAL:
 						offsets[x] = glyphIndex;
+						glyphIndex++;
 						rowSize++;
 						x++;
 						break;
@@ -180,10 +182,10 @@ public class WrappedReflowHelper
 			}
 			else
 			{
-				if(cellIndex2 + xmax > tline.getGlyphCount())
+				if(cellIndex + xmax >= tline.getGlyphCount())
 				{
 					// end of line
-					int sz = tline.getGlyphCount() - cellIndex2;
+					int sz = tline.getGlyphCount() - cellIndex;
 					r.setSize(sz);
 					
 					tline = null;

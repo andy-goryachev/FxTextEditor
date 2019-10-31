@@ -548,7 +548,7 @@ public class VFlow
 				if(complex)
 				{
 					r.setComplex(true);
-					int[] offsets = r.getOffsets(xmax);
+					int[] offsets = r.prepareOffsetsForWidth(xmax);
 					
 					int glyphCount = tline.getGlyphCount();
 					int maxCellIndex = topCellIndex + xmax;
@@ -690,9 +690,15 @@ public class VFlow
 			return;
 		}
 		
+		boolean wrap = editor.isWrapLines(); 
 		ScreenBuffer b = buffer();
-		int xmax = colCount + 1;
+		int xmax = colCount;
+		if(!wrap)
+		{
+			xmax++;
+		}
 		int ymax = rowCount + 1;
+		
 		for(int y=0; y<ymax; y++)
 		{
 			ScreenRow row = b.getScreenRow(y);
@@ -723,6 +729,11 @@ public class VFlow
 					{
 						paintCell(row, x, y);	
 					}
+				}
+				
+				if(wrap)
+				{
+					paintBlank(xmax, y, 1);
 				}
 			}
 		}

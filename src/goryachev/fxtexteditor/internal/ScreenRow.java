@@ -42,7 +42,7 @@ public class ScreenRow
 	}
 	
 	
-	public int[] getOffsets(int width)
+	public int[] prepareOffsetsForWidth(int width)
 	{
 		if((offsets == null) || (offsets.length < width))
 		{
