@@ -77,7 +77,7 @@ public class PlainTextLine
 
 	public GlyptType getGlyphType(int cellIndex)
 	{
-		if((cellIndex >= 0) && (cellIndex  < text.length()))
+		if((cellIndex >= 0) && (cellIndex < text.length()))
 		{
 			char c = text.charAt(cellIndex);
 			if(c == '\t')

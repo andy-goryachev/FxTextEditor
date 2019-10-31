@@ -29,7 +29,6 @@ public class WrappedReflowHelper
 	private boolean complex;
 	private int[] offsets;
 	private int startOffset;
-	private int rowSize;
 	
 	
 	public WrappedReflowHelper()
@@ -54,7 +53,6 @@ public class WrappedReflowHelper
 		r = null;
 		tline = null;
 		offsets = null;
-		rowSize = 0;
 		glyphIndex = 0;
 		glyphCount = 0;
 		tabDistance = 0;
@@ -96,10 +94,10 @@ public class WrappedReflowHelper
 					{
 						offsets = r.prepareOffsetsForWidth(xmax);
 						glyphCount = tline.getGlyphCount();
-						rowSize = 0;
 					}
 				}
 				
+				glyphIndex = 0;
 				startOffset = 0;
 				r.setComplex(complex);
 			}
@@ -127,9 +125,12 @@ public class WrappedReflowHelper
 				if(x >= xmax)
 				{
 					// next line
+					r.setSize(x);
 					startOffset = cellIndex + tabDistance;
 					tabDistance = 0;
 					x = 0;
+					// FIX line disappears
+					r = null;
 					y++;
 				}
 				else
@@ -144,6 +145,7 @@ public class WrappedReflowHelper
 				if(x >= xmax)
 				{
 					// next line
+					r.setSize(x);
 					startOffset = 0;
 					tabDistance = 0;
 					x = 0;
@@ -155,7 +157,7 @@ public class WrappedReflowHelper
 					switch(gt)
 					{
 					case EOL:
-						r.setSize(rowSize);
+						r.setSize(x);
 						r = null;
 						tline = null;
 						lineIndex++;
@@ -166,13 +168,11 @@ public class WrappedReflowHelper
 						offsets[x] = -tabDistance;
 						--tabDistance;
 						glyphIndex++;
-						rowSize++;
 						x++;
 						break;
 					case NORMAL:
 						offsets[x] = glyphIndex;
 						glyphIndex++;
-						rowSize++;
 						x++;
 						break;
 					default:

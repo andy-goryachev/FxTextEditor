@@ -143,18 +143,29 @@ public class ScreenRow
 
 	public void updateStyle(int x, CellStyles style)
 	{
-		textLine.updateStyle(x, style);
+		if(textLine != null)
+		{
+			textLine.updateStyle(x, style);
+		}
 	}
 
 
 	public int getModelIndex()
 	{
+		if(textLine == null)
+		{
+			return -1;
+		}
 		return textLine.getModelIndex();
 	}
 
 
 	public String getCellText(int x)
 	{
+		if(textLine == null)
+		{
+			return "";
+		}
 		int ix = getCellOffset(x);
 		return textLine.getCellText(ix);
 	}

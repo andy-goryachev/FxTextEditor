@@ -2,6 +2,7 @@
 package goryachev.fxtexteditor.internal;
 import goryachev.common.util.Dump;
 import goryachev.common.util.SB;
+import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.TextPos;
 
 
@@ -137,7 +138,9 @@ public class ScreenBuffer
 		for(int i=0; i<getHeight(); i++)
 		{
 			ScreenRow r = rows[i];
-			sb.format("%02d %s %s\n", i, r.dump(), Dump.toPrintable(r.getTextLine().getPlainText()));
+			ITextLine tline = r.getTextLine();
+			String text = (tline == null ? "" : Dump.toPrintable(tline.getPlainText()));
+			sb.format("%02d %s %s\n", i, r.dump(), text);
 		}
 		return sb.toString();
 	}
