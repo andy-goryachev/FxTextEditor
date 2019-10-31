@@ -28,7 +28,7 @@ public class WrappedReflowHelper
 	private int tabDistance;
 	private boolean complex;
 	private int[] offsets;
-	private int startOffset;
+	private int startCellIndex;
 	
 	
 	public WrappedReflowHelper()
@@ -49,7 +49,7 @@ public class WrappedReflowHelper
 		topCellIndex = flow.getTopCellIndex();
 		x = 0;
 		y = 0;
-		startOffset = 0;
+		startCellIndex = 0;
 		r = null;
 		tline = null;
 		offsets = null;
@@ -98,16 +98,16 @@ public class WrappedReflowHelper
 				}
 				
 				glyphIndex = 0;
-				startOffset = 0;
+				startCellIndex = 0;
 				r.setComplex(complex);
 			}
 			
 			if(x == 0)
 			{
-				r.setTextLine(tline, startOffset);
+				r.setTextLine(tline, startCellIndex);
 			}
 			
-			int cellIndex = startOffset + x;
+			int cellIndex = startCellIndex + x;
 			
 			// main FSM loop
 				
@@ -126,7 +126,7 @@ public class WrappedReflowHelper
 				{
 					// next line
 					r.setSize(x);
-					startOffset = cellIndex + tabDistance;
+					startCellIndex = glyphIndex;
 					tabDistance = 0;
 					x = 0;
 					// FIX line disappears
@@ -146,7 +146,7 @@ public class WrappedReflowHelper
 				{
 					// next line
 					r.setSize(x);
-					startOffset = 0;
+					startCellIndex = 0;
 					tabDistance = 0;
 					x = 0;
 					y++;
@@ -195,7 +195,7 @@ public class WrappedReflowHelper
 				{
 					// middle of line
 					r.setSize(xmax);
-					startOffset += xmax;
+					startCellIndex += xmax;
 				}
 				
 				y++;

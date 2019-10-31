@@ -12,7 +12,7 @@ import goryachev.fxtexteditor.ITextLine;
 public class ScreenRow
 {
 	private ITextLine textLine;
-	private int startOffset;
+	private int startCellIndex;
 	private int[] offsets;
 	private int size;
 	private boolean complex;
@@ -35,10 +35,10 @@ public class ScreenRow
 	}
 	
 	
-	public void setTextLine(ITextLine t, int startCellOffset)
+	public void setTextLine(ITextLine t, int startCellIndex)
 	{
 		textLine = t;
-		startOffset = startCellOffset;
+		this.startCellIndex = startCellIndex;
 	}
 	
 	
@@ -124,7 +124,7 @@ public class ScreenRow
 		}
 		else
 		{
-			return startOffset + x; 
+			return startCellIndex + x; 
 		}
 	}
 
@@ -137,7 +137,7 @@ public class ScreenRow
 
 	public int getStartOffset()
 	{
-		return startOffset;
+		return startCellIndex;
 	}
 
 
@@ -190,7 +190,7 @@ public class ScreenRow
 			sb.append("S");
 		}
 		
-		sb.append("(").append(startOffset).append(") ");
+		sb.append("(").append(startCellIndex).append(") ");
 		
 		if(offsets != null)
 		{
