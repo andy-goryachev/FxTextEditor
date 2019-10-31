@@ -166,9 +166,21 @@ public class ScreenRow
 	}
 
 
-	public String printOffsets()
+	public String dump()
 	{
 		SB sb = new SB();
+		
+		if(complex)
+		{
+			sb.append("C");
+		}
+		else
+		{
+			sb.append("S");
+		}
+		
+		sb.append("(").append(startOffset).append(") ");
+		
 		if(offsets != null)
 		{
 			for(int i=0; i<size; i++)

@@ -536,6 +536,7 @@ public class VFlow
 		int tabDistance = 0;
 		boolean complex = false;
 		int[] offsets = null;
+		int startOffset = 0;
 		int rowSize = 0;
 		
 		while(y < ymax)
@@ -543,6 +544,7 @@ public class VFlow
 			if(r == null)
 			{
 				r = buffer.getRow(y);
+				x = 0;
 			}
 			
 			if(tline == null)
@@ -571,7 +573,13 @@ public class VFlow
 					}
 				}
 				
+				startOffset = 0;
 				r.setComplex(complex);
+			}
+			
+			if(x == 0)
+			{
+				r.setTextLine(tline, startOffset);
 			}
 			
 			// main FSM loop
@@ -587,133 +595,89 @@ public class VFlow
 			}
 			else if(tabDistance > 0)
 			{
-				// TODO in tabs
-			}
-			else if(complex)
-			{
-				GlyptType gt = tline.getGlyphType(glyphIndex);
-				switch(gt)
+				int off = cellIndex - startOffset;
+				if(off > xmax)
 				{
-				case EOL:
-					r.setSize(rowSize);
-					r = null;
-					tline = null;
-					lineIndex++;
-					y++;
-					break;
-				case TAB:
-					tabDistance = tabPolicy.nextTabStop(cellIndex) - cellIndex;
-					glyphIndex++;
-					offsets[cellIndex - topCellIndex] = -tabDistance;
-					--tabDistance;
-					cellIndex++;
-					break;
-				case NORMAL:
-					if(offsets == null)
-					{
-						throw new Error();
-					}
-					offsets[cellIndex - topCellIndex] = glyphIndex;
-					rowSize++;
-					break;
-				default:
-					throw new Error("?" + gt);
-				}
-				
-				// FIX
-//				int maxCellIndex = topCellIndex + xmax;
-//				int size = 0;
-//				boolean run2 = true;
-//					
-//				while(run2)
-//				{
-//					GlyptType gt = tline.getGlyphType(glyphIndex);
-//					switch(gt)
-//					{
-//					case EOL:
-//						run = false;
-//						break;
-//					case TAB:
-//						int d = tabPolicy.nextTabStop(cellIndex);
-//						int ct = d - cellIndex;
-//						for( ; ct>0; ct--)
-//						{
-//							if(cellIndex >= maxCellIndex)
-//							{
-//								break;
-//							}
-//							
-//							if(cellIndex >= topCellIndex)
-//							{
-//								offsets[cellIndex - topCellIndex] = -ct;
-//								size++;
-//							}
-//							cellIndex++;
-//						}
-//						glyphIndex++;
-//						break;
-//					case NORMAL:
-//						if(cellIndex >= maxCellIndex)
-//						{
-//							break;
-//						}
-//						else if(cellIndex >= topCellIndex)
-//						{
-//							offsets[cellIndex - topCellIndex] = glyphIndex;
-//							size++;
-//						}
-//						glyphIndex++;
-//						cellIndex++;
-//						break;
-//					default:
-//						throw new Error("?" + gt);
-//					}
-//				
-////					r.setSize(size);
-//					//D.print(r.printOffsets(), Dump.toPrintable(r.getTextLine().getPlainText()));
-//					
-//					if(glyphIndex >= glyphCount)
-//					{
-//						run2 = false;
-//						lineIndex++;
-//						y++;
-//						r = null;
-//						tline = null;
-//						glyphIndex = 0;
-//					}
-//					else if(cellIndex >= maxCellIndex)
-//					{
-//						run2 = false;
-//						r = null;
-//						y++;
-//					}
-//				}
-			}
-			else
-			{
-				r.setTextLine(tline, cellIndex);
-				
-				if(cellIndex + xmax > tline.getGlyphCount())
-				{
-					// middle of line
-					r.setSize(xmax);
-					
-					cellIndex++;
-					x = 0;
+					// next line
+					cellIndex += tabDistance;
+					startOffset = cellIndex;
+					tabDistance = 0;
 					y++;
 				}
 				else
+				{
+					offsets[cellIndex - startOffset] = -tabDistance;
+					--tabDistance;
+					cellIndex++;
+				}
+			}
+			else if(complex)
+			{
+				int off = cellIndex - startOffset;
+				if(off > xmax)
+				{
+					// next line
+					cellIndex += tabDistance;
+					startOffset = cellIndex;
+					tabDistance = 0;
+					y++;
+				}
+				else
+				{
+					GlyptType gt = tline.getGlyphType(glyphIndex);
+					switch(gt)
+					{
+					case EOL:
+						r.setSize(rowSize);
+						r = null;
+						tline = null;
+						lineIndex++;
+						y++;
+						break;
+					case TAB:
+						tabDistance = tabPolicy.nextTabStop(cellIndex) - cellIndex;
+						glyphIndex++;
+						offsets[off] = -tabDistance;
+						--tabDistance;
+						rowSize++;
+						cellIndex++;
+						break;
+					case NORMAL:
+						if(offsets == null)
+						{
+							throw new Error();
+						}
+						offsets[off] = glyphIndex;
+						rowSize++;
+						cellIndex++;
+						break;
+					default:
+						throw new Error("?" + gt);
+					}
+				}
+			}
+			else
+			{
+				if(cellIndex + xmax > tline.getGlyphCount())
 				{
 					// end of line
 					int sz = tline.getGlyphCount() - cellIndex;
 					r.setSize(sz);
 					
-					r = null;
 					tline = null;
-					x = 0;
-					y++;
 					lineIndex++;
 				}
+				else
+				{
+					// middle of line
+					r.setSize(xmax);
+					cellIndex += xmax;
+					startOffset += xmax;
+				}
+				
+				y++;
+				x = 0;
+				r = null;
 			}
 		}
 	}
@@ -795,7 +759,6 @@ public class VFlow
 					}
 					
 					r.setSize(size);
-					//D.print(r.printOffsets(), Dump.toPrintable(r.getTextLine().getPlainText()));
 					
 					if(glyphIndex >= glyphCount)
 					{

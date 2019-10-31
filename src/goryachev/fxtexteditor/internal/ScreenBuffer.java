@@ -1,5 +1,6 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.common.util.Dump;
 import goryachev.common.util.SB;
 import goryachev.fxtexteditor.TextPos;
 
@@ -53,31 +54,6 @@ public class ScreenBuffer
 	{
 		return rows[ix];
 	}
-	
-	
-//	public void setEmptyLine(int ix)
-//	{
-//		rows[ix].setSize(0);
-//	}
-//	
-//	
-//	public void setComplexLine(int ix, boolean on)
-//	{
-//		rows[ix].setComplex(on);
-//	}
-	
-	
-//	@Deprecated // TODO remove
-//	public void addRow(int ix, ITextLine textLine, int startCellOffset)
-//	{
-//		rows[ix].setStart(textLine, startCellOffset, tabPolicy, width);
-//	}
-	
-	
-//	public int[] setTextLine(int ix, ITextLine textLine, int startCellOffset)
-//	{
-//		return rows[ix].setTextLine(textLine, startCellOffset, width);
-//	}
 	
 
 	public int getOffset(int x, int y)
@@ -160,7 +136,8 @@ public class ScreenBuffer
 		SB sb = new SB();
 		for(int i=0; i<getHeight(); i++)
 		{
-			sb.format("%02d %s\n", i, rows[i].printOffsets());
+			ScreenRow r = rows[i];
+			sb.format("%02d %s %s\n", i, r.dump(), Dump.toPrintable(r.getTextLine().getPlainText()));
 		}
 		return sb.toString();
 	}
