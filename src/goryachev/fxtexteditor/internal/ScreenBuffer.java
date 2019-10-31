@@ -74,7 +74,7 @@ public class ScreenBuffer
 			return EOF;
 		}
 		
-		return r.getCellOffset(x);
+		return r.getGlyphIndex(x);
 	}
 	
 	

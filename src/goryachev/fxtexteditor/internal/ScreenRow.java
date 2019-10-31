@@ -104,12 +104,12 @@ public class ScreenRow
 	
 	
 	/**
-	 * returns a cell offset, 
+	 * returns a glyph index for a given x screen coordinate.
 	 * or a negative offset to the position after a tab (if inside a tab),
 	 * or ScreenBuffer.EOL if past the end of given line,
 	 * or ScreenBuffer.EOF if past the end of file
 	 */
-	public int getCellOffset(int x)
+	public int getGlyphIndex(int x)
 	{
 		if(complex)
 		{
@@ -166,7 +166,7 @@ public class ScreenRow
 		{
 			return "";
 		}
-		int ix = getCellOffset(x);
+		int ix = getGlyphIndex(x);
 		return textLine.getCellText(ix);
 	}
 
@@ -194,7 +194,8 @@ public class ScreenRow
 		
 		if(offsets != null)
 		{
-			for(int i=0; i<size; i++)
+			int mx = Math.min(size, offsets.length);
+			for(int i=0; i<mx; i++)
 			{
 				if(i > 0)
 				{

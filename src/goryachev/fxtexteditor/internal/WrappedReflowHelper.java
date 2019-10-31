@@ -18,7 +18,6 @@ public class WrappedReflowHelper
 	private int ymax;
 	private ITabPolicy tabPolicy;
 	private int lineIndex;
-	private int topCellIndex;
 	private int x;
 	private int y;
 	private ScreenRow r;
@@ -27,7 +26,8 @@ public class WrappedReflowHelper
 	private int tabDistance;
 	private boolean complex;
 	private int[] offsets;
-	private int startCellIndex;
+	private int startGlyphIndex;
+	private int cellIndex;
 	
 	
 	public WrappedReflowHelper()
@@ -45,10 +45,10 @@ public class WrappedReflowHelper
 		this.tabPolicy = tabPolicy;
 
 		lineIndex = flow.getTopLine();
-		topCellIndex = flow.getTopCellIndex();
+		cellIndex = 0;
 		x = 0;
 		y = 0;
-		startCellIndex = 0;
+		startGlyphIndex = 0;
 		r = null;
 		tline = null;
 		offsets = null;
@@ -95,16 +95,15 @@ public class WrappedReflowHelper
 				}
 				
 				glyphIndex = 0;
-				startCellIndex = 0;
+				cellIndex = 0;
+				startGlyphIndex = 0;
 				r.setComplex(complex);
 			}
 			
 			if(x == 0)
 			{
-				r.setTextLine(tline, startCellIndex);
+				r.setTextLine(tline, startGlyphIndex); // FIX startGlyphIndex
 			}
-			
-			int cellIndex = startCellIndex + x;
 			
 			// main FSM loop
 				
@@ -114,6 +113,7 @@ public class WrappedReflowHelper
 				r.setSize(0);
 				r = null;
 				x = 0;
+				cellIndex = 0;
 				y++;
 				lineIndex++;
 			}
@@ -123,8 +123,7 @@ public class WrappedReflowHelper
 				{
 					// next line
 					r.setSize(x);
-					// FIX is this right?  cells and glyph
-					startCellIndex = glyphIndex;
+					startGlyphIndex = glyphIndex;
 					tabDistance = 0;
 					// FIX line disappears
 					r = null;
@@ -137,6 +136,7 @@ public class WrappedReflowHelper
 					--tabDistance;
 					x++;
 				}
+				cellIndex++;
 			}
 			else if(complex)
 			{
@@ -144,10 +144,11 @@ public class WrappedReflowHelper
 				{
 					// next line
 					r.setSize(x);
-					startCellIndex = 0;
+					startGlyphIndex = 0;
 					tabDistance = 0;
 					x = 0;
 					y++;
+					cellIndex = 0;
 				}
 				else
 				{
@@ -160,17 +161,20 @@ public class WrappedReflowHelper
 						tline = null;
 						lineIndex++;
 						y++;
+						cellIndex = 0;
 						break;
 					case TAB:
 						tabDistance = tabPolicy.nextTabStop(cellIndex) - cellIndex;
 						offsets[x] = -tabDistance;
 						--tabDistance;
 						glyphIndex++;
+						cellIndex++;
 						x++;
 						break;
 					case NORMAL:
 						offsets[x] = glyphIndex;
 						glyphIndex++;
+						cellIndex++;
 						x++;
 						break;
 					default:
@@ -180,6 +184,7 @@ public class WrappedReflowHelper
 			}
 			else
 			{
+				// simple case, cell indexes coincide with glyph indexes
 				if(cellIndex + xmax >= tline.getGlyphCount())
 				{
 					// end of line
@@ -193,7 +198,7 @@ public class WrappedReflowHelper
 				{
 					// middle of line
 					r.setSize(xmax);
-					startCellIndex += xmax;
+					startGlyphIndex = glyphIndex;
 				}
 				
 				y++;

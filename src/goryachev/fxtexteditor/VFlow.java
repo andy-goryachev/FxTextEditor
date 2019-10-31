@@ -710,7 +710,7 @@ public class VFlow
 			{
 				for(int x=0; x<xmax; x++)
 				{
-					int off = row.getCellOffset(x);
+					int off = row.getGlyphIndex(x);
 					if(off == ScreenBuffer.EOF)
 					{
 						paintBlank(x, y, xmax - x);
