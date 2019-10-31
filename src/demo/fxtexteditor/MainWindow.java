@@ -36,8 +36,8 @@ public class MainWindow
 		setSize(600, 700);
 		
 		// props
-//		bind("WORD_WRAP", editor().wordWrapProperty());
-//		bind("SHOW_LINE_NUMBERS", editor().showLineNumbersProperty());
+		bind("LINE_WRAP", editor().wrapLinesProperty());
+		bind("SHOW_LINE_NUMBERS", editor().showLineNumbersProperty());
 		bind("TAIL_MODE", tailMode);
 
 		tailMode.addListener((s,p,c) -> updateModel());

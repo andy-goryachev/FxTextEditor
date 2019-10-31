@@ -1,7 +1,6 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.CKit;
-import goryachev.common.util.D;
 import goryachev.fx.Binder;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
@@ -10,6 +9,7 @@ import goryachev.fx.FxBooleanBinding;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenRow;
 import goryachev.fxtexteditor.internal.TextCellsCache;
+import goryachev.fxtexteditor.internal.WrappedReflowHelper;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.BooleanExpression;
@@ -67,6 +67,7 @@ public class VFlow
 	private boolean repaintRequested;
 	protected final TextCellsCache cache = new TextCellsCache(256);
 	protected final CellStyles cell = new CellStyles();
+	protected static final WrappedReflowHelper wrappedReflowHelper = new WrappedReflowHelper(); 
 	
 	
 	public VFlow(FxTextEditor ed)
@@ -473,7 +474,7 @@ public class VFlow
 	}
 	
 	
-	protected ITextLine getTextLine(int lineIndex)
+	public ITextLine getTextLine(int lineIndex)
 	{
 		FxTextEditorModel m = editor.getModel();
 		if(lineIndex < m.getLineCount())
@@ -508,177 +509,11 @@ public class VFlow
 		
 		if(wrap)
 		{
-			reflowWrapped(getColumnCount(), bufferHeight, tabPolicy);
-			D.print(buffer.dump());
-//			System.exit(0); // FIX
+			wrappedReflowHelper.reflow(this, buffer, getColumnCount(), bufferHeight, tabPolicy);
 		}
 		else
 		{
 			reflowNonWrapped(bufferWidth, bufferHeight, tabPolicy);
-		}
-	}
-	
-	
-	// TODO
-	@SuppressWarnings("null") // due to offsets
-	protected void reflowWrapped(int xmax, int ymax, ITabPolicy tabPolicy)
-	{
-		int lineIndex = getTopLine();
-		int topCellIndex = getTopCellIndex();
-		boolean run = true;
-		int x = 0;
-		int y = 0;
-		ScreenRow r = null;
-		ITextLine tline = null;
-		int cellIndex = 0;
-		int glyphIndex = 0;
-		int glyphCount = 0;
-		int tabDistance = 0;
-		boolean complex = false;
-		int[] offsets = null;
-		int startOffset = 0;
-		int rowSize = 0;
-		
-		while(y < ymax)
-		{
-			if(r == null)
-			{
-				r = buffer.getRow(y);
-				x = 0;
-			}
-			
-			if(tline == null)
-			{
-				tline = getTextLine(lineIndex);
-				if(tline == null)
-				{
-					complex = false;
-				}
-				else
-				{
-					complex = tline.hasComplexGlyphs();
-					if(!complex)
-					{
-						if(!tabPolicy.isSimple())
-						{
-							complex |= tline.hasTabs();
-						}
-					}
-					
-					if(complex)
-					{
-						offsets = r.getOffsets(xmax);
-						glyphCount = tline.getGlyphCount();
-						rowSize = 0;
-					}
-				}
-				
-				startOffset = 0;
-				r.setComplex(complex);
-			}
-			
-			if(x == 0)
-			{
-				r.setTextLine(tline, startOffset);
-			}
-			
-			// main FSM loop
-				
-			if(tline == null)
-			{
-				// next line
-				r.setSize(0);
-				r = null;
-				x = 0;
-				y++;
-				lineIndex++;
-			}
-			else if(tabDistance > 0)
-			{
-				int off = cellIndex - startOffset;
-				if(off > xmax)
-				{
-					// next line
-					cellIndex += tabDistance;
-					startOffset = cellIndex;
-					tabDistance = 0;
-					y++;
-				}
-				else
-				{
-					offsets[cellIndex - startOffset] = -tabDistance;
-					--tabDistance;
-					cellIndex++;
-				}
-			}
-			else if(complex)
-			{
-				int off = cellIndex - startOffset;
-				if(off > xmax)
-				{
-					// next line
-					cellIndex += tabDistance;
-					startOffset = cellIndex;
-					tabDistance = 0;
-					y++;
-				}
-				else
-				{
-					GlyptType gt = tline.getGlyphType(glyphIndex);
-					switch(gt)
-					{
-					case EOL:
-						r.setSize(rowSize);
-						r = null;
-						tline = null;
-						lineIndex++;
-						y++;
-						break;
-					case TAB:
-						tabDistance = tabPolicy.nextTabStop(cellIndex) - cellIndex;
-						glyphIndex++;
-						offsets[off] = -tabDistance;
-						--tabDistance;
-						rowSize++;
-						cellIndex++;
-						break;
-					case NORMAL:
-						if(offsets == null)
-						{
-							throw new Error();
-						}
-						offsets[off] = glyphIndex;
-						rowSize++;
-						cellIndex++;
-						break;
-					default:
-						throw new Error("?" + gt);
-					}
-				}
-			}
-			else
-			{
-				if(cellIndex + xmax > tline.getGlyphCount())
-				{
-					// end of line
-					int sz = tline.getGlyphCount() - cellIndex;
-					r.setSize(sz);
-					
-					tline = null;
-					lineIndex++;
-				}
-				else
-				{
-					// middle of line
-					r.setSize(xmax);
-					cellIndex += xmax;
-					startOffset += xmax;
-				}
-				
-				y++;
-				x = 0;
-				r = null;
-			}
 		}
 	}
 	
