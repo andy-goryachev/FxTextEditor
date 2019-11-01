@@ -6,6 +6,7 @@ import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxBooleanBinding;
+import goryachev.fxtexteditor.internal.NonWrappedReflowHelper;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenRow;
 import goryachev.fxtexteditor.internal.TextCellsCache;
@@ -67,7 +68,8 @@ public class VFlow
 	private boolean repaintRequested;
 	protected final TextCellsCache cache = new TextCellsCache(256);
 	protected final CellStyles cell = new CellStyles();
-	protected static final WrappedReflowHelper wrappedReflowHelper = new WrappedReflowHelper(); 
+	protected static final WrappedReflowHelper wrappedReflowHelper = new WrappedReflowHelper();
+	protected static final NonWrappedReflowHelper nonWrappedReflowHelper = new NonWrappedReflowHelper(); 
 	
 	
 	public VFlow(FxTextEditor ed)
@@ -513,105 +515,7 @@ public class VFlow
 		}
 		else
 		{
-			reflowNonWrapped(bufferWidth, bufferHeight, tabPolicy);
-		}
-	}
-	
-	
-	protected void reflowNonWrapped(int xmax, int ymax, ITabPolicy tabPolicy)
-	{
-		int lineIndex = getTopLine();
-		int topCellIndex = getTopCellIndex();
-		
-		for(int y=0; y<ymax; y++)
-		{
-			ScreenRow r = buffer.getRow(y);
-			
-			ITextLine tline = getTextLine(lineIndex);
-			if(tline == null)
-			{
-				r.setSize(0);
-			}
-			else
-			{
-				r.setTextLine(tline);
-				r.setStartGlyphIndex(topCellIndex); // FIX need glyph index!  this only works for simple text lines
-				
-				boolean complex = tline.hasComplexGlyphs();
-				if(!complex)
-				{
-					if(!tabPolicy.isSimple())
-					{
-						complex |= tline.hasTabs();
-					}
-				}
-				
-				if(complex)
-				{
-					r.setComplex(true);
-					int[] offsets = r.prepareOffsetsForWidth(xmax);
-					
-					int glyphCount = tline.getGlyphCount();
-					int maxCellIndex = topCellIndex + xmax;
-					int size = 0;
-					int glyphIndex = 0;
-					int cellIndex = 0;
-					boolean run = true;
-					
-					while(run)
-					{
-						GlyptType gt = tline.getGlyphType(glyphIndex);
-						switch(gt)
-						{
-						case EOL:
-							run = false;
-							break;
-						case TAB:
-							int d = tabPolicy.nextTabStop(cellIndex);
-							int ct = d - cellIndex;
-							for( ; ct>0; ct--)
-							{
-								if(cellIndex >= topCellIndex)
-								{
-									offsets[cellIndex - topCellIndex] = -ct;
-									size++;
-								}
-								cellIndex++;
-							}
-							glyphIndex++;
-							break;
-						case NORMAL:
-							if(cellIndex >= topCellIndex)
-							{
-								offsets[cellIndex - topCellIndex] = glyphIndex;
-								size++;
-							}
-							glyphIndex++;
-							cellIndex++;
-							break;
-						default:
-							throw new Error("?" + gt);
-						}
-					}
-					
-					r.setSize(size);
-					
-					if(glyphIndex >= glyphCount)
-					{
-						run = false;
-					}
-					else if(cellIndex >= maxCellIndex)
-					{
-						run = false;
-					}
-				}
-				else
-				{
-					r.setComplex(false);
-				}
-			}
-			
-			lineIndex++;
+			nonWrappedReflowHelper.reflow(this, buffer, bufferWidth, bufferHeight, tabPolicy);
 		}
 	}
 	

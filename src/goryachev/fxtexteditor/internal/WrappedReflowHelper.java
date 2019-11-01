@@ -33,7 +33,7 @@ public class WrappedReflowHelper
 	}
 	
 	
-	protected void reset(VFlow flow, ScreenBuffer buffer, int xmax, int ymax, ITabPolicy tabPolicy)
+	protected void reset(VFlow flow, ScreenBuffer buffer, int xmax, int ymax)
 	{
 		// TODO check if local vars are sufficient
 		this.flow = flow;
@@ -55,9 +55,10 @@ public class WrappedReflowHelper
 	}
 
 	
+	// FIX update top cell index if different
 	public void reflow(VFlow flow, ScreenBuffer buffer, int xmax, int ymax, ITabPolicy tabPolicy)
 	{
-		reset(flow, buffer, xmax, ymax, tabPolicy);
+		reset(flow, buffer, xmax, ymax);
 		
 		while(y < ymax)
 		{

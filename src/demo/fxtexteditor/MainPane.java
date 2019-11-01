@@ -6,6 +6,7 @@ import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.FxTextEditorModel;
+import goryachev.fxtexteditor.internal.TabPolicy;
 import javafx.util.Duration;
 
 
@@ -28,6 +29,7 @@ public class MainPane
 		editor.setBlinkRate(Duration.millis(600));
 		editor.setMultipleSelectionEnabled(true);
 		editor.setWrapLines(false);
+		editor.setTabPolicy(TabPolicy.create(8));
 //		editor.setFont(Font.font("Monospace", 18));
 		
 		setCenter(editor);
