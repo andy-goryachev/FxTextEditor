@@ -12,7 +12,7 @@ import goryachev.fxtexteditor.ITextLine;
 public class ScreenRow
 {
 	private ITextLine textLine;
-	private int startCellIndex;
+	private int startGlyphIndex;
 	private int[] offsets;
 	private int size;
 	private boolean complex;
@@ -35,10 +35,15 @@ public class ScreenRow
 	}
 	
 	
-	public void setTextLine(ITextLine t, int startCellIndex)
+	public void setTextLine(ITextLine t)
 	{
 		textLine = t;
-		this.startCellIndex = startCellIndex;
+	}
+	
+	
+	public void setStartGlyphIndex(int ix)
+	{
+		this.startGlyphIndex = ix;
 	}
 	
 	
@@ -50,57 +55,6 @@ public class ScreenRow
 		}
 		return offsets;
 	}
-	
-	
-	/*
-	// TODO return oofset of the first cell to the right of the screen edge
-	@Deprecated // TODO remove
-	public void setStart(ITextLine t, int startCellOffset, ITabPolicy tabPolicy, int width)
-	{
-		textLine = t;
-		startOffset = startCellOffset;
-		
-		complex = t.hasComplexGlyphs();
-		if(!tabPolicy.isSimple())
-		{
-			complex |= t.hasTabs();
-		}
-		
-		if(complex)
-		{
-			if((offsets == null) || (offsets.length < width))
-			{
-				offsets = new int[width];
-			}
-			
-			for(int i=0; i<width; i++)
-			{
-				int off = startCellOffset + i;
-				GlyptType gt = t.getGlyphType(off);
-				switch(gt)
-				{
-				case EOL:
-					size = i;
-					return;
-				case TAB:
-					int d = tabPolicy.nextTabStop(off);
-					int ct = d - off;
-					for( ; ct>0; ct--,i++)
-					{
-						offsets[i] = -ct;
-					}
-					continue;
-				case NORMAL:
-					offsets[i] = off;
-					size = i;
-					break;
-				default:
-					throw new Error("?" + gt);
-				}
-			}
-		}
-	}
-	*/
 	
 	
 	/**
@@ -124,7 +78,7 @@ public class ScreenRow
 		}
 		else
 		{
-			return startCellIndex + x; 
+			return startGlyphIndex + x; 
 		}
 	}
 
@@ -137,7 +91,7 @@ public class ScreenRow
 
 	public int getStartOffset()
 	{
-		return startCellIndex;
+		return startGlyphIndex;
 	}
 
 
@@ -190,7 +144,7 @@ public class ScreenRow
 			sb.append("S");
 		}
 		
-		sb.append("(").append(startCellIndex).append(") ");
+		sb.append("(").append(startGlyphIndex).append(") ");
 		
 		if(offsets != null)
 		{

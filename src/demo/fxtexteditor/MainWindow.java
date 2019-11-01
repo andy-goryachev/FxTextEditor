@@ -100,34 +100,37 @@ public class MainWindow
 		m.item("Preferences", prefsAction);
 		m.separator();
 		m.item("Exit", FX.exitAction());
-		// edit
-		m.menu("Edit");
-		m.item("Undo");
-		m.item("Redo");
-		m.separator();
-		m.item("Cut");
-//		m.item("Copy", editor().copyAction);
-		m.item("Paste");
-		m.separator();
-//		m.item("Select All", editor().selectAllAction);
-		m.item("Select Line");
-		m.item("Split Selection into Lines");
-		m.separator();
-		m.item("Indent");
-		m.item("Unindent");
-		m.item("Duplicate");
-		m.item("Delete Line");
-		m.item("Move Line Up");
-		m.item("Move Line Down");
-		// find
-		m.menu("Find");
-		m.item("Find");
-		m.item("Regex");
-		m.item("Replace");
-		m.separator();
-		m.item("Find Next");
-		m.item("Find Previous");
-		m.item("Find and Select");
+		
+//		// edit
+//		m.menu("Edit");
+//		m.item("Undo");
+//		m.item("Redo");
+//		m.separator();
+//		m.item("Cut");
+////		m.item("Copy", editor().copyAction);
+//		m.item("Paste");
+//		m.separator();
+////		m.item("Select All", editor().selectAllAction);
+//		m.item("Select Line");
+//		m.item("Split Selection into Lines");
+//		m.separator();
+//		m.item("Indent");
+//		m.item("Unindent");
+//		m.item("Duplicate");
+//		m.item("Delete Line");
+//		m.item("Move Line Up");
+//		m.item("Move Line Down");
+//
+//		// find
+//		m.menu("Find");
+//		m.item("Find");
+//		m.item("Regex");
+//		m.item("Replace");
+//		m.separator();
+//		m.item("Find Next");
+//		m.item("Find Previous");
+//		m.item("Find and Select");
+		
 		// view
 		m.menu("View");
 		m.item("Show Line Numbers", editor().showLineNumbersProperty());

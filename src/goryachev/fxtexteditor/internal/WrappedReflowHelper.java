@@ -16,7 +16,6 @@ public class WrappedReflowHelper
 	private VFlow flow;
 	private int xmax;
 	private int ymax;
-	private ITabPolicy tabPolicy;
 	private int lineIndex;
 	private int x;
 	private int y;
@@ -42,7 +41,6 @@ public class WrappedReflowHelper
 		this.buffer = buffer;
 		this.xmax = xmax;
 		this.ymax = ymax;
-		this.tabPolicy = tabPolicy;
 
 		lineIndex = flow.getTopLine();
 		cellIndex = 0;
@@ -64,12 +62,6 @@ public class WrappedReflowHelper
 		
 		while(y < ymax)
 		{
-			if(r == null)
-			{
-				r = buffer.getRow(y);
-				x = 0;
-			}
-			
 			if(tline == null)
 			{
 				tline = flow.getTextLine(lineIndex);
@@ -87,25 +79,38 @@ public class WrappedReflowHelper
 							complex |= tline.hasTabs();
 						}
 					}
-					
-					if(complex)
-					{
-						offsets = r.prepareOffsetsForWidth(xmax);
-					}
 				}
 				
 				glyphIndex = 0;
 				cellIndex = 0;
 				startGlyphIndex = 0;
+			}
+			
+			if(r == null)
+			{
+				r = buffer.getRow(y);
 				r.setComplex(complex);
+
+				x = 0;
+				
+				if(complex)
+				{
+					offsets = r.prepareOffsetsForWidth(xmax);
+				}
 			}
 			
 			if(x == 0)
 			{
-				r.setTextLine(tline, startGlyphIndex); // FIX startGlyphIndex
+				r.setTextLine(tline);
+				r.setStartGlyphIndex(startGlyphIndex);
 			}
 			
 			// main FSM loop
+			
+			if(x >= xmax)
+			{
+				x = (x + 0);
+			}
 				
 			if(tline == null)
 			{
@@ -121,7 +126,7 @@ public class WrappedReflowHelper
 			{
 				if(x >= xmax)
 				{
-					// next line
+					// carry on to next line, resetting tab distance
 					r.setSize(x);
 					startGlyphIndex = glyphIndex;
 					tabDistance = 0;
@@ -142,13 +147,13 @@ public class WrappedReflowHelper
 			{
 				if(x >= xmax)
 				{
-					// next line
+					// next row
 					r.setSize(x);
-					startGlyphIndex = 0;
+					startGlyphIndex = glyphIndex;
 					tabDistance = 0;
 					x = 0;
 					y++;
-					cellIndex = 0;
+					r = null;
 				}
 				else
 				{

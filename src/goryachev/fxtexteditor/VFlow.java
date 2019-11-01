@@ -534,7 +534,8 @@ public class VFlow
 			}
 			else
 			{
-				r.setTextLine(tline, topCellIndex);
+				r.setTextLine(tline);
+				r.setStartGlyphIndex(topCellIndex); // FIX need glyph index!  this only works for simple text lines
 				
 				boolean complex = tline.hasComplexGlyphs();
 				if(!complex)
