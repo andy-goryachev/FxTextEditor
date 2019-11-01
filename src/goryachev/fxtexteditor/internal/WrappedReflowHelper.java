@@ -1,6 +1,5 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
-import goryachev.common.util.D;
 import goryachev.fxtexteditor.GlyptType;
 import goryachev.fxtexteditor.ITabPolicy;
 import goryachev.fxtexteditor.ITextLine;
@@ -36,7 +35,7 @@ public class WrappedReflowHelper
 	
 	protected void reset(VFlow flow, ScreenBuffer buffer, int xmax, int ymax, ITabPolicy tabPolicy)
 	{
-		// TODO check if local vars are sufficient (tabPolicy?)
+		// TODO check if local vars are sufficient
 		this.flow = flow;
 		this.buffer = buffer;
 		this.xmax = xmax;
@@ -169,7 +168,7 @@ public class WrappedReflowHelper
 						cellIndex = 0;
 						break;
 					case TAB:
-						tabDistance = tabPolicy.nextTabStop(cellIndex) - cellIndex;
+						tabDistance = tabPolicy.nextTabStop(x) - x;
 						offsets[x] = -tabDistance;
 						--tabDistance;
 						glyphIndex++;
@@ -212,7 +211,6 @@ public class WrappedReflowHelper
 			}
 		}
 		
-		D.print(buffer.dump());
-//		System.exit(0); // FIX
+//		D.print(buffer.dump());
 	}
 }
