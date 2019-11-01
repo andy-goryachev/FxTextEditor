@@ -7,11 +7,11 @@ import goryachev.fxtexteditor.VFlow;
 
 
 /**
- * Non-Wrapped Reflow Helper.
+ * Non-Wrapping Reflow Helper.
  */
-public class NonWrappedReflowHelper
+public class NonWrappingReflowHelper
 {
-	public NonWrappedReflowHelper()
+	public NonWrappingReflowHelper()
 	{
 	}
 	

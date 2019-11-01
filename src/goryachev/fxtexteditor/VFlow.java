@@ -6,11 +6,11 @@ import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxBooleanBinding;
-import goryachev.fxtexteditor.internal.NonWrappedReflowHelper;
+import goryachev.fxtexteditor.internal.NonWrappingReflowHelper;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenRow;
 import goryachev.fxtexteditor.internal.TextCellsCache;
-import goryachev.fxtexteditor.internal.WrappedReflowHelper;
+import goryachev.fxtexteditor.internal.WrappingReflowHelper;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.BooleanExpression;
@@ -68,8 +68,8 @@ public class VFlow
 	private boolean repaintRequested;
 	protected final TextCellsCache cache = new TextCellsCache(256);
 	protected final CellStyles cell = new CellStyles();
-	protected static final WrappedReflowHelper wrappedReflowHelper = new WrappedReflowHelper();
-	protected static final NonWrappedReflowHelper nonWrappedReflowHelper = new NonWrappedReflowHelper(); 
+	protected static final WrappingReflowHelper wrappingReflowHelper = new WrappingReflowHelper();
+	protected static final NonWrappingReflowHelper nonWrappingReflowHelper = new NonWrappingReflowHelper(); 
 	
 	
 	public VFlow(FxTextEditor ed)
@@ -511,11 +511,11 @@ public class VFlow
 		
 		if(wrap)
 		{
-			wrappedReflowHelper.reflow(this, buffer, getColumnCount(), bufferHeight, tabPolicy);
+			wrappingReflowHelper.reflow(this, buffer, getColumnCount(), bufferHeight, tabPolicy);
 		}
 		else
 		{
-			nonWrappedReflowHelper.reflow(this, buffer, bufferWidth, bufferHeight, tabPolicy);
+			nonWrappingReflowHelper.reflow(this, buffer, bufferWidth, bufferHeight, tabPolicy);
 		}
 	}
 	

@@ -7,9 +7,9 @@ import goryachev.fxtexteditor.VFlow;
 
 
 /**
- * Wrapped Reflow Helper.
+ * Wrapping Reflow Helper.
  */
-public class WrappedReflowHelper
+public class WrappingReflowHelper
 {
 	private ScreenBuffer buffer;
 	private VFlow flow;
@@ -28,7 +28,7 @@ public class WrappedReflowHelper
 	private int cellIndex;
 	
 	
-	public WrappedReflowHelper()
+	public WrappingReflowHelper()
 	{
 	}
 	
