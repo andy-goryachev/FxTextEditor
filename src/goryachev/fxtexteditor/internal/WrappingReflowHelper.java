@@ -167,6 +167,7 @@ public class WrappingReflowHelper
 						lineIndex++;
 						y++;
 						cellIndex = 0;
+						tline = null;
 						break;
 					case TAB:
 						tabDistance = tabPolicy.nextTabStop(x) - x;
@@ -203,6 +204,7 @@ public class WrappingReflowHelper
 				{
 					// middle of line
 					r.setSize(xmax);
+					glyphIndex += xmax;
 					startGlyphIndex = glyphIndex;
 				}
 				
