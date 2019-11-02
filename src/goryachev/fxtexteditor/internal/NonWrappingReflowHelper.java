@@ -11,12 +11,7 @@ import goryachev.fxtexteditor.VFlow;
  */
 public class NonWrappingReflowHelper
 {
-	public NonWrappingReflowHelper()
-	{
-	}
-	
-	
-	public void reflow(VFlow flow, ScreenBuffer buffer, int xmax, int ymax, ITabPolicy tabPolicy)
+	public static void reflow(VFlow flow, ScreenBuffer buffer, int xmax, int ymax, ITabPolicy tabPolicy)
 	{
 		int lineIndex = flow.getTopLine();
 		int topCellIndex = flow.getTopCellIndex();
@@ -29,6 +24,7 @@ public class NonWrappingReflowHelper
 			if(tline == null)
 			{
 				r.setSize(0);
+				r.setTextLine(null);
 			}
 			else
 			{

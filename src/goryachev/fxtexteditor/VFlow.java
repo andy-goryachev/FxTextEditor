@@ -68,8 +68,6 @@ public class VFlow
 	private boolean repaintRequested;
 	protected final TextCellsCache cache = new TextCellsCache(256);
 	protected final CellStyles cell = new CellStyles();
-	protected static final WrappingReflowHelper wrappingReflowHelper = new WrappingReflowHelper();
-	protected static final NonWrappingReflowHelper nonWrappingReflowHelper = new NonWrappingReflowHelper(); 
 	
 	
 	public VFlow(FxTextEditor ed)
@@ -511,11 +509,11 @@ public class VFlow
 		
 		if(wrap)
 		{
-			wrappingReflowHelper.reflow(this, buffer, getColumnCount(), bufferHeight, tabPolicy);
+			WrappingReflowHelper.reflow(this, buffer, getColumnCount(), bufferHeight, tabPolicy);
 		}
 		else
 		{
-			nonWrappingReflowHelper.reflow(this, buffer, bufferWidth, bufferHeight, tabPolicy);
+			NonWrappingReflowHelper.reflow(this, buffer, bufferWidth, bufferHeight, tabPolicy);
 		}
 	}
 	

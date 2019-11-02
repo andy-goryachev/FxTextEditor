@@ -11,54 +11,24 @@ import goryachev.fxtexteditor.VFlow;
  */
 public class WrappingReflowHelper
 {
-	private ScreenBuffer buffer;
-	private VFlow flow;
-	private int xmax;
-	private int ymax;
-	private int lineIndex;
-	private int x;
-	private int y;
-	private ScreenRow r;
-	private ITextLine tline;
-	private int glyphIndex;
-	private int tabDistance;
-	private boolean complex;
-	private int[] offsets;
-	private int startGlyphIndex;
-	private int cellIndex;
+	private static final int[] AVOID_COMPILER_WARNING = { };
 	
-	
-	public WrappingReflowHelper()
-	{
-	}
-	
-	
-	protected void reset(VFlow flow, ScreenBuffer buffer, int xmax, int ymax)
-	{
-		// TODO check if local vars are sufficient
-		this.flow = flow;
-		this.buffer = buffer;
-		this.xmax = xmax;
-		this.ymax = ymax;
-
-		lineIndex = flow.getTopLine();
-		cellIndex = 0;
-		x = 0;
-		y = 0;
-		startGlyphIndex = 0;
-		r = null;
-		tline = null;
-		offsets = null;
-		glyphIndex = 0;
-		tabDistance = 0;
-		complex = false;
-	}
-
 	
 	// FIX update top cell index if different
-	public void reflow(VFlow flow, ScreenBuffer buffer, int xmax, int ymax, ITabPolicy tabPolicy)
+	public static void reflow(VFlow flow, ScreenBuffer buffer, int xmax, int ymax, ITabPolicy tabPolicy)
 	{
-		reset(flow, buffer, xmax, ymax);
+		int lineIndex = flow.getTopLine();
+		int cellIndex = 0;
+		int x = 0;
+		int y = 0;
+		int startGlyphIndex = 0;
+		ScreenRow r = null;
+		ITextLine tline = null;
+		int[] offsets = AVOID_COMPILER_WARNING;
+		int glyphIndex = 0;
+		int tabDistance = 0;
+		boolean complex = false;
+
 		
 		while(y < ymax)
 		{
@@ -167,7 +137,6 @@ public class WrappingReflowHelper
 						lineIndex++;
 						y++;
 						cellIndex = 0;
-						tline = null;
 						break;
 					case TAB:
 						tabDistance = tabPolicy.nextTabStop(x) - x;
@@ -213,7 +182,5 @@ public class WrappingReflowHelper
 				r = null;
 			}
 		}
-		
-//		D.print(buffer.dump());
 	}
 }
