@@ -50,9 +50,7 @@ public class NonWrappingReflowHelper
 					int glyphIndex = 0;
 					int cellIndex = 0;
 					boolean run = true;
-					
-					// TODO
-					r.setStartGlyphIndex(topCellIndex);
+					int startGlyphIndex = 0;
 					
 					while(run)
 					{
@@ -67,8 +65,13 @@ public class NonWrappingReflowHelper
 							int ct = d - cellIndex;
 							for( ; ct>0; ct--)
 							{
-								if(cellIndex >= topCellIndex)
+								if((cellIndex >= topCellIndex) && (cellIndex < maxCellIndex))
 								{
+									if(cellIndex == topCellIndex)
+									{
+										startGlyphIndex = glyphIndex;
+									}
+									
 									offsets[cellIndex - topCellIndex] = -ct;
 									size++;
 								}
@@ -77,8 +80,13 @@ public class NonWrappingReflowHelper
 							glyphIndex++;
 							break;
 						case NORMAL:
-							if(cellIndex >= topCellIndex)
+							if((cellIndex >= topCellIndex) && (cellIndex < maxCellIndex))
 							{
+								if(cellIndex == topCellIndex)
+								{
+									startGlyphIndex = glyphIndex;
+								}
+								
 								offsets[cellIndex - topCellIndex] = glyphIndex;
 								size++;
 							}
@@ -91,7 +99,8 @@ public class NonWrappingReflowHelper
 					}
 					
 					r.setSize(size);
-					
+					r.setStartGlyphIndex(startGlyphIndex);
+
 					if(glyphIndex >= glyphCount)
 					{
 						run = false;

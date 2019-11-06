@@ -657,9 +657,6 @@ public class VFlow
 		boolean selected = false;
 		Color bg = backgroundColor(false, selected, null);
 		
-		// FIX
-		bg = Color.RED;
-		
 		gx.setFill(bg);
 		gx.fillRect(cx, cy, cw, ch);
 	}
