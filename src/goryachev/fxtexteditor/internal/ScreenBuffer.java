@@ -118,7 +118,7 @@ public class ScreenBuffer
 				}
 				else if(off == EOL)
 				{
-					off = row.getCellCount();
+					off = row.getGlyphCount();
 				}
 				else if(off < 0)
 				{

@@ -125,7 +125,7 @@ public class ScreenRow
 	}
 
 
-	public int getCellCount()
+	public int getGlyphCount()
 	{
 		return textLine.getGlyphCount();
 	}
