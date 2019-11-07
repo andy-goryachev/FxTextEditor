@@ -9,6 +9,7 @@ import goryachev.fx.FxBooleanBinding;
 import goryachev.fxtexteditor.internal.NonWrappingReflowHelper;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenRow;
+import goryachev.fxtexteditor.internal.SelectionHelper;
 import goryachev.fxtexteditor.internal.TextCellsCache;
 import goryachev.fxtexteditor.internal.WrappingReflowHelper;
 import javafx.animation.KeyFrame;
@@ -68,6 +69,7 @@ public class VFlow
 	private boolean repaintRequested;
 	protected final TextCellsCache cache = new TextCellsCache(256);
 	protected final CellStyles cell = new CellStyles();
+	protected final SelectionHelper selectionHelper = new SelectionHelper();
 	
 	
 	public VFlow(FxTextEditor ed)
@@ -607,7 +609,7 @@ public class VFlow
 			ScreenRow row = b.getScreenRow(y);
 			if(row == null)
 			{
-				paintBlank(0, y, xmax);
+				paintBlank(null, 0, y, xmax);
 			}
 			else
 			{
@@ -616,17 +618,17 @@ public class VFlow
 					int off = row.getGlyphIndex(x);
 					if(off == ScreenBuffer.EOF)
 					{
-						paintBlank(x, y, xmax - x);
+						paintBlank(row, x, y, xmax - x);
 						break;
 					}
 					
 					if(off == ScreenBuffer.EOL)
 					{
-						paintBlank(x, y, xmax - x);
+						paintBlank(row, x, y, xmax - x);
 					}
 					else if(off < 0)
 					{
-						paintBlank(x, y, -off);
+						paintBlank(row, x, y, -off);
 					}
 					else
 					{
@@ -636,14 +638,14 @@ public class VFlow
 				
 				if(wrap)
 				{
-					paintBlank(xmax, y, 1);
+					paintBlank(row, xmax, y, 1);
 				}
 			}
 		}
 	}
 	
 	
-	protected void paintBlank(int x, int y, int count)
+	protected void paintBlank(ScreenRow row, int x, int y, int count)
 	{
 		TextMetrics m = textMetrics();
 		double ch = m.cellHeight;
@@ -654,8 +656,16 @@ public class VFlow
 		cw *= count;
 		
 		// TODO bg
-		boolean selected = false;
-		Color bg = backgroundColor(false, selected, null);
+//		boolean selected = false;
+//		boolean caret = false;
+		
+		// TODO
+		int flags = SelectionHelper.getFlags(editor.selector.segments, row, x);
+		boolean caretLine = SelectionHelper.isCaretLine(flags);
+		boolean caret = SelectionHelper.isCaret(flags);
+		boolean selected = SelectionHelper.isSelected(flags);
+		
+		Color bg = backgroundColor(caret, selected, null);
 		
 		gx.setFill(bg);
 		gx.fillRect(cx, cy, cw, ch);
@@ -671,38 +681,10 @@ public class VFlow
 		double cx = x * cw;
 		double cy = y * ch;
 		
-		boolean caretLine = false;
-		boolean caret = false;
-		boolean selected = false;
-//		if(row.hasSelection())
-//		{
-//			selected = row.
-//		}
-//		else
-//		{
-//			selected = false;
-//		}
-
-//		int line = cell.getLine();
-//		int off = cell.getOffset();
-		// TODO this can be optimized by returning an int bitmap? maybe... isValid*
-//		for(SelectionSegment ss: editor.selector.segments)
-//		{
-//			if(cell.isValidLine() && ss.isCaretLine(line))
-//			{
-//				caretLine = true;
-//				
-//				if(cell.isValidCaret() && ss.isCaret(line, off))
-//				{
-//					caret = true;
-//				}
-//			}
-//			
-//			if(ss.contains(line, off))
-//			{
-//				selected = true;
-//			}
-//		}
+		int flags = SelectionHelper.getFlags(editor.selector.segments, row, x);
+		boolean caretLine = SelectionHelper.isCaretLine(flags);
+		boolean caret = SelectionHelper.isCaret(flags);
+		boolean selected = SelectionHelper.isSelected(flags);
 		
 		// style
 		row.updateStyle(x, cell);
