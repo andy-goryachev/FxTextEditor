@@ -1,6 +1,7 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.CKit;
+import goryachev.common.util.D;
 import goryachev.fx.Binder;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
@@ -438,7 +439,9 @@ public class VFlow
 		// TODO hor scrolling
 		int x = FX.round(p.getX() / m.cellWidth);
 		int y = FX.floor(p.getY() / m.cellHeight);
-		return buffer().getInsertPosition(x, y);
+		TextPos pos = buffer().getInsertPosition(x, y);
+		D.print(pos);
+		return pos;
 	}
 	
 	
@@ -517,6 +520,8 @@ public class VFlow
 		{
 			NonWrappingReflowHelper.reflow(this, buffer, bufferWidth, bufferHeight, tabPolicy);
 		}
+		
+		D.print(buffer.dump());
 	}
 	
 	

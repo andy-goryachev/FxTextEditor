@@ -28,7 +28,6 @@ public class WrappingReflowHelper
 		int glyphIndex = 0;
 		int tabDistance = 0;
 		boolean complex = false;
-
 		
 		while(y < ymax)
 		{
@@ -77,11 +76,6 @@ public class WrappingReflowHelper
 			
 			// main FSM loop
 			
-			if(x >= xmax)
-			{
-				x = (x + 0);
-			}
-				
 			if(tline == null)
 			{
 				// next line
@@ -167,6 +161,7 @@ public class WrappingReflowHelper
 					r.setSize(sz);
 					
 					tline = null;
+					r = null;
 					lineIndex++;
 				}
 				else
@@ -174,6 +169,7 @@ public class WrappingReflowHelper
 					// middle of line
 					r.setSize(xmax);
 					glyphIndex += xmax;
+					cellIndex += xmax;
 					startGlyphIndex = glyphIndex;
 				}
 				
