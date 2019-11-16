@@ -78,7 +78,12 @@ public class ScreenRow
 		}
 		else
 		{
-			return startGlyphIndex + x; 
+			int ix = startGlyphIndex + x;
+			if(ix > getGlyphCount())
+			{
+				return getGlyphCount();
+			}
+			return ix;
 		}
 	}
 
@@ -127,7 +132,7 @@ public class ScreenRow
 
 	public int getGlyphCount()
 	{
-		return textLine.getGlyphCount();
+		return textLine == null ? 0 : textLine.getGlyphCount();
 	}
 
 
