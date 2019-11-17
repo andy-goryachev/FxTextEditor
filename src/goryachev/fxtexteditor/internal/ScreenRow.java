@@ -81,7 +81,7 @@ public class ScreenRow
 			int ix = startGlyphIndex + x;
 			if(ix > getGlyphCount())
 			{
-				return getGlyphCount();
+				return ScreenBuffer.EOL;
 			}
 			return ix;
 		}

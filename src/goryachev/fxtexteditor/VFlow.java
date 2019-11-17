@@ -440,6 +440,10 @@ public class VFlow
 		int x = FX.round(p.getX() / m.cellWidth);
 		int y = FX.floor(p.getY() / m.cellHeight);
 		TextPos pos = buffer().getInsertPosition(x, y);
+		if(pos == null)
+		{
+			pos = new TextPos(editor.getModel().getLineCount(), 0, true);
+		}
 		D.print(pos);
 		return pos;
 	}

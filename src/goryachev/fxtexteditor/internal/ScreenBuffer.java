@@ -57,7 +57,8 @@ public class ScreenBuffer
 	}
 	
 
-	public int getOffset(int x, int y)
+	@Deprecated // TODO remove
+	private int getOffset(int x, int y)
 	{
 		if(x < 0)
 		{
@@ -89,46 +90,55 @@ public class ScreenBuffer
 	
 
 	/** 
-	 * returns an insert position for the given screen coordinates.
-	 * might contain negative values for line or offset TODO explain. 
+	 * returns an insert position for the given screen coordinates,
+	 * or null if beyond the end of file.
+	 * 
+	 * TODO might contain negative values for line or offset TODO explain. 
 	 */
 	public TextPos getInsertPosition(int x, int y)
 	{
 		int line;
 		int off;
+		boolean synthetic = false;
 		
 		ScreenRow row = getScreenRow(y);
 		if(row == null)
 		{
-			// TODO scan back to find the end of last text line
-			// FIX
-			line = 0;
-			off = 0;
+			return null;
 		}
 		else
 		{
 			line = row.getModelIndex();
-			off = getOffset(x, y);
-			if(off < 0)
+			if(line < 0)
 			{
-				if(off == EOF)
+				return null;
+			}
+			else
+			{
+				off = row.getGlyphIndex(x);
+				if(off < 0)
 				{
-					// can't happen
-					throw new Error();
-				}
-				else if(off == EOL)
-				{
-					off = row.getGlyphCount();
-				}
-				else if(off < 0)
-				{
-					// inside a tab
-					off = -off;
+					synthetic = true;
+					
+					if(off == EOF)
+					{
+						// can't happen
+						throw new Error();
+					}
+					else if(off == EOL)
+					{
+						off = row.getGlyphCount();
+					}
+					else if(off < 0)
+					{
+						// inside a tab
+						off = -off;
+					}
 				}
 			}
 		}
 		
-		return new TextPos(line, off);
+		return new TextPos(line, off, synthetic);
 	}
 	
 	
