@@ -41,7 +41,7 @@ public class DemoText
 		case 5:
 			p.setModel(new SimplePlainTextEditorModel
 			(
-//				"\t1\t2\t3\t4\t5\t6\t7\n" +
+				"\t1\t2\t3\t4\t5\t6\t7\n" +
 //				"\t\t\t\t\t5\t\t\t\t\t5\t\t\t\t\t5\n" +
 //				"\t1\n" +
 //				"\t\t2\n" +

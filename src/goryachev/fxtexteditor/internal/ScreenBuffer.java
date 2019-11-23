@@ -56,28 +56,6 @@ public class ScreenBuffer
 		return rows[ix];
 	}
 	
-
-	@Deprecated // TODO remove
-	private int getOffset(int x, int y)
-	{
-		if(x < 0)
-		{
-			x = 0;
-		}
-		if(y < 0)
-		{
-			y = 0;
-		}
-		
-		ScreenRow r = getScreenRow(y);
-		if(r == null)
-		{
-			return EOF;
-		}
-		
-		return r.getGlyphIndex(x);
-	}
-	
 	
 	public ScreenRow getScreenRow(int y)
 	{
@@ -131,8 +109,7 @@ public class ScreenBuffer
 					}
 					else if(off < 0)
 					{
-						// inside a tab
-						off = -off;
+						off = row.getNearestInsertPosition(x);
 					}
 				}
 			}

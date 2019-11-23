@@ -72,6 +72,8 @@ public class WrappingReflowHelper
 			{
 				r.setTextLine(tline);
 				r.setStartGlyphIndex(startGlyphIndex);
+				int mx = flow.getEditor().getModel().getLineCount();
+				r.setAppendModelIndex(mx == lineIndex ? mx : -1);
 			}
 			
 			// main FSM loop

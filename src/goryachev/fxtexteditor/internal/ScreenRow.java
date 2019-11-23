@@ -16,6 +16,7 @@ public class ScreenRow
 	private int[] offsets;
 	private int size;
 	private boolean complex;
+	private int appendIndex;
 	
 	
 	public ScreenRow()
@@ -59,7 +60,7 @@ public class ScreenRow
 	
 	/**
 	 * returns a glyph index for a given x screen coordinate.
-	 * or a negative offset to the position after a tab (if inside a tab),
+	 * or a negative offset to the next tab position (if inside a tab),
 	 * or ScreenBuffer.EOL if past the end of given line,
 	 * or ScreenBuffer.EOF if past the end of file
 	 */
@@ -67,7 +68,11 @@ public class ScreenRow
 	{
 		if(complex)
 		{
-			if(x < size)
+			if(x < 0)
+			{
+				return 0;
+			}
+			else if(x < size)
 			{
 				return offsets[x];
 			}
@@ -84,6 +89,37 @@ public class ScreenRow
 				return ScreenBuffer.EOL;
 			}
 			return ix;
+		}
+	}
+	
+	
+	/** returns index of the nearest insert position */ 
+	public int getNearestInsertPosition(int x)
+	{
+		if(complex)
+		{
+			for(int i=0; i<10000; i++)
+			{
+				int ix = getGlyphIndex(x - i);
+				if(ix >= 0)
+				{
+					// FIX need leading/trailing flag:
+					// a|- - - b
+					// a - - -|b
+					return ix;
+				}
+				ix = getGlyphIndex(x + i);
+				if(ix >= 0)
+				{
+					return ix;
+				}
+			}
+			throw new Error();
+		}
+		else
+		{
+			// not used in this mode
+			throw new Error();
 		}
 	}
 
@@ -117,16 +153,32 @@ public class ScreenRow
 		}
 		return textLine.getModelIndex();
 	}
+	
+	
+	public void setAppendModelIndex(int ix)
+	{
+		appendIndex = ix;
+	}
+	
+	
+	/** returns model.getRowCount() index if this row immediately follows the last row with non-null textLine, or -1 */
+	public int getAppendModelIndex()
+	{
+		return appendIndex;
+	}
 
 
 	public String getCellText(int x)
 	{
-		if(textLine == null)
+		if(textLine != null)
 		{
-			return "";
+			int ix = getGlyphIndex(x);
+			if(ix >= 0)
+			{
+				return textLine.getCellText(ix);
+			}
 		}
-		int ix = getGlyphIndex(x);
-		return textLine.getCellText(ix);
+		return "";
 	}
 
 

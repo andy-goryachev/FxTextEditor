@@ -25,6 +25,9 @@ public class NonWrappingReflowHelper
 			{
 				r.setSize(0);
 				r.setTextLine(null);
+				
+				int mx = flow.getEditor().getModel().getLineCount();
+				r.setAppendModelIndex(mx == lineIndex ? mx : -1);
 			}
 			else
 			{
@@ -39,6 +42,7 @@ public class NonWrappingReflowHelper
 
 				r.setTextLine(tline);
 				r.setComplex(complex);
+				r.setAppendModelIndex(-1);
 
 				if(complex)
 				{

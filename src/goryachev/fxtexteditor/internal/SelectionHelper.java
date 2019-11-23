@@ -1,5 +1,6 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.common.util.D;
 import goryachev.fxtexteditor.SelectionSegment;
 import java.util.List;
 
@@ -25,16 +26,21 @@ public class SelectionHelper
 		}
 		
 		int line = row.getModelIndex();
+		if(line < 0)
+		{
+			line = row.getAppendModelIndex();
+		}
+		
 		int off = row.getGlyphIndex(x);
 		
 		int flags = 0;
 		for(SelectionSegment ss: segments)
 		{
-			if(/*cell.isValidLine() &&*/ ss.isCaretLine(line))
+			if(ss.isCaretLine(line))
 			{
 				flags |= CARET_LINE;
 				
-				if(/*cell.isValidCaret() &&*/ ss.isCaret(line, off))
+				if(ss.isCaret(line, off))
 				{
 					flags |= CARET;
 				}

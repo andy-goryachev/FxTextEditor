@@ -451,7 +451,7 @@ public class VFlow
 	
 	protected Color backgroundColor(boolean caretLine, boolean selected, Color cellBG)
 	{
-		Color c = backgroundColor;
+		Color c = getBackgroundColor();
 		
 		if(caretLine)
 		{
@@ -525,7 +525,7 @@ public class VFlow
 			NonWrappingReflowHelper.reflow(this, buffer, bufferWidth, bufferHeight, tabPolicy);
 		}
 		
-		D.print(buffer.dump());
+//		D.print(buffer.dump()); // FIX
 	}
 	
 	
@@ -618,7 +618,8 @@ public class VFlow
 			ScreenRow row = b.getScreenRow(y);
 			if(row == null)
 			{
-				paintBlank(null, 0, y, xmax);
+				throw new Error("null screen row");
+//				paintBlank(null, 0, y, xmax, Color.GRAY);
 			}
 			else
 			{
@@ -634,6 +635,7 @@ public class VFlow
 					if(off == ScreenBuffer.EOL)
 					{
 						paintBlank(row, x, y, xmax - x);
+						x = xmax;
 					}
 					else if(off < 0)
 					{
@@ -664,17 +666,12 @@ public class VFlow
 		
 		cw *= count;
 		
-		// TODO bg
-//		boolean selected = false;
-//		boolean caret = false;
-		
-		// TODO
 		int flags = SelectionHelper.getFlags(editor.selector.segments, row, x);
 		boolean caretLine = SelectionHelper.isCaretLine(flags);
 		boolean caret = SelectionHelper.isCaret(flags);
 		boolean selected = SelectionHelper.isSelected(flags);
 		
-		Color bg = backgroundColor(caret, selected, null);
+		Color bg = backgroundColor(caretLine, selected, null);
 		
 		gx.setFill(bg);
 		gx.fillRect(cx, cy, cw, ch);
