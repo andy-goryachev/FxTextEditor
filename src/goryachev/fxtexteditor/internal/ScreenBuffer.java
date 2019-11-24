@@ -77,19 +77,22 @@ public class ScreenBuffer
 	{
 		int line;
 		int off;
+		boolean leading;
 		boolean synthetic = false;
 		
 		ScreenRow row = getScreenRow(y);
 		if(row == null)
 		{
-			return null;
+			throw new Error();
+//			return null;
 		}
 		else
 		{
 			line = row.getModelIndex();
 			if(line < 0)
 			{
-				return null;
+				throw new Error();
+//				return null;
 			}
 			else
 			{
@@ -106,16 +109,27 @@ public class ScreenBuffer
 					else if(off == EOL)
 					{
 						off = row.getGlyphCount();
+						leading = false;
 					}
 					else if(off < 0)
 					{
-						off = row.getNearestInsertPosition(x);
+						NearestPos p = row.getNearestInsertPosition(x);
+						off = p.offset;
+						leading = p.leading;
 					}
+					else
+					{
+						leading = true; // TODO verify
+					}
+				}
+				else
+				{
+					leading = true; // TODO verify
 				}
 			}
 		}
 		
-		return new TextPos(line, off, synthetic);
+		return new TextPos(line, off, leading, synthetic);
 	}
 	
 	

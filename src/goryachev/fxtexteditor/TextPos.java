@@ -13,13 +13,15 @@ public class TextPos
 {
 	private final int line;
 	private final int offset;
+	private final boolean leading;
 	private final boolean synthetic;
 	
 	
-	public TextPos(int line, int offset, boolean synthetic)
+	public TextPos(int line, int offset, boolean leading, boolean synthetic)
 	{
 		this.line = line;
 		this.offset = offset;
+		this.leading = leading;
 		this.synthetic = synthetic;
 	}
 	
@@ -33,6 +35,12 @@ public class TextPos
 	public int getOffset()
 	{
 		return offset;
+	}
+	
+	
+	public boolean isLeading()
+	{
+		return leading;
 	}
 	
 	
@@ -54,6 +62,10 @@ public class TextPos
 		if(synthetic)
 		{
 			sb.a("S:");
+		}
+		if(leading)
+		{
+			sb.a("L:");
 		}
 		sb.a(line);
 		sb.a(':');

@@ -93,25 +93,35 @@ public class ScreenRow
 	}
 	
 	
-	/** returns index of the nearest insert position */ 
-	public int getNearestInsertPosition(int x)
+	/** 
+	 * returns the glyph index of the nearest insert position.
+	 * For example, when the user clicks over the tab space the text "A\tB"
+	 * this method might return, depending on where exactly the mouse click hit, 
+	 * 
+	 * either
+	 * (offset=2, leading):   a - - -|b
+	 * or
+	 * (offset=0, trailing):  a|- - - b
+	 */ 
+	public NearestPos getNearestInsertPosition(int x)
 	{
 		if(complex)
 		{
+			// look for the nearest insertion point before or after the specified screen coordinate.
+			// this should not take more than the tabsize iterations, 
+			// but let's introduce the upper limit anyway.
 			for(int i=0; i<10000; i++)
 			{
 				int ix = getGlyphIndex(x - i);
 				if(ix >= 0)
 				{
-					// FIX need leading/trailing flag:
-					// a|- - - b
-					// a - - -|b
-					return ix;
+					return new NearestPos(ix, false);
 				}
+				
 				ix = getGlyphIndex(x + i);
 				if(ix >= 0)
 				{
-					return ix;
+					return new NearestPos(ix, true);
 				}
 			}
 			throw new Error();
