@@ -40,6 +40,12 @@ public class DemoTextLine
 	{
 		return text;
 	}
+	
+	
+	public int getTextLength()
+	{
+		return text == null ? 0 : text.length();
+	}
 
 
 	public int getGlyphCount()
@@ -119,5 +125,11 @@ public class DemoTextLine
 	public boolean hasTabs()
 	{
 		return hasTabs;
+	}
+
+
+	public int getTextIndex(int glyphIndex)
+	{
+		return glyphIndex;
 	}
 }

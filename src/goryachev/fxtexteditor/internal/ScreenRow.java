@@ -6,14 +6,14 @@ import goryachev.fxtexteditor.ITextLine;
 
 
 /**
- * Screen Row translates chain of glyphs obtain from the model (ITextLine) 
+ * Screen Row translates sequence of glyphs obtained from the model (ITextLine) 
  * to the cells on screen.
  */
 public class ScreenRow
 {
 	private ITextLine textLine;
 	private int startGlyphIndex;
-	private int[] offsets;
+	private int[] glyphOffsets;
 	private int size;
 	private boolean complex;
 	private int appendIndex;
@@ -24,7 +24,7 @@ public class ScreenRow
 	}
 	
 	
-	public void setSize(int sz)
+	public void setCellCount(int sz)
 	{
 		size = sz;
 	}
@@ -48,18 +48,18 @@ public class ScreenRow
 	}
 	
 	
-	public int[] prepareOffsetsForWidth(int width)
+	public int[] prepareGlyphOffsetsForWidth(int width)
 	{
-		if((offsets == null) || (offsets.length < width))
+		if((glyphOffsets == null) || (glyphOffsets.length < width))
 		{
-			offsets = new int[width];
+			glyphOffsets = new int[width];
 		}
-		return offsets;
+		return glyphOffsets;
 	}
 	
 	
 	/**
-	 * returns a glyph index for a given x screen coordinate.
+	 * returns a glyph index for the given x screen coordinate.
 	 * or a negative offset to the next tab position (if inside a tab),
 	 * or ScreenBuffer.EOL if past the end of given line,
 	 * or ScreenBuffer.EOF if past the end of file
@@ -74,7 +74,7 @@ public class ScreenRow
 			}
 			else if(x < size)
 			{
-				return offsets[x];
+				return glyphOffsets[x];
 			}
 			else
 			{
@@ -89,6 +89,22 @@ public class ScreenRow
 				return ScreenBuffer.EOL;
 			}
 			return ix;
+		}
+	}
+	
+
+	/**
+	 * returns a text index for the given glyph index.
+	 */
+	public int getTextIndex(int glyphIndex)
+	{
+		if(textLine == null)
+		{
+			return 0;
+		}
+		else
+		{
+			return textLine.getTextIndex(glyphIndex);
 		}
 	}
 	
@@ -115,13 +131,13 @@ public class ScreenRow
 				int ix = getGlyphIndex(x - i);
 				if(ix >= 0)
 				{
-					return new NearestPos(ix, false);
+					return new NearestPos(getTextIndex(ix), false);
 				}
 				
 				ix = getGlyphIndex(x + i);
 				if(ix >= 0)
 				{
-					return new NearestPos(ix, true);
+					return new NearestPos(getTextIndex(ix), true);
 				}
 			}
 			throw new Error();
@@ -138,8 +154,14 @@ public class ScreenRow
 	{
 		return textLine;
 	}
-
-
+	
+	
+	public int getTextLength()
+	{
+		return textLine == null ? 0 : textLine.getTextLength();
+	}
+	
+	
 	public int getStartOffset()
 	{
 		return startGlyphIndex;
@@ -213,16 +235,16 @@ public class ScreenRow
 		
 		sb.append("(").append(startGlyphIndex).append(") ");
 		
-		if(offsets != null)
+		if(glyphOffsets != null)
 		{
-			int mx = Math.min(size, offsets.length);
+			int mx = Math.min(size, glyphOffsets.length);
 			for(int i=0; i<mx; i++)
 			{
 				if(i > 0)
 				{
 					sb.append(',');
 				}
-				sb.append(offsets[i]);
+				sb.append(glyphOffsets[i]);
 			}
 		}
 		return sb.toString();

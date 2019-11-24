@@ -24,6 +24,10 @@ public interface ITextLine
 
 	/** returns the plain text, or null */
 	public String getPlainText();
+	
+	
+	/** length of the plain text, or 0 if unknown */
+	public int getTextLength();
 
 
 	/** 
@@ -37,11 +41,12 @@ public interface ITextLine
 	/** 
 	 * returns the text to be rendered in one cell
 	 */
-	public String getCellText(int offset);
+	public String getCellText(int glyphIndex);
 
 
 	/**
 	 * updates cell styles.
+	 * FIX offset needs to be glyph index, currently not.
 	 */
 	public void updateStyle(int offset, CellStyles styles);
 
@@ -59,4 +64,8 @@ public interface ITextLine
 
 	/** returns the type of a glyph at the specified cell index.  this method should be fast */
 	public GlyptType getGlyphType(int cellIndex);
+	
+	
+	/** get offest into plain text string or the given glyph index */
+	public int getTextIndex(int glyphIndex);
 }

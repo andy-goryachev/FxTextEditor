@@ -5,7 +5,7 @@ import goryachev.common.util.FH;
 
 
 /**
- * Encapsulates a single Selection Segment.
+ * A single Selection Segment.
  */
 public class SelectionSegment
 	implements Cloneable

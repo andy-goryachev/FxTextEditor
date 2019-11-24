@@ -396,9 +396,9 @@ public class FxTextEditor
 	/** returns a new Marker at the specified screen coordinates */
 	public Marker getInsertPosition(double screenx, double screeny)
 	{
-		TextPos pos = vflow.getInsertPosition(screenx, screeny);
-		int line = pos.getLine();
-		int off = pos.getOffset();
+		TextPos p = vflow.getInsertPosition(screenx, screeny);
+		int line = p.getLine();
+		int off = p.getOffset();
 		
 		if(line < 0)
 		{
@@ -415,6 +415,13 @@ public class FxTextEditor
 			else
 			{
 				off = s.length();
+			}
+		}
+		else
+		{
+			if(p.isTrailing())
+			{
+				off++;
 			}
 		}
 		

@@ -24,7 +24,7 @@ public class WrappingReflowHelper
 		int startGlyphIndex = 0;
 		ScreenRow r = null;
 		ITextLine tline = null;
-		int[] offsets = AVOID_COMPILER_WARNING;
+		int[] glyphOffsets = AVOID_COMPILER_WARNING;
 		int glyphIndex = 0;
 		int tabDistance = 0;
 		boolean complex = false;
@@ -64,7 +64,7 @@ public class WrappingReflowHelper
 				
 				if(complex)
 				{
-					offsets = r.prepareOffsetsForWidth(xmax);
+					glyphOffsets = r.prepareGlyphOffsetsForWidth(xmax);
 				}
 			}
 			
@@ -81,7 +81,7 @@ public class WrappingReflowHelper
 			if(tline == null)
 			{
 				// next line
-				r.setSize(0);
+				r.setCellCount(0);
 				r = null;
 				x = 0;
 				cellIndex = 0;
@@ -93,7 +93,7 @@ public class WrappingReflowHelper
 				if(x >= xmax)
 				{
 					// carry on to next line, resetting tab distance
-					r.setSize(x);
+					r.setCellCount(x);
 					startGlyphIndex = glyphIndex;
 					tabDistance = 0;
 					// FIX line disappears
@@ -103,7 +103,7 @@ public class WrappingReflowHelper
 				}
 				else
 				{
-					offsets[x] = -tabDistance;
+					glyphOffsets[x] = -tabDistance;
 					--tabDistance;
 					x++;
 				}
@@ -114,7 +114,7 @@ public class WrappingReflowHelper
 				if(x >= xmax)
 				{
 					// next row
-					r.setSize(x);
+					r.setCellCount(x);
 					startGlyphIndex = glyphIndex;
 					tabDistance = 0;
 					x = 0;
@@ -127,7 +127,7 @@ public class WrappingReflowHelper
 					switch(gt)
 					{
 					case EOL:
-						r.setSize(x);
+						r.setCellCount(x);
 						r = null;
 						tline = null;
 						lineIndex++;
@@ -136,14 +136,14 @@ public class WrappingReflowHelper
 						break;
 					case TAB:
 						tabDistance = tabPolicy.nextTabStop(x) - x;
-						offsets[x] = -tabDistance;
+						glyphOffsets[x] = -tabDistance;
 						--tabDistance;
 						glyphIndex++;
 						cellIndex++;
 						x++;
 						break;
 					case NORMAL:
-						offsets[x] = glyphIndex;
+						glyphOffsets[x] = glyphIndex;
 						glyphIndex++;
 						cellIndex++;
 						x++;
@@ -160,7 +160,7 @@ public class WrappingReflowHelper
 				{
 					// end of line
 					int sz = tline.getGlyphCount() - cellIndex;
-					r.setSize(sz);
+					r.setCellCount(sz);
 					
 					tline = null;
 					r = null;
@@ -169,7 +169,7 @@ public class WrappingReflowHelper
 				else
 				{
 					// middle of line
-					r.setSize(xmax);
+					r.setCellCount(xmax);
 					glyphIndex += xmax;
 					cellIndex += xmax;
 					startGlyphIndex = glyphIndex;

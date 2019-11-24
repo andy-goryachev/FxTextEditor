@@ -693,6 +693,7 @@ public class VFlow
 		boolean selected = SelectionHelper.isSelected(flags);
 		
 		// style
+		// TODO need to get glyph index here
 		row.updateStyle(x, cell);
 		
 		// background

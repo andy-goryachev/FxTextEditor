@@ -23,7 +23,7 @@ public class NonWrappingReflowHelper
 			ITextLine tline = flow.getTextLine(lineIndex);
 			if(tline == null)
 			{
-				r.setSize(0);
+				r.setCellCount(0);
 				r.setTextLine(null);
 				
 				int mx = flow.getEditor().getModel().getLineCount();
@@ -46,8 +46,7 @@ public class NonWrappingReflowHelper
 
 				if(complex)
 				{
-					int[] offsets = r.prepareOffsetsForWidth(xmax);
-					
+					int[] glyphOffsets = r.prepareGlyphOffsetsForWidth(xmax);
 					int glyphCount = tline.getGlyphCount();
 					int maxCellIndex = topCellIndex + xmax;
 					int size = 0;
@@ -76,7 +75,7 @@ public class NonWrappingReflowHelper
 										startGlyphIndex = glyphIndex;
 									}
 									
-									offsets[cellIndex - topCellIndex] = -ct;
+									glyphOffsets[cellIndex - topCellIndex] = -ct;
 									size++;
 								}
 								cellIndex++;
@@ -91,7 +90,7 @@ public class NonWrappingReflowHelper
 									startGlyphIndex = glyphIndex;
 								}
 								
-								offsets[cellIndex - topCellIndex] = glyphIndex;
+								glyphOffsets[cellIndex - topCellIndex] = glyphIndex;
 								size++;
 							}
 							glyphIndex++;
@@ -102,7 +101,7 @@ public class NonWrappingReflowHelper
 						}
 					}
 					
-					r.setSize(size);
+					r.setCellCount(size);
 					r.setStartGlyphIndex(startGlyphIndex);
 
 					if(glyphIndex >= glyphCount)

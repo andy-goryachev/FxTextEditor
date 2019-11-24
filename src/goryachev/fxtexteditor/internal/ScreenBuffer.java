@@ -83,20 +83,18 @@ public class ScreenBuffer
 		ScreenRow row = getScreenRow(y);
 		if(row == null)
 		{
-			throw new Error();
-//			return null;
+			return null;
 		}
 		else
 		{
 			line = row.getModelIndex();
 			if(line < 0)
 			{
-				throw new Error();
-//				return null;
+				return null;
 			}
 			else
 			{
-				off = row.getGlyphIndex(x);
+				off = row.getTextIndex(x);
 				if(off < 0)
 				{
 					synthetic = true;
@@ -108,7 +106,7 @@ public class ScreenBuffer
 					}
 					else if(off == EOL)
 					{
-						off = row.getGlyphCount();
+						off = row.getTextLength();
 						leading = false;
 					}
 					else if(off < 0)

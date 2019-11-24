@@ -44,6 +44,12 @@ public class TextPos
 	}
 	
 	
+	public boolean isTrailing()
+	{
+		return !leading;
+	}
+	
+	
 	/** 
 	 * returns true if this insert position differs from a position which otherwise would exist
 	 * at the requested coordinates, for example, when the user clicks beyond the end of line

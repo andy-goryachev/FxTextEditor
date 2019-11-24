@@ -39,6 +39,12 @@ public class PlainTextLine
 	}
 	
 	
+	public int getTextLength()
+	{
+		return text == null ? 0 : text.length();
+	}
+	
+	
 	public boolean hasComplexGlyphs()
 	{
 		return false;
@@ -96,5 +102,11 @@ public class PlainTextLine
 	public boolean hasTabs()
 	{
 		return hasTabs;
+	}
+	
+	
+	public int getTextIndex(int glyphIndex)
+	{
+		return glyphIndex;
 	}
 }

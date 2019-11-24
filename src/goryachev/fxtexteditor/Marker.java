@@ -85,6 +85,7 @@ public class Marker
 	}
 	
 	
+	/** char index */
 	public int getPosition()
 	{
 		return position;
