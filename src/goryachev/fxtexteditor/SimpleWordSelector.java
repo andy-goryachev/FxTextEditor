@@ -100,7 +100,7 @@ public class SimpleWordSelector
 			return;
 		}
 
-		int pos = m.getPosition();
+		int pos = m.getCharIndex();
 		int start;
 		int end;
 		

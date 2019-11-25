@@ -226,7 +226,7 @@ public class SelectionSegment
 		Marker m = getCaret();
 		if(m.getLine() == line)
 		{
-			if(m.getPosition() == pos)
+			if(m.getCharIndex() == pos)
 			{
 				return true;
 			}

@@ -19,9 +19,9 @@ public class Markers
 	}
 
 
-	public Marker newMarker(int lineNumber, int position)
+	public Marker newMarker(int lineNumber, int charIndex)
 	{
-		Marker m = new Marker(this, lineNumber, position);
+		Marker m = new Marker(this, lineNumber, charIndex);
 		markers.add(m);
 		
 		if(markers.size() > 1_000_000)

@@ -15,22 +15,22 @@ public class Marker
 {
 	public static final Marker ZERO = new Marker();
 	private int line;
-	private int position;
+	private int charIndex;
 	
 	
-	public Marker(Markers owner, int line, int pos)
+	public Marker(Markers owner, int line, int charIndex)
 	{
 		Assert.notNull(owner, "owner");
 		
 		this.line = line;
-		this.position = pos;
+		this.charIndex = charIndex;
 	}
 	
 	
 	private Marker()
 	{
 		this.line = 0;
-		this.position = 0;
+		this.charIndex = 0;
 	}
 	
 
@@ -38,7 +38,7 @@ public class Marker
 	{
 		int h = FH.hash(Marker.class);
 		h = FH.hash(h, line);
-		return FH.hash(h, position);
+		return FH.hash(h, charIndex);
 	}
 
 	
@@ -51,7 +51,7 @@ public class Marker
 		else if(x instanceof Marker)
 		{
 			Marker m = (Marker)x;
-			return (line == m.line) && (position == m.position);
+			return (line == m.line) && (charIndex == m.charIndex);
 		}
 		else
 		{
@@ -65,7 +65,7 @@ public class Marker
 		int d = line - m.line;
 		if(d == 0)
 		{
-			return getPosition() - m.getPosition();
+			return getCharIndex() - m.getCharIndex();
 		}
 		return d;
 	}
@@ -74,7 +74,7 @@ public class Marker
 	public void reset(int line, int pos)
 	{
 		this.line = line;
-		this.position = pos;
+		this.charIndex = pos;
 	}
 	
 
@@ -86,9 +86,9 @@ public class Marker
 	
 	
 	/** char index */
-	public int getPosition()
+	public int getCharIndex()
 	{
-		return position;
+		return charIndex;
 	}
 	
 	
@@ -97,7 +97,7 @@ public class Marker
 		SB sb = new SB(16);
 		sb.a(line);
 		sb.a(':');
-		sb.a(getPosition());
+		sb.a(getCharIndex());
 		return sb.toString();
 	}
 
@@ -110,7 +110,7 @@ public class Marker
 		}
 		else if(line == m.line)
 		{
-			if(position < m.position)
+			if(charIndex < m.charIndex)
 			{
 				return true;
 			}
@@ -134,7 +134,7 @@ public class Marker
 		}
 		else if(this.line == line)
 		{
-			if(getPosition() < pos)
+			if(getCharIndex() < pos)
 			{
 				return true;
 			}
@@ -151,7 +151,7 @@ public class Marker
 		}
 		else if(this.line == line)
 		{
-			if(getPosition() <= pos)
+			if(getCharIndex() <= pos)
 			{
 				return true;
 			}
@@ -168,7 +168,7 @@ public class Marker
 		}
 		else if(this.line == line)
 		{
-			if(getPosition() > pos)
+			if(getCharIndex() > pos)
 			{
 				return true;
 			}
@@ -186,7 +186,7 @@ public class Marker
 		}
 		else if(this.line == line)
 		{
-			if(getPosition() >= pos)
+			if(getCharIndex() >= pos)
 			{
 				return true;
 			}
@@ -205,6 +205,6 @@ public class Marker
 	public void movePosition(int delta)
 	{
 		// TODO validate
-		position += delta;
+		charIndex += delta;
 	}
 }

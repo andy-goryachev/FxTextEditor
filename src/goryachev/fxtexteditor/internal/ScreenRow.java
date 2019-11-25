@@ -94,9 +94,9 @@ public class ScreenRow
 	
 
 	/**
-	 * returns a text index for the given glyph index.
+	 * returns a character index (into plain text) for the given glyph index.
 	 */
-	public int getTextIndex(int glyphIndex)
+	public int getCharIndex(int glyphIndex)
 	{
 		if(textLine == null)
 		{
@@ -110,7 +110,7 @@ public class ScreenRow
 	
 	
 	/** 
-	 * returns the glyph index of the nearest insert position.
+	 * returns the nearest insert position inside of a tab.
 	 * For example, when the user clicks over the tab space the text "A\tB"
 	 * this method might return, depending on where exactly the mouse click hit, 
 	 * 
@@ -131,13 +131,13 @@ public class ScreenRow
 				int ix = getGlyphIndex(x - i);
 				if(ix >= 0)
 				{
-					return new NearestPos(getTextIndex(ix), false);
+					return new NearestPos(getCharIndex(ix), false);
 				}
 				
 				ix = getGlyphIndex(x + i);
 				if(ix >= 0)
 				{
-					return new NearestPos(getTextIndex(ix), true);
+					return new NearestPos(getCharIndex(ix), true);
 				}
 			}
 			throw new Error();

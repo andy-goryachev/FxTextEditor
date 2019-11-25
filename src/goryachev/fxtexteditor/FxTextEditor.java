@@ -425,6 +425,7 @@ public class FxTextEditor
 			}
 		}
 		
+		// FIX char index!
 		return markers.newMarker(line, off);
 	}
 	
@@ -826,9 +827,9 @@ public class FxTextEditor
 //	}
 
 	
-	public void setCaret(int row, int position)
+	public void setCaret(int row, int charIndex)
 	{
-		Marker m = newMarker(row, position);
+		Marker m = newMarker(row, charIndex);
 		select(m, m);
 	}
 

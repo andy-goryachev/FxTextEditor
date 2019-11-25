@@ -76,7 +76,7 @@ public class ScreenBuffer
 	public TextPos getInsertPosition(int x, int y)
 	{
 		int line;
-		int off;
+		int charIndex;
 		boolean leading;
 		boolean synthetic = false;
 		
@@ -94,25 +94,25 @@ public class ScreenBuffer
 			}
 			else
 			{
-				off = row.getTextIndex(x);
-				if(off < 0)
+				charIndex = row.getCharIndex(x);
+				if(charIndex < 0)
 				{
 					synthetic = true;
 					
-					if(off == EOF)
+					if(charIndex == EOF)
 					{
 						// can't happen
 						throw new Error();
 					}
-					else if(off == EOL)
+					else if(charIndex == EOL)
 					{
-						off = row.getTextLength();
+						charIndex = row.getTextLength();
 						leading = false;
 					}
-					else if(off < 0)
+					else if(charIndex < 0)
 					{
 						NearestPos p = row.getNearestInsertPosition(x);
-						off = p.offset;
+						charIndex = p.charIndex;
 						leading = p.leading;
 					}
 					else
@@ -127,7 +127,7 @@ public class ScreenBuffer
 			}
 		}
 		
-		return new TextPos(line, off, leading, synthetic);
+		return new TextPos(line, charIndex, leading, synthetic);
 	}
 	
 	

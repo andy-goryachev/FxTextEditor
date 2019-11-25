@@ -7,13 +7,13 @@ package goryachev.fxtexteditor.internal;
  */
 public class NearestPos
 {
-	public final int offset;
+	public final int charIndex;
 	public final boolean leading;
 	
 	
-	public NearestPos(int offset, boolean leading)
+	public NearestPos(int charIndex, boolean leading)
 	{
-		this.offset = offset;
+		this.charIndex = charIndex;
 		this.leading = leading;
 	}
 }
