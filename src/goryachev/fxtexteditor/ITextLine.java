@@ -66,6 +66,6 @@ public interface ITextLine
 	public GlyptType getGlyphType(int cellIndex);
 	
 	
-	/** get offest into plain text string or the given glyph index */
-	public int getTextIndex(int glyphIndex);
+	/** returns the offest into plain text string for the given glyph index */
+	public int getCharIndex(int glyphIndex);
 }

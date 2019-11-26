@@ -104,7 +104,7 @@ public class ScreenRow
 		}
 		else
 		{
-			return textLine.getTextIndex(glyphIndex);
+			return textLine.getCharIndex(glyphIndex);
 		}
 	}
 	

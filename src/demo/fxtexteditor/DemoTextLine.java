@@ -128,7 +128,7 @@ public class DemoTextLine
 	}
 
 
-	public int getTextIndex(int glyphIndex)
+	public int getCharIndex(int glyphIndex)
 	{
 		return glyphIndex;
 	}
