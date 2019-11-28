@@ -52,13 +52,13 @@ public interface ITextLine
 
 
 	/** 
-	 * returns true if translation from text to glyphs is not 1:1 
-	 * (i.e. has modifying characters, surrogate pairs, emojis, etc.
+	 * returns true if translation from text to glyphs is not 1:1 (except tabs) 
+	 * (i.e. has modifying characters, surrogate pairs, emojis, etc.)
 	 */ 
 	public boolean hasComplexGlyphs();
 	
 	
-	/** returns true if the text contains tab characters */
+	/** returns true if the text contains one or more tab characters */
 	public boolean hasTabs();
 
 

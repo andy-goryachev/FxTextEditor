@@ -51,6 +51,12 @@ public class PlainTextLine
 	}
 
 
+	public boolean hasTabs()
+	{
+		return hasTabs;
+	}
+	
+
 	public int getGlyphCount()
 	{
 		return text.length();
@@ -98,15 +104,10 @@ public class PlainTextLine
 		return GlyptType.EOL;
 	}
 
-
-	public boolean hasTabs()
-	{
-		return hasTabs;
-	}
-	
 	
 	public int getCharIndex(int glyphIndex)
 	{
+		// FIX hasTabs! hasComplexUnicode
 		return glyphIndex;
 	}
 }
