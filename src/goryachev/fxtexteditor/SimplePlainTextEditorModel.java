@@ -34,14 +34,17 @@ public class SimplePlainTextEditorModel
 	{
 		return lines.length;
 	}
-
+	
 
 	public ITextLine getTextLine(int line)
 	{
 		if(line < getLineCount())
 		{
 			String text = lines[line];
-			return new PlainTextLine(line, text);
+			if(text != null)
+			{
+				return new PlainTextLine(line, text);
+			}
 		}
 		return null;
 	}

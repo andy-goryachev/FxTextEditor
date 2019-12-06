@@ -7,6 +7,7 @@ import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxBooleanBinding;
+import goryachev.fxtexteditor.internal.FlowLine;
 import goryachev.fxtexteditor.internal.NonWrappingReflowHelper;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenRow;
@@ -68,7 +69,7 @@ public class VFlow
 	private int topCellIndex;
 	private boolean screenBufferValid;
 	private boolean repaintRequested;
-	protected final TextCellsCache cache = new TextCellsCache(256);
+	protected final TextCellsCache cache;
 	protected final CellStyles cell = new CellStyles();
 	protected final SelectionHelper selectionHelper = new SelectionHelper();
 	
@@ -76,6 +77,7 @@ public class VFlow
 	public VFlow(FxTextEditor ed)
 	{
 		this.editor = ed;
+		cache = new TextCellsCache(ed, 256);
 		
 		setMinWidth(0);
 		setMinHeight(0);
@@ -483,20 +485,20 @@ public class VFlow
 	}
 	
 	
-	public ITextLine getTextLine(int lineIndex)
+	public FlowLine getTextLine(int lineIndex)
 	{
 		FxTextEditorModel m = editor.getModel();
 		if(lineIndex < m.getLineCount())
 		{
-			ITextLine t = cache.get(lineIndex);
-			if(t == null)
+			FlowLine f = cache.get(lineIndex);
+			if(f == null)
 			{
-				t = m.getTextLine(lineIndex);
-				cache.put(lineIndex, t);
+				ITextLine t = m.getTextLine(lineIndex);
+				f = cache.insert(lineIndex, t);
 			}
-			return t;
+			return f;
 		}
-		return null;
+		return FlowLine.BLANK;
 	}
 	
 	

@@ -1,6 +1,6 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
-import goryachev.fxtexteditor.GlyptType;
+import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITabPolicy;
 import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.VFlow;
@@ -23,7 +23,7 @@ public class WrappingReflowHelper
 		int y = 0;
 		int startGlyphIndex = 0;
 		ScreenRow r = null;
-		ITextLine tline = null;
+		FlowLine fline = null;
 		int[] glyphOffsets = AVOID_COMPILER_WARNING;
 		int glyphIndex = 0;
 		int tabDistance = 0;
@@ -31,21 +31,21 @@ public class WrappingReflowHelper
 		
 		while(y < ymax)
 		{
-			if(tline == null)
+			if(fline == null)
 			{
-				tline = flow.getTextLine(lineIndex);
-				if(tline == null)
+				fline = flow.getTextLine(lineIndex);
+				if(fline == null)
 				{
 					complex = false;
 				}
 				else
 				{
-					complex = tline.hasComplexGlyphs();
+					complex = fline.hasComplexGlyphs();
 					if(!complex)
 					{
 						if(!tabPolicy.isSimple())
 						{
-							complex |= tline.hasTabs();
+							complex |= fline.hasTabs();
 						}
 					}
 				}
@@ -70,7 +70,7 @@ public class WrappingReflowHelper
 			
 			if(x == 0)
 			{
-				r.setTextLine(tline);
+				r.initLine(fline);
 				r.setStartGlyphIndex(startGlyphIndex);
 				int mx = flow.getEditor().getModel().getLineCount();
 				r.setAppendModelIndex(mx == lineIndex ? mx : -1);
@@ -78,7 +78,7 @@ public class WrappingReflowHelper
 			
 			// main FSM loop
 			
-			if(tline == null)
+			if(fline == null)
 			{
 				// next line
 				r.setCellCount(0);
@@ -123,13 +123,13 @@ public class WrappingReflowHelper
 				}
 				else
 				{
-					GlyptType gt = tline.getGlyphType(glyphIndex);
+					GlyphType gt = r.getGlyphType(glyphIndex);
 					switch(gt)
 					{
 					case EOL:
 						r.setCellCount(x);
 						r = null;
-						tline = null;
+						fline = null;
 						lineIndex++;
 						y++;
 						cellIndex = 0;
@@ -156,13 +156,13 @@ public class WrappingReflowHelper
 			else
 			{
 				// simple case, cell indexes coincide with glyph indexes
-				if(cellIndex + xmax >= tline.getGlyphCount())
+				if(cellIndex + xmax >= r.getGlyphCount())
 				{
 					// end of line
-					int sz = tline.getGlyphCount() - cellIndex;
+					int sz = r.getGlyphCount() - cellIndex;
 					r.setCellCount(sz);
 					
-					tline = null;
+					fline = null;
 					r = null;
 					lineIndex++;
 				}

@@ -60,16 +60,15 @@ public class DemoTextEditorModel
 		}
 		return null;
 	}
-
+	
 	
 	public ITextLine getTextLine(int line)
 	{
 		String text = plainText(line);
-		if(text == null)
+		if(text != null)
 		{
-			return null;
+			return new DemoTextLine(text, line);
 		}
-		
-		return new DemoTextLine(text, line);
+		return null;
 	}
 }

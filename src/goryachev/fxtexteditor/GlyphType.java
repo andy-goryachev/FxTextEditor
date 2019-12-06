@@ -3,9 +3,9 @@ package goryachev.fxtexteditor;
 
 
 /**
- * Glypt Type.
+ * Glyph Type.
  */
-public enum GlyptType
+public enum GlyphType
 {
 	EOL,
 	NORMAL,

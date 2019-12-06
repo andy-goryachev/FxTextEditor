@@ -1,6 +1,6 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
-import goryachev.fxtexteditor.GlyptType;
+import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITabPolicy;
 import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.VFlow;
@@ -20,34 +20,34 @@ public class NonWrappingReflowHelper
 		{
 			ScreenRow r = buffer.getRow(y);
 			
-			ITextLine tline = flow.getTextLine(lineIndex);
-			if(tline == null)
+			FlowLine fline = flow.getTextLine(lineIndex);
+			if(fline == null)
 			{
 				r.setCellCount(0);
-				r.setTextLine(null);
+				r.initLine(FlowLine.BLANK);
 				
 				int mx = flow.getEditor().getModel().getLineCount();
 				r.setAppendModelIndex(mx == lineIndex ? mx : -1);
 			}
 			else
 			{
-				boolean complex = tline.hasComplexGlyphs();
+				boolean complex = fline.hasComplexGlyphs();
 				if(!complex)
 				{
 					if(!tabPolicy.isSimple())
 					{
-						complex |= tline.hasTabs();
+						complex |= fline.hasTabs();
 					}
 				}
 
-				r.setTextLine(tline);
+				r.initLine(fline);
 				r.setComplex(complex);
 				r.setAppendModelIndex(-1);
 
 				if(complex)
 				{
 					int[] glyphOffsets = r.prepareGlyphOffsetsForWidth(xmax);
-					int glyphCount = tline.getGlyphCount();
+					int glyphCount = fline.getGlyphCount();
 					int maxCellIndex = topCellIndex + xmax;
 					int size = 0;
 					int glyphIndex = 0;
@@ -57,7 +57,7 @@ public class NonWrappingReflowHelper
 					
 					while(run)
 					{
-						GlyptType gt = tline.getGlyphType(glyphIndex);
+						GlyphType gt = r.getGlyphType(glyphIndex);
 						switch(gt)
 						{
 						case EOL:

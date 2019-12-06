@@ -2,6 +2,7 @@
 package goryachev.fxtexteditor.internal;
 import goryachev.common.util.SB;
 import goryachev.fxtexteditor.CellStyles;
+import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITextLine;
 
 
@@ -11,7 +12,7 @@ import goryachev.fxtexteditor.ITextLine;
  */
 public class ScreenRow
 {
-	private ITextLine textLine;
+	private FlowLine fline = FlowLine.BLANK;
 	private int startGlyphIndex;
 	private int[] glyphOffsets;
 	private int size;
@@ -32,16 +33,51 @@ public class ScreenRow
 	
 	public void setComplex(boolean on)
 	{
-		complex = on;;
+		complex = on;
 	}
 	
 	
-	public void setTextLine(ITextLine t)
+	public void initLine(FlowLine f)
 	{
-		textLine = t;
+		if(f == null)
+		{
+			throw new Error();
+		}
+		fline = f;
 	}
 	
-	
+
+	/** returns the type of a glyph at the specified cell index. */
+	public GlyphType getGlyphType(int cellIndex)
+	{
+		String s = getCellText(cellIndex);
+		if(s == null)
+		{
+			return GlyphType.EOL;
+		}
+		else if("\t".equals(s))
+		{
+			return GlyphType.TAB;
+		}
+		else
+		{
+			return GlyphType.NORMAL;
+		}
+		
+//		if((cellIndex >= 0) && (cellIndex < text.length()))
+//		{
+//			char c = text.charAt(cellIndex);
+//			if(c == '\t')
+//			{
+//				return GlyphType.TAB;
+//			}
+//			else
+//			{
+//				return GlyphType.NORMAL;
+//			}
+//		}
+//		return GlyphType.EOL;
+	}
 	public void setStartGlyphIndex(int ix)
 	{
 		this.startGlyphIndex = ix;
@@ -92,22 +128,6 @@ public class ScreenRow
 		}
 	}
 	
-
-	/**
-	 * returns a character index (into plain text) for the given glyph index.
-	 */
-	public int getCharIndex(int glyphIndex)
-	{
-		if(textLine == null)
-		{
-			return 0;
-		}
-		else
-		{
-			return textLine.getCharIndex(glyphIndex);
-		}
-	}
-	
 	
 	/** 
 	 * returns the nearest insert position inside of a tab.
@@ -152,13 +172,13 @@ public class ScreenRow
 
 	public ITextLine getTextLine()
 	{
-		return textLine;
+		return fline.getTextLine();
 	}
 	
 	
 	public int getTextLength()
 	{
-		return textLine == null ? 0 : textLine.getTextLength();
+		return fline.getTextLength();
 	}
 	
 	
@@ -170,20 +190,13 @@ public class ScreenRow
 
 	public void updateStyle(int x, CellStyles style)
 	{
-		if(textLine != null)
-		{
-			textLine.updateStyle(x, style);
-		}
+		fline.updateStyle(x, style);
 	}
 
 
 	public int getModelIndex()
 	{
-		if(textLine == null)
-		{
-			return -1;
-		}
-		return textLine.getModelIndex();
+		return fline.getModelIndex();
 	}
 	
 	
@@ -197,26 +210,6 @@ public class ScreenRow
 	public int getAppendModelIndex()
 	{
 		return appendIndex;
-	}
-
-
-	public String getCellText(int x)
-	{
-		if(textLine != null)
-		{
-			int ix = getGlyphIndex(x);
-			if(ix >= 0)
-			{
-				return textLine.getCellText(ix);
-			}
-		}
-		return "";
-	}
-
-
-	public int getGlyphCount()
-	{
-		return textLine == null ? 0 : textLine.getGlyphCount();
 	}
 
 
@@ -248,5 +241,40 @@ public class ScreenRow
 			}
 		}
 		return sb.toString();
+	}
+	
+	
+	/** 
+	 * returns the number of glyphs in the text line.  
+	 * one glyph is rendered in one fixed width cell (even full width CJK)
+	 * A tab is one glyph.
+	 */
+	public int getGlyphCount()
+	{
+		try
+		{
+			return fline.info().getGlyphCount();
+		}
+		catch(Exception e)
+		{
+			// FIX
+			return fline.info().getGlyphCount();
+		}
+	}
+	
+	
+	/** returns the offest into plain text string for the given glyph index */
+	public int getCharIndex(int glyphIndex)
+	{
+		return fline.info().getCharIndex(glyphIndex);
+	}
+	
+	
+	/** 
+	 * returns the text to be rendered in one cell
+	 */
+	public String getCellText(int cellIndex)
+	{
+		return fline.info().getGlyphText(cellIndex);
 	}
 }
