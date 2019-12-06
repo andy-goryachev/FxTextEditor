@@ -266,7 +266,7 @@ public class ScreenRow
 	/** returns the offest into plain text string for the given glyph index */
 	public int getCharIndex(int glyphIndex)
 	{
-		return fline.info().getCharIndex(glyphIndex);
+		return fline.info().getCharIndex(startGlyphIndex + glyphIndex);
 	}
 	
 	
@@ -275,6 +275,6 @@ public class ScreenRow
 	 */
 	public String getCellText(int cellIndex)
 	{
-		return fline.info().getGlyphText(cellIndex);
+		return fline.info().getGlyphText(startGlyphIndex + cellIndex);
 	}
 }
