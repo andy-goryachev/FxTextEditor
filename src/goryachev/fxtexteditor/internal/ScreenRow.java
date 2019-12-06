@@ -251,15 +251,7 @@ public class ScreenRow
 	 */
 	public int getGlyphCount()
 	{
-		try
-		{
-			return fline.info().getGlyphCount();
-		}
-		catch(Exception e)
-		{
-			// FIX
-			return fline.info().getGlyphCount();
-		}
+		return fline.info().getGlyphCount();
 	}
 	
 	
