@@ -78,7 +78,7 @@ public class WrappingReflowHelper
 			
 			// main FSM loop
 			
-			if(fline == null)
+			if(fline == null) // FIX will never happen
 			{
 				// next line
 				r.setCellCount(0);

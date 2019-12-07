@@ -37,7 +37,7 @@ public class MainPane
 		showFindPane();
 		
 		// FIX
-		DemoText.load(this);
+//		DemoText.load(this);
 	}
 	
 	

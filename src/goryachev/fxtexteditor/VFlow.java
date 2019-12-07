@@ -12,7 +12,7 @@ import goryachev.fxtexteditor.internal.NonWrappingReflowHelper;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenRow;
 import goryachev.fxtexteditor.internal.SelectionHelper;
-import goryachev.fxtexteditor.internal.TextCellsCache;
+import goryachev.fxtexteditor.internal.FlowLineCache;
 import goryachev.fxtexteditor.internal.WrappingReflowHelper;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -69,7 +69,7 @@ public class VFlow
 	private int topCellIndex;
 	private boolean screenBufferValid;
 	private boolean repaintRequested;
-	protected final TextCellsCache cache;
+	protected final FlowLineCache cache;
 	protected final CellStyles cell = new CellStyles();
 	protected final SelectionHelper selectionHelper = new SelectionHelper();
 	
@@ -77,7 +77,7 @@ public class VFlow
 	public VFlow(FxTextEditor ed)
 	{
 		this.editor = ed;
-		cache = new TextCellsCache(ed, 256);
+		cache = new FlowLineCache(ed, 256);
 		
 		setMinWidth(0);
 		setMinHeight(0);

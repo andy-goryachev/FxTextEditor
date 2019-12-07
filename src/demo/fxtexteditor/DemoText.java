@@ -2,6 +2,7 @@
 package demo.fxtexteditor;
 import goryachev.common.util.CKit;
 import goryachev.fx.FxTask;
+import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.SimplePlainTextEditorModel;
 
 
@@ -10,6 +11,33 @@ import goryachev.fxtexteditor.SimplePlainTextEditorModel;
  */
 public class DemoText
 {
+	public static final AnItem NO_TABS_NO_UNICODE = new AnItem("NO_TABS_NO_UNICODE", "No Tabs, No Unicode");
+	public static final AnItem TABS_NO_UNICODE = new AnItem("TABS_NO_UNICODE", "Tabs, No Unicode");
+	
+	
+	public static FxTextEditorModel getModel(Object x)
+	{
+		if(x == NO_TABS_NO_UNICODE)
+		{
+			return new SimplePlainTextEditorModel
+			(
+				" h 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+				" //end"
+			);
+		}
+		else if(x == TABS_NO_UNICODE)
+		{
+			return new SimplePlainTextEditorModel
+			(
+				"\t1\t2\t3\t4\t5\t6\t7\n" +
+				" h 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+				" //end"
+			);
+		}
+		return null;
+	}
+	
+	
 	public static void load(MainPane p)
 	{
 		switch(5)

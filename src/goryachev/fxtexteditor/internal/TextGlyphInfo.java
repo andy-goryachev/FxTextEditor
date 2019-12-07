@@ -9,8 +9,6 @@ import goryachev.common.util.text.IBreakIterator;
  */
 public abstract class TextGlyphInfo
 {
-	public abstract boolean hasTabs();
-
 	public abstract String getGlyphText(int cellIndex);
 
 	public abstract int getCharIndex(int glyphIndex);
@@ -21,13 +19,21 @@ public abstract class TextGlyphInfo
 	
 	//
 	
-	public static final TextGlyphInfo BLANK = new SIMPLE("");
+	public static final TextGlyphInfo BLANK = new SIMPLE("", false);
 	protected final String text;
+	protected final boolean hasTabs;
 
 	
-	protected TextGlyphInfo(String text)
+	protected TextGlyphInfo(String text, boolean hasTabs)
 	{
 		this.text = text;
+		this.hasTabs = hasTabs;
+	}
+	
+	
+	public final boolean hasTabs()
+	{
+		return hasTabs;
 	}
 	
 	
@@ -38,30 +44,34 @@ public abstract class TextGlyphInfo
 			return BLANK;
 		}
 		
-		if(breakIterator != null)
+		boolean hasTabs = false;
+		
+		if(breakIterator == null)
+		{
+			hasTabs = (text.indexOf('\t') >= 0);
+		}
+		else
 		{
 			for(int i=0; i<text.length(); i++)
 			{
 				char c = text.charAt(i);
-				if(isTabOrComplex(c))
+				if(c == '\t')
 				{
-					return createComplex(text, breakIterator);
+					hasTabs = true;
+				}
+				else if(isComplex(c))
+				{
+					return createComplex(text, hasTabs, breakIterator);
 				}
 			}
 		}
 		
-		return new SIMPLE(text);
+		return new SIMPLE(text, hasTabs);
 	}
 	
 
-	private static boolean isTabOrComplex(char c)
+	private static boolean isComplex(char c)
 	{
-		switch(c)
-		{
-		case '\t':
-			return true;
-		}
-		
 		if(Character.isSurrogate(c))
 		{
 			return true;
@@ -107,9 +117,8 @@ public abstract class TextGlyphInfo
 	}
 
 
-	private static COMPLEX createComplex(String text, IBreakIterator bi)
+	private static COMPLEX createComplex(String text, boolean hasTabs, IBreakIterator bi)
 	{
-		boolean hasTabs = false;
 		boolean hasComplex = false;
 		
 		int len = text.length();
@@ -122,6 +131,14 @@ public abstract class TextGlyphInfo
 		for(int end = bi.next(); end != IBreakIterator.DONE; start = end, end = bi.next())
 		{
 			String s = text.substring(start, end);
+			
+			if(!hasTabs)
+			{
+				if("\t".equals(s))
+				{
+					hasTabs = true;
+				}
+			}
 			
 			glyphOffsets[gi++] = goff;
 			goff += s.length();
@@ -136,15 +153,9 @@ public abstract class TextGlyphInfo
 	
 	public static class SIMPLE extends TextGlyphInfo
 	{
-		public SIMPLE(String text)
+		public SIMPLE(String text, boolean hasTabs)
 		{
-			super(text);
-		}
-
-
-		public boolean hasTabs()
-		{
-			return false;
+			super(text, hasTabs);
 		}
 
 
@@ -182,15 +193,13 @@ public abstract class TextGlyphInfo
 	
 	public static class COMPLEX extends TextGlyphInfo
 	{
-		private final boolean hasTabs;
 		private final boolean hasComplex;
 		private final int[] glyphOffsets;
 		
 		
 		public COMPLEX(String text, boolean hasTabs, boolean hasComplex, int[] glyphOffsets)
 		{
-			super(text);
-			this.hasTabs = hasTabs;
+			super(text, hasTabs);
 			this.hasComplex = hasComplex;
 			this.glyphOffsets = glyphOffsets;
 		}
@@ -201,12 +210,6 @@ public abstract class TextGlyphInfo
 			return hasComplex;
 		}
 		
-		
-		public boolean hasTabs()
-		{
-			return hasTabs;
-		}
-
 
 		public int getCharIndex(int glyphIndex)
 		{

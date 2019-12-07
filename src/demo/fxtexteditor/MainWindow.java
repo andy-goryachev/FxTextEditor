@@ -3,11 +3,16 @@ package demo.fxtexteditor;
 import goryachev.fx.FX;
 import goryachev.fx.FxAction;
 import goryachev.fx.FxBoolean;
+import goryachev.fx.FxComboBox;
 import goryachev.fx.FxDump;
 import goryachev.fx.FxMenuBar;
 import goryachev.fx.FxPopupMenu;
 import goryachev.fx.FxWindow;
+import goryachev.fx.HPane;
 import goryachev.fxtexteditor.FxTextEditor;
+import goryachev.fxtexteditor.FxTextEditorModel;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
 
 
 /**
@@ -19,14 +24,21 @@ public class MainWindow
 	public final FxAction prefsAction = new FxAction(this::preferences);
 	public final MainPane mainPane;
 	protected FxBoolean tailMode = new FxBoolean();
-//	protected FxEditorModel model;
-//	protected static DemoColorEditorModel largeModel;
-//	protected static DemoGrowingModel growingModel;
-	
+	protected final FxComboBox modelSelector = new FxComboBox();
 	
 	public MainWindow()
 	{
 		super("MainWindow");
+		
+		modelSelector.getItems().addAll
+		(
+			DemoText.NO_TABS_NO_UNICODE,
+			DemoText.TABS_NO_UNICODE
+//			full
+//			also large
+//			also bidirectional
+		);
+		modelSelector.valueProperty().addListener((s,p,c) -> onModelSelectionChange(c));
 
 		mainPane = new MainPane();
 				
@@ -39,6 +51,7 @@ public class MainWindow
 		bind("LINE_WRAP", editor().wrapLinesProperty());
 		bind("SHOW_LINE_NUMBERS", editor().showLineNumbersProperty());
 		bind("TAIL_MODE", tailMode);
+		// TODO modelSelector
 
 		tailMode.addListener((s,p,c) -> updateModel());
 		updateModel();
@@ -47,6 +60,8 @@ public class MainWindow
 		
 		// debug
 		FxDump.attach(this);
+		
+		FX.later(() -> modelSelector.select(DemoText.TABS_NO_UNICODE));
 	}
 	
 	
@@ -88,7 +103,7 @@ public class MainWindow
 	}
 	
 	
-	protected FxMenuBar createMenu()
+	protected Node createMenu()
 	{
 		FxMenuBar m = new FxMenuBar();
 		// file
@@ -138,7 +153,13 @@ public class MainWindow
 		// help
 		m.menu("Help");
 		m.item("About");
-		return m;
+		
+		HPane p = new HPane();
+		p.add(m);
+		p.fill();
+		p.add(new Label("Model:"));
+		p.add(modelSelector);
+		return p;
 	}
 	
 	
@@ -152,5 +173,12 @@ public class MainWindow
 		MainWindow w = new MainWindow();
 		w.tailMode.set(tailMode.get());
 		w.open();
+	}
+	
+	
+	protected void onModelSelectionChange(Object x)
+	{
+		FxTextEditorModel m = DemoText.getModel(x);
+		mainPane.setModel(m);
 	}
 }

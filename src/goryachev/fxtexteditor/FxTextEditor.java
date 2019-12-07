@@ -221,6 +221,7 @@ public class FxTextEditor
 		}
 		
 		modelProperty.set(m);
+		vflow.clearTextCellsCache();
 		
 		if(m != null)
 		{

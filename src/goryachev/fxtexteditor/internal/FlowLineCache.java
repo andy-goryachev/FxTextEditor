@@ -11,7 +11,7 @@ import java.util.Random;
 /**
  * Fixed Size Cache, not synchronized.
  */
-public class TextCellsCache
+public class FlowLineCache
 {
 	private final FxTextEditor editor;
 	private final int capacity;
@@ -19,7 +19,7 @@ public class TextCellsCache
 	private final CList<Integer> keys;
 	
 	
-	public TextCellsCache(FxTextEditor editor, int capacity)
+	public FlowLineCache(FxTextEditor editor, int capacity)
 	{
 		if(capacity <= 8)
 		{
