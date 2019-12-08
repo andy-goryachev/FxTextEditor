@@ -19,70 +19,44 @@ public class NonWrappingReflowHelper
 		for(int y=0; y<ymax; y++)
 		{
 			ScreenRow r = buffer.getRow(y);
-			
 			FlowLine fline = flow.getTextLine(lineIndex);
-			if(fline == null)
+			boolean complex = fline.hasComplexGlyphs();
+			if(!complex)
 			{
-				r.setCellCount(0);
-				r.initLine(FlowLine.BLANK);
-				
-				int mx = flow.getEditor().getModel().getLineCount();
-				r.setAppendModelIndex(mx == lineIndex ? mx : -1);
-			}
-			else
-			{
-				boolean complex = fline.hasComplexGlyphs();
-				if(!complex)
+				if(!tabPolicy.isSimple())
 				{
-					if(!tabPolicy.isSimple())
-					{
-						complex |= fline.hasTabs();
-					}
+					complex |= fline.hasTabs();
 				}
+			}
 
-				r.initLine(fline);
-				r.setComplex(complex);
-				r.setAppendModelIndex(-1);
+			r.initLine(fline);
+			r.setComplex(complex);
+			r.setAppendModelIndex(-1);
 
-				if(complex)
+			if(complex)
+			{
+				int[] glyphOffsets = r.prepareGlyphOffsetsForWidth(xmax);
+				int glyphCount = fline.getGlyphCount();
+				int maxCellIndex = topCellIndex + xmax;
+				int size = 0;
+				int glyphIndex = 0;
+				int cellIndex = 0;
+				boolean run = true;
+				int startGlyphIndex = 0;
+				
+				while(run)
 				{
-					int[] glyphOffsets = r.prepareGlyphOffsetsForWidth(xmax);
-					int glyphCount = fline.getGlyphCount();
-					int maxCellIndex = topCellIndex + xmax;
-					int size = 0;
-					int glyphIndex = 0;
-					int cellIndex = 0;
-					boolean run = true;
-					int startGlyphIndex = 0;
-					
-					while(run)
+					GlyphType gt = r.getGlyphType(glyphIndex);
+					switch(gt)
 					{
-						GlyphType gt = r.getGlyphType(glyphIndex);
-						switch(gt)
+					case EOL:
+						run = false;
+						break;
+					case TAB:
+						int d = tabPolicy.nextTabStop(cellIndex);
+						int ct = d - cellIndex;
+						for( ; ct>0; ct--)
 						{
-						case EOL:
-							run = false;
-							break;
-						case TAB:
-							int d = tabPolicy.nextTabStop(cellIndex);
-							int ct = d - cellIndex;
-							for( ; ct>0; ct--)
-							{
-								if((cellIndex >= topCellIndex) && (cellIndex < maxCellIndex))
-								{
-									if(cellIndex == topCellIndex)
-									{
-										startGlyphIndex = glyphIndex;
-									}
-									
-									glyphOffsets[cellIndex - topCellIndex] = -ct;
-									size++;
-								}
-								cellIndex++;
-							}
-							glyphIndex++;
-							break;
-						case NORMAL:
 							if((cellIndex >= topCellIndex) && (cellIndex < maxCellIndex))
 							{
 								if(cellIndex == topCellIndex)
@@ -90,34 +64,48 @@ public class NonWrappingReflowHelper
 									startGlyphIndex = glyphIndex;
 								}
 								
-								glyphOffsets[cellIndex - topCellIndex] = glyphIndex;
+								glyphOffsets[cellIndex - topCellIndex] = -ct;
 								size++;
 							}
-							glyphIndex++;
 							cellIndex++;
-							break;
-						default:
-							throw new Error("?" + gt);
 						}
+						glyphIndex++;
+						break;
+					case NORMAL:
+						if((cellIndex >= topCellIndex) && (cellIndex < maxCellIndex))
+						{
+							if(cellIndex == topCellIndex)
+							{
+								startGlyphIndex = glyphIndex;
+							}
+							
+							glyphOffsets[cellIndex - topCellIndex] = glyphIndex;
+							size++;
+						}
+						glyphIndex++;
+						cellIndex++;
+						break;
+					default:
+						throw new Error("?" + gt);
 					}
-					
-					r.setCellCount(size);
-					r.setStartGlyphIndex(startGlyphIndex);
+				}
+				
+				r.setCellCount(size);
+				r.setStartGlyphIndex(startGlyphIndex);
 
-					if(glyphIndex >= glyphCount)
-					{
-						run = false;
-					}
-					else if(cellIndex >= maxCellIndex)
-					{
-						run = false;
-					}
-				}
-				else
+				if(glyphIndex >= glyphCount)
 				{
-					// cell index coincides with glyph index
-					r.setStartGlyphIndex(topCellIndex);
+					run = false;
 				}
+				else if(cellIndex >= maxCellIndex)
+				{
+					run = false;
+				}
+			}
+			else
+			{
+				// cell index coincides with glyph index
+				r.setStartGlyphIndex(topCellIndex);
 			}
 			
 			lineIndex++;

@@ -46,11 +46,11 @@ public class ScreenRow
 		fline = f;
 	}
 	
-
+	
 	/** returns the type of a glyph at the specified cell index. */
-	public GlyphType getGlyphType(int cellIndex)
+	public GlyphType getGlyphType(int glyphIndex)
 	{
-		String s = getCellText(cellIndex);
+		String s = getGlyphText(glyphIndex);
 		if(s == null)
 		{
 			return GlyphType.EOL;
@@ -63,21 +63,9 @@ public class ScreenRow
 		{
 			return GlyphType.NORMAL;
 		}
-		
-//		if((cellIndex >= 0) && (cellIndex < text.length()))
-//		{
-//			char c = text.charAt(cellIndex);
-//			if(c == '\t')
-//			{
-//				return GlyphType.TAB;
-//			}
-//			else
-//			{
-//				return GlyphType.NORMAL;
-//			}
-//		}
-//		return GlyphType.EOL;
 	}
+	
+	
 	public void setStartGlyphIndex(int ix)
 	{
 		this.startGlyphIndex = ix;
@@ -256,9 +244,10 @@ public class ScreenRow
 	
 	
 	/** returns the offest into plain text string for the given glyph index */
-	public int getCharIndex(int glyphIndex)
+	public int getCharIndex(int cellIndex)
 	{
-		return fline.info().getCharIndex(startGlyphIndex + glyphIndex);
+		int glyphIndex = getGlyphIndex(cellIndex);
+		return fline.info().getCharIndex(glyphIndex); //startGlyphIndex + glyphIndex);
 	}
 	
 	
@@ -267,6 +256,13 @@ public class ScreenRow
 	 */
 	public String getCellText(int cellIndex)
 	{
-		return fline.info().getGlyphText(startGlyphIndex + cellIndex);
+		int glyphIndex = getGlyphIndex(cellIndex);
+		return getGlyphText(glyphIndex);
+	}
+	
+	
+	protected String getGlyphText(int glyphIndex)
+	{
+		return fline.info().getGlyphText(glyphIndex); // startGlyphIndex + cellIndex);
 	}
 }

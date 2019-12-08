@@ -614,6 +614,7 @@ public class VFlow
 		
 		boolean wrap = editor.isWrapLines(); 
 		ScreenBuffer b = buffer();
+		
 		int xmax = colCount;
 		if(!wrap)
 		{
@@ -624,41 +625,33 @@ public class VFlow
 		for(int y=0; y<ymax; y++)
 		{
 			ScreenRow row = b.getScreenRow(y);
-			if(row == null)
+			for(int x=0; x<xmax; x++)
 			{
-				throw new Error("null screen row");
-//				paintBlank(null, 0, y, xmax, Color.GRAY);
-			}
-			else
-			{
-				for(int x=0; x<xmax; x++)
+				int off = row.getGlyphIndex(x);
+				if(off == ScreenBuffer.EOF)
 				{
-					int off = row.getGlyphIndex(x);
-					if(off == ScreenBuffer.EOF)
-					{
-						paintBlank(row, x, y, xmax - x);
-						break;
-					}
-					
-					if(off == ScreenBuffer.EOL)
-					{
-						paintBlank(row, x, y, xmax - x);
-						x = xmax;
-					}
-					else if(off < 0)
-					{
-						paintBlank(row, x, y, -off);
-					}
-					else
-					{
-						paintCell(row, x, y);	
-					}
+					paintBlank(row, x, y, xmax - x);
+					break;
 				}
 				
-				if(wrap)
+				if(off == ScreenBuffer.EOL)
 				{
-					paintBlank(row, xmax, y, 1);
+					paintBlank(row, x, y, xmax - x);
+					x = xmax;
 				}
+				else if(off < 0)
+				{
+					paintBlank(row, x, y, -off);
+				}
+				else
+				{
+					paintCell(row, x, y);	
+				}
+			}
+			
+			if(wrap)
+			{
+				paintBlank(row, xmax, y, 1);
 			}
 		}
 	}
