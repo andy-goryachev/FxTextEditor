@@ -94,7 +94,8 @@ public class ScreenBuffer
 			}
 			else
 			{
-				charIndex = row.getCharIndex(x);
+				int glyphIndex = row.getGlyphIndex(x);
+				charIndex = row.getCharIndex(glyphIndex);
 				if(charIndex < 0)
 				{
 					synthetic = true;

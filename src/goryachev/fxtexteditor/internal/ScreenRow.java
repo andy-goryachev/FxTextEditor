@@ -136,16 +136,16 @@ public class ScreenRow
 			// but let's introduce the upper limit anyway.
 			for(int i=0; i<10000; i++)
 			{
-				int ix = getGlyphIndex(x - i);
-				if(ix >= 0)
+				int glyphIndex = getGlyphIndex(x - i);
+				if(glyphIndex >= 0)
 				{
-					return new NearestPos(getCharIndex(ix), false);
+					return new NearestPos(getCharIndex(glyphIndex), false);
 				}
 				
-				ix = getGlyphIndex(x + i);
-				if(ix >= 0)
+				glyphIndex = getGlyphIndex(x + i);
+				if(glyphIndex >= 0)
 				{
-					return new NearestPos(getCharIndex(ix), true);
+					return new NearestPos(getCharIndex(glyphIndex), true);
 				}
 			}
 			throw new Error();
@@ -244,9 +244,8 @@ public class ScreenRow
 	
 	
 	/** returns the offest into plain text string for the given glyph index */
-	public int getCharIndex(int cellIndex)
+	protected int getCharIndex(int glyphIndex)
 	{
-		int glyphIndex = getGlyphIndex(cellIndex);
 		return fline.info().getCharIndex(glyphIndex); //startGlyphIndex + glyphIndex);
 	}
 	

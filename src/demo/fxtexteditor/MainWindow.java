@@ -154,7 +154,7 @@ public class MainWindow
 		m.menu("Help");
 		m.item("About");
 		
-		HPane p = new HPane();
+		HPane p = new HPane(5);
 		p.add(m);
 		p.fill();
 		p.add(new Label("Model:"));
