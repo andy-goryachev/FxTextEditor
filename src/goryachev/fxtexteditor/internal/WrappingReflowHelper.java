@@ -34,19 +34,12 @@ public class WrappingReflowHelper
 			if(fline == null)
 			{
 				fline = flow.getTextLine(lineIndex);
-				if(fline == null)
+				complex = fline.hasComplexGlyphs();
+				if(!complex)
 				{
-					complex = false;
-				}
-				else
-				{
-					complex = fline.hasComplexGlyphs();
-					if(!complex)
+					if(!tabPolicy.isSimple())
 					{
-						if(!tabPolicy.isSimple())
-						{
-							complex |= fline.hasTabs();
-						}
+						complex |= fline.hasTabs();
 					}
 				}
 				
@@ -78,17 +71,7 @@ public class WrappingReflowHelper
 			
 			// main FSM loop
 			
-			if(fline == null) // FIX will never happen
-			{
-				// next line
-				r.setCellCount(0);
-				r = null;
-				x = 0;
-				cellIndex = 0;
-				y++;
-				lineIndex++;
-			}
-			else if(tabDistance > 0)
+			if(tabDistance > 0)
 			{
 				if(x >= xmax)
 				{

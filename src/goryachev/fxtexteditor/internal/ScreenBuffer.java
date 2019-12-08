@@ -143,4 +143,11 @@ public class ScreenBuffer
 		}
 		return sb.toString();
 	}
+
+
+	public void reset()
+	{
+		height = 0;
+		width = 0;
+	}
 }

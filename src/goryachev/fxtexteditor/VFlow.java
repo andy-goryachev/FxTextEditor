@@ -502,6 +502,12 @@ public class VFlow
 	}
 	
 	
+	public void reset()
+	{
+		buffer.reset();
+	}
+	
+	
 	public void clearTextCellsCache()
 	{
 		cache.clear();
