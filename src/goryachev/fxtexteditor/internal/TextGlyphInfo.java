@@ -165,7 +165,7 @@ public abstract class TextGlyphInfo
 			{
 				return text.substring(cellIndex, cellIndex + 1);
 			}
-			return "";
+			return null;
 		}
 
 
@@ -219,6 +219,11 @@ public abstract class TextGlyphInfo
 
 		public String getGlyphText(int cellIndex)
 		{
+			if(cellIndex > glyphOffsets.length)
+			{
+				return null;
+			}
+
 			int start = glyphOffsets[cellIndex];
 			if(cellIndex == glyphOffsets.length)
 			{
