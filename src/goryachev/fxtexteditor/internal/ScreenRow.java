@@ -152,8 +152,8 @@ public class ScreenRow
 		}
 		else
 		{
-			// not used in this mode
-			throw new Error();
+			// TODO
+			return new NearestPos(x, true);
 		}
 	}
 

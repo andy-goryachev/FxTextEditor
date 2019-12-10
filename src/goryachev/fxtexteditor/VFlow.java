@@ -673,9 +673,19 @@ public class VFlow
 		boolean selected = SelectionHelper.isSelected(flags);
 		
 		Color bg = backgroundColor(caretLine, selected, null);
-		
 		gx.setFill(bg);
 		gx.fillRect(cx, cy, cw, ch);
+		
+		// caret
+		if(paintCaret.get())
+		{
+			if(caret)
+			{
+				// TODO insert mode
+				gx.setFill(caretColor);
+				gx.fillRect(cx, cy, 2, ch);
+			}
+		}
 	}
 	
 
@@ -703,7 +713,7 @@ public class VFlow
 		gx.fillRect(cx, cy, cw, ch);
 		
 		// caret
-		if(paintCaret.get()) // TODO move to screen buffer
+		if(paintCaret.get())
 		{
 			if(caret)
 			{

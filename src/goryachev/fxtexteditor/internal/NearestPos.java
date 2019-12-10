@@ -16,4 +16,10 @@ public class NearestPos
 		this.charIndex = charIndex;
 		this.leading = leading;
 	}
+	
+	
+	public int getCharOffset()
+	{
+		return leading ? charIndex : charIndex + 1;
+	}
 }

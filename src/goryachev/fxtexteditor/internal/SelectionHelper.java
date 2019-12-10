@@ -31,7 +31,31 @@ public class SelectionHelper
 			line = row.getAppendModelIndex();
 		}
 		
-		int off = row.getGlyphIndex(x);
+		// FIX glyph index?  or char in
+		// TODO returns negative values here
+		int glyphIndex = row.getGlyphIndex(x);
+		int off;
+		if(glyphIndex < 0)
+		{
+			if(glyphIndex == ScreenBuffer.EOL)
+			{
+				off = -1;
+			}
+			else if(glyphIndex == ScreenBuffer.EOF)
+			{
+				off = -1;
+			}
+			else
+			{
+				// TODO special case when x=0, may not have glyph index for x=-1
+				// tab
+				off = -1;
+			}
+		}
+		else
+		{
+			off = row.getCharIndex(glyphIndex);
+		}
 		
 		int flags = 0;
 		for(SelectionSegment ss: segments)
