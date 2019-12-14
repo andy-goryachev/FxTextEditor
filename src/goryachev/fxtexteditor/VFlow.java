@@ -14,6 +14,7 @@ import goryachev.fxtexteditor.internal.ScreenRow;
 import goryachev.fxtexteditor.internal.SelectionHelper;
 import goryachev.fxtexteditor.internal.FlowLineCache;
 import goryachev.fxtexteditor.internal.WrappingReflowHelper;
+import java.util.List;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.BooleanExpression;
@@ -106,6 +107,12 @@ public class VFlow
 	public FxTextEditor getEditor()
 	{
 		return editor;
+	}
+	
+	
+	public SelectionSegment[] getSelectionSegments()
+	{
+		return editor.getSelection().getSegments();
 	}
 	
 	
@@ -668,8 +675,8 @@ public class VFlow
 		cw *= count;
 		
 		int flags = SelectionHelper.getFlags(editor.selector.segments, row, x);
-		boolean caretLine = SelectionHelper.isCaretLine(flags);
-		boolean caret = SelectionHelper.isCaret(flags);
+		boolean caretLine = row.isCaretLine();
+		boolean caret = row.isCaret(x);
 		boolean selected = SelectionHelper.isSelected(flags);
 		
 		Color bg = backgroundColor(caretLine, selected, null);
@@ -699,8 +706,8 @@ public class VFlow
 		double cy = y * ch;
 		
 		int flags = SelectionHelper.getFlags(editor.selector.segments, row, x);
-		boolean caretLine = SelectionHelper.isCaretLine(flags);
-		boolean caret = SelectionHelper.isCaret(flags);
+		boolean caretLine = row.isCaretLine();
+		boolean caret = row.isCaret(x);
 		boolean selected = SelectionHelper.isSelected(flags);
 		
 		// style

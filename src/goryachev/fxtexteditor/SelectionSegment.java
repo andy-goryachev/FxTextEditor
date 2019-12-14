@@ -121,6 +121,30 @@ public class SelectionSegment
 	{
 		return max;
 	}
+	
+	
+	public int getMinLine()
+	{
+		return min.getLine();
+	}
+	
+	
+	public int getMaxLine()
+	{
+		return max.getLine();
+	}
+	
+	
+	public int getCaretLine()
+	{
+		return getCaret().getLine();
+	}
+	
+	
+	public int getCaretCharIndex()
+	{
+		return getCaret().getCharIndex();
+	}
 
 
 	public boolean contains(Marker p)

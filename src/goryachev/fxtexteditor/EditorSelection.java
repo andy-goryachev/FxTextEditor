@@ -5,6 +5,7 @@ import goryachev.common.util.CKit;
 
 /**
  * An immutable object that represents text selection within FxEditor.
+ * Segments are guaranteed to be non-overlapping and ordered from top to bottom.
  */
 public class EditorSelection
 {

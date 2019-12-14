@@ -7,9 +7,8 @@ import java.util.List;
 
 /**
  * Selection Helper.
- * 
- * TODO quick hack, rewrite later
  */
+@Deprecated // TODO remove, prepare flags in reflow helper
 public class SelectionHelper
 {
 	private static final int CARET = 1;
@@ -37,6 +36,7 @@ public class SelectionHelper
 		int off;
 		if(glyphIndex < 0)
 		{
+			// FIX this might be complicated due to trailing text pos
 			if(glyphIndex == ScreenBuffer.EOL)
 			{
 				off = -1;
@@ -80,16 +80,16 @@ public class SelectionHelper
 	}
 
 
-	public static boolean isCaret(int flags)
-	{
-		return (flags & CARET) != 0;
-	}
-	
-	
-	public static boolean isCaretLine(int flags)
-	{
-		return (flags & CARET_LINE) != 0;
-	}
+//	public static boolean isCaret(int flags)
+//	{
+//		return (flags & CARET) != 0;
+//	}
+//	
+//	
+//	public static boolean isCaretLine(int flags)
+//	{
+//		return (flags & CARET_LINE) != 0;
+//	}
 	
 	
 	public static boolean isSelected(int flags)

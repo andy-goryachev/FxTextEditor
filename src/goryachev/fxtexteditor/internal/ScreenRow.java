@@ -1,9 +1,11 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.common.util.CKit;
 import goryachev.common.util.SB;
 import goryachev.fxtexteditor.CellStyles;
 import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITextLine;
+import java.util.Arrays;
 
 
 /**
@@ -12,12 +14,17 @@ import goryachev.fxtexteditor.ITextLine;
  */
 public class ScreenRow
 {
+	private static final int CARET = 0x0000_0001;
+	private static final int SELECTED = 0x0000_0002;
+	
 	private FlowLine fline = FlowLine.BLANK;
 	private int startGlyphIndex;
 	private int[] glyphOffsets;
+	private byte[] flags;
 	private int size;
 	private boolean complex;
 	private int appendIndex;
+	private boolean caretLine;
 	
 	
 	public ScreenRow()
@@ -76,9 +83,20 @@ public class ScreenRow
 	{
 		if((glyphOffsets == null) || (glyphOffsets.length < width))
 		{
-			glyphOffsets = new int[width];
+			glyphOffsets = new int[CKit.toNeatSize(width)];
 		}
 		return glyphOffsets;
+	}
+	
+	
+	public byte[] prepareFlagsForWidth(int width)
+	{
+		if((flags == null) || (flags.length < width))
+		{
+			flags = new byte[CKit.toNeatSize(width)];
+		}
+		Arrays.fill(flags, (byte)0);
+		return flags;
 	}
 	
 	
@@ -262,6 +280,38 @@ public class ScreenRow
 	
 	protected String getGlyphText(int glyphIndex)
 	{
-		return fline.info().getGlyphText(glyphIndex); // startGlyphIndex + cellIndex);
+		return fline.info().getGlyphText(glyphIndex);
+	}
+
+
+	public void setCaret(int x)
+	{
+		if((x >= 0) && (x < flags.length))
+		{
+			flags[x] |= CARET;
+		}
+	}
+	
+	
+	public boolean isCaret(int x)
+	{
+		// TODO remove once all wrap modes are implemented
+		if(flags == null)
+		{
+			return false;
+		}
+		return ((flags[x] & CARET) != 0);
+	}
+
+
+	public void setCaretLine(boolean on)
+	{
+		caretLine = on;
+	}
+	
+	
+	public boolean isCaretLine()
+	{
+		return caretLine;
 	}
 }
