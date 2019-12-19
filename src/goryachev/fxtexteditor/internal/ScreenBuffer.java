@@ -77,7 +77,6 @@ public class ScreenBuffer
 	{
 		int line;
 		int charIndex;
-		boolean leading;
 		boolean synthetic = false;
 		
 		ScreenRow row = getScreenRow(y);
@@ -107,28 +106,17 @@ public class ScreenBuffer
 					}
 					else if(charIndex == EOL)
 					{
-						charIndex = row.getTextLength();
-						leading = false;
+						charIndex = row.getTextLength() + 1;
 					}
 					else if(charIndex < 0)
 					{
-						NearestPos p = row.getNearestInsertPosition(x);
-						charIndex = p.charIndex;
-						leading = p.leading;
+						charIndex = row.getNearestInsertPosition(x);
 					}
-					else
-					{
-						leading = true; // TODO verify
-					}
-				}
-				else
-				{
-					leading = true; // TODO verify
 				}
 			}
 		}
 		
-		return new TextPos(line, charIndex, leading, synthetic);
+		return new TextPos(line, charIndex, synthetic);
 	}
 	
 	

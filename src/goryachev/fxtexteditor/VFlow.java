@@ -451,7 +451,7 @@ public class VFlow
 		TextPos pos = buffer().getInsertPosition(x, y);
 		if(pos == null)
 		{
-			pos = new TextPos(editor.getModel().getLineCount(), 0, true, true);
+			pos = new TextPos(editor.getModel().getLineCount(), 0, true);
 		}
 		D.print(pos);
 		return pos;

@@ -141,11 +141,11 @@ public class ScreenRow
 	 * this method might return, depending on where exactly the mouse click hit, 
 	 * 
 	 * either
-	 * (offset=2, leading):   a - - -|b
+	 * 2:   a - - -|b
 	 * or
-	 * (offset=0, trailing):  a|- - - b
+	 * 1:  a|- - - b
 	 */ 
-	public NearestPos getNearestInsertPosition(int x)
+	public int getNearestInsertPosition(int x)
 	{
 		if(complex)
 		{
@@ -157,13 +157,13 @@ public class ScreenRow
 				int glyphIndex = getGlyphIndex(x - i);
 				if(glyphIndex >= 0)
 				{
-					return new NearestPos(getCharIndex(glyphIndex), false);
+					return getCharIndex(glyphIndex) + 1;
 				}
 				
 				glyphIndex = getGlyphIndex(x + i);
 				if(glyphIndex >= 0)
 				{
-					return new NearestPos(getCharIndex(glyphIndex), true);
+					return getCharIndex(glyphIndex);
 				}
 			}
 			throw new Error();
@@ -171,7 +171,7 @@ public class ScreenRow
 		else
 		{
 			// TODO
-			return new NearestPos(x, true);
+			return x;
 		}
 	}
 

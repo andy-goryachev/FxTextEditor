@@ -419,15 +419,7 @@ public class FxTextEditor
 				off = s.length();
 			}
 		}
-		else
-		{
-			if(p.isTrailing())
-			{
-				off++;
-			}
-		}
 		
-		// FIX char index!
 		return markers.newMarker(line, off);
 	}
 	
