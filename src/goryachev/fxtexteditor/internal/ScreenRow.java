@@ -293,15 +293,15 @@ public class ScreenRow
 	}
 	
 	
-	public boolean isCaret(int x)
-	{
-		// TODO remove once all wrap modes are implemented
-		if(flags == null)
-		{
-			return false;
-		}
-		return ((flags[x] & CARET) != 0);
-	}
+//	public boolean isCaret(int x)
+//	{
+//		// TODO remove once all wrap modes are implemented
+//		if(flags == null)
+//		{
+//			return false;
+//		}
+//		return ((flags[x] & CARET) != 0);
+//	}
 
 
 	public void setCaretLine(boolean on)
@@ -310,8 +310,8 @@ public class ScreenRow
 	}
 	
 	
-	public boolean isCaretLine()
-	{
-		return caretLine;
-	}
+//	public boolean isCaretLine()
+//	{
+//		return caretLine;
+//	}
 }

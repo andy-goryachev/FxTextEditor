@@ -675,8 +675,8 @@ public class VFlow
 		cw *= count;
 		
 		int flags = SelectionHelper.getFlags(editor.selector.segments, row, x);
-		boolean caretLine = row.isCaretLine();
-		boolean caret = row.isCaret(x);
+		boolean caretLine = SelectionHelper.isCaretLine(flags);
+		boolean caret = SelectionHelper.isCaret(flags);
 		boolean selected = SelectionHelper.isSelected(flags);
 		
 		Color bg = backgroundColor(caretLine, selected, null);
@@ -706,8 +706,8 @@ public class VFlow
 		double cy = y * ch;
 		
 		int flags = SelectionHelper.getFlags(editor.selector.segments, row, x);
-		boolean caretLine = row.isCaretLine();
-		boolean caret = row.isCaret(x);
+		boolean caretLine = SelectionHelper.isCaretLine(flags);
+		boolean caret = SelectionHelper.isCaret(flags);
 		boolean selected = SelectionHelper.isSelected(flags);
 		
 		// style
