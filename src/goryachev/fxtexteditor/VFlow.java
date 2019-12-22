@@ -13,6 +13,7 @@ import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenRow;
 import goryachev.fxtexteditor.internal.SelectionHelper;
 import goryachev.fxtexteditor.internal.FlowLineCache;
+import goryachev.fxtexteditor.internal.GlyphIndex;
 import goryachev.fxtexteditor.internal.WrappingReflowHelper;
 import java.util.List;
 import javafx.animation.KeyFrame;
@@ -634,21 +635,21 @@ public class VFlow
 			ScreenRow row = b.getScreenRow(y);
 			for(int x=0; x<xmax; x++)
 			{
-				int off = row.getGlyphIndex(x);
-				if(off == ScreenBuffer.EOF)
+				GlyphIndex gix = row.getGlyphIndex(x);
+				if(gix.isEOF())
 				{
 					paintBlank(row, x, y, xmax - x);
 					break;
 				}
 				
-				if(off == ScreenBuffer.EOL)
+				if(gix.isEOL())
 				{
 					paintBlank(row, x, y, xmax - x);
 					x = xmax;
 				}
-				else if(off < 0)
+				else if(gix.isInsideTab())
 				{
-					paintBlank(row, x, y, -off);
+					paintBlank(row, x, y, -gix.intValue());
 				}
 				else
 				{

@@ -9,9 +9,9 @@ import goryachev.common.util.text.IBreakIterator;
  */
 public abstract class TextGlyphInfo
 {
-	public abstract String getGlyphText(int cellIndex);
+	public abstract String getGlyphText(GlyphIndex glyphIndex);
 
-	public abstract int getCharIndex(int glyphIndex);
+	public abstract int getCharIndex(GlyphIndex glyphIndex);
 
 	public abstract int getGlyphCount();
 
@@ -159,19 +159,20 @@ public abstract class TextGlyphInfo
 		}
 
 
-		public String getGlyphText(int cellIndex)
+		public String getGlyphText(GlyphIndex gix)
 		{
-			if((cellIndex >= 0) && (cellIndex < text.length()))
+			int ix = gix.intValue();
+			if((ix >= 0) && (ix < text.length()))
 			{
-				return text.substring(cellIndex, cellIndex + 1);
+				return text.substring(ix, ix + 1);
 			}
 			return null;
 		}
 
 
-		public int getCharIndex(int glyphIndex)
+		public int getCharIndex(GlyphIndex glyphIndex)
 		{
-			return glyphIndex;
+			return glyphIndex.intValue();
 		}
 
 
@@ -211,27 +212,28 @@ public abstract class TextGlyphInfo
 		}
 		
 
-		public int getCharIndex(int glyphIndex)
+		public int getCharIndex(GlyphIndex glyphIndex)
 		{
-			return glyphOffsets[glyphIndex];
+			return glyphOffsets[glyphIndex.intValue()];
 		}
 
 
-		public String getGlyphText(int cellIndex)
+		public String getGlyphText(GlyphIndex gix)
 		{
-			if(cellIndex > glyphOffsets.length)
+			int ix = gix.intValue();
+			if(ix > glyphOffsets.length)
 			{
 				return null;
 			}
 
-			int start = glyphOffsets[cellIndex];
-			if(cellIndex == glyphOffsets.length)
+			int start = glyphOffsets[ix];
+			if(ix == glyphOffsets.length)
 			{
 				return text.substring(start);
 			}
 			else
 			{
-				int end = glyphOffsets[cellIndex + 1];
+				int end = glyphOffsets[ix + 1];
 				return text.substring(start);
 			}
 		}

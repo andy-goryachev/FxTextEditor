@@ -70,15 +70,16 @@ public class FlowLine
 
 	/** 
 	 * returns the text to be rendered in one cell
+	 * TODO is it used?
 	 */
-	public String getCellText(int cellIndex)
+	public String getCellText(GlyphIndex gix)
 	{
-		return info.getGlyphText(cellIndex);
+		return info.getGlyphText(gix);
 	}
 
 	
 	/** returns the offest into plain text string for the given glyph index */
-	public int getCharIndex(int glyphIndex)
+	public int getCharIndex(GlyphIndex glyphIndex)
 	{
 		return info.getCharIndex(glyphIndex);
 	}

@@ -41,14 +41,14 @@ public class NonWrappingReflowHelper
 
 			if(complex)
 			{
-				int[] glyphOffsets = r.prepareGlyphOffsetsForWidth(xmax);
+				GlyphIndex[] glyphOffsets = r.prepareGlyphOffsetsForWidth(xmax);
 				int glyphCount = fline.getGlyphCount();
 				int maxCellIndex = topCellIndex + xmax;
 				int size = 0;
-				int glyphIndex = 0;
 				int cellIndex = 0;
 				boolean run = true;
-				int startGlyphIndex = 0;
+				GlyphIndex glyphIndex = GlyphIndex.ZERO;
+				GlyphIndex startGlyphIndex = GlyphIndex.ZERO;
 				
 				while(run)
 				{
@@ -70,12 +70,12 @@ public class NonWrappingReflowHelper
 									startGlyphIndex = glyphIndex;
 								}
 								
-								glyphOffsets[cellIndex - topCellIndex] = -ct;
+								glyphOffsets[cellIndex - topCellIndex] = GlyphIndex.of(-ct);
 								size++;
 							}
 							cellIndex++;
 						}
-						glyphIndex++;
+						glyphIndex = glyphIndex.increment();
 						break;
 					case NORMAL:
 						if((cellIndex >= topCellIndex) && (cellIndex < maxCellIndex))
@@ -88,7 +88,7 @@ public class NonWrappingReflowHelper
 							glyphOffsets[cellIndex - topCellIndex] = glyphIndex;
 							size++;
 						}
-						glyphIndex++;
+						glyphIndex = glyphIndex.increment();
 						cellIndex++;
 						break;
 					default:
@@ -99,7 +99,7 @@ public class NonWrappingReflowHelper
 				r.setCellCount(size);
 				r.setStartGlyphIndex(startGlyphIndex);
 
-				if(glyphIndex >= glyphCount)
+				if(glyphIndex.intValue() >= glyphCount)
 				{
 					run = false;
 				}
@@ -111,7 +111,7 @@ public class NonWrappingReflowHelper
 			else
 			{
 				// cell index coincides with glyph index
-				r.setStartGlyphIndex(topCellIndex);
+				r.setStartGlyphIndex(GlyphIndex.of(topCellIndex));
 				
 				// TODO selectedBefore, selectedAfter
 				boolean caretLine = false;

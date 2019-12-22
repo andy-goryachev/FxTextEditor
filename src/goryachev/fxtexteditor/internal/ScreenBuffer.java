@@ -11,8 +11,6 @@ import goryachev.fxtexteditor.TextPos;
  */
 public class ScreenBuffer
 {
-	public static final int EOF = Integer.MIN_VALUE;
-	public static final int EOL = Integer.MIN_VALUE + 1;
 	private int height;
 	private int width;
 	private ScreenRow[] rows;
@@ -93,17 +91,21 @@ public class ScreenBuffer
 			}
 			else
 			{
-				int glyphIndex = row.getGlyphIndex(x);
-				if(glyphIndex < 0)
+				GlyphIndex glyphIndex = row.getGlyphIndex(x);
+				if(glyphIndex.isRegular())
+				{
+					charIndex = row.getCharIndex(glyphIndex);
+				}
+				else
 				{
 					synthetic = true;
 				
-					if(glyphIndex == EOF)
+					if(glyphIndex.isEOF())
 					{
 						// can't happen
 						throw new Error();
 					}
-					else if(glyphIndex == EOL)
+					else if(glyphIndex.isEOL())
 					{
 						// at or after end of line
 						charIndex = row.getTextLength() + 1;
@@ -113,10 +115,6 @@ public class ScreenBuffer
 						// inside a tab
 						charIndex = row.getNearestInsertPosition(x);
 					}
-				}
-				else
-				{
-					charIndex = row.getCharIndex(glyphIndex);
 				}
 				
 				// if eof, eol

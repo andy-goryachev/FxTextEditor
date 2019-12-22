@@ -29,31 +29,34 @@ public class SelectionHelper
 			line = row.getAppendModelIndex();
 		}
 		
-		// FIX glyph index?  or char in
 		// TODO returns negative values here
-		int glyphIndex = row.getGlyphIndex(x);
+		GlyphIndex gix = row.getGlyphIndex(x);
 		int off;
-		if(glyphIndex < 0)
+		if(gix.isRegular())
 		{
-			// FIX this might be complicated due to trailing text pos
-			if(glyphIndex == ScreenBuffer.EOL)
-			{
-				off = -1;
-			}
-			else if(glyphIndex == ScreenBuffer.EOF)
-			{
-				off = -1;
-			}
-			else
-			{
-				// TODO special case when x=0, may not have glyph index for x=-1
-				// tab
-				off = -1;
-			}
+			off = row.getCharIndex(gix);
+		}
+		else if(gix.isEOL())
+		{
+			off = -1;
+		}
+		else if(gix.isEOF())
+		{
+			off = -1;
+		}
+		else if(gix.isBOL())
+		{
+			// TODO special case when x=0, may not have glyph index for x=-1
+			off = -1;
+		}
+		else if(gix.isInsideTab())
+		{
+			// tab
+			off = -1;
 		}
 		else
 		{
-			off = row.getCharIndex(glyphIndex);
+			throw new Error(gix.toString());
 		}
 		
 		int flags = 0;

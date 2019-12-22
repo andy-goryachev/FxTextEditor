@@ -18,8 +18,8 @@ public class ScreenRow
 	private static final int SELECTED = 0x0000_0002;
 	
 	private FlowLine fline = FlowLine.BLANK;
-	private int startGlyphIndex;
-	private int[] glyphOffsets;
+	private GlyphIndex startGlyphIndex;
+	private GlyphIndex[] glyphOffsets;
 	private byte[] flags;
 	private int size;
 	private boolean complex;
@@ -55,7 +55,7 @@ public class ScreenRow
 	
 	
 	/** returns the type of a glyph at the specified cell index. */
-	public GlyphType getGlyphType(int glyphIndex)
+	public GlyphType getGlyphType(GlyphIndex glyphIndex)
 	{
 		String s = getGlyphText(glyphIndex);
 		if(s == null)
@@ -73,17 +73,17 @@ public class ScreenRow
 	}
 	
 	
-	public void setStartGlyphIndex(int ix)
+	public void setStartGlyphIndex(GlyphIndex gix)
 	{
-		this.startGlyphIndex = ix;
+		this.startGlyphIndex = gix;
 	}
 	
 	
-	public int[] prepareGlyphOffsetsForWidth(int width)
+	public GlyphIndex[] prepareGlyphOffsetsForWidth(int width)
 	{
 		if((glyphOffsets == null) || (glyphOffsets.length < width))
 		{
-			glyphOffsets = new int[CKit.toNeatSize(width)];
+			glyphOffsets = new GlyphIndex[CKit.toNeatSize(width)];
 		}
 		return glyphOffsets;
 	}
@@ -103,16 +103,17 @@ public class ScreenRow
 	/**
 	 * returns a glyph index for the given x screen coordinate.
 	 * or a negative offset to the next tab position (if inside a tab),
-	 * or ScreenBuffer.EOL if past the end of given line,
-	 * or ScreenBuffer.EOF if past the end of file
+	 * or GlyphIndex.EOL if past the end of given line,
+	 * of GlyphIndex.BOL if before the beginning of line,
+	 * or GlyphIndex.EOF if past the end of file.
 	 */
-	public int getGlyphIndex(int x)
+	public GlyphIndex getGlyphIndex(int x)
 	{
 		if(complex)
 		{
 			if(x < 0)
 			{
-				return 0;
+				return GlyphIndex.BOL;
 			}
 			else if(x < size)
 			{
@@ -120,17 +121,17 @@ public class ScreenRow
 			}
 			else
 			{
-				return ScreenBuffer.EOL;
+				return GlyphIndex.EOL;
 			}
 		}
 		else
 		{
-			int ix = startGlyphIndex + x;
+			int ix = startGlyphIndex.intValue() + x;
 			if(ix > getGlyphCount())
 			{
-				return ScreenBuffer.EOL;
+				return GlyphIndex.EOL;
 			}
-			return ix;
+			return GlyphIndex.of(ix);
 		}
 	}
 	
@@ -154,17 +155,20 @@ public class ScreenRow
 			// but let's introduce the upper limit anyway.
 			for(int i=1; i<10000; i++)
 			{
-				int glyphIndex = getGlyphIndex(x - i);
-				if(glyphIndex >= 0)
+				GlyphIndex gix = getGlyphIndex(x - i);
+				if(gix.isRegular())
 				{
-					// FIX need to handle BOL, without +1 
-					return getCharIndex(glyphIndex) + 1;
+					return getCharIndex(gix) + 1;
+				}
+				else if(gix.isBOL())
+				{
+					return getCharIndex(GlyphIndex.ZERO);
 				}
 				
-				glyphIndex = getGlyphIndex(x + i);
-				if(glyphIndex >= 0)
+				gix = getGlyphIndex(x + i);
+				if(gix.isRegular())
 				{
-					return getCharIndex(glyphIndex);
+					return getCharIndex(gix);
 				}
 			}
 			throw new Error();
@@ -189,7 +193,7 @@ public class ScreenRow
 	}
 	
 	
-	public int getStartOffset()
+	public GlyphIndex getStartOffset()
 	{
 		return startGlyphIndex;
 	}
@@ -263,7 +267,7 @@ public class ScreenRow
 	
 	
 	/** returns the offest into plain text string for the given glyph index */
-	protected int getCharIndex(int glyphIndex)
+	protected int getCharIndex(GlyphIndex glyphIndex)
 	{
 		return fline.info().getCharIndex(glyphIndex); //startGlyphIndex + glyphIndex);
 	}
@@ -274,12 +278,12 @@ public class ScreenRow
 	 */
 	public String getCellText(int cellIndex)
 	{
-		int glyphIndex = getGlyphIndex(cellIndex);
+		GlyphIndex glyphIndex = getGlyphIndex(cellIndex);
 		return getGlyphText(glyphIndex);
 	}
 	
 	
-	protected String getGlyphText(int glyphIndex)
+	protected String getGlyphText(GlyphIndex glyphIndex)
 	{
 		return fline.info().getGlyphText(glyphIndex);
 	}

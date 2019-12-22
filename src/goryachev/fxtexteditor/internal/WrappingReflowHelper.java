@@ -11,7 +11,7 @@ import goryachev.fxtexteditor.VFlow;
  */
 public class WrappingReflowHelper
 {
-	private static final int[] AVOID_COMPILER_WARNING = { };
+	private static final GlyphIndex[] AVOID_COMPILER_WARNING = { };
 	
 	
 	// FIX update top cell index if different
@@ -21,11 +21,11 @@ public class WrappingReflowHelper
 		int cellIndex = 0;
 		int x = 0;
 		int y = 0;
-		int startGlyphIndex = 0;
+		GlyphIndex startGlyphIndex = GlyphIndex.ZERO;
 		ScreenRow r = null;
 		FlowLine fline = null;
-		int[] glyphOffsets = AVOID_COMPILER_WARNING;
-		int glyphIndex = 0;
+		GlyphIndex[] glyphOffsets = AVOID_COMPILER_WARNING;
+		GlyphIndex glyphIndex = GlyphIndex.ZERO;
 		int tabDistance = 0;
 		boolean complex = false;
 		
@@ -43,9 +43,9 @@ public class WrappingReflowHelper
 					}
 				}
 				
-				glyphIndex = 0;
 				cellIndex = 0;
-				startGlyphIndex = 0;
+				glyphIndex = GlyphIndex.ZERO;
+				startGlyphIndex = GlyphIndex.ZERO;
 			}
 			
 			if(r == null)
@@ -79,14 +79,13 @@ public class WrappingReflowHelper
 					r.setCellCount(x);
 					startGlyphIndex = glyphIndex;
 					tabDistance = 0;
-					// FIX line disappears
 					r = null;
 					x = 0;
 					y++;
 				}
 				else
 				{
-					glyphOffsets[x] = -tabDistance;
+					glyphOffsets[x] = GlyphIndex.of(-tabDistance);
 					--tabDistance;
 					x++;
 				}
@@ -119,15 +118,15 @@ public class WrappingReflowHelper
 						break;
 					case TAB:
 						tabDistance = tabPolicy.nextTabStop(x) - x;
-						glyphOffsets[x] = -tabDistance;
+						glyphOffsets[x] = GlyphIndex.of(-tabDistance);
 						--tabDistance;
-						glyphIndex++;
+						glyphIndex = glyphIndex.increment();
 						cellIndex++;
 						x++;
 						break;
 					case NORMAL:
 						glyphOffsets[x] = glyphIndex;
-						glyphIndex++;
+						glyphIndex = glyphIndex.increment();
 						cellIndex++;
 						x++;
 						break;
@@ -153,7 +152,7 @@ public class WrappingReflowHelper
 				{
 					// middle of line
 					r.setCellCount(xmax);
-					glyphIndex += xmax;
+					glyphIndex = glyphIndex.add(xmax);
 					cellIndex += xmax;
 					startGlyphIndex = glyphIndex;
 				}
