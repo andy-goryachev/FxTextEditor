@@ -12,9 +12,9 @@ public class SimplePlainTextEditorModel
 	protected final String[] lines;
 
 
-	public SimplePlainTextEditorModel(String text)
+	public SimplePlainTextEditorModel(String[] lines)
 	{
-		lines = CKit.split(text, '\n');
+		this.lines = lines;
 	}
 	
 	
@@ -43,6 +43,10 @@ public class SimplePlainTextEditorModel
 			String text = lines[line];
 			if(text != null)
 			{
+				if(text.endsWith("\r"))
+				{
+					text = text.substring(0, text.length() - 1);
+				}
 				return new PlainTextLine(line, text);
 			}
 		}

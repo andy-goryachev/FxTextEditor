@@ -11,6 +11,7 @@ import goryachev.fx.FxWindow;
 import goryachev.fx.HPane;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.FxTextEditorModel;
+import demo.fxtexteditor.res.DemoText;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 
@@ -30,14 +31,7 @@ public class MainWindow
 	{
 		super("MainWindow");
 		
-		modelSelector.getItems().addAll
-		(
-			DemoText.NO_TABS_NO_UNICODE,
-			DemoText.TABS_NO_UNICODE
-//			full
-//			also large
-//			also bidirectional
-		);
+		modelSelector.getItems().addAll((Object[])DemoText.getAll());
 		modelSelector.valueProperty().addListener((s,p,c) -> onModelSelectionChange(c));
 
 		mainPane = new MainPane();
