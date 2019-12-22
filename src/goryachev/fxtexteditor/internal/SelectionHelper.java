@@ -29,7 +29,6 @@ public class SelectionHelper
 			line = row.getAppendModelIndex();
 		}
 		
-		// TODO returns negative values here
 		GlyphIndex gix = row.getGlyphIndex(x);
 		int off;
 		if(gix.isRegular())
@@ -38,7 +37,7 @@ public class SelectionHelper
 		}
 		else if(gix.isEOL())
 		{
-			off = -1;
+			off = gix.isAtEOL() ? row.getTextLength() : -1;
 		}
 		else if(gix.isEOF())
 		{

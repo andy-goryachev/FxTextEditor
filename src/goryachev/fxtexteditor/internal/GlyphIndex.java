@@ -32,6 +32,19 @@ public class GlyphIndex
 	}
 	
 	
+	public static GlyphIndex atEOL()
+	{
+		return new GlyphIndex(EOL_INDEX)
+		{
+			@Override
+			public boolean isAtEOL()
+			{
+				return true;
+			}
+		};
+	}
+	
+	
 	public static GlyphIndex inTab(int tabSpan, int off)
 	{
 		return new GlyphIndex(-tabSpan)
@@ -160,5 +173,12 @@ public class GlyphIndex
 	public int getLeadingCharIndex()
 	{
 		return -1;
+	}
+	
+	
+	/** returns true if this glyph is at EOL exacly, false otherwise */
+	public boolean isAtEOL()
+	{
+		return false;
 	}
 }

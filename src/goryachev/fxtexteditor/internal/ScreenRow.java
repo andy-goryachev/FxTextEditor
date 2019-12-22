@@ -119,6 +119,10 @@ public class ScreenRow
 			{
 				return glyphOffsets[x];
 			}
+			else if(x == size)
+			{
+				return GlyphIndex.atEOL();
+			}
 			else
 			{
 				return GlyphIndex.EOL;

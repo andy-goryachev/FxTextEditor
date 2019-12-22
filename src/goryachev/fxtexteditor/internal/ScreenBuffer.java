@@ -108,7 +108,7 @@ public class ScreenBuffer
 					else if(glyphIndex.isEOL())
 					{
 						// at or after end of line
-						charIndex = row.getTextLength() + 1;
+						charIndex = row.getTextLength();
 					}
 					else
 					{

@@ -453,7 +453,7 @@ public class VFlow
 		{
 			pos = new TextPos(editor.getModel().getLineCount(), 0, true);
 		}
-		D.print(pos);
+		D.print(pos); // FIX
 		return pos;
 	}
 	
@@ -467,7 +467,7 @@ public class VFlow
 			c = mixColor(c, editor.getCaretLineColor(), CARET_LINE_OPACITY);
 		}
 		
-		if(selected) // pos.isValidCaretOffset() && editor.selector.isSelected(pos.getLine(), pos.getOffset()))
+		if(selected)
 		{
 			c = mixColor(c, editor.getSelectionBackgroundColor(), SELECTION_BACKGROUND_OPACITY);
 		}
