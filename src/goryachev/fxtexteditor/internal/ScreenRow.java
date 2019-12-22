@@ -152,11 +152,12 @@ public class ScreenRow
 			// look for the nearest insertion point before or after the specified screen coordinate.
 			// this should not take more than the tabsize iterations, 
 			// but let's introduce the upper limit anyway.
-			for(int i=0; i<10000; i++)
+			for(int i=1; i<10000; i++)
 			{
 				int glyphIndex = getGlyphIndex(x - i);
 				if(glyphIndex >= 0)
 				{
+					// FIX need to handle BOL, without +1 
 					return getCharIndex(glyphIndex) + 1;
 				}
 				

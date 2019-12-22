@@ -94,25 +94,53 @@ public class ScreenBuffer
 			else
 			{
 				int glyphIndex = row.getGlyphIndex(x);
-				charIndex = row.getCharIndex(glyphIndex);
-				if(charIndex < 0)
+				if(glyphIndex < 0)
 				{
 					synthetic = true;
-					
-					if(charIndex == EOF)
+				
+					if(glyphIndex == EOF)
 					{
 						// can't happen
 						throw new Error();
 					}
-					else if(charIndex == EOL)
+					else if(glyphIndex == EOL)
 					{
+						// at or after end of line
 						charIndex = row.getTextLength() + 1;
 					}
-					else if(charIndex < 0)
+					else
 					{
+						// inside a tab
 						charIndex = row.getNearestInsertPosition(x);
 					}
 				}
+				else
+				{
+					charIndex = row.getCharIndex(glyphIndex);
+				}
+				
+				// if eof, eol
+				
+				// FIX incorrect in case of a tab
+//				charIndex = row.getCharIndex(glyphIndex);
+//				if(charIndex < 0)
+//				{
+//					synthetic = true;
+//					
+//					if(charIndex == EOF)
+//					{
+//						// can't happen
+//						throw new Error();
+//					}
+//					else if(charIndex == EOL)
+//					{
+//						charIndex = row.getTextLength() + 1;
+//					}
+//					else if(charIndex < 0)
+//					{
+//						charIndex = row.getNearestInsertPosition(x);
+//					}
+//				}
 			}
 		}
 		
