@@ -13,14 +13,14 @@ public class GlyphIndex
 	private static final int BOL_INDEX = Integer.MIN_VALUE + 2;
 	
 	public static final GlyphIndex EOF = new GlyphIndex(EOF_INDEX);
-	public static final GlyphIndex EOL = new GlyphIndex(EOL_INDEX);
+	public static final GlyphIndex EOL = new GlyphIndex(EOL_INDEX); // TODO needs leading char off
 	public static final GlyphIndex BOL = new GlyphIndex(BOL_INDEX);
 	public static final GlyphIndex ZERO = new GlyphIndex(0);
 	
 	private final int index;
 	
 	
-	private GlyphIndex(int ix)
+	protected GlyphIndex(int ix)
 	{
 		this.index = ix;
 	}
@@ -28,8 +28,20 @@ public class GlyphIndex
 	
 	public static GlyphIndex of(int ix)
 	{
-		// TODO hashmap?
 		return new GlyphIndex(ix);
+	}
+	
+	
+	public static GlyphIndex inTab(int tabSpan, int off)
+	{
+		return new GlyphIndex(-tabSpan)
+		{
+			@Override
+			public int getLeadingCharIndex()
+			{
+				return off;
+			}
+		};
 	}
 	
 	
@@ -104,7 +116,7 @@ public class GlyphIndex
 		default:
 			if(index < 0)
 			{
-				sb.a("TAB(").a(index).a(")");
+				sb.a("TAB(").a(index).a(",").a(getLeadingCharIndex()).a(")");
 			}
 			else
 			{
@@ -141,5 +153,12 @@ public class GlyphIndex
 		{
 			throw new Error("cannot increment non-regular index");
 		}
+	}
+
+
+	/** returns a char offset only if the first cell within a tab, otherwise -1 */
+	public int getLeadingCharIndex()
+	{
+		return -1;
 	}
 }

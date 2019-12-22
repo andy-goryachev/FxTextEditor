@@ -2,7 +2,6 @@
 package goryachev.fxtexteditor.internal;
 import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITabPolicy;
-import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.VFlow;
 
 
@@ -56,7 +55,7 @@ public class WrappingReflowHelper
 				x = 0;
 				
 				if(complex)
-				{
+				{					
 					glyphOffsets = r.prepareGlyphOffsetsForWidth(xmax);
 				}
 			}
@@ -69,7 +68,7 @@ public class WrappingReflowHelper
 				r.setAppendModelIndex(mx == lineIndex ? mx : -1);
 			}
 			
-			// main FSM loop
+			// main finite state machine loop
 			
 			if(tabDistance > 0)
 			{
@@ -85,11 +84,10 @@ public class WrappingReflowHelper
 				}
 				else
 				{
-					glyphOffsets[x] = GlyphIndex.of(-tabDistance);
+					glyphOffsets[x] = GlyphIndex.inTab(tabDistance, -1);
 					--tabDistance;
 					x++;
 				}
-				cellIndex++;
 			}
 			else if(complex)
 			{
@@ -118,7 +116,7 @@ public class WrappingReflowHelper
 						break;
 					case TAB:
 						tabDistance = tabPolicy.nextTabStop(x) - x;
-						glyphOffsets[x] = GlyphIndex.of(-tabDistance);
+						glyphOffsets[x] = GlyphIndex.inTab(tabDistance, cellIndex);
 						--tabDistance;
 						glyphIndex = glyphIndex.increment();
 						cellIndex++;

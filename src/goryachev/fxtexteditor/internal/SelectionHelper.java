@@ -46,13 +46,11 @@ public class SelectionHelper
 		}
 		else if(gix.isBOL())
 		{
-			// TODO special case when x=0, may not have glyph index for x=-1
-			off = -1;
+			off = 0; // TODO check
 		}
 		else if(gix.isInsideTab())
 		{
-			// tab
-			off = -1;
+			off = gix.getLeadingCharIndex(); 
 		}
 		else
 		{

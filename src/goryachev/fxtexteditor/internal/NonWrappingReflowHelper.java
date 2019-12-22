@@ -61,6 +61,7 @@ public class NonWrappingReflowHelper
 					case TAB:
 						int d = tabPolicy.nextTabStop(cellIndex);
 						int ct = d - cellIndex;
+						boolean leading = true;
 						for( ; ct>0; ct--)
 						{
 							if((cellIndex >= topCellIndex) && (cellIndex < maxCellIndex))
@@ -70,8 +71,9 @@ public class NonWrappingReflowHelper
 									startGlyphIndex = glyphIndex;
 								}
 								
-								glyphOffsets[cellIndex - topCellIndex] = GlyphIndex.of(-ct);
+								glyphOffsets[cellIndex - topCellIndex] = GlyphIndex.inTab(ct, leading ? cellIndex : -1);
 								size++;
+								leading = false;
 							}
 							cellIndex++;
 						}

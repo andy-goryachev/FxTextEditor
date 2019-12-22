@@ -8,14 +8,13 @@ import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxBooleanBinding;
 import goryachev.fxtexteditor.internal.FlowLine;
+import goryachev.fxtexteditor.internal.FlowLineCache;
+import goryachev.fxtexteditor.internal.GlyphIndex;
 import goryachev.fxtexteditor.internal.NonWrappingReflowHelper;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenRow;
 import goryachev.fxtexteditor.internal.SelectionHelper;
-import goryachev.fxtexteditor.internal.FlowLineCache;
-import goryachev.fxtexteditor.internal.GlyphIndex;
 import goryachev.fxtexteditor.internal.WrappingReflowHelper;
-import java.util.List;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.BooleanExpression;
@@ -677,7 +676,7 @@ public class VFlow
 		
 		int flags = SelectionHelper.getFlags(editor.selector.segments, row, x);
 		boolean caretLine = SelectionHelper.isCaretLine(flags);
-		boolean caret = SelectionHelper.isCaret(flags);
+		boolean caret = paintCaret.get() ? SelectionHelper.isCaret(flags) : false;
 		boolean selected = SelectionHelper.isSelected(flags);
 		
 		Color bg = backgroundColor(caretLine, selected, null);
@@ -685,14 +684,11 @@ public class VFlow
 		gx.fillRect(cx, cy, cw, ch);
 		
 		// caret
-		if(paintCaret.get())
+		if(caret)
 		{
-			if(caret)
-			{
-				// TODO insert mode
-				gx.setFill(caretColor);
-				gx.fillRect(cx, cy, 2, ch);
-			}
+			// TODO insert mode
+			gx.setFill(caretColor);
+			gx.fillRect(cx, cy, 2, ch);
 		}
 	}
 	
