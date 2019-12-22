@@ -52,7 +52,14 @@ public class FlowLineCache
 		Integer moved = keys.removeLast();
 		if(moved != null)
 		{
-			keys.set(ix, moved);
+			if(ix == (size() - 1))
+			{
+				keys.add(moved);
+			}
+			else
+			{
+				keys.set(ix, moved);
+			}
 		}
 		cache.remove(key);
 	}

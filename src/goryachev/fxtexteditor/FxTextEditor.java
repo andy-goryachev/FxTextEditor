@@ -767,11 +767,11 @@ public class FxTextEditor
 		if(handleScrollEvents)
 		{
 			// FIX
-//			int lineCount = getLineCount();
-//			int vis = vflow.getLineCount();
-//
-//			if(isWrapLines())
-//			{
+			int lineCount = getLineCount();
+			int vis = vflow.getLineCount();
+
+			if(isWrapLines())
+			{
 //				int threshold = 200;
 //				
 //				if(lineCount < threshold)
@@ -799,11 +799,11 @@ public class FxTextEditor
 //					setTopOffset(off);
 //					return;
 //				}
-//			}
-//			
-//			int max = Math.max(0, lineCount + 1 - vis);
-//			int top = FX.round(max * val);
-//			setTopLine(top);
+			}
+			
+			int max = Math.max(0, lineCount - vis);
+			int top = FX.round(max * val);
+			setTopLine(top);
 		}
 	}
 	

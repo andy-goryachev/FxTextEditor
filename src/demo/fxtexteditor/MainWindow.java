@@ -45,7 +45,8 @@ public class MainWindow
 		bind("LINE_WRAP", editor().wrapLinesProperty());
 		bind("SHOW_LINE_NUMBERS", editor().showLineNumbersProperty());
 		bind("TAIL_MODE", tailMode);
-		// TODO modelSelector
+		// TODO
+		//bind("MODEL", modelSelector.valueProperty());
 
 		tailMode.addListener((s,p,c) -> updateModel());
 		updateModel();
