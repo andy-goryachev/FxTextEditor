@@ -45,12 +45,19 @@ public class GlyphIndex
 	}
 	
 	
-	public static GlyphIndex inTab(int tabSpan, int off)
+	public static GlyphIndex inTab(int tabSpan, boolean leading, int off)
 	{
 		return new GlyphIndex(-tabSpan)
 		{
 			@Override
 			public int getLeadingCharIndex()
+			{
+				return leading ? off : -1;
+			}
+			
+			
+			@Override
+			public int getTabCharIndex()
 			{
 				return off;
 			}
@@ -129,7 +136,9 @@ public class GlyphIndex
 		default:
 			if(index < 0)
 			{
-				sb.a("TAB(").a(index).a(",").a(getLeadingCharIndex()).a(")");
+				sb.a("TAB(").a(index).a(",");
+				sb.a(getLeadingCharIndex()).a(",");
+				sb.a(getTabCharIndex()).a(")");
 			}
 			else
 			{
@@ -171,6 +180,13 @@ public class GlyphIndex
 
 	/** returns a char offset only if the first cell within a tab, otherwise -1 */
 	public int getLeadingCharIndex()
+	{
+		return -1;
+	}
+	
+	
+	/** returns a char offset only if within the tab, otherwise -1 */
+	public int getTabCharIndex()
 	{
 		return -1;
 	}

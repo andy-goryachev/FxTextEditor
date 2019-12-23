@@ -84,7 +84,8 @@ public class WrappingReflowHelper
 				}
 				else
 				{
-					glyphOffsets[x] = GlyphIndex.inTab(tabDistance, -1);
+					// TODO check
+					glyphOffsets[x] = GlyphIndex.inTab(tabDistance, false, glyphIndex.intValue());
 					--tabDistance;
 					x++;
 				}
@@ -116,7 +117,7 @@ public class WrappingReflowHelper
 						break;
 					case TAB:
 						tabDistance = tabPolicy.nextTabStop(x) - x;
-						glyphOffsets[x] = GlyphIndex.inTab(tabDistance, cellIndex);
+						glyphOffsets[x] = GlyphIndex.inTab(tabDistance, true, cellIndex);
 						--tabDistance;
 						glyphIndex = glyphIndex.increment();
 						cellIndex++;

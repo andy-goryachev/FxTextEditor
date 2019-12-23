@@ -660,7 +660,9 @@ public class VFlow
 				}
 				else if(gix.isInsideTab())
 				{
-					paintBlank(row, x, y, -gix.intValue());
+					int w = -gix.intValue();
+					paintBlank(row, x, y, w);
+					x += (w - 1);
 				}
 				else
 				{
@@ -685,6 +687,12 @@ public class VFlow
 		double cy = y * ch;
 		
 		cw *= count;
+		
+		// FIX
+		if(y==0 && x==0)
+		{
+			x = x + 1 - 1;
+		}
 		
 		int flags = SelectionHelper.getFlags(editor.selector.segments, row, x);
 		boolean caretLine = SelectionHelper.isCaretLine(flags);

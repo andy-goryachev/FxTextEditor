@@ -30,6 +30,7 @@ public class SelectionHelper
 		
 		GlyphIndex gix = row.getGlyphIndex(x);
 		int off;
+		int off2 = -1;
 		if(gix.isRegular())
 		{
 			off = row.getCharIndex(gix);
@@ -48,7 +49,8 @@ public class SelectionHelper
 		}
 		else if(gix.isInsideTab())
 		{
-			off = gix.getLeadingCharIndex(); 
+			off = gix.getLeadingCharIndex();
+			off2 = gix.getTabCharIndex();
 		}
 		else
 		{
@@ -71,9 +73,13 @@ public class SelectionHelper
 				}
 			}
 			
-			if(ss.contains(line, off))
+			int selectionOffset = (off2 >= 0 ? off2 : off);
+			if(selectionOffset >= 0)
 			{
-				flags |= SELECTED;
+				if(ss.contains(line, off))
+				{
+					flags |= SELECTED;
+				}
 			}
 		}
 		

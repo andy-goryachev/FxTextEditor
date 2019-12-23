@@ -71,7 +71,7 @@ public class NonWrappingReflowHelper
 									startGlyphIndex = glyphIndex;
 								}
 								
-								glyphOffsets[cellIndex - topCellIndex] = GlyphIndex.inTab(ct, leading ? glyphIndex.intValue() : -1);
+								glyphOffsets[cellIndex - topCellIndex] = GlyphIndex.inTab(ct, leading, glyphIndex.intValue());
 								size++;
 								leading = false;
 							}
