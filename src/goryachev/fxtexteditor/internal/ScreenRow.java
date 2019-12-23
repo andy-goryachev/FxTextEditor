@@ -21,7 +21,7 @@ public class ScreenRow
 	private GlyphIndex startGlyphIndex;
 	private GlyphIndex[] glyphOffsets;
 	private byte[] flags;
-	private int size;
+	private int cellCount;
 	private boolean complex;
 	private int appendIndex;
 	private boolean caretLine;
@@ -34,7 +34,7 @@ public class ScreenRow
 	
 	public void setCellCount(int sz)
 	{
-		size = sz;
+		cellCount = sz;
 	}
 	
 	
@@ -54,22 +54,16 @@ public class ScreenRow
 	}
 	
 	
+	public FlowLine getFlowLine()
+	{
+		return fline;
+	}
+	
+	
 	/** returns the type of a glyph at the specified cell index. */
 	public GlyphType getGlyphType(GlyphIndex glyphIndex)
 	{
-		String s = getGlyphText(glyphIndex);
-		if(s == null)
-		{
-			return GlyphType.EOL;
-		}
-		else if("\t".equals(s))
-		{
-			return GlyphType.TAB;
-		}
-		else
-		{
-			return GlyphType.NORMAL;
-		}
+		return fline.getGlyphType(glyphIndex);
 	}
 	
 	
@@ -115,11 +109,11 @@ public class ScreenRow
 			{
 				return GlyphIndex.BOL;
 			}
-			else if(x < size)
+			else if(x < cellCount)
 			{
 				return glyphOffsets[x];
 			}
-			else if(x == size)
+			else if(x == cellCount)
 			{
 				return GlyphIndex.atEOL();
 			}
@@ -245,7 +239,7 @@ public class ScreenRow
 		
 		if(glyphOffsets != null)
 		{
-			int mx = Math.min(size, glyphOffsets.length);
+			int mx = Math.min(cellCount, glyphOffsets.length);
 			for(int i=0; i<mx; i++)
 			{
 				if(i > 0)

@@ -339,9 +339,9 @@ public class FxTextEditor
 	}
 	
 	
-	protected void setTopOffset(int off)
+	protected void setTopCellIndex(int cellIndex)
 	{
-		vflow.setTopCellIndex(off);
+		vflow.setTopCellIndex(cellIndex);
 		invalidate();
 	}
 	
@@ -725,39 +725,19 @@ public class FxTextEditor
 	}
 	
 	
-	/** 
-	 * returns approximate text line length, which must always exceed the number of 
-	 * screen cells needed to represent the visible text segment 
-	 */
-	protected int getVisibleTextWidthApprox()
-	{
-		int w = 0;
-		int start = vflow.getTopLine();
-		int sz = vflow.getLineCount();
-		for(int i=0; i<=sz; i++)
-		{
-			int line = start + i;
-			int len = getTextLength(line);
-			if(len > w)
-			{
-				w = len;
-			}
-		}
-		return w;
-	}
-	
-	
 	protected void handleHorizontalScroll(double val)
 	{
 		if(handleScrollEvents)
 		{
-			int max = getVisibleTextWidthApprox() + 1;
-			int vis = vflow.getMaxColumnCount();
-			
-			max = Math.max(0, max - vis);
-			
-			int off = FX.round(max * val);
-			setTopOffset(off);
+			if(!isWrapLines())
+			{
+				int max = vflow.getMaxCellCount() + 1; // allow for 1 blank space at the end
+				int vis = vflow.getMaxColumnCount();
+				int fr = Math.max(0, max - vis);
+				
+				int off = FX.round(fr * val);
+				setTopCellIndex(off);
+			}
 		}
 	}
 	
@@ -766,12 +746,12 @@ public class FxTextEditor
 	{
 		if(handleScrollEvents)
 		{
-			// FIX
 			int lineCount = getLineCount();
 			int vis = vflow.getLineCount();
 
 			if(isWrapLines())
 			{
+				// TODO
 //				int threshold = 200;
 //				
 //				if(lineCount < threshold)
@@ -807,19 +787,6 @@ public class FxTextEditor
 		}
 	}
 	
-	
-//	private FlowHelper createFlowHelper(int start, int lineCount)
-//	{
-//		int w = vflow.getColumnCount();
-//		FlowHelper h = new FlowHelper(w, start, vflow.getBreakIterator());
-//		for(int i=0; i<lineCount; i++)
-//		{
-//			String s = getPlainText(start + i);
-//			h.addLine(s);
-//		}
-//		return h;
-//	}
-
 	
 	public void setCaret(int row, int charIndex)
 	{

@@ -2,6 +2,7 @@
 package goryachev.fxtexteditor.internal;
 import goryachev.common.util.Dump;
 import goryachev.common.util.SB;
+import goryachev.fxtexteditor.ITabPolicy;
 import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.TextPos;
 
@@ -62,6 +63,32 @@ public class ScreenBuffer
 			return rows[y];
 		}
 		return null;
+	}
+	
+	
+	/** 
+	 * returns the maximum number of horizontal screen cells required to display the 
+	 * visible text in the screen buffer.
+	 * this method makes sense only in non-wrapping mode
+	 */
+	public int getMaxCellCount(ITabPolicy tabPolicy)
+	{
+		int w = 0;
+		for(int i=0; i<height; i++)
+		{
+			int len = NonWrappingReflowHelper.computeCellCount(rows[i].getFlowLine(), tabPolicy);
+			if(len > w)
+			{
+				w = len;
+			}
+		}
+		
+		if(w > 0)
+		{
+			w++;
+		}
+		
+		return w;
 	}
 	
 

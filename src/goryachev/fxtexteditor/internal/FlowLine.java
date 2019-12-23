@@ -1,6 +1,7 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.fxtexteditor.CellStyles;
+import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITextLine;
 
 
@@ -67,16 +68,6 @@ public class FlowLine
 		return info.getGlyphCount();
 	}
 
-
-	/** 
-	 * returns the text to be rendered in one cell
-	 * TODO is it used?
-	 */
-	public String getCellText(GlyphIndex gix)
-	{
-		return info.getGlyphText(gix);
-	}
-
 	
 	/** returns the offest into plain text string for the given glyph index */
 	public int getCharIndex(GlyphIndex glyphIndex)
@@ -102,6 +93,25 @@ public class FlowLine
 		if(tline != null)
 		{
 			tline.updateStyle(x, style);
+		}
+	}
+
+
+	/** returns the type of a glyph at the specified cell index. */
+	public GlyphType getGlyphType(GlyphIndex glyphIndex)
+	{
+		String s = info.getGlyphText(glyphIndex);
+		if(s == null)
+		{
+			return GlyphType.EOL;
+		}
+		else if("\t".equals(s))
+		{
+			return GlyphType.TAB;
+		}
+		else
+		{
+			return GlyphType.NORMAL;
 		}
 	}
 }

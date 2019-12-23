@@ -175,6 +175,18 @@ public class VFlow
 	}
 	
 	
+	/** 
+	 * returns the maximum number of horizontal screen cells required to display the 
+	 * visible text in the screen buffer.
+	 * valid only in non-wrapping mode.
+	 */
+	public int getMaxCellCount()
+	{
+		ITabPolicy p = editor.getTabPolicy();
+		return buffer().getMaxCellCount(p);
+	}
+	
+	
 	public void setSuppressBlink(boolean on)
 	{
 		suppressBlink.set(on);

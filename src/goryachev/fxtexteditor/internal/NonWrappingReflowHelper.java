@@ -140,4 +140,55 @@ public class NonWrappingReflowHelper
 			lineIndex++;
 		}
 	}
+
+	public static int computeCellCount(FlowLine fline, ITabPolicy tabPolicy)
+	{
+		boolean complex = fline.hasComplexGlyphs();
+		if(!complex)
+		{
+			if(!tabPolicy.isSimple())
+			{
+				complex |= fline.hasTabs();
+			}
+		}
+
+		if(complex)
+		{
+			int glyphCount = fline.getGlyphCount();
+			int size = 0;
+			int cellIndex = 0;
+			GlyphIndex glyphIndex = GlyphIndex.ZERO;
+			
+			for(;;)
+			{
+				GlyphType gt = fline.getGlyphType(glyphIndex);
+				switch(gt)
+				{
+				case EOL:
+					return size;
+				case TAB:
+					int d = tabPolicy.nextTabStop(cellIndex);
+					int ct = d - cellIndex;
+					for( ; ct>0; ct--)
+					{
+						size++;
+						cellIndex++;
+					}
+					glyphIndex = glyphIndex.increment();
+					break;
+				case NORMAL:
+					size++;
+					glyphIndex = glyphIndex.increment();
+					cellIndex++;
+					break;
+				default:
+					throw new Error("?" + gt);
+				}
+			}
+		}
+		else
+		{
+			return fline.getTextLength();
+		}
+	}
 }
