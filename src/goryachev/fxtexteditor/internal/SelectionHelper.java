@@ -1,6 +1,5 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
-import goryachev.common.util.D;
 import goryachev.fxtexteditor.SelectionSegment;
 import java.util.List;
 
@@ -63,10 +62,12 @@ public class SelectionHelper
 			{
 				flags |= CARET_LINE;
 				
-				if(ss.isCaret(line, off))
+				if(off >= 0)
 				{
-					D.print(line, off); // FIX
-					flags |= CARET;
+					if(ss.isCaret(line, off))
+					{
+						flags |= CARET;
+					}
 				}
 			}
 			
