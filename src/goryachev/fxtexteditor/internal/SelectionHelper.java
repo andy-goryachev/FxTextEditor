@@ -65,6 +65,7 @@ public class SelectionHelper
 				
 				if(ss.isCaret(line, off))
 				{
+					D.print(line, off); // FIX
 					flags |= CARET;
 				}
 			}

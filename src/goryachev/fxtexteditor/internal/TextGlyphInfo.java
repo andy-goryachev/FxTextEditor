@@ -122,9 +122,9 @@ public abstract class TextGlyphInfo
 		boolean hasComplex = false;
 		
 		int len = text.length();
-		int[] glyphOffsets = new int[len];
+		int[] offsets = new int[len];
 		int gi = 0;
-		int goff = 0;
+		int off = 0;
 		
 		bi.setText(text);
 		int start = bi.first();
@@ -140,11 +140,11 @@ public abstract class TextGlyphInfo
 				}
 			}
 			
-			glyphOffsets[gi++] = goff;
-			goff += s.length();
+			offsets[gi++] = off;
+			off += s.length();
 		}
 		
-		return new COMPLEX(text, hasTabs, hasComplex, glyphOffsets);
+		return new COMPLEX(text, hasTabs, hasComplex, offsets);
 	}
 
 
@@ -195,14 +195,14 @@ public abstract class TextGlyphInfo
 	public static class COMPLEX extends TextGlyphInfo
 	{
 		private final boolean hasComplex;
-		private final int[] glyphOffsets;
+		private final int[] charOffsets;
 		
 		
-		public COMPLEX(String text, boolean hasTabs, boolean hasComplex, int[] glyphOffsets)
+		public COMPLEX(String text, boolean hasTabs, boolean hasComplex, int[] offsets)
 		{
 			super(text, hasTabs);
 			this.hasComplex = hasComplex;
-			this.glyphOffsets = glyphOffsets;
+			this.charOffsets = offsets;
 		}
 
 
@@ -214,26 +214,26 @@ public abstract class TextGlyphInfo
 
 		public int getCharIndex(GlyphIndex glyphIndex)
 		{
-			return glyphOffsets[glyphIndex.intValue()];
+			return charOffsets[glyphIndex.intValue()];
 		}
 
 
 		public String getGlyphText(GlyphIndex gix)
 		{
 			int ix = gix.intValue();
-			if(ix > glyphOffsets.length)
+			if(ix > charOffsets.length)
 			{
 				return null;
 			}
 
-			int start = glyphOffsets[ix];
-			if(ix == glyphOffsets.length)
+			int start = charOffsets[ix];
+			if(ix == charOffsets.length)
 			{
 				return text.substring(start);
 			}
 			else
 			{
-				int end = glyphOffsets[ix + 1];
+				int end = charOffsets[ix + 1];
 				return text.substring(start);
 			}
 		}
@@ -241,7 +241,7 @@ public abstract class TextGlyphInfo
 
 		public int getGlyphCount()
 		{
-			return glyphOffsets.length;
+			return charOffsets.length;
 		}
 	}
 }
