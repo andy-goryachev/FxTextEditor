@@ -118,24 +118,28 @@ public class ScreenBuffer
 			}
 			else
 			{
-				GlyphIndex glyphIndex = row.getGlyphIndex(x);
-				if(glyphIndex.isRegular())
+				GlyphIndex gix = row.getGlyphIndex(x);
+				if(gix.isRegular())
 				{
-					charIndex = row.getCharIndex(glyphIndex);
+					charIndex = row.getCharIndex(gix);
 				}
 				else
 				{
 					synthetic = true;
 				
-					if(glyphIndex.isEOF())
+					if(gix.isEOF())
 					{
 						// can't happen
 						throw new Error();
 					}
-					else if(glyphIndex.isEOL())
+					else if(gix.isEOL())
 					{
 						// at or after end of line
 						charIndex = row.getTextLength();
+					}
+					else if(gix.isInsideTab() && (gix.getLeadingCharIndex() >= 0))
+					{
+						charIndex = gix.getLeadingCharIndex();
 					}
 					else
 					{
@@ -143,29 +147,6 @@ public class ScreenBuffer
 						charIndex = row.getNearestInsertPosition(x);
 					}
 				}
-				
-				// if eof, eol
-				
-				// FIX incorrect in case of a tab
-//				charIndex = row.getCharIndex(glyphIndex);
-//				if(charIndex < 0)
-//				{
-//					synthetic = true;
-//					
-//					if(charIndex == EOF)
-//					{
-//						// can't happen
-//						throw new Error();
-//					}
-//					else if(charIndex == EOL)
-//					{
-//						charIndex = row.getTextLength() + 1;
-//					}
-//					else if(charIndex < 0)
-//					{
-//						charIndex = row.getNearestInsertPosition(x);
-//					}
-//				}
 			}
 		}
 		

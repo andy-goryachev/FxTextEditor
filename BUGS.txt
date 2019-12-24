@@ -1,4 +1,3 @@
 BUGS
 
-- unable to place caret between two tabs
 - unable to place caret after last line in non-wrapping mode

@@ -153,20 +153,38 @@ public class ScreenRow
 			// but let's introduce the upper limit anyway.
 			for(int i=1; i<10000; i++)
 			{
+				// backward
 				GlyphIndex gix = getGlyphIndex(x - i);
 				if(gix.isRegular())
 				{
 					return getCharIndex(gix) + 1;
+				}
+				else if(gix.isInsideTab())
+				{
+					int ix = gix.getLeadingCharIndex();
+					if(ix >= 0)
+					{
+						return ix; 
+					}
 				}
 				else if(gix.isBOL())
 				{
 					return getCharIndex(GlyphIndex.ZERO);
 				}
 				
+				// forward
 				gix = getGlyphIndex(x + i);
 				if(gix.isRegular())
 				{
 					return getCharIndex(gix);
+				}
+				else if(gix.isInsideTab())
+				{
+					int ix = gix.getLeadingCharIndex();
+					if(ix >= 0)
+					{
+						return ix; 
+					}
 				}
 			}
 			throw new Error();
