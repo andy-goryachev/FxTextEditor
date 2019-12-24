@@ -3,20 +3,21 @@ package demo.fxtexteditor.res;
 import goryachev.common.util.CKit;
 import goryachev.fx.FxTask;
 import goryachev.fxtexteditor.FxTextEditorModel;
-import goryachev.fxtexteditor.SimplePlainTextEditorModel;
+import goryachev.fxtexteditor.InMemoryPlainTextEditorModel;
 import demo.fxtexteditor.AnItem;
 import demo.fxtexteditor.DemoTextEditorModel;
 import demo.fxtexteditor.MainPane;
 
 
 /**
- * Demo Text.
+ * Demo Text Models.
  */
 public class DemoText
 {
 	public static final AnItem NO_TABS_NO_UNICODE = new AnItem("NO_TABS_NO_UNICODE", "No Tabs, No Unicode");
 	public static final AnItem TABS_NO_UNICODE = new AnItem("TABS_NO_UNICODE", "Tabs, No Unicode");
-	public static final AnItem JAVA = new AnItem("Java", "A large java file");
+	public static final AnItem JAVA = new AnItem("JAVA", "A large java file");
+	public static final AnItem LONG_LINES = new AnItem("LONG_LINES", "Long lines (1M characters)");
 	
 	
 	public static AnItem[] getAll()
@@ -25,7 +26,8 @@ public class DemoText
 		{
 			NO_TABS_NO_UNICODE,
 			TABS_NO_UNICODE,
-			JAVA
+			JAVA,
+			LONG_LINES
 //			full
 //			also large
 //			also bidirectional
@@ -56,6 +58,11 @@ public class DemoText
 		else if(x == JAVA)
 		{
 			return toSimpleModel(loadResource("CKit.java.txt"));
+		}
+		else if(x == LONG_LINES)
+		{
+			String text = loadResource("million.txt");
+			return toSimpleModel(text);
 		}
 		return null;
 	}
@@ -89,26 +96,6 @@ public class DemoText
 				onSuccess((text) -> p.setModel(new DemoTextEditorModel(text, 100))).
 				submit();
 			break;
-		case 5:
-			p.setModel(toSimpleModel
-			(
-				"\t1\t2\t3\t4\t5\t6\t7\n" +
-//				"\t\t\t\t\t5\t\t\t\t\t5\t\t\t\t\t5\n" +
-//				"\t1\n" +
-//				"\t\t2\n" +
-//				"\t\t\t3\n" +
-//				"\t\t\t\t4\n" +
-//				" a 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
-//				" b 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
-//				" c 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
-//				" d 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
-//				" e 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
-//				" f 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
-//				" g 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
-				" h 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
-				" //end"
-			));
-			break;
 		}
 	}
 	
@@ -119,9 +106,9 @@ public class DemoText
 	}
 	
 	
-	protected static SimplePlainTextEditorModel toSimpleModel(String text)
+	protected static InMemoryPlainTextEditorModel toSimpleModel(String text)
 	{
 		String[] lines = CKit.split(text, '\n');
-		return new SimplePlainTextEditorModel(lines);
+		return new InMemoryPlainTextEditorModel(lines);
 	}
 }

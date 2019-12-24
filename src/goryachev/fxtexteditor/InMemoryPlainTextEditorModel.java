@@ -4,15 +4,15 @@ import goryachev.common.util.CKit;
 
 
 /**
- * Simple Plain Text FxTextEditorModel.
+ * In-memory Plain Text FxTextEditorModel.
  */
-public class SimplePlainTextEditorModel
+public class InMemoryPlainTextEditorModel
 	extends FxTextEditorModel
 {
 	protected final String[] lines;
 
 
-	public SimplePlainTextEditorModel(String[] lines)
+	public InMemoryPlainTextEditorModel(String[] lines)
 	{
 		this.lines = lines;
 	}
