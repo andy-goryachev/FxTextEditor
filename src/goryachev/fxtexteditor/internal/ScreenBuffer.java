@@ -5,6 +5,7 @@ import goryachev.common.util.SB;
 import goryachev.fxtexteditor.ITabPolicy;
 import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.TextPos;
+import goryachev.fxtexteditor.VFlow;
 
 
 /**
@@ -12,13 +13,15 @@ import goryachev.fxtexteditor.TextPos;
  */
 public class ScreenBuffer
 {
+	protected final VFlow vflow;
 	private int height;
 	private int width;
 	private ScreenRow[] rows;
 	
 	
-	public ScreenBuffer()
+	public ScreenBuffer(VFlow vf)
 	{
+		vflow = vf;
 	}
 	
 	
@@ -95,8 +98,6 @@ public class ScreenBuffer
 	/** 
 	 * returns an insert position for the given screen coordinates,
 	 * or null if beyond the end of file.
-	 * 
-	 * TODO might contain negative values for line or offset TODO explain. 
 	 */
 	public TextPos getInsertPosition(int x, int y)
 	{
@@ -111,7 +112,7 @@ public class ScreenBuffer
 		}
 		else
 		{
-			line = row.getModelIndex();
+			line = row.getLineIndex();
 			if(line < 0)
 			{
 				return null;
@@ -129,8 +130,8 @@ public class ScreenBuffer
 				
 					if(gix.isEOF())
 					{
-						// can't happen
-						throw new Error();
+						line = vflow.getModelLineCount();
+						charIndex = 0;
 					}
 					else if(gix.isEOL())
 					{

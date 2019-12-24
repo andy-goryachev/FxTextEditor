@@ -16,6 +16,7 @@ public class NonWrappingReflowHelper
 	public static void reflow(VFlow flow, ScreenBuffer buffer, int xmax, int ymax, ITabPolicy tabPolicy)
 	{
 		int lineIndex = flow.getTopLine();
+		int modelLineCount = flow.getModelLineCount();
 		int topCellIndex = flow.getTopCellIndex();
 		SelectionSegment[] selection = flow.getSelectionSegments();
 		int selectedSegmentIndex;
@@ -33,7 +34,7 @@ public class NonWrappingReflowHelper
 				}
 			}
 
-			r.initLine(fline);
+			r.initLine(fline, lineIndex, modelLineCount);
 			r.setComplex(complex);
 			r.setAppendModelIndex(-1);
 			

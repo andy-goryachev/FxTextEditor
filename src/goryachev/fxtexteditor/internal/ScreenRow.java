@@ -18,6 +18,8 @@ public class ScreenRow
 	private static final int SELECTED = 0x0000_0002;
 	
 	private FlowLine fline = FlowLine.BLANK;
+	private int lineIndex;
+	private boolean eof;
 	private GlyphIndex startGlyphIndex;
 	private GlyphIndex[] glyphOffsets;
 	private byte[] flags;
@@ -44,19 +46,28 @@ public class ScreenRow
 	}
 	
 	
-	public void initLine(FlowLine f)
+	public void initLine(FlowLine f, int lineIndex,int modelLineCount)
 	{
 		if(f == null)
 		{
 			throw new Error();
 		}
-		fline = f;
+		
+		this.fline = f;
+		this.lineIndex = (lineIndex <= modelLineCount ? lineIndex : -1);
+		this.eof = (lineIndex >= modelLineCount);
 	}
 	
 	
 	public FlowLine getFlowLine()
 	{
 		return fline;
+	}
+	
+	
+	public boolean isEOF()
+	{
+		return eof;
 	}
 	
 	
@@ -121,9 +132,16 @@ public class ScreenRow
 			{
 				return GlyphIndex.EOL;
 			}
+			
+			// TODO eof?
 		}
 		else
 		{
+			if(eof)
+			{
+				return GlyphIndex.EOF;
+			}
+			
 			int ix = startGlyphIndex.intValue() + x;
 			if(ix > getGlyphCount())
 			{
@@ -221,9 +239,9 @@ public class ScreenRow
 	}
 
 
-	public int getModelIndex()
+	public int getLineIndex()
 	{
-		return fline.getModelIndex();
+		return lineIndex;
 	}
 	
 	

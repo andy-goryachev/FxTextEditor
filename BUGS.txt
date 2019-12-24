@@ -1,3 +1,2 @@
 BUGS
 
-- unable to place caret after last line in non-wrapping mode

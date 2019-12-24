@@ -17,6 +17,7 @@ public class WrappingReflowHelper
 	public static void reflow(VFlow flow, ScreenBuffer buffer, int xmax, int ymax, ITabPolicy tabPolicy)
 	{
 		int lineIndex = flow.getTopLine();
+		int modelLineCount = flow.getModelLineCount();
 		int cellIndex = 0;
 		int x = 0;
 		int y = 0;
@@ -62,7 +63,7 @@ public class WrappingReflowHelper
 			
 			if(x == 0)
 			{
-				r.initLine(fline);
+				r.initLine(fline, lineIndex, modelLineCount);
 				r.setStartGlyphIndex(startGlyphIndex);
 				int mx = flow.getEditor().getModel().getLineCount();
 				r.setAppendModelIndex(mx == lineIndex ? mx : -1);

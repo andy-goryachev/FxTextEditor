@@ -47,7 +47,7 @@ public class VFlow
 	protected final FxBoolean showCaret = new FxBoolean(true);
 	protected final FxBoolean suppressBlink = new FxBoolean(false);
 	protected final BooleanExpression paintCaret;
-	protected final ScreenBuffer buffer = new ScreenBuffer();
+	protected final ScreenBuffer buffer = new ScreenBuffer(this);
 	private Timeline cursorAnimation;
 	private boolean cursorEnabled = true;
 	private boolean cursorOn = true;
@@ -163,9 +163,15 @@ public class VFlow
 	}
 	
 	
-	public int getLineCount()
+	public int getVisibleLineCount()
 	{
 		return rowCount;
+	}
+	
+	
+	public int getModelLineCount()
+	{
+		return editor.getLineCount();
 	}
 	
 	
@@ -537,7 +543,7 @@ public class VFlow
 	{
 		boolean wrap = editor.isWrapLines();
 		int bufferWidth = getColumnCount() + 1;
-		int bufferHeight = getLineCount() + 1;
+		int bufferHeight = getVisibleLineCount() + 1;
 		
 		buffer.setSize(bufferWidth, bufferHeight);
 		
@@ -566,7 +572,7 @@ public class VFlow
 			{
 				return false;
 			}
-			else if(startLine > (topLine + getLineCount()))
+			else if(startLine > (topLine + getVisibleLineCount()))
 			{
 				return false;
 			}
@@ -605,7 +611,7 @@ public class VFlow
 		else
 		{
 			max = model.getLineCount();
-			visible = getLineCount();
+			visible = getVisibleLineCount();
 			val = topLine; //(max - visible);
 		}
 		
@@ -687,12 +693,6 @@ public class VFlow
 		double cy = y * ch;
 		
 		cw *= count;
-		
-		// FIX
-		if(y==0 && x==0)
-		{
-			x = x + 1 - 1;
-		}
 		
 		int flags = SelectionHelper.getFlags(editor.selector.segments, row, x);
 		boolean caretLine = SelectionHelper.isCaretLine(flags);

@@ -747,7 +747,7 @@ public class FxTextEditor
 		if(handleScrollEvents)
 		{
 			int lineCount = getLineCount();
-			int vis = vflow.getLineCount();
+			int vis = vflow.getVisibleLineCount();
 
 			if(isWrapLines())
 			{
