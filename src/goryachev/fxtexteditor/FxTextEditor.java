@@ -39,7 +39,7 @@ import javafx.util.Duration;
 
 
 /**
- * Fx Text Editor.
+ * Monospaced Text Editor.
  */
 public class FxTextEditor
 	extends CPane
@@ -384,6 +384,8 @@ public class FxTextEditor
 		{
 			hscrollHeight = hscroll.prefHeight(-1);
 		}
+		
+		// TODO line numbers column
 		
 		double w = getWidth() - m.getLeft() - m.getRight() - vscrollWidth - 1;
 		double h = getHeight() - m.getTop() - m.getBottom() - hscrollHeight - 1;

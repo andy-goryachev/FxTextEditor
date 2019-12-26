@@ -715,7 +715,6 @@ public class VFlow
 
 	protected void paintCell(ScreenRow row, int x, int y)
 	{
-		// TODO optimize, we could get this into a structure at the start of paint* methods
 		TextMetrics m = textMetrics();
 		double ch = m.cellHeight;
 		double cw = m.cellWidth;
