@@ -617,8 +617,7 @@ public class FxTextEditor
 	
 	public void scroll(double fractionOfHeight)
 	{
-		// TODO
-//		vflow.scroll(fractionOfHeight);
+		vflow.scroll(fractionOfHeight);
 	}
 	
 	

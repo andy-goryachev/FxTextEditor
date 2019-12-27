@@ -15,7 +15,7 @@ import javafx.util.Duration;
 
 
 /**
- * FxTextEditor keyboard and Mouse Handler.
+ * FxTextEditor keyboard and mouse handler.
  */
 public class InputHandler
 {

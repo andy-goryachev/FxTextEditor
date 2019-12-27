@@ -30,7 +30,7 @@ public class MainPane
 		editor.setBlinkRate(Duration.millis(600));
 		editor.setMultipleSelectionEnabled(true);
 		editor.setWrapLines(false);
-		editor.setTabPolicy(TabPolicy.create(8));
+		editor.setTabPolicy(TabPolicy.create(4));
 		editor.setFont(Font.font("Monospace", 18));
 		
 		setCenter(editor);
