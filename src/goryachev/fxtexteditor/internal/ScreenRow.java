@@ -336,4 +336,14 @@ public class ScreenRow
 	{
 		caretLine = on;
 	}
+
+
+	public int getDisplayLineNumber()
+	{
+		if(startGlyphIndex.intValue() == 0)
+		{
+			return lineIndex;
+		}
+		return -1;
+	}
 }

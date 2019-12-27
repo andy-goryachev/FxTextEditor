@@ -92,6 +92,28 @@ public class SelectionHelper
 		
 		return flags;
 	}
+	
+	
+	public static boolean isCaretLine(List<SelectionSegment> segments, ScreenRow row)
+	{
+		if(row != null)
+		{
+			int line = row.getLineIndex();
+			if(line < 0)
+			{
+				line = row.getAppendModelIndex();
+			}
+			
+			for(SelectionSegment ss: segments)
+			{
+				if(ss.isCaretLine(line))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 
 	public static boolean isCaret(int flags)

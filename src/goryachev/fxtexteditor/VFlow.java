@@ -39,6 +39,7 @@ import javafx.util.Duration;
 public class VFlow
 	extends CPane
 {
+	private static final double LINE_NUMBERS_BG_OPACITY = 0.1;
 	private static final double CARET_LINE_OPACITY = 0.3;
 	private static final double SELECTION_BACKGROUND_OPACITY = 0.4;
 	private static final double CELL_BACKGROUND_OPACITY = 0.8;
@@ -58,10 +59,12 @@ public class VFlow
 	private GraphicsContext lineNumberGx;
 	private Canvas canvas;
 	private GraphicsContext gx;
-	private int colCount;
+	private int columnCount;
 	private int rowCount;
-	private int lineNumberCellCount;
+	private int lineNumbersCellCount;
+	private int lineNumbersBarWidth;
 	private int minLineNumberCellCount = 3; // arbitrary number
+	private int lineNumbersGap = 5; // arbitrary number
 	private TextMetrics metrics;
 	protected final Text proto = new Text();
 	private Color backgroundColor = Color.WHITE; // TODO properties
@@ -127,6 +130,8 @@ public class VFlow
 	public void setTopLine(int y)
 	{
 		topLine = y;
+		
+		handleLineNumbersChange();
 		invalidate();
 	}
 	
@@ -163,7 +168,7 @@ public class VFlow
 	
 	public int getVisibleColumnCount()
 	{
-		return colCount;
+		return columnCount;
 	}
 	
 	
@@ -386,21 +391,17 @@ public class VFlow
 		gx = canvas.getGraphicsContext2D();
 		gx.setFontSmoothingType(FontSmoothingType.GRAY);
 		
+		updateDimensions();
+		
 		paintAll();
 	}
 	
 	
 	protected Canvas createCanvas()
 	{
-		TextMetrics tm = textMetrics();
 		Insets m = getInsets();
-		
 		double w = getWidth() - m.getLeft() - m.getRight();
 		double h = getHeight() - m.getTop() - m.getBottom();
-		
-		colCount = CKit.floor(w / tm.cellWidth);
-		rowCount = CKit.floor(h / tm.cellHeight);
-		
 		return new Canvas(w + 1, h + 1);
 	}
 	
@@ -432,24 +433,53 @@ public class VFlow
 		{
 			int lastLine = getTopLine() + rowCount;
 			String s = editor.getLineNumberFormatter().format(lastLine);
-			count = Math.min(minLineNumberCellCount, s.length());
+			count = Math.max(minLineNumberCellCount, s.length());
 		}
 		else
 		{
 			count = 0;
 		}
 		
-		if(count != lineNumberCellCount)
+		if(count != lineNumbersCellCount)
 		{
-			lineNumberCellCount = count;
-			invalidate();
+			lineNumbersCellCount = count;
 			
-			D.print(count); // FIX
+			if(count == 0)
+			{
+				lineNumbersBarWidth = 0;
+			}
+			else
+			{
+				TextMetrics tm = textMetrics();
+				lineNumbersBarWidth = (count * tm.cellWidth + lineNumbersGap + lineNumbersGap);
+			}
+			
+			invalidate();
 		}
-		// TODO compute colCount
-		// estimate last line number
-		// set line num width
 		
+		updateDimensions();
+	}
+	
+	
+	protected void updateDimensions()
+	{
+		Insets m = getInsets();
+		double w = getWidth() - m.getLeft() - m.getRight();
+		double h = getHeight() - m.getTop() - m.getBottom();
+	
+		TextMetrics tm = textMetrics();
+		if(lineNumbersCellCount > 0)
+		{
+			w -= (lineNumbersCellCount * tm.cellWidth + lineNumbersGap + lineNumbersGap);
+		}
+		
+		if(w < 0.0)
+		{
+			w = 0.0;
+		}
+
+		columnCount = CKit.floor(w / tm.cellWidth);
+		rowCount = CKit.floor(h / tm.cellHeight);
 	}
 	
 
@@ -508,8 +538,16 @@ public class VFlow
 		Point2D p = canvas.screenToLocal(screenx, screeny);
 		TextMetrics m = textMetrics();
 		// TODO hor scrolling
-		int x = FX.round(p.getX() / m.cellWidth);
-		int y = FX.floor(p.getY() / m.cellHeight);
+		
+		double sx = p.getX() - lineNumbersBarWidth;
+		if(sx < 0)
+		{
+			sx = 0;
+		}
+		double sy = p.getY();
+		
+		int x = FX.round(sx / m.cellWidth);
+		int y = FX.floor(sy / m.cellHeight);
 		TextPos pos = buffer().getInsertPosition(x, y);
 		if(pos == null)
 		{
@@ -540,6 +578,21 @@ public class VFlow
 		}
 		
 		return c;
+	}
+	
+	
+	protected Color lineNumberBackgroundColor(boolean caretLine)
+	{
+		Color c = getBackgroundColor();
+		
+		if(caretLine)
+		{
+			return c;
+		}
+		else
+		{
+			return mixColor(c, Color.GRAY, LINE_NUMBERS_BG_OPACITY);
+		}
 	}
 	
 	
@@ -674,21 +727,16 @@ public class VFlow
 	
 	protected void paintAll()
 	{
-		if((colCount == 0) || (rowCount == 0))
+		if((columnCount == 0) || (rowCount == 0))
 		{
 			return;
 		}
-		
-//		if(editor.getModel() == null)
-//		{
-//			return;
-//		}
 		
 		boolean wrap = editor.isWrapLines();
 		boolean showLineNumbers = editor.isShowLineNumbers(); // TODO
 		ScreenBuffer b = buffer();
 		
-		int xmax = colCount;
+		int xmax = columnCount;
 		if(!wrap)
 		{
 			xmax++;
@@ -698,6 +746,12 @@ public class VFlow
 		for(int y=0; y<ymax; y++)
 		{
 			ScreenRow row = b.getScreenRow(y);
+
+			if(showLineNumbers)
+			{
+				paintLineNumber(row, y);
+			}
+			
 			for(int x=0; x<xmax; x++)
 			{
 				GlyphIndex gix = row.getGlyphIndex(x);
@@ -732,12 +786,60 @@ public class VFlow
 	}
 	
 	
+	protected String charAt(String text, int pos, int width)
+	{
+		int ix = pos - lineNumbersCellCount + text.length();
+		if((ix >= 0) && (ix < (text.length() - 0)))
+		{
+			return text.substring(ix, ix + 1);
+		}
+		return null;
+	}
+	
+	
+	protected void paintLineNumber(ScreenRow row, int y)
+	{
+		TextMetrics tm = textMetrics();
+		double ch = tm.cellHeight;
+		double cw = tm.cellWidth;
+		double cy = y * ch;
+		
+		boolean caretLine = SelectionHelper.isCaretLine(editor.selector.segments, row);
+		
+		Color bg = lineNumberBackgroundColor(caretLine);
+		gx.setFill(bg);
+		
+		Color fg = Color.GRAY; // FIX
+		
+		gx.fillRect(0, cy, cw * lineNumbersCellCount + lineNumbersGap + lineNumbersGap, ch);
+		
+		int num = row.getDisplayLineNumber();
+		if(num > 0)
+		{
+			String text = editor.getLineNumberFormatter().format(num);
+
+			for(int i=0; i<lineNumbersCellCount; i++)
+			{
+				String s = charAt(text, i, lineNumbersCellCount);
+				if(s != null)
+				{
+					double cx = i * cw + lineNumbersGap;
+					
+					gx.setFont(font);
+					gx.setFill(fg);
+					gx.fillText(s, cx, cy - tm.baseline, cw);
+				}
+			}
+		}
+	}
+	
+	
 	protected void paintBlank(ScreenRow row, int x, int y, int count)
 	{
-		TextMetrics m = textMetrics();
-		double ch = m.cellHeight;
-		double cw = m.cellWidth;
-		double cx = x * cw;
+		TextMetrics tm = textMetrics();
+		double ch = tm.cellHeight;
+		double cw = tm.cellWidth;
+		double cx = x * cw + lineNumbersBarWidth;
 		double cy = y * ch;
 		
 		cw *= count;
@@ -763,10 +865,10 @@ public class VFlow
 
 	protected void paintCell(ScreenRow row, int x, int y)
 	{
-		TextMetrics m = textMetrics();
-		double ch = m.cellHeight;
-		double cw = m.cellWidth;
-		double cx = x * cw;
+		TextMetrics tm = textMetrics();
+		double ch = tm.cellHeight;
+		double cw = tm.cellWidth;
+		double cx = x * cw + lineNumbersBarWidth;
 		double cy = y * ch;
 		
 		int flags = SelectionHelper.getFlags(editor.selector.segments, row, x);
@@ -807,7 +909,7 @@ public class VFlow
 			Font f = getFont(cell);
 			gx.setFont(f);
 			gx.setFill(fg);
-			gx.fillText(text, cx, cy - m.baseline, cw);
+			gx.fillText(text, cx, cy - tm.baseline, cw);
 		
 			// TODO underline, strikethrough
 		}
