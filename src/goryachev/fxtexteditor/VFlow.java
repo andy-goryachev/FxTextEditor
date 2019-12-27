@@ -557,15 +557,18 @@ public class VFlow
 	public FlowLine getTextLine(int lineIndex)
 	{
 		FxTextEditorModel m = editor.getModel();
-		if(lineIndex < m.getLineCount())
+		if(m != null)
 		{
-			FlowLine f = cache.get(lineIndex);
-			if(f == null)
+			if(lineIndex < m.getLineCount())
 			{
-				ITextLine t = m.getTextLine(lineIndex);
-				f = cache.insert(lineIndex, t);
+				FlowLine f = cache.get(lineIndex);
+				if(f == null)
+				{
+					ITextLine t = m.getTextLine(lineIndex);
+					f = cache.insert(lineIndex, t);
+				}
+				return f;
 			}
-			return f;
 		}
 		return FlowLine.BLANK;
 	}
@@ -676,10 +679,10 @@ public class VFlow
 			return;
 		}
 		
-		if(editor.getModel() == null)
-		{
-			return;
-		}
+//		if(editor.getModel() == null)
+//		{
+//			return;
+//		}
 		
 		boolean wrap = editor.isWrapLines();
 		boolean showLineNumbers = editor.isShowLineNumbers(); // TODO

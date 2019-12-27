@@ -1,5 +1,6 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITabPolicy;
 import goryachev.fxtexteditor.VFlow;
@@ -65,7 +66,8 @@ public class WrappingReflowHelper
 			{
 				r.initLine(fline, lineIndex, modelLineCount);
 				r.setStartGlyphIndex(startGlyphIndex);
-				int mx = flow.getEditor().getModel().getLineCount();
+				FxTextEditorModel m = flow.getEditor().getModel();
+				int mx = m == null ? 0 : m.getLineCount();
 				r.setAppendModelIndex(mx == lineIndex ? mx : -1);
 			}
 			

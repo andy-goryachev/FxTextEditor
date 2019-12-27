@@ -1,12 +1,10 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor.res;
 import goryachev.common.util.CKit;
-import goryachev.fx.FxTask;
 import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.InMemoryPlainTextEditorModel;
 import demo.fxtexteditor.AnItem;
 import demo.fxtexteditor.DemoTextEditorModel;
-import demo.fxtexteditor.MainPane;
 
 
 /**
@@ -18,6 +16,8 @@ public class DemoText
 	public static final AnItem TABS_NO_UNICODE = new AnItem("TABS_NO_UNICODE", "Tabs, No Unicode");
 	public static final AnItem JAVA = new AnItem("JAVA", "A large java file");
 	public static final AnItem LONG_LINES = new AnItem("LONG_LINES", "Long lines (1M characters)");
+	public static final AnItem BILLION_LINES = new AnItem("BILLION_LINES", "One billion lines");
+	public static final AnItem NULL = new AnItem("null", "null");
 	
 	
 	public static AnItem[] getAll()
@@ -27,7 +27,9 @@ public class DemoText
 			NO_TABS_NO_UNICODE,
 			TABS_NO_UNICODE,
 			JAVA,
-			LONG_LINES
+			LONG_LINES,
+			BILLION_LINES,
+			NULL
 //			full
 //			also large
 //			also bidirectional
@@ -64,39 +66,16 @@ public class DemoText
 			String text = loadResource("million.txt");
 			return toSimpleModel(text);
 		}
-		return null;
-	}
-	
-	
-	public static void load(MainPane p)
-	{
-		switch(5)
+		else if(x == BILLION_LINES)
 		{
-		case 1:
-			// hsort text
-			p.setModel(toSimpleModel("333\n22\n1"));
-			break;
-		case 2:
-			// very long lines
-			new FxTask<String>().
-				producer(() -> loadResource("million.txt")).
-				onSuccess((text) -> p.setModel(toSimpleModel(text))).
-				submit();
-			break;
-		case 3:
-			new FxTask<String>().
-				producer(() -> loadResource("demo.txt")).
-				onSuccess((text) -> p.setModel(new DemoTextEditorModel(text, 1))).
-				submit();
-			break;
-		case 4:
-			// large model
-			new FxTask<String>().
-				producer(() -> loadResource("demo.txt")).
-				onSuccess((text) -> p.setModel(new DemoTextEditorModel(text, 100))).
-				submit();
-			break;
+			String text = loadResource("demo.txt");
+			return new DemoTextEditorModel(text, 1_000_000_000);
 		}
+		else if(x == BILLION_LINES)
+		{
+			return null;
+		}
+		return null;
 	}
 	
 

@@ -767,7 +767,7 @@ public class FxTextEditor
 //				}
 			}
 			
-			int max = Math.max(0, lineCount - vis);
+			int max = Math.max(0, lineCount + 1 - vis);
 			int top = FX.round(max * val);
 			setTopLine(top);
 		}
