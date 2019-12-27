@@ -2,7 +2,6 @@
 package goryachev.fxtexteditor;
 import goryachev.common.util.CKit;
 import goryachev.common.util.D;
-import goryachev.fx.Binder;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
@@ -87,9 +86,10 @@ public class VFlow
 		
 		setFocusTraversable(true);
 		
-		Binder.onChange(this::handleSizeChange,  widthProperty(), heightProperty());
-		Binder.onChange(this::updateLineNumbers, ed.showLineNumbersProperty(), ed.lineNumberFormatterProperty());
-		Binder.onChange(this::updateModel, ed.modelProperty());
+		FX.onChange(this::handleSizeChange,  widthProperty(), heightProperty());
+		FX.onChange(this::updateLineNumbers, ed.showLineNumbersProperty(), ed.lineNumberFormatterProperty());
+		FX.onChange(this::updateModel, ed.modelProperty());
+		FX.onChange(this::invalidate, ed.widthProperty(), ed.heightProperty(), ed.showLineNumbersProperty, ed.lineNumberFormatterProperty);
 		
 		// TODO clip rect
 		
@@ -125,6 +125,7 @@ public class VFlow
 	public void setTopLine(int y)
 	{
 		topLine = y;
+		invalidate();
 	}
 	
 	
@@ -138,6 +139,7 @@ public class VFlow
 	public void setTopCellIndex(int ix)
 	{
 		topCellIndex = ix;
+		invalidate();
 	}
 	
 	
@@ -157,7 +159,7 @@ public class VFlow
 	}
 	
 	
-	public int getColumnCount()
+	public int getVisibleColumnCount()
 	{
 		return colCount;
 	}
@@ -542,7 +544,7 @@ public class VFlow
 	protected void reflow()
 	{
 		boolean wrap = editor.isWrapLines();
-		int bufferWidth = getColumnCount() + 1;
+		int bufferWidth = getVisibleColumnCount() + 1;
 		int bufferHeight = getVisibleLineCount() + 1;
 		
 		buffer.setSize(bufferWidth, bufferHeight);
@@ -551,7 +553,7 @@ public class VFlow
 		
 		if(wrap)
 		{
-			WrappingReflowHelper.reflow(this, buffer, getColumnCount(), bufferHeight, tabPolicy);
+			WrappingReflowHelper.reflow(this, buffer, getVisibleColumnCount(), bufferHeight, tabPolicy);
 		}
 		else
 		{
@@ -637,7 +639,8 @@ public class VFlow
 			return;
 		}
 		
-		boolean wrap = editor.isWrapLines(); 
+		boolean wrap = editor.isWrapLines();
+		boolean showLineNumbers = editor.isShowLineNumbers(); // TODO
 		ScreenBuffer b = buffer();
 		
 		int xmax = colCount;

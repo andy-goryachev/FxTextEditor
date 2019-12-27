@@ -1,7 +1,6 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.D;
-import goryachev.fx.Binder;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.Formatters;
@@ -118,9 +117,9 @@ public class FxTextEditor
 		
 		selector.segments.addListener((ListChangeListener.Change<? extends SelectionSegment> ss) -> handleSelectionSegmentUpdate(ss)); 
 		
-//		Binder.onChange(vflow::updateBlinkRate, true, blinkRateProperty());
-		Binder.onChange(this::invalidate, widthProperty(), heightProperty(), showLineNumbersProperty);
-		wrapLinesProperty.addListener((s,p,c) -> handleWrapChange());
+		// TODO
+//		FX.onChange(vflow::updateBlinkRate, true, blinkRateProperty());
+		FX.onChange(this::handleWrapChange, wrapLinesProperty);
 		
 		initInputHandler();
 		setFocusTraversable(true);
@@ -180,7 +179,6 @@ public class FxTextEditor
 	public void setLineNumberFormatter(FxFormatter f)
 	{
 		lineNumberFormatterProperty.set(f);
-		invalidate();
 	}
 	
 	
@@ -335,27 +333,19 @@ public class FxTextEditor
 	protected void setTopLine(int ix)
 	{
 		vflow.setTopLine(ix);
-		invalidate();
 	}
 	
 	
 	protected void setTopCellIndex(int cellIndex)
 	{
 		vflow.setTopCellIndex(cellIndex);
-		invalidate();
-	}
-	
-	
-	protected void invalidate()
-	{
-		vflow.invalidate();
 	}
 	
 	
 	protected void handleWrapChange()
 	{
 		requestLayout();
-		invalidate();
+		vflow.invalidate();
 	}
 	
 	
@@ -477,7 +467,7 @@ public class FxTextEditor
 			hscroll.setValue(0);
 		}
 		
-		invalidate();
+		vflow.invalidate();
 	}
 
 
