@@ -60,6 +60,8 @@ public class VFlow
 	private GraphicsContext gx;
 	private int colCount;
 	private int rowCount;
+	private int lineNumberCellCount;
+	private int minLineNumberCellCount = 3; // arbitrary number
 	private TextMetrics metrics;
 	protected final Text proto = new Text();
 	private Color backgroundColor = Color.WHITE; // TODO properties
@@ -89,7 +91,7 @@ public class VFlow
 		FX.onChange(this::handleSizeChange,  widthProperty(), heightProperty());
 		FX.onChange(this::updateLineNumbers, ed.showLineNumbersProperty(), ed.lineNumberFormatterProperty());
 		FX.onChange(this::updateModel, ed.modelProperty());
-		FX.onChange(this::invalidate, ed.widthProperty(), ed.heightProperty(), ed.showLineNumbersProperty, ed.lineNumberFormatterProperty);
+		FX.onChange(this::handleLineNumbersChange, ed.showLineNumbersProperty, ed.lineNumberFormatterProperty, ed.modelProperty);
 		
 		// TODO clip rect
 		
@@ -408,6 +410,46 @@ public class VFlow
 	{
 		screenBufferValid = false;
 		repaint();
+	}
+	
+	
+	protected void handleLineNumbersChange()
+	{
+		FxTextEditorModel m = editor.getModel();
+		if(m == null)
+		{
+			return;
+		}
+		
+		if(buffer == null)
+		{
+			D.print("null buffer?");
+			return; // TODO check this
+		}
+
+		int count;
+		if(editor.isShowLineNumbers())
+		{
+			int lastLine = getTopLine() + rowCount;
+			String s = editor.getLineNumberFormatter().format(lastLine);
+			count = Math.min(minLineNumberCellCount, s.length());
+		}
+		else
+		{
+			count = 0;
+		}
+		
+		if(count != lineNumberCellCount)
+		{
+			lineNumberCellCount = count;
+			invalidate();
+			
+			D.print(count); // FIX
+		}
+		// TODO compute colCount
+		// estimate last line number
+		// set line num width
+		
 	}
 	
 

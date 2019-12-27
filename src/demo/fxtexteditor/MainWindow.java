@@ -1,5 +1,6 @@
 // Copyright © 2017-2019 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
+import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxAction;
 import goryachev.fx.FxBoolean;
@@ -7,8 +8,8 @@ import goryachev.fx.FxComboBox;
 import goryachev.fx.FxDump;
 import goryachev.fx.FxMenuBar;
 import goryachev.fx.FxPopupMenu;
+import goryachev.fx.FxToolBar;
 import goryachev.fx.FxWindow;
-import goryachev.fx.HPane;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.FxTextEditorModel;
 import demo.fxtexteditor.res.DemoText;
@@ -24,6 +25,7 @@ public class MainWindow
 {
 	public final FxAction prefsAction = new FxAction(this::preferences);
 	public final MainPane mainPane;
+	public final CPane content;
 	protected FxBoolean tailMode = new FxBoolean();
 	protected final FxComboBox modelSelector = new FxComboBox();
 	
@@ -35,10 +37,21 @@ public class MainWindow
 		modelSelector.valueProperty().addListener((s,p,c) -> onModelSelectionChange(c));
 
 		mainPane = new MainPane();
-				
+		
+		FxToolBar tb = new FxToolBar();
+		tb.toggleButton("wrap", editor().wrapLinesProperty());
+		tb.toggleButton("line numbers", editor().showLineNumbersProperty());
+		tb.fill();
+		tb.add(new Label("Model:"));
+		tb.add(modelSelector);
+		
+		content = new CPane();
+		content.setTop(tb);
+		content.setCenter(mainPane);
+		
 		setTitle("FxTextEditor");
 		setTop(createMenu());
-		setCenter(mainPane);
+		setCenter(content);
 		setSize(600, 700);
 		
 		// props
@@ -149,12 +162,7 @@ public class MainWindow
 		m.menu("Help");
 		m.item("About");
 		
-		HPane p = new HPane(5);
-		p.add(m);
-		p.fill();
-		p.add(new Label("Model:"));
-		p.add(modelSelector);
-		return p;
+		return m;
 	}
 	
 	

@@ -36,9 +36,6 @@ public class MainPane
 		setCenter(editor);
 		
 		showFindPane();
-		
-		// FIX
-//		DemoText.load(this);
 	}
 	
 	
