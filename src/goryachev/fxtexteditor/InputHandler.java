@@ -20,6 +20,7 @@ import javafx.util.Duration;
 public class InputHandler
 {
 	protected final FxTextEditor editor;
+	protected final VFlow vflow;
 	protected final SelectionController selector;
 	protected final Timeline autoScrollTimer;
 	private boolean fastAutoScroll;
@@ -33,27 +34,20 @@ public class InputHandler
 	private int lasty = -1;
 
 
-	public InputHandler(FxTextEditor ed, SelectionController sel)
+	public InputHandler(FxTextEditor ed, VFlow f, SelectionController sel)
 	{
 		this.editor = ed;
+		this.vflow = f;
 		this.selector = sel;
 		
 		autoScrollTimer = new Timeline(new KeyFrame(autoScrollPeriod, (ev) -> autoScroll()));
 		autoScrollTimer.setCycleCount(Timeline.INDEFINITE);
-	}
-	
-	
-	// TODO remove static?
-	public static void init(FxTextEditor ed, SelectionController sel)
-	{
-		VFlow vflow = ed.vflow;
-		InputHandler h = new InputHandler(ed, sel);
 		
-		vflow.addEventFilter(MouseEvent.MOUSE_CLICKED, (ev) -> h.handleMouseClicked(ev));
-		vflow.addEventFilter(MouseEvent.MOUSE_PRESSED, (ev) -> h.handleMousePressed(ev));
-		vflow.addEventFilter(MouseEvent.MOUSE_RELEASED, (ev) -> h.handleMouseReleased(ev));
-		vflow.addEventFilter(MouseEvent.MOUSE_DRAGGED, (ev) -> h.handleMouseDragged(ev));
-		vflow.addEventFilter(ScrollEvent.ANY, (ev) -> h.handleScroll(ev));
+		vflow.addEventFilter(MouseEvent.MOUSE_CLICKED, (ev) -> handleMouseClicked(ev));
+		vflow.addEventFilter(MouseEvent.MOUSE_PRESSED, (ev) -> handleMousePressed(ev));
+		vflow.addEventFilter(MouseEvent.MOUSE_RELEASED, (ev) -> handleMouseReleased(ev));
+		vflow.addEventFilter(MouseEvent.MOUSE_DRAGGED, (ev) -> handleMouseDragged(ev));
+		vflow.addEventFilter(ScrollEvent.ANY, (ev) -> handleScroll(ev));
 		
 		// key map
 		KeyMap.onKeyPressed(ed, KeyCode.A, KeyMap.SHORTCUT, ed::selectAll);
@@ -68,9 +62,9 @@ public class InputHandler
 		KeyMap.onKeyPressed(ed, KeyCode.BACK_SPACE, ed::keyBackspace);
 		
 		// TODO remove?
-		ed.addEventFilter(KeyEvent.KEY_PRESSED, (ev) -> h.handleKeyPressed(ev));
-		ed.addEventFilter(KeyEvent.KEY_RELEASED, (ev) -> h.handleKeyReleased(ev));
-		ed.addEventFilter(KeyEvent.KEY_TYPED, (ev) -> h.handleKeyTyped(ev));
+		ed.addEventFilter(KeyEvent.KEY_PRESSED, (ev) -> handleKeyPressed(ev));
+		ed.addEventFilter(KeyEvent.KEY_RELEASED, (ev) -> handleKeyReleased(ev));
+		ed.addEventFilter(KeyEvent.KEY_TYPED, (ev) -> handleKeyTyped(ev));
 	}
 	
 	

@@ -131,7 +131,7 @@ public class FxTextEditor
 	/** override to provide your own input handler */
 	protected void initInputHandler()
 	{
-		InputHandler.init(this, selector);
+		new InputHandler(this, vflow, selector);
 	}
 	
 
