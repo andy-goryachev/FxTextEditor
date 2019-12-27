@@ -9,6 +9,7 @@ import goryachev.fx.FxBoolean;
 import goryachev.fx.FxFormatter;
 import goryachev.fx.FxObject;
 import goryachev.fx.XScrollBar;
+import goryachev.fxtexteditor.internal.InputHandler;
 import goryachev.fxtexteditor.internal.Markers;
 import goryachev.fxtexteditor.internal.TabPolicy;
 import java.io.StringWriter;
@@ -666,12 +667,6 @@ public class FxTextEditor
 	{
 		selector.setSelection(start, end);
 		selector.commitSelection();
-	}
-	
-	
-	protected void setSuppressBlink(boolean on)
-	{
-		vflow.setSuppressBlink(on);
 	}
 	
 	

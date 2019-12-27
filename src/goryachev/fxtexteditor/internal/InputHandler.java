@@ -1,8 +1,12 @@
 // Copyright © 2016-2019 Andy Goryachev <andy@goryachev.com>
-package goryachev.fxtexteditor;
+package goryachev.fxtexteditor.internal;
 import goryachev.common.util.D;
 import goryachev.fx.FX;
 import goryachev.fx.KeyMap;
+import goryachev.fxtexteditor.FxTextEditor;
+import goryachev.fxtexteditor.Marker;
+import goryachev.fxtexteditor.SelectionController;
+import goryachev.fxtexteditor.VFlow;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Point2D;
@@ -135,7 +139,7 @@ public class InputHandler
 		}
 
 		Marker pos = getMarker(ev);
-		editor.setSuppressBlink(true);
+		vflow.setSuppressBlink(true);
 		
 		if(ev.isShiftDown())
 		{
@@ -182,10 +186,10 @@ public class InputHandler
 			autoScroll(y);
 			return;
 		}
-		else if(y > editor.vflow.getHeight())
+		else if(y > vflow.getHeight())
 		{
 			// below vflow
-			autoScroll(y - editor.vflow.getHeight());
+			autoScroll(y - vflow.getHeight());
 			return;
 		}
 		else
@@ -201,7 +205,7 @@ public class InputHandler
 	public void handleMouseReleased(MouseEvent ev)
 	{
 		stopAutoScroll();
-		editor.setSuppressBlink(false);
+		vflow.setSuppressBlink(false);
 		selector.commitSelection();
 	}
 	
@@ -232,11 +236,11 @@ public class InputHandler
 		Point2D p;
 		if(autoScrollUp)
 		{
-			p = editor.vflow.localToScreen(0, 0);
+			p = vflow.localToScreen(0, 0);
 		}
 		else
 		{
-			p = editor.vflow.localToScreen(0, editor.vflow.getHeight());
+			p = vflow.localToScreen(0, vflow.getHeight());
 		}
 		
 		// TODO this could be done on mouse released!
