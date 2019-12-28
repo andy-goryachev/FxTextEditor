@@ -46,7 +46,7 @@ public class MainWindow
 			"24"
 		);
 		fontSelector.valueProperty().addListener((s,p,c) -> onFontChange(c));
-
+		
 		mainPane = new MainPane();
 		
 		content = new CPane();
@@ -63,8 +63,11 @@ public class MainWindow
 		bind("SHOW_LINE_NUMBERS", editor().showLineNumbersProperty());
 		bind("TAIL_MODE", tailMode);
 		// TODO
-		//bind("MODEL", modelSelector.valueProperty());
-
+//		bind("MODEL", modelSelector.valueProperty(), AnItem.converter(modelSelector));
+//		bind("FONT_SIZE", fontSelector.valueProperty(), AnItem.converter(fontSelector));
+		// FIX
+		fontSelector.select("12");
+		
 		tailMode.addListener((s,p,c) -> updateModel());
 		updateModel();
 		

@@ -40,8 +40,8 @@ public class VFlow
 	extends CPane
 {
 	private static final double LINE_NUMBERS_BG_OPACITY = 0.1;
-	private static final double CARET_LINE_OPACITY = 0.3;
-	private static final double SELECTION_BACKGROUND_OPACITY = 0.4;
+	private static final double CARET_LINE_OPACITY = 0.1; // FIX 0.3;
+	private static final double SELECTION_BACKGROUND_OPACITY = 0.8; // FIX 0.4;
 	private static final double CELL_BACKGROUND_OPACITY = 0.8;
 	protected final FxTextEditor editor;
 	protected final FxBoolean showCaret = new FxBoolean(true);
@@ -57,7 +57,6 @@ public class VFlow
 	private Font italicFont;
 	private TextMetrics metrics;
 	protected final Text proto = new Text();
-	private Canvas lineNumberCanvas;
 	private GraphicsContext lineNumberGx;
 	private Canvas canvas;
 	private GraphicsContext gx;
@@ -92,9 +91,8 @@ public class VFlow
 		setFocusTraversable(true);
 		
 		FX.onChange(this::handleSizeChange,  widthProperty(), heightProperty());
-		FX.onChange(this::updateLineNumbers, ed.showLineNumbersProperty(), ed.lineNumberFormatterProperty());
 		FX.onChange(this::updateModel, ed.modelProperty());
-		FX.onChange(this::handleLineNumbersChange, ed.showLineNumbersProperty, ed.lineNumberFormatterProperty, ed.modelProperty);
+		FX.onChange(this::updateLineNumbers, ed.showLineNumbersProperty, ed.lineNumberFormatterProperty, ed.modelProperty);
 		FX.onChange(this::updateFont, ed.fontProperty);
 		
 		// TODO clip rect
@@ -132,7 +130,7 @@ public class VFlow
 	{
 		topLine = y;
 		
-		handleLineNumbersChange();
+		updateLineNumbers();
 		invalidate();
 	}
 	
@@ -257,8 +255,9 @@ public class VFlow
 		italicFont = Font.font(font.getFamily(), FontWeight.NORMAL, FontPosture.ITALIC, font.getSize());
 
 		metrics = null;
+		lineNumbersCellCount = -1;
 
-		updateDimensions();
+		updateLineNumbers();
 		invalidate();
 	}
 	
@@ -344,28 +343,6 @@ public class VFlow
 	}
 	
 	
-	protected void updateLineNumbers()
-	{
-		if(editor.isShowLineNumbers())
-		{
-			if(lineNumberCanvas != null)
-			{
-				// TODO check w,h,format
-			}
-			
-			// TODO create canvas, context
-		}
-		else
-		{
-			if(lineNumberCanvas != null)
-			{
-				setLeft(null);
-				lineNumberCanvas = null;
-			}
-		}
-	}
-	
-	
 	protected void updateModel()
 	{
 		invalidate();
@@ -405,7 +382,7 @@ public class VFlow
 	}
 	
 	
-	protected void handleLineNumbersChange()
+	protected void updateLineNumbers()
 	{
 		FxTextEditorModel m = editor.getModel();
 		if(m == null)
@@ -413,12 +390,6 @@ public class VFlow
 			return;
 		}
 		
-		if(buffer == null)
-		{
-			D.print("null buffer?");
-			return; // TODO check this
-		}
-
 		int count;
 		if(editor.isShowLineNumbers())
 		{

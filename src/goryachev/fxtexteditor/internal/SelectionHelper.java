@@ -38,6 +38,7 @@ public class SelectionHelper
 		else if(gix.isEOL())
 		{
 			off = gix.isAtEOL() ? row.getTextLength() : -1;
+			selOff = row.getTextLength();
 		}
 		else if(gix.isEOF())
 		{
@@ -83,7 +84,7 @@ public class SelectionHelper
 			int selectionOffset = (selOff >= 0 ? selOff : off);
 			if(selectionOffset >= 0)
 			{
-				if(ss.contains(line, off))
+				if(ss.contains(line, selectionOffset))
 				{
 					flags |= SELECTED;
 				}

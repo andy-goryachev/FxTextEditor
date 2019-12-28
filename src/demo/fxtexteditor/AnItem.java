@@ -5,6 +5,7 @@ package demo.fxtexteditor;
 /**
  * An Item.
  * TODO enum?
+ * TODO see also Choices, figure out a good way to code UI choice set with persistence
  */
 public class AnItem
 {
