@@ -124,16 +124,10 @@ public class ScreenRow
 			{
 				return glyphOffsets[x];
 			}
-			else if(x == cellCount)
-			{
-				return GlyphIndex.atEOL();
-			}
 			else
 			{
-				return GlyphIndex.EOL;
+				return GlyphIndex.atEOL(x == cellCount);
 			}
-			
-			// TODO eof?
 		}
 		else
 		{
@@ -142,12 +136,16 @@ public class ScreenRow
 				return GlyphIndex.EOF;
 			}
 			
+			int ct = getGlyphCount();
 			int ix = startGlyphIndex.intValue() + x;
-			if(ix > getGlyphCount())
+			if(ix < ct)
 			{
-				return GlyphIndex.EOL;
+				return GlyphIndex.of(ix);
 			}
-			return GlyphIndex.of(ix);
+			else
+			{
+				return GlyphIndex.atEOL(ix == ct);
+			}
 		}
 	}
 	

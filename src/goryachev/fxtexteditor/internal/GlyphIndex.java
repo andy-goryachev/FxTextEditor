@@ -13,7 +13,6 @@ public class GlyphIndex
 	private static final int BOL_INDEX = Integer.MIN_VALUE + 2;
 	
 	public static final GlyphIndex EOF = new GlyphIndex(EOF_INDEX);
-	public static final GlyphIndex EOL = new GlyphIndex(EOL_INDEX); // TODO needs leading char off
 	public static final GlyphIndex BOL = new GlyphIndex(BOL_INDEX);
 	public static final GlyphIndex ZERO = new GlyphIndex(0);
 	
@@ -32,14 +31,14 @@ public class GlyphIndex
 	}
 	
 	
-	public static GlyphIndex atEOL()
+	public static GlyphIndex atEOL(boolean atEOL)
 	{
 		return new GlyphIndex(EOL_INDEX)
 		{
 			@Override
 			public boolean isAtEOL()
 			{
-				return true;
+				return atEOL;
 			}
 		};
 	}
@@ -73,19 +72,19 @@ public class GlyphIndex
 	
 	public boolean isEOF()
 	{
-		return index == EOF.index;
+		return index == EOF_INDEX;
 	}
 	
 	
 	public boolean isEOL()
 	{
-		return index == EOL.index;
+		return index == EOL_INDEX;
 	}
 	
 	
 	public boolean isBOL()
 	{
-		return index == BOL.index;
+		return index == BOL_INDEX;
 	}
 	
 	

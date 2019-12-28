@@ -30,7 +30,7 @@ public class SelectionHelper
 		
 		GlyphIndex gix = row.getGlyphIndex(x);
 		int off;
-		int off2 = -1;
+		int selOff = -1;
 		if(gix.isRegular())
 		{
 			off = row.getCharIndex(gix);
@@ -57,7 +57,7 @@ public class SelectionHelper
 		else if(gix.isInsideTab())
 		{
 			off = gix.getLeadingCharIndex();
-			off2 = gix.getTabCharIndex();
+			selOff = gix.getTabCharIndex();
 		}
 		else
 		{
@@ -80,7 +80,7 @@ public class SelectionHelper
 				}
 			}
 			
-			int selectionOffset = (off2 >= 0 ? off2 : off);
+			int selectionOffset = (selOff >= 0 ? selOff : off);
 			if(selectionOffset >= 0)
 			{
 				if(ss.contains(line, off))
