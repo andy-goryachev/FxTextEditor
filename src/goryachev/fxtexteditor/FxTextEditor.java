@@ -47,6 +47,7 @@ public class FxTextEditor
 	public final FxAction copyAction = new FxAction(this::copy);
 	public final FxAction selectAllAction = new FxAction(this::selectAll);
 	
+	protected final FxObject<Font> fontProperty = new FxObject();
 	protected final FxBoolean editableProperty = new FxBoolean(false);
 	protected final ReadOnlyObjectWrapper<FxTextEditorModel> modelProperty = new ReadOnlyObjectWrapper<>();
 	protected final FxBoolean wrapLinesProperty = new FxBoolean(true);
@@ -135,16 +136,24 @@ public class FxTextEditor
 		new InputHandler(this, vflow, selector);
 	}
 	
+	
+	public Font getFont()
+	{
+		return fontProperty.get();
+	}
+	
 
 	public void setFont(Font f)
 	{
-		vflow.setFont(f);
+		fontProperty.set(f);
 	}
 	
 	
 	public void setFontSize(double size)
 	{
-		vflow.setFontSize(size);
+		Font f = getFont();
+		f = Font.font(f.getFamily(), size);
+		setFont(f);
 	}
 	
 	

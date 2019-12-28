@@ -51,10 +51,12 @@ public class VFlow
 	private Timeline cursorAnimation;
 	private boolean cursorEnabled = true;
 	private boolean cursorOn = true;
-	private Font font; // FIX use editor property
+	private Font font;
 	private Font boldFont;
 	private Font boldItalicFont;
 	private Font italicFont;
+	private TextMetrics metrics;
+	protected final Text proto = new Text();
 	private Canvas lineNumberCanvas;
 	private GraphicsContext lineNumberGx;
 	private Canvas canvas;
@@ -65,8 +67,6 @@ public class VFlow
 	private int lineNumbersBarWidth;
 	private int minLineNumberCellCount = 3; // arbitrary number
 	private int lineNumbersGap = 5; // arbitrary number
-	private TextMetrics metrics;
-	protected final Text proto = new Text();
 	private Color backgroundColor = Color.WHITE; // TODO properties
 	private Color textColor = Color.BLACK;
 	private Color caretColor = Color.BLACK;
@@ -95,6 +95,7 @@ public class VFlow
 		FX.onChange(this::updateLineNumbers, ed.showLineNumbersProperty(), ed.lineNumberFormatterProperty());
 		FX.onChange(this::updateModel, ed.modelProperty());
 		FX.onChange(this::handleLineNumbersChange, ed.showLineNumbersProperty, ed.lineNumberFormatterProperty, ed.modelProperty);
+		FX.onChange(this::updateFont, ed.fontProperty);
 		
 		// TODO clip rect
 		
@@ -243,40 +244,22 @@ public class VFlow
 	}
 	
 	
-	public void setFont(Font f)
+	protected void updateFont()
 	{
-		this.font = f;
-		metrics = null;
-
-		updateFonts();
-		updateDimensions();
-		invalidate();
-	}
-	
-	
-	public void setFontSize(double size)
-	{
-		Font f = Font.font(font.getFamily(), size);
-		setFont(f);
-	}
-	
-	
-	public Font getFont()
-	{
-		if(font == null)
+		Font f = editor.getFont();
+		if(f == null)
 		{
-			font = Font.font("Monospace", 12);
-			updateFonts();
+			f = Font.font("Monospace", 12);
 		}
-		return font;
-	}
-	
-	
-	protected void updateFonts()
-	{
+		font = f; 
 		boldFont = Font.font(font.getFamily(), FontWeight.BOLD, FontPosture.REGULAR, font.getSize());
 		boldItalicFont = Font.font(font.getFamily(), FontWeight.BOLD, FontPosture.ITALIC, font.getSize());
 		italicFont = Font.font(font.getFamily(), FontWeight.NORMAL, FontPosture.ITALIC, font.getSize());
+
+		metrics = null;
+
+		updateDimensions();
+		invalidate();
 	}
 	
 	
@@ -325,16 +308,14 @@ public class VFlow
 	{
 		if(metrics == null)
 		{
-			Font f = getFont();
-			
 			proto.setText("8");
-			proto.setFont(f);
+			proto.setFont(font);
 			
 			Bounds b = proto.getBoundsInLocal();
 			int w = FX.round(b.getWidth());
 			int h = FX.round(b.getHeight());
 			
-			metrics = new TextMetrics(f, b.getMinY(), w, h);
+			metrics = new TextMetrics(font, b.getMinY(), w, h);
 		}
 		return metrics;
 	}
