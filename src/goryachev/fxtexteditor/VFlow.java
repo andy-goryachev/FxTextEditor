@@ -751,19 +751,22 @@ public class VFlow
 		
 		if((y == 0) || (row.getStartGlyphIndex().intValue() == 0))
 		{
-			int num = row.getLineIndex() + 1;
-			String text = editor.getLineNumberFormatter().format(num);
-
-			for(int i=0; i<lineNumbersCellCount; i++)
+			int ix = row.getLineIndex();
+			if((ix >= 0) && (ix <= (editor.getLineCount() + 1)))
 			{
-				String s = charAt(text, i, lineNumbersCellCount);
-				if(s != null)
+				String text = editor.getLineNumberFormatter().format(ix + 1);
+	
+				for(int i=0; i<lineNumbersCellCount; i++)
 				{
-					double cx = i * cw + lineNumbersGap;
-					
-					gx.setFont(font);
-					gx.setFill(fg);
-					gx.fillText(s, cx, cy - tm.baseline, cw);
+					String s = charAt(text, i, lineNumbersCellCount);
+					if(s != null)
+					{
+						double cx = i * cw + lineNumbersGap;
+						
+						gx.setFont(font);
+						gx.setFill(fg);
+						gx.fillText(s, cx, cy - tm.baseline, cw);
+					}
 				}
 			}
 		}

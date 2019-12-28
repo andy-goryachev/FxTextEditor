@@ -1,3 +1,7 @@
 BUGS
 
+
+TODO
 - vertical scrolling in wrapped mode
+- scroll bar thunb size
+- mouse wheel scrolling
