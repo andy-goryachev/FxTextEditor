@@ -225,7 +225,7 @@ public class ScreenRow
 	}
 	
 	
-	public GlyphIndex getStartOffset()
+	public GlyphIndex getStartGlyphIndex()
 	{
 		return startGlyphIndex;
 	}
@@ -333,15 +333,5 @@ public class ScreenRow
 	public void setCaretLine(boolean on)
 	{
 		caretLine = on;
-	}
-
-
-	public int getDisplayLineNumber()
-	{
-		if(startGlyphIndex.intValue() == 0)
-		{
-			return lineIndex;
-		}
-		return -1;
 	}
 }

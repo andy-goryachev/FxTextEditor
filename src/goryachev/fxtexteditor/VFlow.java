@@ -775,9 +775,9 @@ public class VFlow
 		
 		gx.fillRect(0, cy, cw * lineNumbersCellCount + lineNumbersGap + lineNumbersGap, ch);
 		
-		int num = row.getDisplayLineNumber();
-		if(num > 0)
+		if((y == 0) || (row.getStartGlyphIndex().intValue() == 0))
 		{
+			int num = row.getLineIndex() + 1;
 			String text = editor.getLineNumberFormatter().format(num);
 
 			for(int i=0; i<lineNumbersCellCount; i++)
