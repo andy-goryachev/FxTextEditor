@@ -34,17 +34,17 @@ import javafx.util.Duration;
 
 
 /**
- * Paints the text on canvas. 
+ * Visual flow container lays out cells inside the screen buffer and paints the canvas. 
  */
 public class VFlow
 	extends CPane
 {
 	private static final double LINE_NUMBERS_BG_OPACITY = 0.1;
-	private static final double CARET_LINE_OPACITY = 0.1; // FIX 0.3;
-	private static final double SELECTION_BACKGROUND_OPACITY = 0.8; // FIX 0.4;
+	private static final double CARET_LINE_OPACITY = 0.3;
+	private static final double SELECTION_BACKGROUND_OPACITY = 0.4;
 	private static final double CELL_BACKGROUND_OPACITY = 0.8;
 	protected final FxTextEditor editor;
-	protected final FxBoolean showCaret = new FxBoolean(true);
+	protected final FxBoolean caretEnabledProperty = new FxBoolean(true);
 	protected final FxBoolean suppressBlink = new FxBoolean(false);
 	protected final BooleanExpression paintCaret;
 	protected final ScreenBuffer buffer = new ScreenBuffer(this);
@@ -66,7 +66,6 @@ public class VFlow
 	private int lineNumbersBarWidth;
 	private int minLineNumberCellCount = 3; // arbitrary number
 	private int lineNumbersGap = 5; // arbitrary number
-	private Color backgroundColor = Color.WHITE; // TODO properties
 	private Color textColor = Color.BLACK;
 	private Color caretColor = Color.BLACK;
 	private int topLine;
@@ -90,6 +89,7 @@ public class VFlow
 		
 		setFocusTraversable(true);
 		
+		FX.onChange(this::repaint, ed.backgroundColorProperty());
 		FX.onChange(this::handleSizeChange,  widthProperty(), heightProperty());
 		FX.onChange(this::updateModel, ed.modelProperty());
 		FX.onChange(this::updateLineNumbers, ed.showLineNumbersProperty, ed.lineNumberFormatterProperty, ed.modelProperty);
@@ -97,11 +97,11 @@ public class VFlow
 		
 		// TODO clip rect
 		
-		paintCaret = new FxBooleanBinding(showCaret, editor.displayCaretProperty, editor.focusedProperty(), editor.disabledProperty(), suppressBlink)
+		paintCaret = new FxBooleanBinding(caretEnabledProperty, editor.displayCaretProperty, editor.focusedProperty(), editor.disabledProperty(), suppressBlink)
 		{
 			protected boolean computeValue()
 			{
-				return (isShowCaret() || suppressBlink.get()) && editor.isDisplayCaret() && editor.isFocused() && (!editor.isDisabled());
+				return (caretEnabledProperty.get() || suppressBlink.get()) && editor.isDisplayCaret() && editor.isFocused() && (!editor.isDisabled());
 			}
 		};
 		paintCaret.addListener((s,p,c) -> refreshCursor());
@@ -221,24 +221,11 @@ public class VFlow
 		cursorAnimation.stop();
 		cursorAnimation.getKeyFrames().setAll
 		(
-			new KeyFrame(Duration.ZERO, (ev) -> setShowCaret(true)),
-			new KeyFrame(d, (ev) -> setShowCaret(false)),
+			new KeyFrame(Duration.ZERO, (ev) -> caretEnabledProperty.set(true)),
+			new KeyFrame(d, (ev) -> caretEnabledProperty.set(false)),
 			new KeyFrame(period)
 		);
 		cursorAnimation.play();
-	}
-	
-	
-	/** used for blinking animation */
-	protected void setShowCaret(boolean on)
-	{
-		showCaret.set(on);
-	}
-	
-	
-	public boolean isShowCaret()
-	{
-		return showCaret.get();
 	}
 	
 	
@@ -259,19 +246,6 @@ public class VFlow
 
 		updateLineNumbers();
 		invalidate();
-	}
-	
-	
-	public void setBackgroundColor(Color c)
-	{
-		backgroundColor = c;
-		repaint();
-	}
-	
-	
-	public Color getBackgroundColor()
-	{
-		return backgroundColor;
 	}
 	
 	
@@ -522,7 +496,7 @@ public class VFlow
 	
 	protected Color backgroundColor(boolean caretLine, boolean selected, Color cellBG)
 	{
-		Color c = getBackgroundColor();
+		Color c = editor.getBackgroundColor();
 		
 		if(caretLine)
 		{
@@ -545,7 +519,7 @@ public class VFlow
 	
 	protected Color lineNumberBackgroundColor(boolean caretLine)
 	{
-		Color c = getBackgroundColor();
+		Color c = editor.getBackgroundColor();
 		
 		if(caretLine)
 		{

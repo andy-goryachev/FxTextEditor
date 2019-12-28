@@ -47,6 +47,7 @@ public class FxTextEditor
 	public final FxAction copyAction = new FxAction(this::copy);
 	public final FxAction selectAllAction = new FxAction(this::selectAll);
 	
+	protected final FxObject<Color> backgroundColorProperty = new FxObject(Color.WHITE);
 	protected final FxObject<Font> fontProperty = new FxObject();
 	protected final FxBoolean editableProperty = new FxBoolean(false);
 	protected final ReadOnlyObjectWrapper<FxTextEditorModel> modelProperty = new ReadOnlyObjectWrapper<>();
@@ -893,5 +894,23 @@ public class FxTextEditor
 	public boolean isSelected(int line, int pos)
 	{
 		return selector.isSelected(line, pos);
+	}
+	
+	
+	public void setBackgroundColor(Color c)
+	{
+		backgroundColorProperty.set(c);
+	}
+	
+	
+	public Color getBackgroundColor()
+	{
+		return backgroundColorProperty.get();
+	}
+	
+	
+	public FxObject<Color> backgroundColorProperty()
+	{
+		return backgroundColorProperty;
 	}
 }
