@@ -51,7 +51,7 @@ public class VFlow
 	private Timeline cursorAnimation;
 	private boolean cursorEnabled = true;
 	private boolean cursorOn = true;
-	private Font font;
+	private Font font; // FIX use editor property
 	private Font boldFont;
 	private Font boldItalicFont;
 	private Font italicFont;
@@ -246,8 +246,18 @@ public class VFlow
 	public void setFont(Font f)
 	{
 		this.font = f;
-		updateFonts();
 		metrics = null;
+
+		updateFonts();
+		updateDimensions();
+		invalidate();
+	}
+	
+	
+	public void setFontSize(double size)
+	{
+		Font f = Font.font(font.getFamily(), size);
+		setFont(f);
 	}
 	
 	

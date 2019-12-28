@@ -142,6 +142,12 @@ public class FxTextEditor
 	}
 	
 	
+	public void setFontSize(double size)
+	{
+		vflow.setFontSize(size);
+	}
+	
+	
 	public ScrollBar getVerticalScrollBar()
 	{
 		return vscroll;

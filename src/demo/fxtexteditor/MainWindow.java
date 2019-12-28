@@ -1,5 +1,6 @@
 // Copyright © 2017-2019 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
+import goryachev.common.util.Parsers;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxAction;
@@ -28,25 +29,28 @@ public class MainWindow
 	public final CPane content;
 	protected FxBoolean tailMode = new FxBoolean();
 	protected final FxComboBox modelSelector = new FxComboBox();
+	protected final FxComboBox fontSelector = new FxComboBox();
 	
 	public MainWindow()
 	{
 		super("MainWindow");
 		
-		modelSelector.getItems().addAll((Object[])DemoText.getAll());
+		modelSelector.setValues((Object[])DemoText.getAll());
 		modelSelector.valueProperty().addListener((s,p,c) -> onModelSelectionChange(c));
+		
+		fontSelector.setValues
+		(
+			"9",
+			"12",
+			"18",
+			"24"
+		);
+		fontSelector.valueProperty().addListener((s,p,c) -> onFontChange(c));
 
 		mainPane = new MainPane();
 		
-		FxToolBar tb = new FxToolBar();
-		tb.toggleButton("wrap", editor().wrapLinesProperty());
-		tb.toggleButton("line numbers", editor().showLineNumbersProperty());
-		tb.fill();
-		tb.add(new Label("Model:"));
-		tb.add(modelSelector);
-		
 		content = new CPane();
-		content.setTop(tb);
+		content.setTop(createToolbar());
 		content.setCenter(mainPane);
 		
 		setTitle("FxTextEditor");
@@ -166,6 +170,20 @@ public class MainWindow
 	}
 	
 	
+	protected Node createToolbar()
+	{
+		FxToolBar t = new FxToolBar();
+		t.toggleButton("wrap", editor().wrapLinesProperty());
+		t.toggleButton("line numbers", editor().showLineNumbersProperty());
+		t.fill();
+		t.add(new Label("Font:"));
+		t.add(fontSelector);
+		t.add(new Label("Model:"));
+		t.add(modelSelector);
+		return t;
+	}
+	
+	
 	protected void preferences()
 	{
 	}
@@ -183,5 +201,12 @@ public class MainWindow
 	{
 		FxTextEditorModel m = DemoText.getModel(x);
 		mainPane.setModel(m);
+	}
+	
+	
+	protected void onFontChange(Object x)
+	{
+		int sz = Parsers.parseInt(x, 12);
+		mainPane.editor.setFontSize(sz);
 	}
 }
