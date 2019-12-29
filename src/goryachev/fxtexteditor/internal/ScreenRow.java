@@ -239,9 +239,14 @@ public class ScreenRow
 	}
 
 
-	public void updateStyle(int x, CellStyles style)
+	public void updateStyle(CellStyles styles, int cellIndex)
 	{
-		fline.updateStyle(x, style);
+		GlyphIndex glyphIndex = getGlyphIndex(cellIndex);
+		int off = glyphIndex.intValue();
+		if(off >= 0)
+		{
+			fline.updateStyle(styles, off);
+		}
 	}
 
 

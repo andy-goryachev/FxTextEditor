@@ -88,11 +88,11 @@ public class FlowLine
 	}
 	
 	
-	public void updateStyle(int x, CellStyles style)
+	public void updateStyle(CellStyles styles, int charOffset)
 	{
 		if(tline != null)
 		{
-			tline.updateStyle(x, style);
+			tline.updateStyles(styles, charOffset);
 		}
 	}
 

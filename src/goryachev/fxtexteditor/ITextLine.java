@@ -30,9 +30,6 @@ public interface ITextLine
 	public int getTextLength();
 
 
-	/**
-	 * updates cell styles.
-	 * FIX offset needs to be glyph index, currently not.
-	 */
-	public void updateStyle(int offset, CellStyles styles);
+	/** sets cell styles at the given char index */
+	public void updateStyles(CellStyles styles, int charOffset);
 }

@@ -34,7 +34,7 @@ public class DemoTextLine
 //	}
 	
 
-	public void updateStyle(int off, CellStyles styles)
+	public void updateStyles(CellStyles styles, int off)
 	{
 		// TODO syntax
 		styles.update

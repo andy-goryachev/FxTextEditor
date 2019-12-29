@@ -73,7 +73,7 @@ public class VFlow
 	private boolean screenBufferValid;
 	private boolean repaintRequested;
 	protected final FlowLineCache cache;
-	protected final CellStyles cell = new CellStyles();
+	protected final CellStyles styles = new CellStyles();
 	protected final SelectionHelper selectionHelper = new SelectionHelper();
 	
 	
@@ -838,11 +838,10 @@ public class VFlow
 		boolean selected = SelectionHelper.isSelected(flags);
 		
 		// style
-		// TODO need to get glyph index here
-		row.updateStyle(x, cell);
+		row.updateStyle(styles, x);
 		
 		// background
-		Color bg = backgroundColor(caretLine, selected, cell.getBackgroundColor());
+		Color bg = backgroundColor(caretLine, selected, styles.getBackgroundColor());
 		gx.setFill(bg);
 		gx.fillRect(cx, cy, cw, ch);
 		
@@ -861,13 +860,13 @@ public class VFlow
 		String text = row.getCellText(x);
 		if(text != null)
 		{
-			Color fg = cell.getTextColor();
+			Color fg = styles.getTextColor();
 			if(fg == null)
 			{
 				fg = getTextColor();
 			}
 			
-			Font f = getFont(cell);
+			Font f = getFont(styles);
 			gx.setFont(f);
 			gx.setFill(fg);
 			gx.fillText(text, cx, cy - tm.baseline, cw);
