@@ -29,6 +29,7 @@ public class WrappingReflowHelper
 		GlyphIndex glyphIndex = GlyphIndex.ZERO;
 		int tabDistance = 0;
 		boolean complex = false;
+		boolean bol = true;
 		
 		while(y < ymax)
 		{
@@ -45,6 +46,7 @@ public class WrappingReflowHelper
 				}
 				
 				cellIndex = 0;
+				bol = true;
 				glyphIndex = GlyphIndex.ZERO;
 				startGlyphIndex = GlyphIndex.ZERO;
 			}
@@ -64,7 +66,7 @@ public class WrappingReflowHelper
 			
 			if(x == 0)
 			{
-				r.initLine(fline, lineIndex, modelLineCount);
+				r.initLine(fline, lineIndex, modelLineCount, bol);
 				r.setStartGlyphIndex(startGlyphIndex);
 				FxTextEditorModel m = flow.getEditor().getModel();
 				int mx = m == null ? 0 : m.getLineCount();
@@ -84,6 +86,7 @@ public class WrappingReflowHelper
 					r = null;
 					x = 0;
 					y++;
+					bol = false;
 				}
 				else
 				{

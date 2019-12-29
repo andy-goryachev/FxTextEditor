@@ -34,7 +34,7 @@ public class NonWrappingReflowHelper
 				}
 			}
 
-			r.initLine(fline, lineIndex, modelLineCount);
+			r.initLine(fline, lineIndex, modelLineCount, true);
 			r.setComplex(complex);
 			r.setAppendModelIndex(-1);
 			

@@ -20,6 +20,7 @@ public class ScreenRow
 	private FlowLine fline = FlowLine.BLANK;
 	private int lineIndex;
 	private boolean eof;
+	private boolean bol;
 	private GlyphIndex startGlyphIndex;
 	private GlyphIndex[] glyphOffsets;
 	private byte[] flags;
@@ -46,7 +47,7 @@ public class ScreenRow
 	}
 	
 	
-	public void initLine(FlowLine f, int lineIndex,int modelLineCount)
+	public void initLine(FlowLine f, int lineIndex, int modelLineCount, boolean bol)
 	{
 		if(f == null)
 		{
@@ -56,6 +57,7 @@ public class ScreenRow
 		this.fline = f;
 		this.lineIndex = (lineIndex <= modelLineCount ? lineIndex : -1);
 		this.eof = (lineIndex >= modelLineCount);
+		this.bol = bol;
 	}
 	
 	
@@ -68,6 +70,12 @@ public class ScreenRow
 	public boolean isEOF()
 	{
 		return eof;
+	}
+	
+	
+	public boolean isBOL()
+	{
+		return bol;
 	}
 	
 	

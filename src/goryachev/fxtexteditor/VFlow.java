@@ -771,7 +771,7 @@ public class VFlow
 		
 		gx.fillRect(0, cy, cw * lineNumbersCellCount + lineNumbersGap + lineNumbersGap, ch);
 		
-		if((y == 0) || (row.getStartGlyphIndex().intValue() == 0))
+		if((y == 0) || row.isBOL())
 		{
 			int ix = row.getLineIndex();
 			if((ix >= 0) && (ix <= (editor.getLineCount() + 1)))
