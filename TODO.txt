@@ -1,8 +1,0 @@
-TODO
-
-- line numbers
-- vertical scrolling
-- mouse wheel
-- sub-cell horizontal scrolling
-- sub-cell vertical scrolling
-- repaint damaged areas only

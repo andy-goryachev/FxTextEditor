@@ -1,4 +1,0 @@
-DEPENDENCIES
-
-icu4j
-	https://mvnrepository.com/artifact/com.ibm.icu/icu4j
