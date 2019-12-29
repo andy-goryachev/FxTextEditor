@@ -10,7 +10,9 @@
 	
 	<!-- libraries -->
 	<path id="libs">
+		<!--
 		<pathelement location="lib/icu4j/icu4j-64.2.jar" />
+		-->
 	</path>
 
 
