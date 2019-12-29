@@ -353,12 +353,6 @@ public class FxTextEditor
 	}
 	
 	
-	protected void setTopCellIndex(int cellIndex)
-	{
-		vflow.setTopCellIndex(cellIndex);
-	}
-	
-	
 	protected void handleWrapChange()
 	{
 		requestLayout();
@@ -738,7 +732,7 @@ public class FxTextEditor
 				int fr = Math.max(0, max - vis);
 				
 				int off = FX.round(fr * val);
-				setTopCellIndex(off);
+				vflow.setTopCellIndex(off);
 			}
 		}
 	}
