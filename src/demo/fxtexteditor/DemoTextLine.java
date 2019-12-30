@@ -1,5 +1,6 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
+import goryachev.common.util.CKit;
 import goryachev.fxtexteditor.CellStyles;
 import goryachev.fxtexteditor.PlainTextLine;
 
@@ -10,41 +11,42 @@ import goryachev.fxtexteditor.PlainTextLine;
 public class DemoTextLine
 	extends PlainTextLine
 {
+	private TextAttributes attributes;
+	private static TextAttributes NONE = new TextAttributes(0);
+	
+	
 	public DemoTextLine(String text, int line)
 	{
 		super(line, text);
 	}
 
 
-	// TODO
-//	public TextDecor getTextDecor(int line, String text, TextDecor d)
-//	{
-//		if(line < getLineCount())
-//		{
-//			for(Segment seg: new DemoSyntax(text).generateSegments())
-//			{
-//				d.setTextColor(seg.textColor);
-//				d.setBackground(seg.backgroundColor);
-//				d.setBold(seg.bold);
-//				d.addSegment(seg.text.length());	
-//			}
-//			return d;
-//		}
-//		return null;
-//	}
-	
-
 	public void updateStyles(CellStyles styles, int off)
 	{
-		// TODO syntax
-		styles.update
-		(
-			null,
-			null,
-			false,
-			false, 
-			false,
-			false
-		);
+		if(attributes == null)
+		{
+			String text = getPlainText();
+			attributes = applySyntax(text); 
+		}
+		
+		attributes.update(styles, off);
+	}
+	
+	
+	protected TextAttributes applySyntax(String text)
+	{
+		if(CKit.isBlank(text))
+		{
+			return NONE;
+		}
+		
+		TextAttributes a = new TextAttributes(text.length());
+		int start = 0;
+		for(Segment seg: new DemoSyntax(text).generateSegments())
+		{
+			a.addSegment(start, seg);
+			start += seg.length();
+		}
+		return a;
 	}
 }

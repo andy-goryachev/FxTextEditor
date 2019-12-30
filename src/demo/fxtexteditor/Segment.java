@@ -21,4 +21,10 @@ public class Segment
 		this.backgroundColor = bg;
 		this.bold = bold;
 	}
+
+
+	public int length()
+	{
+		return text.length();
+	}
 }

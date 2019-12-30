@@ -10,7 +10,7 @@ import demo.fxtexteditor.DemoTextEditorModel;
 /**
  * Demo Text Models.
  */
-public class DemoText
+public class DemoModels
 {
 	public static final AnItem NO_TABS_NO_UNICODE = new AnItem("NO_TABS_NO_UNICODE", "No Tabs, No Unicode");
 	public static final AnItem TABS_NO_UNICODE = new AnItem("TABS_NO_UNICODE", "Tabs, No Unicode");
@@ -59,7 +59,7 @@ public class DemoText
 		}
 		else if(x == JAVA)
 		{
-			return toSimpleModel(loadResource("CKit.java.txt"));
+			return new DemoTextEditorModel(loadResource("CKit.java.txt"));
 		}
 		else if(x == LONG_LINES)
 		{
@@ -81,7 +81,7 @@ public class DemoText
 
 	protected static String loadResource(String name)
 	{
-		return CKit.readStringQuiet(DemoText.class, name);
+		return CKit.readStringQuiet(DemoModels.class, name);
 	}
 	
 	

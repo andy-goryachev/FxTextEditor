@@ -24,6 +24,13 @@ public class DemoTextEditorModel
 	}
 	
 	
+	public DemoTextEditorModel(String text)
+	{
+		lines = CKit.split(text, '\n');
+		this.lineCount = lines.length;
+	}
+	
+	
 	public LoadInfo getLoadInfo()
 	{
 		return null;

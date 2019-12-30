@@ -13,7 +13,7 @@ import goryachev.fx.FxToolBar;
 import goryachev.fx.FxWindow;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.FxTextEditorModel;
-import demo.fxtexteditor.res.DemoText;
+import demo.fxtexteditor.res.DemoModels;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 
@@ -35,7 +35,7 @@ public class MainWindow
 	{
 		super("MainWindow");
 		
-		modelSelector.setValues((Object[])DemoText.getAll());
+		modelSelector.setValues((Object[])DemoModels.getAll());
 		modelSelector.valueProperty().addListener((s,p,c) -> onModelSelectionChange(c));
 		
 		fontSelector.setValues
@@ -76,7 +76,7 @@ public class MainWindow
 		// debug
 		FxDump.attach(this);
 		
-		FX.later(() -> modelSelector.select(DemoText.TABS_NO_UNICODE));
+		FX.later(() -> modelSelector.select(DemoModels.TABS_NO_UNICODE));
 	}
 	
 	
@@ -202,7 +202,7 @@ public class MainWindow
 	
 	protected void onModelSelectionChange(Object x)
 	{
-		FxTextEditorModel m = DemoText.getModel(x);
+		FxTextEditorModel m = DemoModels.getModel(x);
 		mainPane.setModel(m);
 	}
 	
