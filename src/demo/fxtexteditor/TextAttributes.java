@@ -41,15 +41,15 @@ public class TextAttributes
 	}
 
 
-	public void update(CellStyles styles, int off)
+	public void update(CellStyles styles, int charIndex)
 	{
-		if(off < size())
+		if(charIndex < size())
 		{
 			styles.update
 			(
-				bg[off], 
-				fg[off],
-				bold.get(off),
+				bg[charIndex], 
+				fg[charIndex],
+				bold.get(charIndex),
 				false, // italic
 				false, // strikeThrough
 				false  // s.underscore

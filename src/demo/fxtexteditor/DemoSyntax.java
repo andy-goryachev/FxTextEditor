@@ -14,8 +14,8 @@ public class DemoSyntax
 	private final CList<Segment> segments = new CList();
 	private int start;
 	private Color color = Color.BLACK;
-	private Color bg = null;
-	private boolean bold;
+	private Color bg;
+	private boolean bold; // means nothing, random logic
 	
 	
 	public DemoSyntax(String text)
