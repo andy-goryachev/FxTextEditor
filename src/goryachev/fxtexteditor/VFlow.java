@@ -69,6 +69,7 @@ public class VFlow
 	private Color textColor = Color.BLACK;
 	private Color caretColor = Color.BLACK;
 	private int topLine;
+	private GlyphIndex topGlyphIndex = GlyphIndex.ZERO;
 	private int topCellIndex;
 	private boolean screenBufferValid;
 	private boolean repaintRequested;
@@ -126,9 +127,16 @@ public class VFlow
 	}
 	
 	
-	public void setTopLine(int y)
+	public GlyphIndex getTopGlyphIndex()
 	{
-		topLine = y;
+		return topGlyphIndex;
+	}
+	
+	
+	public void setOrigin(int top, GlyphIndex ix)
+	{
+		topLine = top;
+		topGlyphIndex = ix;
 		
 		updateLineNumbers();
 		invalidate();
@@ -142,6 +150,7 @@ public class VFlow
 	}
 	
 	
+	/** meaningful only in non-wrapped mode */
 	public void setTopCellIndex(int ix)
 	{
 		topCellIndex = ix;
@@ -149,29 +158,13 @@ public class VFlow
 	}
 	
 	
-	public void setOrigin(int top, double offy)
-	{
-		topLine = top;
-		// FIX
-//		offsety = offy;
-		
-//		layoutChildren();
-		
-		// TODO
-//		updateVerticalScrollBar();
-		
-		invalidate();
-		repaint();
-	}
-	
-	
-	public int getVisibleColumnCount()
+	public int getScreenColumnCount()
 	{
 		return columnCount;
 	}
 	
 	
-	public int getVisibleLineCount()
+	public int getScreenRowCount()
 	{
 		return rowCount;
 	}
@@ -600,8 +593,8 @@ public class VFlow
 	protected void reflow()
 	{
 		boolean wrap = editor.isWrapLines();
-		int bufferWidth = getVisibleColumnCount() + 1;
-		int bufferHeight = getVisibleLineCount() + 1;
+		int bufferWidth = getScreenColumnCount() + 1;
+		int bufferHeight = getScreenRowCount() + 1;
 		
 		buffer.setSize(bufferWidth, bufferHeight);
 		
@@ -609,7 +602,7 @@ public class VFlow
 		
 		if(wrap)
 		{
-			WrappingReflowHelper.reflow(this, buffer, getVisibleColumnCount(), bufferHeight, tabPolicy);
+			WrappingReflowHelper.reflow(this, buffer, getScreenColumnCount(), bufferHeight, tabPolicy);
 		}
 		else
 		{
@@ -630,7 +623,7 @@ public class VFlow
 			{
 				return false;
 			}
-			else if(startLine > (topLine + getVisibleLineCount()))
+			else if(startLine > (topLine + getScreenRowCount()))
 			{
 				return false;
 			}
@@ -669,7 +662,7 @@ public class VFlow
 		else
 		{
 			max = model.getLineCount();
-			visible = getVisibleLineCount();
+			visible = getScreenRowCount();
 			val = topLine; //(max - visible);
 		}
 		

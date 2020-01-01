@@ -9,8 +9,10 @@ import goryachev.fx.FxBoolean;
 import goryachev.fx.FxFormatter;
 import goryachev.fx.FxObject;
 import goryachev.fx.XScrollBar;
+import goryachev.fxtexteditor.internal.GlyphIndex;
 import goryachev.fxtexteditor.internal.InputHandler;
 import goryachev.fxtexteditor.internal.Markers;
+import goryachev.fxtexteditor.internal.VerticalScrollHelper;
 import goryachev.fxtexteditor.internal.TabPolicy;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -347,12 +349,6 @@ public class FxTextEditor
 	}
 	
 	
-	protected void setTopLine(int ix)
-	{
-		vflow.setTopLine(ix);
-	}
-	
-	
 	protected void handleWrapChange()
 	{
 		requestLayout();
@@ -679,15 +675,6 @@ public class FxTextEditor
 		selector.commitSelection();
 	}
 	
-	
-	public void setOrigin(int row)
-	{
-		if((row >= 0) && (row < getLineCount()))
-		{
-			vflow.setOrigin(row, 0);
-		}
-	}
-	
 
 	// TODO
 //	public void scrollToVisible(int row)
@@ -743,43 +730,23 @@ public class FxTextEditor
 		if(handleScrollEvents)
 		{
 			int lineCount = getLineCount();
-			int vis = vflow.getVisibleLineCount();
-
-			if(isWrapLines())
-			{
-				// TODO
-//				int threshold = 200;
-//				
-//				if(lineCount < threshold)
-//				{
-//					// compute all
-//					FlowHelper helper = createFlowHelper(0, lineCount);
-//					int max = Math.max(0, helper.getRowCount() + 1 - vis);
-//					int ix = FX.round(max * val);
-//					int top = helper.getLineAt(ix);
-//					int off = helper.getOffsetAt(ix);
-//					setTopLine(top);
-//					setTopOffset(off);
-//					return;
-//				}
-//				else if(((1 - val) * lineCount) < threshold)
-//				{
-//					// compute tail
-//					int start = lineCount - threshold;
-//					FlowHelper helper = createFlowHelper(start, threshold);
-//					int max = start + helper.getRowCount() + 1 - vis;
-//					int ix = FX.round(max * val) - start;
-//					int top = helper.getLineAt(ix);
-//					int off = helper.getOffsetAt(ix);
-//					setTopLine(top);
-//					setTopOffset(off);
-//					return;
-//				}
-			}
+			int vis = vflow.getScreenRowCount();
 			
 			int max = Math.max(0, lineCount + 1 - vis);
 			int top = FX.round(max * val);
-			setTopLine(top);
+			GlyphIndex gix = GlyphIndex.ZERO;
+
+			if(isWrapLines())
+			{
+				int frameSize = 2 * Math.max(100, vflow.getScreenRowCount());
+				VerticalScrollHelper h = new VerticalScrollHelper(vflow, frameSize, max, top, val);
+				h.process();
+				
+				top = h.getNewTopLine();
+				gix = h.getNewGlyphIndex();
+			}
+			
+			vflow.setOrigin(top, gix);
 		}
 	}
 	
