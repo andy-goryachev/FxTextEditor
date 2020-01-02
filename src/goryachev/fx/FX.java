@@ -551,27 +551,6 @@ public final class FX
 	}
 	
 	
-	/** rounds a double value to int */
-	public static int round(double x)
-	{
-		return (int)Math.round(x);
-	}
-	
-	
-	/** returns int ceiling of a double value */
-	public static int ceil(double x)
-	{
-		return (int)Math.ceil(x);
-	}
-	
-	
-	/** returns int floor of a double value */
-	public static int floor(double x)
-	{
-		return (int)Math.floor(x);
-	}
-	
-	
 	/** shortcut for Platform.runLater() */
 	public static void later(Runnable r)
 	{

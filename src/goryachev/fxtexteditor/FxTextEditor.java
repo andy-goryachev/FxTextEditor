@@ -1,5 +1,6 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
+import goryachev.common.util.CKit;
 import goryachev.common.util.D;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
@@ -12,8 +13,8 @@ import goryachev.fx.XScrollBar;
 import goryachev.fxtexteditor.internal.GlyphIndex;
 import goryachev.fxtexteditor.internal.InputHandler;
 import goryachev.fxtexteditor.internal.Markers;
-import goryachev.fxtexteditor.internal.VerticalScrollHelper;
 import goryachev.fxtexteditor.internal.TabPolicy;
+import goryachev.fxtexteditor.internal.VerticalScrollHelper;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.function.BiConsumer;
@@ -718,7 +719,7 @@ public class FxTextEditor
 				int vis = vflow.getMaxColumnCount();
 				int fr = Math.max(0, max - vis);
 				
-				int off = FX.round(fr * val);
+				int off = CKit.round(fr * val);
 				vflow.setTopCellIndex(off);
 			}
 		}
@@ -733,7 +734,7 @@ public class FxTextEditor
 			int vis = vflow.getScreenRowCount();
 			
 			int max = Math.max(0, lineCount + 1 - vis);
-			int top = FX.round(max * val);
+			int top = CKit.round(max * val);
 			GlyphIndex gix = GlyphIndex.ZERO;
 
 			if(isWrapLines())

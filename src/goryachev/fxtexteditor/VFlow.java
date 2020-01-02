@@ -278,8 +278,8 @@ public class VFlow
 			proto.setFont(font);
 			
 			Bounds b = proto.getBoundsInLocal();
-			int w = FX.round(b.getWidth());
-			int h = FX.round(b.getHeight());
+			int w = CKit.round(b.getWidth());
+			int h = CKit.round(b.getHeight());
 			
 			metrics = new TextMetrics(font, b.getMinY(), w, h);
 		}
@@ -497,8 +497,8 @@ public class VFlow
 		}
 		double sy = p.getY();
 		
-		int x = FX.round(sx / m.cellWidth);
-		int y = FX.floor(sy / m.cellHeight);
+		int x = CKit.round(sx / m.cellWidth);
+		int y = CKit.floor(sy / m.cellHeight);
 		TextPos pos = buffer().getInsertPosition(x, y);
 		if(pos == null)
 		{
