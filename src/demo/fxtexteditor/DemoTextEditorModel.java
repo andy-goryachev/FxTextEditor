@@ -1,4 +1,4 @@
-// Copyright © 2019 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
 import goryachev.common.util.CKit;
 import goryachev.fxtexteditor.Edit;
