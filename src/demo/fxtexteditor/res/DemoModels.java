@@ -1,8 +1,11 @@
 // Copyright © 2019 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor.res;
 import goryachev.common.util.CKit;
+import goryachev.common.util.CList;
+import goryachev.common.util.SB;
 import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.InMemoryPlainTextEditorModel;
+import java.text.DecimalFormat;
 import demo.fxtexteditor.AnItem;
 import demo.fxtexteditor.DemoTextEditorModel;
 
@@ -63,8 +66,7 @@ public class DemoModels
 		}
 		else if(x == LONG_LINES)
 		{
-			String text = loadResource("million.txt");
-			return toSimpleModel(text);
+			return makeLongLinesModel();
 		}
 		else if(x == BILLION_LINES)
 		{
@@ -85,9 +87,35 @@ public class DemoModels
 	}
 	
 	
-	protected static InMemoryPlainTextEditorModel toSimpleModel(String text)
+	protected static FxTextEditorModel toSimpleModel(String text)
 	{
 		String[] lines = CKit.split(text, '\n');
 		return new InMemoryPlainTextEditorModel(lines);
+	}
+	
+	
+	protected static FxTextEditorModel makeLongLinesModel()
+	{
+		DecimalFormat f = new DecimalFormat("#,##0");
+		
+		int len = 100;
+		int sz = 1_000_000 / len;
+		SB sb = new SB(1_000_010);
+		
+		for(int i=0; i<sz; i++)
+		{
+			String s = f.format(i * len);
+			sb.a(s);
+			sb.repeat('.', len - s.length());
+		}
+		String longLines = sb.toString();
+		
+		CList<String> a = new CList();
+		for(int i=0; i<1; i++)
+		{
+			a.add(f.format(i));
+			a.add(longLines);
+		}
+		return new InMemoryPlainTextEditorModel(CKit.toArray(a));
 	}
 }
