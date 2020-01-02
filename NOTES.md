@@ -1,8 +1,9 @@
 # BUGS
 
+- vertical scrolling in wrapped mode: last line?
+
 
 # TODO
 
-- vertical scrolling in wrapped mode
 - vertical scroll bar thumb size
 - mouse wheel scrolling

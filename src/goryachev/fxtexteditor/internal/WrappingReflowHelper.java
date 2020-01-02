@@ -19,7 +19,8 @@ public class WrappingReflowHelper
 	public static void reflow(VFlow flow, ScreenBuffer buffer, int xmax, int ymax, ITabPolicy tabPolicy)
 	{
 		int lineIndex = flow.getTopLine();
-		GlyphIndex startGlyphIndex = flow.getTopGlyphIndex(); 
+		GlyphIndex startGlyphIndex = flow.getTopGlyphIndex(); // FIX gets overwritten
+		boolean useStartGlyphIndex = true;
 			
 		int modelLineCount = flow.getModelLineCount();
 		int cellIndex = 0;
@@ -49,8 +50,16 @@ public class WrappingReflowHelper
 				
 				cellIndex = 0;
 				bol = true;
-				glyphIndex = GlyphIndex.ZERO;
-				startGlyphIndex = GlyphIndex.ZERO;
+				if(useStartGlyphIndex)
+				{
+					glyphIndex = startGlyphIndex;
+					useStartGlyphIndex = false;
+				}
+				else
+				{
+					glyphIndex = GlyphIndex.ZERO;
+					startGlyphIndex = GlyphIndex.ZERO;
+				}
 			}
 			
 			if(r == null)
