@@ -186,6 +186,11 @@ public class WrappingReflowHelper
 	public static int computeBreaks(VerticalScrollHelper helper, ITabPolicy tabPolicy, FlowLine fline, int xmax)
 	{
 		int lineIndex = fline.getModelIndex();
+		if(lineIndex < 0)
+		{
+			return 0;
+		}
+		
 		int cellIndex = 0;
 		int x = 0;
 		GlyphIndex startGlyphIndex = GlyphIndex.ZERO;
