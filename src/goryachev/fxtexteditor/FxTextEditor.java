@@ -676,6 +676,22 @@ public class FxTextEditor
 		selector.commitSelection();
 	}
 	
+	
+	public void setOrigin(int row)
+	{
+		if(row >= getLineCount())
+		{
+			row = getLineCount() - 1;
+		}
+		
+		if(row < 0)
+		{
+			row = 0;
+		}
+		
+		vflow.setOrigin(row, GlyphIndex.ZERO);
+	}
+	
 
 	// TODO
 //	public void scrollToVisible(int row)
