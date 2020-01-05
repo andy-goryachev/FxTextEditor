@@ -94,7 +94,7 @@ public class VFlow
 		FX.onChange(this::handleSizeChange,  widthProperty(), heightProperty());
 		FX.onChange(this::updateModel, ed.modelProperty());
 		FX.onChange(this::updateLineNumbers, ed.showLineNumbersProperty, ed.lineNumberFormatterProperty, ed.modelProperty);
-		FX.onChange(this::updateFont, ed.fontProperty);
+		FX.onChange(this::updateFont, true, ed.fontProperty);
 		
 		// TODO clip rect
 		

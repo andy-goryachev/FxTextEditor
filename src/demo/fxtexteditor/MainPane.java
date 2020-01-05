@@ -31,7 +31,6 @@ public class MainPane
 		editor.setMultipleSelectionEnabled(true);
 		editor.setWrapLines(false);
 		editor.setTabPolicy(TabPolicy.create(4));
-		editor.setFont(Font.font("Monospace", 18));
 		
 		setCenter(editor);
 		

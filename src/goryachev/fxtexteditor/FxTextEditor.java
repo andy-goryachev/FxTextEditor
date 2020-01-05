@@ -51,7 +51,7 @@ public class FxTextEditor
 	public final FxAction selectAllAction = new FxAction(this::selectAll);
 	
 	protected final FxObject<Color> backgroundColorProperty = new FxObject(Color.WHITE);
-	protected final FxObject<Font> fontProperty = new FxObject();
+	protected final FxObject<Font> fontProperty = new FxObject(Font.font("Monospace", 12));
 	protected final FxBoolean editableProperty = new FxBoolean(false);
 	protected final ReadOnlyObjectWrapper<FxTextEditorModel> modelProperty = new ReadOnlyObjectWrapper<>();
 	protected final FxBoolean wrapLinesProperty = new FxBoolean(true);

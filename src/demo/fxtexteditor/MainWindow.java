@@ -124,7 +124,7 @@ public class MainWindow
 		// file
 		m.menu("File");
 		m.separator();
-		m.item("Growing Model", tailMode);
+//		m.item("Growing Model", tailMode);
 		m.item("New Window, Same Model", new FxAction(this::newWindow));
 		m.separator();
 		m.item("Preferences", prefsAction);
@@ -177,7 +177,7 @@ public class MainWindow
 	{
 		FxToolBar t = new FxToolBar();
 		t.toggleButton("wrap", editor().wrapLinesProperty());
-		t.toggleButton("line numbers", editor().showLineNumbersProperty());
+		t.toggleButton("num", editor().showLineNumbersProperty());
 		t.fill();
 		t.add(new Label("Font:"));
 		t.add(fontSelector);
