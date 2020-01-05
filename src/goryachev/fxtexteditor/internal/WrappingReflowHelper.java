@@ -19,7 +19,7 @@ public class WrappingReflowHelper
 	public static void reflow(VFlow flow, ScreenBuffer buffer, int xmax, int ymax, ITabPolicy tabPolicy)
 	{
 		int lineIndex = flow.getTopLine();
-		GlyphIndex startGlyphIndex = flow.getTopGlyphIndex(); // FIX gets overwritten
+		GlyphIndex startGlyphIndex = flow.getTopGlyphIndex();
 		boolean useStartGlyphIndex = true;
 			
 		int modelLineCount = flow.getModelLineCount();
@@ -54,6 +54,7 @@ public class WrappingReflowHelper
 				{
 					glyphIndex = startGlyphIndex;
 					useStartGlyphIndex = false;
+					// FIX cellIndex?
 				}
 				else
 				{
@@ -155,11 +156,12 @@ public class WrappingReflowHelper
 			}
 			else
 			{
-				// simple case, cell indexes coincide with glyph indexes
-				if(cellIndex + xmax >= r.getGlyphCount())
+				// simple case: cell indexes coincide with glyph indexes
+				int ix = glyphIndex.intValue();
+				if(ix + xmax >= r.getGlyphCount())
 				{
 					// end of line
-					int sz = r.getGlyphCount() - cellIndex;
+					int sz = r.getGlyphCount() - ix;
 					r.setCellCount(sz);
 					
 					fline = null;
