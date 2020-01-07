@@ -80,8 +80,7 @@ public class DemoSyntax
 	{
 		if(end > start)
 		{
-			String s = text.substring(start, end);
-			segments.add(new Segment(color, bg, s, bold));
+			segments.add(new Segment(text, start, end, color, bg, bold));
 			start = end;
 			bold = false;
 		}

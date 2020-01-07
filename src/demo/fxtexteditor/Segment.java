@@ -8,15 +8,19 @@ import javafx.scene.paint.Color;
  */
 public class Segment
 {
-	public final String text;
+	private final String text;
+	private final int start;
+	private final int end;
 	public final Color textColor;
 	public final Color backgroundColor;
 	public final boolean bold;
 	
 	
-	public Segment(Color textColor, Color bg, String text, boolean bold)
+	public Segment(String text, int start, int end, Color textColor, Color bg, boolean bold)
 	{
 		this.text = text;
+		this.start = start;
+		this.end = end;
 		this.textColor = textColor;
 		this.backgroundColor = bg;
 		this.bold = bold;
@@ -25,6 +29,12 @@ public class Segment
 
 	public int length()
 	{
-		return text.length();
+		return end - start;
+	}
+	
+	
+	public String getText()
+	{
+		return text.substring(start, end);
 	}
 }
