@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 public class DemoSyntax
 {
 	private final String text;
-	private final CList<Segment> segments = new CList();
+	private final CList<TSegment> segments = new CList();
 	private int start;
 	private Color color = Color.BLACK;
 	private Color bg;
@@ -24,7 +24,7 @@ public class DemoSyntax
 	}
 	
 	
-	public List<Segment> generateSegments()
+	public List<TSegment> generateSegments()
 	{
 		for(int i=0; i<text.length(); i++)
 		{
@@ -80,7 +80,7 @@ public class DemoSyntax
 	{
 		if(end > start)
 		{
-			segments.add(new Segment(text, start, end, color, bg, bold));
+			segments.add(new TSegment(text, start, end, color, bg, bold));
 			start = end;
 			bold = false;
 		}

@@ -11,8 +11,8 @@ import goryachev.fxtexteditor.PlainTextLine;
 public class DemoTextLine
 	extends PlainTextLine
 {
-	private TextAttributes attributes;
-	private static TextAttributes NONE = new TextAttributes(0);
+	private TAttributes attributes;
+	private static TAttributes NONE = new TAttributes();
 	
 	
 	public DemoTextLine(String text, int line)
@@ -33,16 +33,16 @@ public class DemoTextLine
 	}
 	
 	
-	protected TextAttributes applySyntax(String text)
+	protected TAttributes applySyntax(String text)
 	{
 		if(CKit.isBlank(text))
 		{
 			return NONE;
 		}
 		
-		TextAttributes a = new TextAttributes(text.length());
+		TAttributes a = new TAttributes();
 		int start = 0;
-		for(Segment seg: new DemoSyntax(text).generateSegments())
+		for(TSegment seg: new DemoSyntax(text).generateSegments())
 		{
 			a.addSegment(start, seg);
 			start += seg.length();

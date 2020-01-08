@@ -4,19 +4,19 @@ import javafx.scene.paint.Color;
 
 
 /**
- * Segment.
+ * Text Attribute Segment.
  */
-public class Segment
+public class TSegment
 {
-	private final String text;
-	private final int start;
-	private final int end;
+	public final String text;
+	public final int start;
+	public final int end;
 	public final Color textColor;
 	public final Color backgroundColor;
 	public final boolean bold;
 	
 	
-	public Segment(String text, int start, int end, Color textColor, Color bg, boolean bold)
+	public TSegment(String text, int start, int end, Color textColor, Color bg, boolean bold)
 	{
 		this.text = text;
 		this.start = start;
