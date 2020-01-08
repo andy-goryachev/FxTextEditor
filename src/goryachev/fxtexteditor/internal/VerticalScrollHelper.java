@@ -86,11 +86,9 @@ public class VerticalScrollHelper
 		}
 		
 		int additionalBottomCount = positions.size() - topSize - bottomSize; // FIX -1?
-
+		
 		// the new scroll position is center + delta
-		// where delta is determined by the formula
-		// delta = (additionalBottomCount - additionalTopCount ) * fraction
-		int delta = (int)((additionalBottomCount - additionalTopCount) * fraction);
+		int delta = (int)((additionalBottomCount + additionalTopCount) * fraction) - additionalTopCount;
 		int ix = topSize + delta;
 		
 		newLineNumber = positions.lineNumberAt(ix);
