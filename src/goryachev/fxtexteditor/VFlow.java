@@ -74,8 +74,8 @@ public class VFlow
 	private boolean screenBufferValid;
 	private boolean repaintRequested;
 	protected final FlowLineCache cache;
-	protected final CellStyles styles = new CellStyles();
 	protected final SelectionHelper selectionHelper = new SelectionHelper();
+	private static final CellStyle NO_STYLE = new CellStyle();
 	
 	
 	public VFlow(FxTextEditor ed)
@@ -456,7 +456,7 @@ public class VFlow
 	}
 	
 	
-	protected Font getFont(CellStyles st)
+	protected Font getFont(CellStyle st)
 	{
 		if(st.isBold())
 		{
@@ -831,10 +831,14 @@ public class VFlow
 		boolean selected = SelectionHelper.isSelected(flags);
 		
 		// style
-		row.updateStyle(styles, x);
+		CellStyle style = row.getCellStyles(x);
+		if(style == null)
+		{
+			style = NO_STYLE;
+		}
 		
 		// background
-		Color bg = backgroundColor(caretLine, selected, styles.getBackgroundColor());
+		Color bg = backgroundColor(caretLine, selected, style.getBackgroundColor());
 		gx.setFill(bg);
 		gx.fillRect(cx, cy, cw, ch);
 		
@@ -853,13 +857,13 @@ public class VFlow
 		String text = row.getCellText(x);
 		if(text != null)
 		{
-			Color fg = styles.getTextColor();
+			Color fg = style.getTextColor();
 			if(fg == null)
 			{
 				fg = getTextColor();
 			}
 			
-			Font f = getFont(styles);
+			Font f = getFont(style);
 			gx.setFont(f);
 			gx.setFill(fg);
 			gx.fillText(text, cx, cy - tm.baseline, cw);

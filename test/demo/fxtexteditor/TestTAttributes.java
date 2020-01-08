@@ -45,7 +45,7 @@ public class TestTAttributes
 		{
 			int start = offsets[i];
 			int end = offsets[i + 1];
-			TSegment s = new TSegment(null, start, end, null, null, false);
+			TSegment s = new TSegment(null, start, end, null);
 			a.addSegment(s);
 		}
 	}
@@ -53,14 +53,14 @@ public class TestTAttributes
 	
 	protected void t(TAttributes a, int off, int expected)
 	{
-		TSegment s = a.segmentAt(off);
+		TSegment s = a.getSegmentAt(off);
 		TF.eq(s.start, expected);
 	}
 	
 	
 	protected void tnull(TAttributes a, int off)
 	{
-		TSegment s = a.segmentAt(off);
+		TSegment s = a.getSegmentAt(off);
 		TF.eq(s, null);
 	}
 }

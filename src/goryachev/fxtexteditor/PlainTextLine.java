@@ -43,16 +43,8 @@ public class PlainTextLine
 	}
 	
 
-	public void updateStyles(CellStyles styles, int offset)
+	public CellStyle getCellStyle(int offset)
 	{
-		styles.update
-		(
-			null,
-			null,
-			false,
-			false,
-			false,
-			false
-		);
+		return null;
 	}
 }

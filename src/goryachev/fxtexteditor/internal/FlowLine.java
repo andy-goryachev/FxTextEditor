@@ -1,6 +1,6 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
-import goryachev.fxtexteditor.CellStyles;
+import goryachev.fxtexteditor.CellStyle;
 import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITextLine;
 
@@ -88,12 +88,13 @@ public class FlowLine
 	}
 	
 	
-	public void updateStyle(CellStyles styles, int charOffset)
+	public CellStyle getCellStyle(int charOffset)
 	{
 		if(tline != null)
 		{
-			tline.updateStyles(styles, charOffset);
+			return tline.getCellStyle(charOffset);
 		}
+		return null;
 	}
 
 

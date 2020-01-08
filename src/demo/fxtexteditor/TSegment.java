@@ -1,6 +1,6 @@
 // Copyright © 2017-2020 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
-import javafx.scene.paint.Color;
+import goryachev.fxtexteditor.CellStyle;
 
 
 /**
@@ -11,19 +11,15 @@ public class TSegment
 	public final String text;
 	public final int start;
 	public final int end;
-	public final Color textColor;
-	public final Color backgroundColor;
-	public final boolean bold;
+	public final CellStyle style;
 	
 	
-	public TSegment(String text, int start, int end, Color textColor, Color bg, boolean bold)
+	public TSegment(String text, int start, int end, CellStyle style)
 	{
 		this.text = text;
 		this.start = start;
 		this.end = end;
-		this.textColor = textColor;
-		this.backgroundColor = bg;
-		this.bold = bold;
+		this.style = style;
 	}
 
 
@@ -36,5 +32,11 @@ public class TSegment
 	public String getText()
 	{
 		return text.substring(start, end);
+	}
+
+
+	public boolean contains(int off)
+	{
+		return (off >= start) && (off < end);
 	}
 }

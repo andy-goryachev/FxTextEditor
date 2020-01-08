@@ -4,9 +4,9 @@ import javafx.scene.paint.Color;
 
 
 /**
- * A single instance of this object holds cell attributes during paintCell().
+ * Captures text cell style.
  */
-public class CellStyles
+public class CellStyle
 {
 	private Color backgroundColor;
 	private Color textColor;
@@ -16,12 +16,7 @@ public class CellStyles
 	private boolean underscore;
 	
 	
-	public CellStyles()
-	{
-	}
-	
-	
-	public void update(Color bg, Color fg, boolean bold, boolean italic, boolean strikeThrough, boolean underscore)
+	public CellStyle(Color fg, Color bg, boolean bold, boolean italic, boolean strikeThrough, boolean underscore)
 	{
 		this.backgroundColor = bg;
 		this.textColor = fg;
@@ -29,6 +24,11 @@ public class CellStyles
 		this.italic = italic;
 		this.strikeThrough = strikeThrough;
 		this.underscore = underscore;
+	}
+	
+	
+	public CellStyle()
+	{
 	}
 	
 	

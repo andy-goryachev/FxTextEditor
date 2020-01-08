@@ -3,7 +3,7 @@ package goryachev.fxtexteditor.internal;
 import goryachev.common.test.TF;
 import goryachev.common.test.Test;
 import goryachev.common.util.D;
-import goryachev.fxtexteditor.CellStyles;
+import goryachev.fxtexteditor.CellStyle;
 import goryachev.fxtexteditor.ITabPolicy;
 import goryachev.fxtexteditor.ITextLine;
 
@@ -63,8 +63,9 @@ public class TestWrappingReflowHelper
 			}
 
 
-			public void updateStyles(CellStyles styles, int charOffset)
+			public CellStyle getCellStyle(int charOffset)
 			{
+				return null;
 			}
 		};
 		FlowLine fline = new FlowLine(tline, TextGlyphInfo.create(tline.getPlainText(), null));

@@ -2,7 +2,7 @@
 package goryachev.fxtexteditor.internal;
 import goryachev.common.util.CKit;
 import goryachev.common.util.SB;
-import goryachev.fxtexteditor.CellStyles;
+import goryachev.fxtexteditor.CellStyle;
 import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITextLine;
 import java.util.Arrays;
@@ -239,14 +239,15 @@ public class ScreenRow
 	}
 
 
-	public void updateStyle(CellStyles styles, int cellIndex)
+	public CellStyle getCellStyles(int cellIndex)
 	{
 		GlyphIndex glyphIndex = getGlyphIndex(cellIndex);
 		int off = glyphIndex.intValue();
 		if(off >= 0)
 		{
-			fline.updateStyle(styles, off);
+			return fline.getCellStyle(off);
 		}
+		return null;
 	}
 
 

@@ -30,6 +30,6 @@ public interface ITextLine
 	public int getTextLength();
 
 
-	/** sets cell styles at the given char index */
-	public void updateStyles(CellStyles styles, int charOffset);
+	/** returns cell styles at the given char index, or null */
+	public CellStyle getCellStyle(int charOffset);
 }

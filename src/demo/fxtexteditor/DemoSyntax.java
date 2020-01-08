@@ -1,6 +1,7 @@
 // Copyright © 2017-2020 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
 import goryachev.common.util.CList;
+import goryachev.fxtexteditor.CellStyle;
 import java.util.List;
 import javafx.scene.paint.Color;
 
@@ -10,12 +11,15 @@ import javafx.scene.paint.Color;
  */
 public class DemoSyntax
 {
+	private CellStyle STYLE_TEXT = new CellStyle();
+	private CellStyle STYLE_ENCLOSED = new CellStyle(null, Color.YELLOW, false, false, false, false);
+	private CellStyle STYLE_NUMBER = new CellStyle(Color.RED, null, true, false, false, false);
+	private CellStyle STYLE_RTF = new CellStyle(Color.OLIVEDRAB, null, true, false, false, false);
+
 	private final String text;
 	private final CList<TSegment> segments = new CList();
 	private int start;
-	private Color color = Color.BLACK;
-	private Color bg;
-	private boolean bold; // means nothing, random logic
+	private CellStyle style = STYLE_TEXT;
 	
 	
 	public DemoSyntax(String text)
@@ -37,8 +41,7 @@ public class DemoSyntax
 				if(ix >= 0)
 				{
 					addSegment(i);
-					color = Color.BLUE;
-					bg = Color.YELLOW;
+					style = STYLE_ENCLOSED;
 					i = ix;
 					
 					addSegment(i);
@@ -46,12 +49,11 @@ public class DemoSyntax
 				}
 			}
 			
-			Color col = getColor(c);
-			if(!col.equals(color))
+			CellStyle st = getCellStyle(c);
+			if(!st.equals(style))
 			{
 				addSegment(i);
-				color = col;
-				bg = null;
+				style = st;
 			}
 		}
 		
@@ -80,19 +82,17 @@ public class DemoSyntax
 	{
 		if(end > start)
 		{
-			segments.add(new TSegment(text, start, end, color, bg, bold));
+			segments.add(new TSegment(text, start, end, style));
 			start = end;
-			bold = false;
 		}
 	}
 	
 	
-	protected Color getColor(char c)
+	protected CellStyle getCellStyle(char c)
 	{
 		if(Character.isDigit(c))
 		{
-			bold = true;
-			return Color.RED;
+			return STYLE_NUMBER;
 		}
 		
 		byte dir = Character.getDirectionality(c);
@@ -103,9 +103,9 @@ public class DemoSyntax
 		case Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC:
 		case Character.DIRECTIONALITY_RIGHT_TO_LEFT_EMBEDDING:
 		case Character.DIRECTIONALITY_RIGHT_TO_LEFT_OVERRIDE:
-			return Color.OLIVEDRAB;
+			return STYLE_RTF;
 		}
 		
-		return Color.BLACK;
+		return STYLE_TEXT;
 	}
 }

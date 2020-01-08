@@ -1,7 +1,7 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
 import goryachev.common.util.CList;
-import goryachev.fxtexteditor.CellStyles;
+import goryachev.fxtexteditor.CellStyle;
 
 
 /**
@@ -33,7 +33,8 @@ public class TAttributes
 	}
 	
 	
-	protected TSegment segmentAt(int pos)
+	/** binary search */
+	public TSegment getSegmentAt(int pos)
 	{
 		int low = 0;
 		int high = segments.size() - 1;
@@ -61,20 +62,20 @@ public class TAttributes
 	}
 
 
-	public void update(CellStyles styles, int charIndex)
-	{
-		TSegment s = segmentAt(charIndex);
-		if(s != null)
-		{
-			styles.update
-			(
-				s.backgroundColor, 
-				s.textColor,
-				s.bold,
-				false, // italic
-				false, // strikeThrough
-				false  // s.underscore
-			);
-		}
-	}
+//	public CellStyles getCellStyles(int charIndex)
+//	{
+//		TSegment s = segmentAt(charIndex);
+//		if(s != null)
+//		{
+//			styles.update
+//			(
+//				s.backgroundColor, 
+//				s.textColor,
+//				s.bold,
+//				false, // italic
+//				false, // strikeThrough
+//				false  // s.underscore
+//			);
+//		}
+//	}
 }

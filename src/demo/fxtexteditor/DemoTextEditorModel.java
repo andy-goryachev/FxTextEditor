@@ -1,10 +1,12 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
 import goryachev.common.util.CKit;
+import goryachev.fxtexteditor.CellStyle;
 import goryachev.fxtexteditor.Edit;
 import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.LoadInfo;
+import goryachev.fxtexteditor.PlainTextLine;
 
 
 /**
@@ -15,7 +17,10 @@ public class DemoTextEditorModel
 {
 	protected final String[] lines;
 	protected final int lineCount;
-
+	private static TAttributes NONE = new TAttributes();
+	private static int cachedStylesLine = -1;
+	private static TSegment cachedSegment;
+	
 
 	public DemoTextEditorModel(String text, int lineCount)
 	{
@@ -70,12 +75,72 @@ public class DemoTextEditorModel
 	}
 	
 	
+	protected TAttributes applySyntax(String text)
+	{
+		if(CKit.isBlank(text))
+		{
+			return NONE;
+		}
+		
+		TAttributes a = new TAttributes();
+		for(TSegment seg: new DemoSyntax(text).generateSegments())
+		{
+			a.addSegment(seg);
+		}
+		return a;
+	}
+	
+	
+	// caches last segment for faster access
+	protected TSegment fastGetSegment(int line, int off, TAttributes attributes)
+	{
+		if(line == cachedStylesLine)
+		{
+			if(cachedSegment != null)
+			{
+				if(cachedSegment != null)
+				{
+					if(cachedSegment.contains(off))
+					{
+						return cachedSegment;
+					}
+				}
+			}
+		}
+		
+		TSegment seg = attributes.getSegmentAt(off);
+		cachedStylesLine = line;
+		cachedSegment = seg;
+		return seg;
+	}
+	
+	
 	public ITextLine getTextLine(int line)
 	{
 		String text = plainText(line);
 		if(text != null)
 		{
-			return new DemoTextLine(text, line);
+			return new PlainTextLine(line, text)
+			{
+				private TAttributes attributes;
+				
+				
+				public CellStyle getCellStyle(int off)
+				{
+					if(attributes == null)
+					{
+						String text = getPlainText();
+						attributes = applySyntax(text); 
+					}
+					
+					TSegment seg = fastGetSegment(line, off, attributes);
+					if(seg != null)
+					{
+						return seg.style;
+					}
+					return null;
+				}
+			};
 		}
 		return null;
 	}
