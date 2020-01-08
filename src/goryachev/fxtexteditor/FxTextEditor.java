@@ -755,6 +755,11 @@ public class FxTextEditor
 
 			if(isWrapLines())
 			{
+				if(val == 1.0)
+				{
+					val = 1.0;
+				}
+				
 				int frameSize = 2 * Math.max(100, vflow.getScreenRowCount());
 				VerticalScrollHelper h = new VerticalScrollHelper(vflow, frameSize, lineCount, top, val);
 				h.process();

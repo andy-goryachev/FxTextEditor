@@ -1,5 +1,6 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.common.util.D;
 import goryachev.common.util.ElasticIntArray;
 import goryachev.fxtexteditor.ITabPolicy;
 import goryachev.fxtexteditor.VFlow;
@@ -57,9 +58,8 @@ public class VerticalScrollHelper
 	{
 		int width = vflow.getScreenColumnCount();
 		ITabPolicy tabPolicy = vflow.getEditor().getTabPolicy();
-		
+
 		int topSize = 0;
-		int centerPos = 0;
 		
 		if(center > 0)
 		{
@@ -75,9 +75,9 @@ public class VerticalScrollHelper
 		}
 
 		int additionalTopCount  = positions.size() - topSize;
-
 		int end = Math.min(max, center + frameSize);
 		int bottomSize = end - center;
+		boolean hasLastLine = (end == max);
 		
 		for(int ix=center; ix<=end; ix++)
 		{
@@ -85,14 +85,40 @@ public class VerticalScrollHelper
 			WrappingReflowHelper.computeBreaks(this, tabPolicy, fline, width);
 		}
 		
-		int additionalBottomCount = positions.size() - topSize - bottomSize; // FIX -1?
+		int additionalBottomCount = positions.size() - topSize - bottomSize;
 		
 		// the new scroll position is center + delta
 		int delta = (int)((additionalBottomCount + additionalTopCount) * fraction) - additionalTopCount;
 		int ix = topSize + delta;
 		
+		if(hasLastLine)
+		{
+			ix = Math.min(ix, positions.size() - vflow.getScreenRowCount() + 1);
+			if(ix < 0)
+			{
+				ix = 0;
+			}
+		}
+		
 		newLineNumber = positions.lineNumberAt(ix);
 		newGlyphIndex = positions.gyphIndexAt(ix);
+		
+		// FIX
+//		D.print
+//		(
+//			"fraction=", fraction,
+//			"center=", center,
+//			"max=", max,
+//			"topSize=", topSize,
+//			"additionalTopCount=", additionalTopCount,
+//			"end=", end,
+//			"bottomSize=", bottomSize,
+//			"additionalBottomCount=", additionalBottomCount,
+//			"delta=", delta,
+//			"ix=", ix,
+//			"newLineNumber=", newLineNumber,
+//			"newGlyphIndex=", newGlyphIndex
+//		);
 	}
 	
 	
