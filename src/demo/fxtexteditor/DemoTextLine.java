@@ -41,11 +41,9 @@ public class DemoTextLine
 		}
 		
 		TAttributes a = new TAttributes();
-		int start = 0;
 		for(TSegment seg: new DemoSyntax(text).generateSegments())
 		{
-			a.addSegment(start, seg);
-			start += seg.length();
+			a.addSegment(seg);
 		}
 		return a;
 	}

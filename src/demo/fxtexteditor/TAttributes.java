@@ -23,7 +23,7 @@ public class TAttributes
 	}
 
 
-	public void addSegment(int start, TSegment seg)
+	public void addSegment(TSegment seg)
 	{
 		if(segments == null)
 		{
