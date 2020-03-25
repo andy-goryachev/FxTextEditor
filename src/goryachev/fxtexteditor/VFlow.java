@@ -420,7 +420,7 @@ public class VFlow
 		FX.later(() ->
 		{
 			// vertical scroll bar
-			updateVerticalScrollBar();
+			// TODO
 			
 			// horizontal scroll bar
 			if(!editor.isWrapLines())
@@ -609,8 +609,6 @@ public class VFlow
 			NonWrappingReflowHelper.reflow(this, buffer, bufferWidth, bufferHeight, tabPolicy);
 		}
 		
-//		updateVerticalScrollBar();
-		
 //		D.print(buffer.dump()); // FIX
 	}
 	
@@ -651,6 +649,9 @@ public class VFlow
 		int visible;
 		double val;
 		
+//		double v = (max == 0 ? 0.0 : topLine / (double)max); 
+//		editor.vscroll.setValue(v);
+		
 		FxTextEditorModel model = editor.getModel();
 		if(model == null)
 		{
@@ -660,14 +661,9 @@ public class VFlow
 		}
 		else
 		{
-			max = model.getLineCount() + 2;
+			max = model.getLineCount();
 			visible = getScreenRowCount();
-			val = topLine;
-			
-			if(visible > max)
-			{
-				visible = max; // FIX jumps
-			}
+			val = topLine; //(max - visible);
 		}
 		
 		ScrollBar vscroll = editor.getVerticalScrollBar();
