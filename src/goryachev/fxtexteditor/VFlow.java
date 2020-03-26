@@ -410,27 +410,24 @@ public class VFlow
 		columnCount = CKit.floor(w / tm.cellWidth);
 		rowCount = CKit.floor(h / tm.cellHeight);
 		
-		updateScrollBarsLater();
+		FX.later(this::updateScrollBars);
 	}
 	
 	
-	protected void updateScrollBarsLater()
+	// depends on a wrapping pass in reflow()
+	protected void updateScrollBars()
 	{
-		// depends on a wrapping pass in reflow()
-		FX.later(() ->
+		// vertical scroll bar
+		// TODO
+		
+		// horizontal scroll bar
+		if(!editor.isWrapLines())
 		{
-			// vertical scroll bar
-			// TODO
-			
-			// horizontal scroll bar
-			if(!editor.isWrapLines())
-			{
-				int max = getMaxCellCount() + 1; // allow for 1 blank space at the end
-				double vis = getMaxColumnCount();
-				double thumbSize = vis / max;
-				editor.hscroll.setVisibleAmount(thumbSize);
-			}
-		});
+			int max = getMaxCellCount() + 1; // allow for 1 blank space at the end
+			double vis = getMaxColumnCount();
+			double thumbSize = vis / max;
+			editor.hscroll.setVisibleAmount(thumbSize);
+		}
 	}
 	
 
