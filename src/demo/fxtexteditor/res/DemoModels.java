@@ -17,7 +17,8 @@ public class DemoModels
 {
 	public static final AnItem NO_TABS_NO_UNICODE = new AnItem("NO_TABS_NO_UNICODE", "No Tabs, No Unicode");
 	public static final AnItem TABS_NO_UNICODE = new AnItem("TABS_NO_UNICODE", "Tabs, No Unicode");
-	public static final AnItem JAVA = new AnItem("JAVA", "A large java file");
+	public static final AnItem JAVA_LARGE = new AnItem("JAVA", "A large java file");
+	public static final AnItem JAVA_SMALL = new AnItem("JAVA_SMALL", "A small java file");
 	public static final AnItem LONG_LINES = new AnItem("LONG_LINES", "Long lines (1M characters)");
 	public static final AnItem BILLION_LINES = new AnItem("BILLION_LINES", "One billion lines");
 	public static final AnItem NULL = new AnItem("null", "null");
@@ -27,9 +28,10 @@ public class DemoModels
 	{
 		return new AnItem[]
 		{
+			JAVA_SMALL,
 			NO_TABS_NO_UNICODE,
 			TABS_NO_UNICODE,
-			JAVA,
+			JAVA_LARGE,
 			LONG_LINES,
 			BILLION_LINES,
 			NULL
@@ -60,9 +62,13 @@ public class DemoModels
 				" //end"
 			);
 		}
-		else if(x == JAVA)
+		else if(x == JAVA_LARGE)
 		{
 			return new DemoTextEditorModel(loadResource("CKit.java.txt"));
+		}
+		else if(x == JAVA_SMALL)
+		{
+			return new DemoTextEditorModel(loadResource("Edit.java.txt"));
 		}
 		else if(x == LONG_LINES)
 		{
