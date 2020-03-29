@@ -1,5 +1,6 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
+import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
 import goryachev.common.util.D;
 import goryachev.fx.CPane;
@@ -43,6 +44,8 @@ public class VFlow
 	private static final double CARET_LINE_OPACITY = 0.3;
 	private static final double SELECTION_BACKGROUND_OPACITY = 0.4;
 	private static final double CELL_BACKGROUND_OPACITY = 0.8;
+	
+	protected final Log log = Log.get("VFlow");
 	protected final FxTextEditor editor;
 	protected final FxBoolean caretEnabledProperty = new FxBoolean(true);
 	protected final FxBoolean suppressBlink = new FxBoolean(false);
@@ -528,7 +531,8 @@ public class VFlow
 		{
 			pos = new TextPos(editor.getLineCount(), 0, true);
 		}
-		D.print(pos); // FIX
+		
+		log.debug(pos);
 		return pos;
 	}
 	
@@ -643,77 +647,21 @@ public class VFlow
 	/** returns true if update resulted in a visual change */
 	public boolean update(int startLine, int linesInserted, int endLine)
 	{
-		try
+		int max = Math.max(endLine, startLine + linesInserted);
+		if(max < topLine)
 		{
-			int max = Math.max(endLine, startLine + linesInserted);
-			if(max < topLine)
-			{
-				return false;
-			}
-			else if(startLine > (topLine + getScreenRowCount()))
-			{
-				return false;
-			}
-			
-			// TODO optimize, but for now simply
-			invalidate();
-			requestLayout();
-			
-			return true;
+			return false;
 		}
-		finally
+		else if(startLine > (topLine + getScreenRowCount()))
 		{
-//			updateVerticalScrollBar();
+			return false;
 		}
-	}
-	
-	
-	// TODO remove?
-	protected void updateVerticalScrollBar()
-	{
-		editor.setHandleScrollEvents(false);
-		try
-		{		
-			int max;
-			int visible;
-			double val;
-			
-	//		double v = (max == 0 ? 0.0 : topLine / (double)max); 
-	//		editor.vscroll.setValue(v);
-			
-			FxTextEditorModel model = editor.getModel();
-			if(model == null)
-			{
-				visible = 1;
-				max = 1;
-				val = 0;
-			}
-			else
-			{
-				// TODO add the number of extra rows due to wrapping (for visible lines)
-				max = model.getLineCount() + 2;
-				// FIX not correct
-				val = topLine; //(max - visible);								
-				visible = getScreenRowCount();
-				if(visible > max)
-				{
-					// TODO perhaps suppress scrollbar thumb, but keep the scroll bar itself to avoid another reflow
-					visible = max; // FIX jumps
-				}
-			}
-
-			ScrollBar vscroll = editor.getVerticalScrollBar();
-			vscroll.setMin(0);
-	        vscroll.setMax(max);
-	        vscroll.setVisibleAmount(visible);
-	        vscroll.setValue(val);
-	        
-	        D.print(val); // FIX
-		}
-		finally
-		{
-			editor.setHandleScrollEvents(true);
-		}
+		
+		// TODO optimize, but for now simply
+		invalidate();
+		requestLayout();
+		
+		return true;
 	}
 	
 	
@@ -917,6 +865,6 @@ public class VFlow
 	public void scroll(double fractionOfHeight)
 	{
 		// TODO
-		D.print("scroll", fractionOfHeight);
+		log.debug("scroll={}", fractionOfHeight);
 	}
 }

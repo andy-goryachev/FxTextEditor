@@ -1,5 +1,6 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
+import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
 import goryachev.common.util.D;
 import goryachev.fx.CPane;
@@ -50,6 +51,7 @@ public class FxTextEditor
 	public final FxAction copyAction = new FxAction(this::copy);
 	public final FxAction selectAllAction = new FxAction(this::selectAll);
 	
+	protected final Log log = Log.get("FxTextEditor");
 	protected final FxObject<Color> backgroundColorProperty = new FxObject(Color.WHITE);
 	protected final FxObject<Font> fontProperty = new FxObject(Font.font("Monospace", 12));
 	protected final FxBoolean editableProperty = new FxBoolean(false);
@@ -487,8 +489,7 @@ public class FxTextEditor
 
 	protected void handleTextUpdated(int startLine, int startPos, int startCharsInserted, int linesInserted, int endLine, int endPos, int endCharsInserted)
 	{
-		// TODO
-		D.print(startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted);
+		log.debug("startLine={} startPos={} startCharsInserted={} linesInserted={} endLine={} endPos={} endCharsInserted={}", startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted);
 		
 		// update markers
 		markers.update(startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted);
@@ -752,7 +753,7 @@ public class FxTextEditor
 	{
 		if(handleScrollEvents)
 		{
-			D.print(val); // FIX
+			log.debug("val={}", val);
 			
 			int lineCount = getLineCount();
 			int vis = vflow.getScreenRowCount();
@@ -763,11 +764,6 @@ public class FxTextEditor
 
 			if(isWrapLines())
 			{
-				if(val == 1.0)
-				{
-					val = 1.0;
-				}
-				
 				int frameSize = 2 * Math.max(100, vflow.getScreenRowCount());
 				VerticalScrollHelper h = new VerticalScrollHelper(vflow, frameSize, lineCount, top, val);
 				h.process();

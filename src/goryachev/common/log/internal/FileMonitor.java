@@ -36,7 +36,7 @@ public class FileMonitor
 	{
 		last = file.lastModified();
 		
-		SystemTask.schedule(period, this::check);
+		SystemTask.schedule(period, period, this::check);
 	}
 	
 	

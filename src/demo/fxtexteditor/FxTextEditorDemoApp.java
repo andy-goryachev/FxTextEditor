@@ -1,8 +1,8 @@
 // Copyright © 2016-2020 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
+import goryachev.common.log.Log;
 import goryachev.common.util.FileSettingsProvider;
 import goryachev.common.util.GlobalSettings;
-import goryachev.common.util.Log;
 import goryachev.fx.CssLoader;
 import java.io.File;
 import javafx.application.Application;
@@ -17,6 +17,7 @@ public class FxTextEditorDemoApp
 {
 	public static void main(String[] args)
 	{
+		Log.configure(new File("log-conf.json"), 1000);
 		launch(args);
 	}
 
@@ -26,8 +27,8 @@ public class FxTextEditorDemoApp
 		// TODO change to something visible in Documents? platform-specific?
 		File baseDir = new File(System.getProperty("user.home"), ".goryachev.com/FxTextEditorDemoApp");
 			
-		File logFolder = new File(baseDir, "logs"); 
-		Log.init(logFolder);
+//		File logFolder = new File(baseDir, "logs"); 
+//		Log.init(logFolder);
 		
 		File settingsFile = new File(baseDir, "settings.conf");
 		FileSettingsProvider p = new FileSettingsProvider(settingsFile);
