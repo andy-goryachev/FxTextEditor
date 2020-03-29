@@ -410,15 +410,19 @@ public class VFlow
 		columnCount = CKit.floor(w / tm.cellWidth);
 		rowCount = CKit.floor(h / tm.cellHeight);
 		
-		FX.later(this::updateScrollBars);
+//		FX.later(this::updateScrollBars);
+//		updateScrollBars();
 	}
 	
 	
 	// depends on a wrapping pass in reflow()
 	protected void updateScrollBars()
 	{
-		// vertical scroll bar
+		D.print();
+		
 		// TODO
+		// vertical scroll bar
+//		updateVerticalScrollBar();
 		
 		// horizontal scroll bar
 		if(!editor.isWrapLines())
@@ -606,6 +610,8 @@ public class VFlow
 			NonWrappingReflowHelper.reflow(this, buffer, bufferWidth, bufferHeight, tabPolicy);
 		}
 		
+		updateScrollBars();
+		
 //		D.print(buffer.dump()); // FIX
 	}
 	
@@ -633,7 +639,7 @@ public class VFlow
 		}
 		finally
 		{
-			updateVerticalScrollBar();
+//			updateVerticalScrollBar();
 		}
 	}
 	
@@ -641,35 +647,48 @@ public class VFlow
 	protected void updateVerticalScrollBar()
 	{
 		editor.setHandleScrollEvents(false);
-		
-		int max;
-		int visible;
-		double val;
-		
-//		double v = (max == 0 ? 0.0 : topLine / (double)max); 
-//		editor.vscroll.setValue(v);
-		
-		FxTextEditorModel model = editor.getModel();
-		if(model == null)
-		{
-			visible = 1;
-			max = 1;
-			val = 0;
+		try
+		{		
+			int max;
+			int visible;
+			double val;
+			
+	//		double v = (max == 0 ? 0.0 : topLine / (double)max); 
+	//		editor.vscroll.setValue(v);
+			
+			FxTextEditorModel model = editor.getModel();
+			if(model == null)
+			{
+				visible = 1;
+				max = 1;
+				val = 0;
+			}
+			else
+			{
+				// TODO add the number of extra rows due to wrapping (for visible lines)
+				max = model.getLineCount() + 2;
+				// FIX not correct
+				val = topLine; //(max - visible);								
+				visible = getScreenRowCount();
+				if(visible > max)
+				{
+					// TODO perhaps suppress scrollbar thumb, but keep the scroll bar itself to avoid another reflow
+					visible = max; // FIX jumps
+				}
+			}
+
+			ScrollBar vscroll = editor.getVerticalScrollBar();
+			vscroll.setMin(0);
+	        vscroll.setMax(max);
+	        vscroll.setVisibleAmount(visible);
+	        vscroll.setValue(val);
+	        
+	        D.print(val); // FIX
 		}
-		else
+		finally
 		{
-			max = model.getLineCount();
-			visible = getScreenRowCount();
-			val = topLine; //(max - visible);
+			editor.setHandleScrollEvents(true);
 		}
-		
-		ScrollBar vscroll = editor.getVerticalScrollBar();
-		vscroll.setMin(0);
-        vscroll.setMax(max);
-        vscroll.setVisibleAmount(visible);
-        vscroll.setValue(val);
-        
-		editor.setHandleScrollEvents(true);
 	}
 	
 	

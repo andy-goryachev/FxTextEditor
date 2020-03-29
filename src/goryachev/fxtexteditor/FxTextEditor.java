@@ -308,6 +308,12 @@ public class FxTextEditor
 	}
 	
 	
+	protected boolean isHandleScrollEvents()
+	{
+		return handleScrollEvents;
+	}
+	
+	
 	public boolean isWrapLines()
 	{
 		return wrapLinesProperty.get();
@@ -746,6 +752,8 @@ public class FxTextEditor
 	{
 		if(handleScrollEvents)
 		{
+			D.print(val); // FIX
+			
 			int lineCount = getLineCount();
 			int vis = vflow.getScreenRowCount();
 			
