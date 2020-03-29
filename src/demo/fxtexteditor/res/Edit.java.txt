@@ -4,6 +4,7 @@ package demo.fxtexteditor.res;
 
 /**
  * An Edit.
+ * For testing purposes, here we have a very long line which should appear wrapped and wrapped and wrapped.  For testing purposes, here we have a very long line which should appear wrapped and wrapped and wrapped.  For testing purposes, here we have a very long line which should appear wrapped and wrapped and wrapped.
  */
 public class Edit
 {

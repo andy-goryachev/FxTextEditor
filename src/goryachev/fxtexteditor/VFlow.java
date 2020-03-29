@@ -415,22 +415,45 @@ public class VFlow
 	}
 	
 	
-	// depends on a wrapping pass in reflow()
-	protected void updateScrollBars()
+	/** updates thumb size; depends on a wrapping pass in reflow() */
+	protected void updateHorizontalScrollBarSize()
 	{
-		D.print();
-		
-		// TODO
-		// vertical scroll bar
-//		updateVerticalScrollBar();
-		
-		// horizontal scroll bar
 		if(!editor.isWrapLines())
 		{
 			int max = getMaxCellCount() + 1; // allow for 1 blank space at the end
 			double vis = getMaxColumnCount();
 			double thumbSize = vis / max;
 			editor.hscroll.setVisibleAmount(thumbSize);
+		}
+	}
+	
+	
+	protected void updateVerticalScrollBarSize()
+	{
+		if(editor.isWrapLines())
+		{
+			double val;
+			
+			FxTextEditorModel model = editor.getModel();
+			if(model == null)
+			{
+				val = 1.0;
+			}
+			else
+			{
+				// TODO add the number of extra rows due to wrapping (for visible lines)
+				int max = model.getLineCount() + 2;
+				int visible = getScreenRowCount();
+				if(visible > max)
+				{
+					// TODO perhaps suppress scrollbar thumb, but keep the scroll bar itself to avoid another reflow
+					visible = max;
+				}
+				val = visible / (double)max;
+			}
+
+			ScrollBar vscroll = editor.getVerticalScrollBar();
+	        vscroll.setVisibleAmount(val);
 		}
 	}
 	
@@ -503,7 +526,7 @@ public class VFlow
 		TextPos pos = buffer().getInsertPosition(x, y);
 		if(pos == null)
 		{
-			pos = new TextPos(editor.getModel().getLineCount(), 0, true);
+			pos = new TextPos(editor.getLineCount(), 0, true);
 		}
 		D.print(pos); // FIX
 		return pos;
@@ -610,7 +633,8 @@ public class VFlow
 			NonWrappingReflowHelper.reflow(this, buffer, bufferWidth, bufferHeight, tabPolicy);
 		}
 		
-		updateScrollBars();
+		updateHorizontalScrollBarSize();
+		updateVerticalScrollBarSize();
 		
 //		D.print(buffer.dump()); // FIX
 	}
@@ -644,6 +668,7 @@ public class VFlow
 	}
 	
 	
+	// TODO remove?
 	protected void updateVerticalScrollBar()
 	{
 		editor.setHandleScrollEvents(false);
