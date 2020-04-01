@@ -23,6 +23,8 @@ public class VerticalScrollHelper
 	private final Positions positions;
 	private int newLineNumber;
 	private int newGlyphIndex;
+	private int additionalTopCount;
+	private int additionalBottomCount;
 	
 	
 	public VerticalScrollHelper(VFlow vflow, int frameSize, int max, int center, double fraction)
@@ -53,6 +55,13 @@ public class VerticalScrollHelper
 		positions.add(line, gix.intValue());
 	}
 	
+	
+	// TODO think of a better name
+	public int getExtraRowCount()
+	{
+		return additionalBottomCount + additionalTopCount;
+	}
+	
 
 	public void process()
 	{
@@ -74,7 +83,7 @@ public class VerticalScrollHelper
 			}
 		}
 
-		int additionalTopCount  = positions.size() - topSize;
+		additionalTopCount  = positions.size() - topSize;
 		int end = Math.min(max, center + frameSize);
 		int bottomSize = end - center;
 		boolean hasLastLine = (end == max);
@@ -85,7 +94,7 @@ public class VerticalScrollHelper
 			WrappingReflowHelper.computeBreaks(this, tabPolicy, fline, width);
 		}
 		
-		int additionalBottomCount = positions.size() - topSize - bottomSize;
+		additionalBottomCount = positions.size() - topSize - bottomSize;
 		
 		// the new scroll position is center + delta
 		int delta = (int)((additionalBottomCount + additionalTopCount) * fraction) - additionalTopCount;

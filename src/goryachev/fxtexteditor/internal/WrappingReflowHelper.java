@@ -34,6 +34,7 @@ public class WrappingReflowHelper
 		boolean complex = false;
 		boolean bol = true;
 		
+		// TODO we need to account for all extra rows (in case of a very long rows)
 		while(y < ymax)
 		{
 			if(fline == null)

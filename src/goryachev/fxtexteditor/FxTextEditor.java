@@ -765,11 +765,15 @@ public class FxTextEditor
 			if(isWrapLines())
 			{
 				int frameSize = 2 * Math.max(100, vflow.getScreenRowCount());
+				// TODO this does not account for all additional rows wrapped below the view port
+				// we need to account for those for correct scrolling of very long lines (or maybe approximate)
 				VerticalScrollHelper h = new VerticalScrollHelper(vflow, frameSize, lineCount, top, val);
 				h.process();
 				
 				top = h.getNewTopLine();
 				gix = h.getNewGlyphIndex();
+				// TODO
+				//vflow.setScrollAssist(h.getExtraRowCount());
 			}
 			
 			vflow.setOrigin(top, gix);
