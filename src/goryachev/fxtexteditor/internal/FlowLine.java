@@ -14,6 +14,7 @@ public class FlowLine
 	
 	private final ITextLine tline;
 	private final TextGlyphInfo info;
+	private WrapInfo wrap;
 	
 	
 	public FlowLine(ITextLine tline, TextGlyphInfo info)
