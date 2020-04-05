@@ -4,20 +4,18 @@ import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITabPolicy;
 import goryachev.fxtexteditor.VFlow;
-import java.util.function.BiConsumer;
 
 
 /**
  * Wrapping Reflow Helper.
  */
-@Deprecated // replace with WrapInfo
 public class WrappingReflowHelper
 {
 	private static final GlyphIndex[] AVOID_COMPILER_WARNING = { };
 	
 	
 	// FIX update top cell index if different
-	public static void reflow(VFlow flow, ScreenBuffer buffer, int xmax, int ymax, ITabPolicy tabPolicy)
+	public static void reflow(VFlow flow, ScreenBuffer buffer, int width, int height, ITabPolicy tabPolicy)
 	{
 		int lineIndex = flow.getTopLine();
 		GlyphIndex startGlyphIndex = flow.getTopGlyphIndex();
@@ -35,12 +33,12 @@ public class WrappingReflowHelper
 		boolean complex = false;
 		boolean bol = true;
 		
-		// TODO we need to account for all extra rows (in case of a very long rows)
-		while(y < ymax)
+		while(y < height)
 		{
 			if(fline == null)
 			{
 				fline = flow.getTextLine(lineIndex);
+				
 				complex = fline.hasComplexGlyphs();
 				if(!complex)
 				{
@@ -56,7 +54,6 @@ public class WrappingReflowHelper
 				{
 					glyphIndex = startGlyphIndex;
 					useStartGlyphIndex = false;
-					// FIX cellIndex?
 				}
 				else
 				{
@@ -74,7 +71,7 @@ public class WrappingReflowHelper
 				
 				if(complex)
 				{					
-					glyphOffsets = r.prepareGlyphOffsetsForWidth(xmax);
+					glyphOffsets = r.prepareGlyphOffsetsForWidth(width);
 				}
 			}
 			
@@ -93,7 +90,7 @@ public class WrappingReflowHelper
 			
 			if(tabDistance > 0)
 			{
-				if(x >= xmax)
+				if(x >= width)
 				{
 					// carry on to next line, resetting tab distance
 					r.setCellCount(x);
@@ -106,7 +103,6 @@ public class WrappingReflowHelper
 				}
 				else
 				{
-					// TODO check
 					glyphOffsets[x] = GlyphIndex.inTab(tabDistance, false, glyphIndex.intValue());
 					--tabDistance;
 					x++;
@@ -114,7 +110,7 @@ public class WrappingReflowHelper
 			}
 			else if(complex)
 			{
-				if(x >= xmax)
+				if(x >= width)
 				{
 					// next row
 					r.setCellCount(x);
@@ -160,7 +156,7 @@ public class WrappingReflowHelper
 			{
 				// simple case: cell indexes coincide with glyph indexes
 				int ix = glyphIndex.intValue();
-				if(ix + xmax >= r.getGlyphCount())
+				if(ix + width >= r.getGlyphCount())
 				{
 					// end of line
 					int sz = r.getGlyphCount() - ix;
@@ -173,9 +169,9 @@ public class WrappingReflowHelper
 				else
 				{
 					// middle of line
-					r.setCellCount(xmax);
-					glyphIndex = glyphIndex.add(xmax);
-					cellIndex += xmax;
+					r.setCellCount(width);
+					glyphIndex = glyphIndex.add(width);
+					cellIndex += width;
 					startGlyphIndex = glyphIndex;
 				}
 				
@@ -273,7 +269,7 @@ public class WrappingReflowHelper
 			else
 			{
 				// simple case, cell indexes coincide with glyph indexes
-				if(cellIndex + xmax >= fline.info().getGlyphCount())
+				if(cellIndex + xmax >= fline.glyphInfo().getGlyphCount())
 				{
 					// end of line
 					return y;

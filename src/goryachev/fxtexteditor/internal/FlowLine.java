@@ -2,11 +2,12 @@
 package goryachev.fxtexteditor.internal;
 import goryachev.fxtexteditor.CellStyle;
 import goryachev.fxtexteditor.GlyphType;
+import goryachev.fxtexteditor.ITabPolicy;
 import goryachev.fxtexteditor.ITextLine;
 
 
 /**
- * Flow Line (cache entry).
+ * Flow Line Cache Entry.
  */
 public class FlowLine
 {
@@ -36,9 +37,24 @@ public class FlowLine
 	}
 	
 	
-	public TextGlyphInfo info()
+	public TextGlyphInfo glyphInfo()
 	{
 		return info;
+	}
+	
+	
+	public WrapInfo getWrapInfo(ITabPolicy tabPolicy, int width)
+	{
+		if(wrap != null)
+		{
+			if(wrap.isCompatible(tabPolicy, width))
+			{
+				return wrap;
+			}
+		}
+		
+		wrap = WrapInfo.create(this, tabPolicy, width);
+		return wrap;
 	}
 	
 

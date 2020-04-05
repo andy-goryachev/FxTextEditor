@@ -15,12 +15,11 @@ public abstract class WrapInfo
 	
 	public abstract GlyphIndex getIndexForRow(int row);
 	
+	public abstract boolean isCompatible(ITabPolicy tabPolicy, int width);
+	
 	//
 	
-	private static final WrapInfo EMPTY = new Empty();
-//	protected final ITabPolicy tabPolicy;
-//	protected final FlowLine fline;
-//	protected final int width;
+	public static final WrapInfo EMPTY = new Empty();
 	
 	
 	public WrapInfo()
@@ -28,21 +27,7 @@ public abstract class WrapInfo
 	}
 	
 	
-//	public WrapInfo(ITabPolicy tabPolicy, FlowLine fline, int width)
-//	{
-//		this.tabPolicy = tabPolicy;
-//		this.fline = fline;
-//		this.width = width;
-//	}
-	
-	
-//	public int getWidth()
-//	{
-//		return width;
-//	}
-	
-	
-	public static WrapInfo create(ITabPolicy tabPolicy, FlowLine fline, int width)
+	public static WrapInfo create(FlowLine fline, ITabPolicy tabPolicy, int width)
 	{
 		// TODO move to caller?
 		int lineIndex = fline.getModelIndex();
@@ -72,7 +57,7 @@ public abstract class WrapInfo
 			return new Simple(len, width);
 		}
 		
-		Complex wrap = new Complex();
+		Complex wrap = new Complex(tabPolicy, width);
 		wrap.addBreak(startGlyphIndex);
 		
 		for(;;)
@@ -130,7 +115,7 @@ public abstract class WrapInfo
 			else
 			{
 				// simple case, cell indexes coincide with glyph indexes
-				if(cellIndex + width >= fline.info().getGlyphCount())
+				if(cellIndex + width >= fline.glyphInfo().getGlyphCount())
 				{
 					// end of line
 					return wrap;
@@ -158,6 +143,7 @@ public abstract class WrapInfo
 	{
 		public int getRowCount() { return 1; }
 		public GlyphIndex getIndexForRow(int row) { return GlyphIndex.ZERO; }
+		public boolean isCompatible(ITabPolicy tabPolicy, int width) { return true; }
 	}
 	
 	
@@ -187,6 +173,12 @@ public abstract class WrapInfo
 		{
 			return new GlyphIndex(row * width);
 		}
+
+
+		public boolean isCompatible(ITabPolicy tabPolicy, int width)
+		{
+			return (this.width == width);
+		}
 	}
 	
 	
@@ -195,11 +187,15 @@ public abstract class WrapInfo
 	
 	public static class Complex extends WrapInfo
 	{
+		private final ITabPolicy tabPolicy;
+		private final int width;
 		private final CList<GlyphIndex> breaks = new CList();
 		
 		
-		public Complex()
+		public Complex(ITabPolicy tabPolicy, int width)
 		{
+			this.tabPolicy = tabPolicy;
+			this.width = width;
 		}
 		
 		
@@ -218,6 +214,14 @@ public abstract class WrapInfo
 		public GlyphIndex getIndexForRow(int row)
 		{
 			return breaks.get(row);
+		}
+		
+		
+		public boolean isCompatible(ITabPolicy tabPolicy, int width)
+		{
+			return 
+				(this.width == width) &&
+				(this.tabPolicy == tabPolicy);
 		}
 	}
 }

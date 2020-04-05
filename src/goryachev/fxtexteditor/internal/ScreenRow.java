@@ -308,14 +308,14 @@ public class ScreenRow
 	 */
 	public int getGlyphCount()
 	{
-		return fline.info().getGlyphCount();
+		return fline.glyphInfo().getGlyphCount();
 	}
 	
 	
 	/** returns the offest into plain text string for the given glyph index */
 	protected int getCharIndex(GlyphIndex glyphIndex)
 	{
-		return fline.info().getCharIndex(glyphIndex); //startGlyphIndex + glyphIndex);
+		return fline.glyphInfo().getCharIndex(glyphIndex); //startGlyphIndex + glyphIndex);
 	}
 	
 	
@@ -331,7 +331,7 @@ public class ScreenRow
 	
 	protected String getGlyphText(GlyphIndex glyphIndex)
 	{
-		return fline.info().getGlyphText(glyphIndex);
+		return fline.glyphInfo().getGlyphText(glyphIndex);
 	}
 
 
