@@ -10,6 +10,7 @@ import java.util.function.BiConsumer;
 /**
  * Wrapping Reflow Helper.
  */
+@Deprecated // replace with WrapInfo
 public class WrappingReflowHelper
 {
 	private static final GlyphIndex[] AVOID_COMPILER_WARNING = { };
@@ -186,6 +187,7 @@ public class WrappingReflowHelper
 	}
 
 
+	@Deprecated // TODO move to WrapInfo
 	public static int computeBreaks(VerticalScrollHelper helper, ITabPolicy tabPolicy, FlowLine fline, int xmax)
 	{
 		int lineIndex = fline.getModelIndex();
