@@ -13,6 +13,7 @@ import goryachev.fxtexteditor.internal.NonWrappingReflowHelper;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenRow;
 import goryachev.fxtexteditor.internal.SelectionHelper;
+import goryachev.fxtexteditor.internal.VerticalScrollHelper;
 import goryachev.fxtexteditor.internal.WrappingReflowHelper;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -865,5 +866,34 @@ public class VFlow
 	{
 		// TODO
 		log.debug("scroll={}", fractionOfHeight);
+	}
+
+
+	public void verticalScroll(double fraction, boolean wrapLines)
+	{
+		int lineCount = editor.getLineCount();
+		int vis = getScreenRowCount();
+		int max = Math.max(0, lineCount + 1 - vis);
+		int top = CKit.round(max * fraction);
+		GlyphIndex gix = GlyphIndex.ZERO;
+
+		if(wrapLines)
+		{
+			int frameSize = 2 * Math.max(100, getScreenRowCount());
+			
+			// TODO use WrapInfo
+			
+			// TODO this does not account for all additional rows wrapped below the view port
+			// we need to account for those for correct scrolling of very long lines (or maybe approximate)
+			VerticalScrollHelper h = new VerticalScrollHelper(this, frameSize, lineCount, top, fraction);
+			h.process();
+
+			top = h.getNewTopLine();
+			gix = h.getNewGlyphIndex();
+			// TODO
+			//vflow.setScrollAssist(h.getExtraRowCount());
+		}
+
+		setOrigin(top, gix);
 	}
 }

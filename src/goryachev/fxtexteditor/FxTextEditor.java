@@ -15,7 +15,6 @@ import goryachev.fxtexteditor.internal.GlyphIndex;
 import goryachev.fxtexteditor.internal.InputHandler;
 import goryachev.fxtexteditor.internal.Markers;
 import goryachev.fxtexteditor.internal.TabPolicy;
-import goryachev.fxtexteditor.internal.VerticalScrollHelper;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.function.BiConsumer;
@@ -755,28 +754,7 @@ public class FxTextEditor
 		{
 			log.debug("val={}", val);
 			
-			int lineCount = getLineCount();
-			int vis = vflow.getScreenRowCount();
-			
-			int max = Math.max(0, lineCount + 1 - vis);
-			int top = CKit.round(max * val);
-			GlyphIndex gix = GlyphIndex.ZERO;
-
-			if(isWrapLines())
-			{
-				int frameSize = 2 * Math.max(100, vflow.getScreenRowCount());
-				// TODO this does not account for all additional rows wrapped below the view port
-				// we need to account for those for correct scrolling of very long lines (or maybe approximate)
-				VerticalScrollHelper h = new VerticalScrollHelper(vflow, frameSize, lineCount, top, val);
-				h.process();
-				
-				top = h.getNewTopLine();
-				gix = h.getNewGlyphIndex();
-				// TODO
-				//vflow.setScrollAssist(h.getExtraRowCount());
-			}
-			
-			vflow.setOrigin(top, gix);
+			vflow.verticalScroll(val, isWrapLines());
 		}
 	}
 	
