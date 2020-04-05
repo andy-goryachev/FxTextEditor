@@ -118,6 +118,13 @@ public class FlowLine
 	/** returns the type of a glyph at the specified cell index. */
 	public GlyphType getGlyphType(GlyphIndex glyphIndex)
 	{
+		return getGlyphType(glyphIndex.intValue());
+	}
+	
+	
+	/** returns the type of a glyph at the specified cell index. */
+	public GlyphType getGlyphType(int glyphIndex)
+	{
 		String s = info.getGlyphText(glyphIndex);
 		if(s == null)
 		{

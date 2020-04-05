@@ -9,7 +9,7 @@ import goryachev.common.util.text.IBreakIterator;
  */
 public abstract class TextGlyphInfo
 {
-	public abstract String getGlyphText(GlyphIndex glyphIndex);
+	public abstract String getGlyphText(int glyphIndex);
 
 	public abstract int getCharIndex(GlyphIndex glyphIndex);
 
@@ -146,6 +146,12 @@ public abstract class TextGlyphInfo
 		
 		return new COMPLEX(text, hasTabs, hasComplex, offsets);
 	}
+	
+	
+	public String getGlyphText(GlyphIndex glyphIndex)
+	{
+		return getGlyphText(glyphIndex.intValue());
+	}
 
 
 	//
@@ -159,9 +165,8 @@ public abstract class TextGlyphInfo
 		}
 
 
-		public String getGlyphText(GlyphIndex gix)
+		public String getGlyphText(int ix)
 		{
-			int ix = gix.intValue();
 			if((ix >= 0) && (ix < text.length()))
 			{
 				return text.substring(ix, ix + 1);
@@ -218,9 +223,8 @@ public abstract class TextGlyphInfo
 		}
 
 
-		public String getGlyphText(GlyphIndex gix)
+		public String getGlyphText(int ix)
 		{
-			int ix = gix.intValue();
 			if(ix > charOffsets.length)
 			{
 				return null;

@@ -1,7 +1,7 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.common.util.CKit;
-import goryachev.common.util.CList;
+import goryachev.common.util.ElasticIntArray;
 import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITabPolicy;
 
@@ -38,8 +38,8 @@ public abstract class WrapInfo
 		
 		int cellIndex = 0;
 		int x = 0;
-		GlyphIndex startGlyphIndex = GlyphIndex.ZERO;
-		GlyphIndex glyphIndex = GlyphIndex.ZERO;
+		int startGlyphIndex = 0;
+		int glyphIndex = 0;
 		int tabDistance = 0;
 		
 		boolean complex = fline.hasComplexGlyphs();
@@ -98,12 +98,12 @@ public abstract class WrapInfo
 					case TAB:
 						tabDistance = tabPolicy.nextTabStop(x) - x;
 						--tabDistance;
-						glyphIndex = glyphIndex.increment();
+						glyphIndex++;
 						cellIndex++;
 						x++;
 						break;
 					case NORMAL:
-						glyphIndex = glyphIndex.increment();
+						glyphIndex++;
 						cellIndex++;
 						x++;
 						break;
@@ -123,7 +123,7 @@ public abstract class WrapInfo
 				else
 				{
 					// middle of line
-					glyphIndex = glyphIndex.add(width);
+					glyphIndex += width;
 					cellIndex += width;
 					startGlyphIndex = glyphIndex;
 				}
@@ -189,7 +189,7 @@ public abstract class WrapInfo
 	{
 		private final ITabPolicy tabPolicy;
 		private final int width;
-		private final CList<GlyphIndex> breaks = new CList();
+		private final ElasticIntArray breaks = new ElasticIntArray();
 		
 		
 		public Complex(ITabPolicy tabPolicy, int width)
@@ -199,7 +199,7 @@ public abstract class WrapInfo
 		}
 		
 		
-		protected void addBreak(GlyphIndex start)
+		protected void addBreak(int start)
 		{
 			breaks.add(start);
 		}
@@ -213,7 +213,7 @@ public abstract class WrapInfo
 
 		public GlyphIndex getIndexForRow(int row)
 		{
-			return breaks.get(row);
+			return new GlyphIndex(breaks.get(row));
 		}
 		
 		
