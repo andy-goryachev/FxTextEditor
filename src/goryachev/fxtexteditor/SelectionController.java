@@ -16,6 +16,7 @@ public class SelectionController
 	private final ReadOnlyObjectWrapper<EditorSelection> selectionProperty = new ReadOnlyObjectWrapper(EditorSelection.EMPTY);
 	private Marker anchor;
 	private CList<SelectionSegment> originalSelection;
+	private ObservableList<SelectionSegment> readOnlySegmentsList;
 
 
 	public SelectionController()
@@ -29,6 +30,7 @@ public class SelectionController
 	}
 	
 	
+	/** non-null */
 	public EditorSelection getSelection()
 	{
 		return selectionProperty.get();
@@ -204,5 +206,15 @@ public class SelectionController
 		
 		EditorSelection es = new EditorSelection(segments.toArray(new SelectionSegment[segments.size()]));
 		selectionProperty.set(es);
+	}
+
+
+	public ObservableList<SelectionSegment> selectionSegmentsProperty()
+	{
+		if(readOnlySegmentsList == null)
+		{
+			readOnlySegmentsList = FXCollections.unmodifiableObservableList(segments);
+		}
+		return readOnlySegmentsList;
 	}
 }

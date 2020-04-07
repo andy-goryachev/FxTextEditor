@@ -104,4 +104,15 @@ public class EditorSelection
 	{
 		return new EditorSelection(segments);
 	}
+	
+	
+	public Marker getLastCaret()
+	{
+		if(isEmpty())
+		{
+			return null;
+		}
+		
+		return segments[segments.length - 1].getCaret();
+	}
 }

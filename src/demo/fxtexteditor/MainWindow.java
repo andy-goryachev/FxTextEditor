@@ -27,6 +27,7 @@ public class MainWindow
 	public final FxAction prefsAction = new FxAction(this::preferences);
 	public final MainPane mainPane;
 	public final CPane content;
+	public final StatusBar statusBar;
 	protected FxBoolean tailMode = new FxBoolean();
 	protected final FxComboBox modelSelector = new FxComboBox();
 	protected final FxComboBox fontSelector = new FxComboBox();
@@ -53,9 +54,12 @@ public class MainWindow
 		content.setTop(createToolbar());
 		content.setCenter(mainPane);
 		
+		statusBar = new StatusBar();
+		
 		setTitle("FxTextEditor");
 		setTop(createMenu());
 		setCenter(content);
+		setBottom(statusBar);
 		setSize(600, 700);
 		
 		// props
@@ -72,6 +76,8 @@ public class MainWindow
 		updateModel();
 		
 //		FX.setPopupMenu(editor(), this::createPopupMenu);
+		
+		statusBar.attach(editor());
 		
 		// debug
 		FxDump.attach(this);

@@ -86,7 +86,7 @@ public class SelectionSegment
 		
 		if(caretAtMin)
 		{
-			return "[" + min + "*-" + max + "]";
+			return "[" + min + "^-" + max + "]";
 		}
 		else
 		{

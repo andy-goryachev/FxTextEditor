@@ -27,6 +27,7 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -207,6 +208,12 @@ public class FxTextEditor
 	protected SelectionController createSelectionController()
 	{
 		return new SelectionController();
+	}
+	
+	
+	public ObservableList<SelectionSegment> selectionSegmentsProperty()
+	{
+		return selector.selectionSegmentsProperty();
 	}
 	
 	

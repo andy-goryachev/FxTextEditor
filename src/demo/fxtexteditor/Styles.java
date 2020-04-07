@@ -18,12 +18,12 @@ public class Styles
 		add
 		(
 			// common fx styles
-			new CommonStyles()
+			new CommonStyles(),
 			
-//			selector(MainPane.PANE, FxEditor.PANE).defines
-//			(
-//				fontSize("200%")
-//			)
+			selector(StatusBar.LABEL).defines
+			(
+				padding(1, 1, 1, 5)
+			)
 		);
 	}
 }
