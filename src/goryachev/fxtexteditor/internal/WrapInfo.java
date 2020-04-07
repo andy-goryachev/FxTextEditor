@@ -13,7 +13,7 @@ public abstract class WrapInfo
 {
 	public abstract int getRowCount();
 	
-	public abstract GlyphIndex getIndexForRow(int row);
+	public abstract int getIndexForRow(int row);
 	
 	public abstract boolean isCompatible(ITabPolicy tabPolicy, int width);
 	
@@ -142,7 +142,7 @@ public abstract class WrapInfo
 	public static class Empty extends WrapInfo
 	{
 		public int getRowCount() { return 1; }
-		public GlyphIndex getIndexForRow(int row) { return GlyphIndex.ZERO; }
+		public int getIndexForRow(int row) { return 0; }
 		public boolean isCompatible(ITabPolicy tabPolicy, int width) { return true; }
 	}
 	
@@ -169,9 +169,9 @@ public abstract class WrapInfo
 		}
 
 
-		public GlyphIndex getIndexForRow(int row)
+		public int getIndexForRow(int row)
 		{
-			return new GlyphIndex(row * width);
+			return row * width;
 		}
 
 
@@ -211,9 +211,9 @@ public abstract class WrapInfo
 		}
 
 
-		public GlyphIndex getIndexForRow(int row)
+		public int getIndexForRow(int row)
 		{
-			return new GlyphIndex(breaks.get(row));
+			return breaks.get(row);
 		}
 		
 		
