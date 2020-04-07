@@ -436,29 +436,60 @@ public class VFlow
 	{
 		if(editor.isWrapLines())
 		{
-			double val;
-			
-			FxTextEditorModel model = editor.getModel();
-			if(model == null)
-			{
-				val = 1.0;
-			}
-			else
-			{
-				// TODO add the number of extra rows due to wrapping (for visible lines)
-				int max = model.getLineCount() + 2;
-				int visible = getScreenRowCount();
-				if(visible > max)
-				{
-					// TODO perhaps suppress scrollbar thumb, but keep the scroll bar itself to avoid another reflow
-					visible = max;
-				}
-				val = visible / (double)max;
-			}
-
-			ScrollBar vscroll = editor.getVerticalScrollBar();
-	        vscroll.setVisibleAmount(val);
+			double val = computeVerticalScrollBarThumbSize();
+			editor.getVerticalScrollBar().setVisibleAmount(val);
 		}
+	}
+	
+	
+	protected double computeVerticalScrollBarThumbSize()
+	{
+		FxTextEditorModel model = editor.getModel();
+		if(model == null)
+		{
+			return 1.0;
+		}
+		
+		// add the number of additional rows created due to wrapping
+		int extraRows = 0;
+		
+		int frameSize = 100;
+		
+		int sz = Math.max(0, topLine - frameSize);
+		for(int i=0; i<sz; i++)
+		{
+			FlowLine fline = getTextLine(topLine - i);
+			WrapInfo wr = getWrapInfo(fline);
+			int ct = wr.getRowCount();
+			if(ct > 1)
+			{
+				extraRows += (ct - 1);
+			}
+		}
+		
+		// TODO when startGlyphIndex != 0
+		
+		sz = Math.min(topLine + getScreenRowCount() + frameSize, model.getLineCount());
+		for(int i=0; i<sz; i++)
+		{
+			FlowLine fline = getTextLine(topLine + i);
+			WrapInfo wr = getWrapInfo(fline);
+			int ct = wr.getRowCount();
+			if(ct > 1)
+			{
+				extraRows += (ct - 1);
+			}
+		}
+		
+		// TODO add the number of extra rows due to wrapping (for visible lines)
+		int max = model.getLineCount() + 2 + extraRows;
+		int visible = getScreenRowCount();
+		if(visible > max)
+		{
+			// TODO perhaps suppress scrollbar thumb, but keep the scroll bar itself to avoid another reflow
+			visible = max;
+		}
+		return visible / (double)max;
 	}
 	
 
