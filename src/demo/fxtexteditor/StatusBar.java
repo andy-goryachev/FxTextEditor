@@ -7,7 +7,7 @@ import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.Marker;
 import goryachev.fxtexteditor.SelectionSegment;
 import java.util.List;
-import javafx.beans.binding.StringBinding;
+import javafx.beans.binding.Bindings;
 import javafx.scene.control.Label;
 
 
@@ -35,15 +35,9 @@ public class StatusBar
 
 	public void attach(FxTextEditor ed)
 	{
-		// FIX use segments instead
-		caret.textProperty().bind(new StringBinding()
-		{
-			{
-				bind(ed.selectionSegmentsProperty());
-			}
-			
-			
-			protected String computeValue()
+		caret.textProperty().bind(Bindings.createStringBinding
+		(
+			() ->
 			{
 				List<SelectionSegment> sel = ed.selectionSegmentsProperty();
 				int sz = sel.size();
@@ -57,7 +51,8 @@ public class StatusBar
 				SelectionSegment seg = sel.get(sz - 1);
 				Marker m = seg.getCaret();
 				return m.getLine() + " : " + m.getCharIndex();
-			}
-		});
+			},
+			ed.selectionSegmentsProperty()
+		));
 	}
 }
