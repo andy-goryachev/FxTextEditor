@@ -18,7 +18,7 @@ public class WrappingReflowHelper
 	public static void reflow(VFlow flow, ScreenBuffer buffer, int width, int height, ITabPolicy tabPolicy)
 	{
 		int lineIndex = flow.getTopLine();
-		GlyphIndex startGlyphIndex = flow.getTopGlyphIndex();
+		int startGlyphIndex = flow.getTopGlyphIndex().intValue();
 		boolean useStartGlyphIndex = true;
 			
 		int modelLineCount = flow.getModelLineCount();
@@ -28,7 +28,7 @@ public class WrappingReflowHelper
 		ScreenRow r = null;
 		FlowLine fline = null;
 		GlyphIndex[] glyphOffsets = AVOID_COMPILER_WARNING;
-		GlyphIndex glyphIndex = GlyphIndex.ZERO;
+		int glyphIndex = 0;
 		int tabDistance = 0;
 		boolean complex = false;
 		boolean bol = true;
@@ -57,8 +57,8 @@ public class WrappingReflowHelper
 				}
 				else
 				{
-					glyphIndex = GlyphIndex.ZERO;
-					startGlyphIndex = GlyphIndex.ZERO;
+					glyphIndex = 0;
+					startGlyphIndex = 0;
 				}
 			}
 			
@@ -78,7 +78,7 @@ public class WrappingReflowHelper
 			if(x == 0)
 			{
 				r.initLine(fline, lineIndex, modelLineCount, bol);
-				r.setStartGlyphIndex(startGlyphIndex);
+				r.setStartGlyphIndex(new GlyphIndex(startGlyphIndex));
 				bol = false;
 				
 				FxTextEditorModel m = flow.getEditor().getModel();
@@ -103,7 +103,7 @@ public class WrappingReflowHelper
 				}
 				else
 				{
-					glyphOffsets[x] = GlyphIndex.inTab(tabDistance, false, glyphIndex.intValue());
+					glyphOffsets[x] = GlyphIndex.inTab(tabDistance, false, glyphIndex);
 					--tabDistance;
 					x++;
 				}
@@ -137,13 +137,13 @@ public class WrappingReflowHelper
 						tabDistance = tabPolicy.nextTabStop(x) - x;
 						glyphOffsets[x] = GlyphIndex.inTab(tabDistance, true, cellIndex);
 						--tabDistance;
-						glyphIndex = glyphIndex.increment();
+						glyphIndex++;
 						cellIndex++;
 						x++;
 						break;
 					case NORMAL:
-						glyphOffsets[x] = glyphIndex;
-						glyphIndex = glyphIndex.increment();
+						glyphOffsets[x] = new GlyphIndex(glyphIndex);
+						glyphIndex++;
 						cellIndex++;
 						x++;
 						break;
@@ -155,7 +155,7 @@ public class WrappingReflowHelper
 			else
 			{
 				// simple case: cell indexes coincide with glyph indexes
-				int ix = glyphIndex.intValue();
+				int ix = glyphIndex;
 				if(ix + width >= r.getGlyphCount())
 				{
 					// end of line
@@ -170,7 +170,7 @@ public class WrappingReflowHelper
 				{
 					// middle of line
 					r.setCellCount(width);
-					glyphIndex = glyphIndex.add(width);
+					glyphIndex += width;
 					cellIndex += width;
 					startGlyphIndex = glyphIndex;
 				}
@@ -181,112 +181,4 @@ public class WrappingReflowHelper
 			}
 		}
 	}
-
-
-//	@Deprecated // TODO move to WrapInfo
-//	public static int computeBreaks(VerticalScrollHelper helper, ITabPolicy tabPolicy, FlowLine fline, int xmax)
-//	{
-//		int lineIndex = fline.getModelIndex();
-//		if(lineIndex < 0)
-//		{
-//			return 0;
-//		}
-//		
-//		int cellIndex = 0;
-//		int x = 0;
-//		GlyphIndex startGlyphIndex = GlyphIndex.ZERO;
-//		GlyphIndex glyphIndex = GlyphIndex.ZERO;
-//		int tabDistance = 0;
-//		boolean bol = true;
-//		
-//		boolean complex = fline.hasComplexGlyphs();
-//		if(!complex)
-//		{
-//			if(!tabPolicy.isSimple())
-//			{
-//				complex |= fline.hasTabs();
-//			}
-//		}
-//		
-//		helper.addEntry(lineIndex, startGlyphIndex);
-//		
-//		int y = 1;
-//		
-//		for(;;)
-//		{
-//			if(tabDistance > 0)
-//			{
-//				if(x >= xmax)
-//				{
-//					// carry on to next line, resetting tab distance
-//					startGlyphIndex = glyphIndex;
-//					tabDistance = 0;
-//					x = 0;
-//					y++;
-//					bol = false;
-//				}
-//				else
-//				{
-//					--tabDistance;
-//					x++;
-//				}
-//			}
-//			else if(complex)
-//			{
-//				if(x >= xmax)
-//				{
-//					// next row
-//					startGlyphIndex = glyphIndex;
-//					tabDistance = 0;
-//					x = 0;
-//					y++;
-//					helper.addEntry(lineIndex, startGlyphIndex);
-//				}
-//				else
-//				{
-//					GlyphType gt = fline.getGlyphType(glyphIndex);
-//					switch(gt)
-//					{
-//					case EOL:
-//						return y;
-//					case TAB:
-//						tabDistance = tabPolicy.nextTabStop(x) - x;
-//						--tabDistance;
-//						glyphIndex = glyphIndex.increment();
-//						cellIndex++;
-//						x++;
-//						break;
-//					case NORMAL:
-//						glyphIndex = glyphIndex.increment();
-//						cellIndex++;
-//						x++;
-//						break;
-//					default:
-//						throw new Error("?" + gt);
-//					}
-//				}
-//			}
-//			else
-//			{
-//				// simple case, cell indexes coincide with glyph indexes
-//				if(cellIndex + xmax >= fline.glyphInfo().getGlyphCount())
-//				{
-//					// end of line
-//					return y;
-//				}
-//				else
-//				{
-//					// middle of line
-//					glyphIndex = glyphIndex.add(xmax);
-//					cellIndex += xmax;
-//					startGlyphIndex = glyphIndex;
-//				}
-//				
-//				x = 0;
-//				y++;
-//
-//				helper.addEntry(lineIndex, startGlyphIndex);
-//			}
-//		}
-//	}
 }

@@ -172,7 +172,7 @@ public class GlyphIndex
 		}
 		else
 		{
-			throw new Error("cannot increment non-regular index");
+			throw new Error("cannot increment non-regular index:" + index);
 		}
 	}
 

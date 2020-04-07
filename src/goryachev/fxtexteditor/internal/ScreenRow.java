@@ -79,8 +79,15 @@ public class ScreenRow
 	}
 	
 	
-	/** returns the type of a glyph at the specified cell index. */
+	/** returns the type of a glyph at the specified glyph (cell) index. */
 	public GlyphType getGlyphType(GlyphIndex glyphIndex)
+	{
+		return fline.getGlyphType(glyphIndex);
+	}
+	
+	
+	/** returns the type of a glyph at the specified glyph (cell) index. */
+	public GlyphType getGlyphType(int glyphIndex)
 	{
 		return fline.getGlyphType(glyphIndex);
 	}
