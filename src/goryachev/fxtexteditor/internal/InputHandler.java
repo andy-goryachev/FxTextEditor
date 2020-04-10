@@ -54,16 +54,16 @@ public class InputHandler
 		vflow.addEventFilter(ScrollEvent.ANY, (ev) -> handleScroll(ev));
 		
 		// key map
-		KeyMap.onKeyPressed(ed, KeyCode.A, KeyMap.SHORTCUT, ed::selectAll);
-		KeyMap.onKeyPressed(ed, KeyCode.C, KeyMap.SHORTCUT, ed::copy);
-		KeyMap.onKeyPressed(ed, KeyCode.DOWN, ed::moveDown);
-		KeyMap.onKeyPressed(ed, KeyCode.PAGE_DOWN, ed::pageDown);
-		KeyMap.onKeyPressed(ed, KeyCode.PAGE_UP, ed::pageUp);
-		KeyMap.onKeyPressed(ed, KeyCode.UP, ed::moveUp);
-		KeyMap.onKeyPressed(ed, KeyCode.HOME, ed::moveHome);
-		KeyMap.onKeyPressed(ed, KeyCode.END, ed::moveEnd);
-		KeyMap.onKeyPressed(ed, KeyCode.DELETE, ed::keyDelete);
-		KeyMap.onKeyPressed(ed, KeyCode.BACK_SPACE, ed::keyBackspace);
+		KeyMap.onKeyPressed(ed, KeyCode.A, KeyMap.SHORTCUT, ed.selectAllAction);
+		KeyMap.onKeyPressed(ed, KeyCode.C, KeyMap.SHORTCUT, ed.copyAction);
+		KeyMap.onKeyPressed(ed, KeyCode.DOWN, ed.moveDownAction);
+		KeyMap.onKeyPressed(ed, KeyCode.PAGE_DOWN, ed.pageDownAction);
+		KeyMap.onKeyPressed(ed, KeyCode.PAGE_UP, ed.pageUpAction);
+		KeyMap.onKeyPressed(ed, KeyCode.UP, ed.moveUpAction);
+		KeyMap.onKeyPressed(ed, KeyCode.HOME, ed.moveHomeAction);
+		KeyMap.onKeyPressed(ed, KeyCode.END, ed.moveEndAction);
+		KeyMap.onKeyPressed(ed, KeyCode.DELETE, ed.deleteAction);
+		KeyMap.onKeyPressed(ed, KeyCode.BACK_SPACE, ed.backspaceAction);
 		
 		// TODO remove?
 		ed.addEventFilter(KeyEvent.KEY_PRESSED, (ev) -> handleKeyPressed(ev));
@@ -84,11 +84,11 @@ public class InputHandler
 			// page up / page down
 			if(ev.getDeltaY() >= 0)
 			{
-				editor.pageUp();
+				editor.doPageUp();
 			}
 			else
 			{
-				editor.pageDown();
+				editor.doPageDown();
 			}
 		}
 		else

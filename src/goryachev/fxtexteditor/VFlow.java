@@ -25,7 +25,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -935,5 +934,34 @@ public class VFlow
 	{
 		// wrapping info is cached
 		return fline.getWrapInfo(editor.getTabPolicy(), getScreenColumnCount());
+	}
+	
+	
+	public void pageUp()
+	{
+		// TODO
+	}
+	
+	
+	public void pageDown()
+	{
+		// TODO need the concept of last caret
+		// single caret: create phantom x position, move caret + screen height
+		// multiple carets: reset to a single caret using last caret, then follow the single caret logic
+		
+		// TODO
+	}
+	
+	
+	public void moveUp()
+	{
+		// TODO
+		// last caret
+	}
+	
+	
+	public void moveDown()
+	{
+		// TODO
 	}
 }

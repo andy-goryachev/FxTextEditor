@@ -48,8 +48,16 @@ import javafx.util.Duration;
 public class FxTextEditor
 	extends CPane
 {
-	public final FxAction copyAction = new FxAction(this::copy);
-	public final FxAction selectAllAction = new FxAction(this::selectAll);
+	public final FxAction backspaceAction = new FxAction(this::doBackspace);
+	public final FxAction copyAction = new FxAction(this::doCopy);
+	public final FxAction deleteAction = new FxAction(this::doDelete);
+	public final FxAction moveDownAction = new FxAction(this::doMoveDown);
+	public final FxAction moveEndAction = new FxAction(this::doMoveEnd);
+	public final FxAction moveHomeAction = new FxAction(this::doMoveHome);
+	public final FxAction moveUpAction = new FxAction(this::doMoveUp);
+	public final FxAction pageDownAction = new FxAction(this::doPageDown);
+	public final FxAction pageUpAction = new FxAction(this::doPageUp);
+	public final FxAction selectAllAction = new FxAction(this::doSelectAll);
 	
 	protected final Log log = Log.get("FxTextEditor");
 	protected final FxObject<Color> backgroundColorProperty = new FxObject(Color.WHITE);
@@ -582,55 +590,54 @@ public class FxTextEditor
 	}
 	
 	
-	public void pageUp()
+	public void doPageUp()
 	{
-		// TODO
-//		vflow.pageUp();
+		vflow.pageUp();
 	}
 	
 	
-	public void pageDown()
+	public void doPageDown()
 	{
 		// TODO need the concept of last caret
 		// single caret: create phantom x position, move caret + screen height
 		// multiple carets: reset to a single caret using last caret, then follow the single caret logic
-		D.print("pageDown"); // FIX
+		vflow.pageDown();
 	}
 	
 	
-	public void moveUp()
+	public void doMoveUp()
+	{
+		vflow.moveUp();
+	}
+	
+	
+	public void doMoveDown()
+	{
+		vflow.moveDown();
+	}
+	
+	
+	public void doMoveHome()
 	{
 		// TODO
-//		vflow.moveUp();
+		// if wrapped: row start, then prev row start, then start of text line.
 	}
 	
 	
-	public void moveDown()
+	public void doMoveEnd()
 	{
 		// TODO
-//		vflow.moveDown();
+		// if wrapped: end of row, then end of next row, ... finally end of text line.
 	}
 	
 	
-	public void moveHome()
-	{
-		// TODO
-	}
-	
-	
-	public void moveEnd()
+	public void doBackspace()
 	{
 		// TODO
 	}
 	
 	
-	public void keyBackspace()
-	{
-		// TODO
-	}
-	
-	
-	public void keyDelete()
+	public void doDelete()
 	{
 		// TODO
 	}
@@ -651,7 +658,7 @@ public class FxTextEditor
 	
 	
 	/** copies all supported formats */
-	public void copy()
+	public void doCopy()
 	{
 		// TODO
 //		copy(null, getModel().getSupportedFormats());
@@ -666,7 +673,7 @@ public class FxTextEditor
 	}
 	
 	
-	public void selectAll()
+	public void doSelectAll()
 	{
 		int ix = getLineCount();
 		if(ix > 0)
