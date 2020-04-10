@@ -1,10 +1,10 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
-import goryachev.common.util.CList;
 import goryachev.common.util.CMap;
 import goryachev.common.util.text.IBreakIterator;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.ITextLine;
+import java.util.Iterator;
 import java.util.Random;
 
 
@@ -16,7 +16,7 @@ public class FlowLineCache
 	private final FxTextEditor editor;
 	private final int capacity;
 	private final CMap<Integer,FlowLine> cache;
-	private final CList<Integer> keys;
+	private final Random random = new Random();
 	
 	
 	public FlowLineCache(FxTextEditor editor, int capacity)
@@ -29,13 +29,6 @@ public class FlowLineCache
 		this.editor = editor;
 		this.capacity = capacity;
 		cache = new CMap(capacity);
-		keys = new CList(capacity);
-	}
-	
-	
-	public int size()
-	{
-		return cache.size();
 	}
 	
 
@@ -45,34 +38,27 @@ public class FlowLineCache
 	}
 	
 	
-	protected void evict()
+	protected void prune()
 	{
-		int ix = new Random().nextInt(size());
-		Integer key = keys.get(ix);
-		Integer moved = keys.removeLast();
-		if(moved != null)
+		Iterator<FlowLine> it = cache.values().iterator();
+		while(it.hasNext())
 		{
-			if(ix == (size() - 1))
+			it.next();
+			boolean remove = random.nextBoolean();
+			if(remove)
 			{
-				keys.add(moved);
-			}
-			else
-			{
-				keys.set(ix, moved);
+				it.remove();
 			}
 		}
-		cache.remove(key);
 	}
 	
 	
 	public FlowLine insert(int key, ITextLine t)
 	{
-		if(size() >= (capacity - 1))
+		if(cache.size() >= (capacity - 1))
 		{
-			evict();
+			prune();
 		}
-		
-		keys.add(key);
 		
 		FlowLine f = new FlowLine(t, createInfo(t));
 		cache.put(key, f);
@@ -82,7 +68,6 @@ public class FlowLineCache
 	
 	public void clear()
 	{
-		keys.clear();
 		cache.clear();
 	}
 	

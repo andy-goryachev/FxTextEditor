@@ -40,6 +40,7 @@ import javafx.util.Duration;
 public class VFlow
 	extends CPane
 {
+	private static final int LINE_CACHE_SIZE = 1024;
 	private static final double LINE_NUMBERS_BG_OPACITY = 0.1;
 	private static final double CARET_LINE_OPACITY = 0.3;
 	private static final double SELECTION_BACKGROUND_OPACITY = 0.4;
@@ -84,7 +85,7 @@ public class VFlow
 	public VFlow(FxTextEditor ed)
 	{
 		this.editor = ed;
-		cache = new FlowLineCache(ed, 256);
+		cache = new FlowLineCache(ed, LINE_CACHE_SIZE);
 		
 		setMinWidth(0);
 		setMinHeight(0);
@@ -452,12 +453,12 @@ public class VFlow
 		// add the number of additional rows created due to wrapping
 		int extraRows = 0;
 		
-		int frameSize = 100;
+		int frameSize = 10;
 		
-		int sz = Math.max(0, topLine - frameSize);
-		for(int i=0; i<sz; i++)
+		int min = Math.max(0, topLine - frameSize);
+		for(int ix=topLine; ix>=min; ix--)
 		{
-			FlowLine fline = getTextLine(topLine - i);
+			FlowLine fline = getTextLine(ix);
 			WrapInfo wr = getWrapInfo(fline);
 			int ct = wr.getRowCount();
 			if(ct > 1)
@@ -468,10 +469,10 @@ public class VFlow
 		
 		// TODO when startGlyphIndex != 0
 		
-		sz = Math.min(topLine + getScreenRowCount() + frameSize, model.getLineCount());
-		for(int i=0; i<sz; i++)
+		int max = Math.min(topLine + getScreenRowCount() + frameSize, model.getLineCount());
+		for(int ix=topLine; ix<max; ix++)
 		{
-			FlowLine fline = getTextLine(topLine + i);
+			FlowLine fline = getTextLine(ix);
 			WrapInfo wr = getWrapInfo(fline);
 			int ct = wr.getRowCount();
 			if(ct > 1)
@@ -481,14 +482,14 @@ public class VFlow
 		}
 		
 		// TODO add the number of extra rows due to wrapping (for visible lines)
-		int max = model.getLineCount() + 2 + extraRows;
+		int total = model.getLineCount() + 2 + extraRows;
 		int visible = getScreenRowCount();
-		if(visible > max)
+		if(visible > total)
 		{
 			// TODO perhaps suppress scrollbar thumb, but keep the scroll bar itself to avoid another reflow
-			visible = max;
+			visible = total;
 		}
-		return visible / (double)max;
+		return visible / (double)total;
 	}
 	
 
