@@ -954,13 +954,6 @@ public class VFlow
 	}
 	
 	
-	public void moveUp()
-	{
-		// TODO
-		// last caret
-	}
-	
-	
 	public void moveDown()
 	{
 		// TODO

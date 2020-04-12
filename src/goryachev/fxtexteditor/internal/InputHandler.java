@@ -59,7 +59,7 @@ public class InputHandler
 		KeyMap.onKeyPressed(ed, KeyCode.DOWN, ed.moveDownAction);
 		KeyMap.onKeyPressed(ed, KeyCode.PAGE_DOWN, ed.pageDownAction);
 		KeyMap.onKeyPressed(ed, KeyCode.PAGE_UP, ed.pageUpAction);
-		KeyMap.onKeyPressed(ed, KeyCode.UP, ed.moveUpAction);
+		KeyMap.onKeyPressed(ed, KeyCode.UP, ed.actions.moveUpAction);
 		KeyMap.onKeyPressed(ed, KeyCode.HOME, ed.moveHomeAction);
 		KeyMap.onKeyPressed(ed, KeyCode.END, ed.moveEndAction);
 		KeyMap.onKeyPressed(ed, KeyCode.DELETE, ed.deleteAction);

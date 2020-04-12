@@ -2,7 +2,6 @@
 package goryachev.fxtexteditor;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
-import goryachev.common.util.D;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.Formatters;
@@ -48,17 +47,18 @@ import javafx.util.Duration;
 public class FxTextEditor
 	extends CPane
 {
+	public final Actions actions = new Actions(this);
+	// TODO move to actions
 	public final FxAction backspaceAction = new FxAction(this::doBackspace);
 	public final FxAction copyAction = new FxAction(this::doCopy);
 	public final FxAction deleteAction = new FxAction(this::doDelete);
 	public final FxAction moveDownAction = new FxAction(this::doMoveDown);
 	public final FxAction moveEndAction = new FxAction(this::doMoveEnd);
 	public final FxAction moveHomeAction = new FxAction(this::doMoveHome);
-	public final FxAction moveUpAction = new FxAction(this::doMoveUp);
 	public final FxAction pageDownAction = new FxAction(this::doPageDown);
 	public final FxAction pageUpAction = new FxAction(this::doPageUp);
 	public final FxAction selectAllAction = new FxAction(this::doSelectAll);
-	
+
 	protected final Log log = Log.get("FxTextEditor");
 	protected final FxObject<Color> backgroundColorProperty = new FxObject(Color.WHITE);
 	protected final FxObject<Font> fontProperty = new FxObject(Font.font("Monospace", 12));
@@ -605,10 +605,10 @@ public class FxTextEditor
 	}
 	
 	
-	public void doMoveUp()
-	{
-		vflow.moveUp();
-	}
+//	public void doMoveUp()
+//	{
+//		vflow.moveUp();
+//	}
 	
 	
 	public void doMoveDown()
