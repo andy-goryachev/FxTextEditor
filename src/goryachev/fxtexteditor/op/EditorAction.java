@@ -9,28 +9,31 @@ import goryachev.fxtexteditor.VFlow;
 /**
  * Editor Action.
  */
-public class EditorAction
+public abstract class EditorAction
 	extends FxAction
 {
-	protected final FxTextEditor editor;
-	protected final VFlow vflow;
+	protected abstract void action();
+	
+	//
+	
+	protected final Actions actions;
 
 	
 	public EditorAction(Actions a)
 	{
-		editor = a.editor();
-		vflow = a.vflow();
+		actions = a;
+		setOnAction(this::action);
 	}
 	
 	
 	public FxTextEditor editor()
 	{
-		return editor;
+		return actions.editor();
 	}
 	
 	
 	public VFlow vflow()
 	{
-		return vflow;
+		return actions.vflow();
 	}
 }

@@ -1058,7 +1058,7 @@ public final class FX
 				}
 				else
 				{
-					a.action();
+					a.invokeAction();
 					ev.consume();
 				}
 			}

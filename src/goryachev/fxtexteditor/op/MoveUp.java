@@ -1,7 +1,6 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.op;
 import goryachev.fxtexteditor.Actions;
-import goryachev.fxtexteditor.FxTextEditor;
 
 
 /**
@@ -13,6 +12,12 @@ public class MoveUp
 	public MoveUp(Actions a)
 	{
 		super(a);
+	}
+	
+	
+	protected void action()
+	{
+		moveUp();
 	}
 	
 	
