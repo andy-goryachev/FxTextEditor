@@ -1,6 +1,7 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
-import goryachev.fx.FxAction;
+import goryachev.fxtexteditor.op.MoveLeft;
+import goryachev.fxtexteditor.op.MoveRight;
 import goryachev.fxtexteditor.op.MoveUp;
 
 
@@ -9,7 +10,10 @@ import goryachev.fxtexteditor.op.MoveUp;
  */
 public class Actions
 {
-	public final MoveUp moveUpAction = new MoveUp(this);
+	public final MoveLeft moveLeft = new MoveLeft(this);
+	public final MoveRight moveRight = new MoveRight(this);
+	public final MoveUp moveUp = new MoveUp(this);
+	//
 	private final FxTextEditor editor;
 	
 	
@@ -28,5 +32,11 @@ public class Actions
 	public VFlow vflow()
 	{
 		return editor.vflow;
+	}
+	
+	
+	public SelectionController selector()
+	{
+		return editor.selector;
 	}
 }

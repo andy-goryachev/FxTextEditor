@@ -93,6 +93,12 @@ public class FlowLine
 	}
 	
 	
+	public GlyphIndex getGlyphIndex(int charIndex)
+	{
+		return info.getGlyphIndex(charIndex);
+	}
+	
+	
 	public int getTextLength()
 	{
 		return tline == null ? 0 : tline.getTextLength();

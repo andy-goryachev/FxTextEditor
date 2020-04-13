@@ -1,6 +1,7 @@
 // Copyright © 2017-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.CKit;
+import java.util.Iterator;
 
 
 /**
@@ -8,6 +9,7 @@ import goryachev.common.util.CKit;
  * Segments are guaranteed to be non-overlapping and ordered from top to bottom.
  */
 public class EditorSelection
+	implements Iterable<SelectionSegment>
 {
 	public static final EditorSelection EMPTY = createEmpty();
 	private final SelectionSegment[] segments;
@@ -114,5 +116,11 @@ public class EditorSelection
 		}
 		
 		return segments[segments.length - 1].getCaret();
+	}
+
+
+	public Iterator<SelectionSegment> iterator()
+	{
+		return CKit.iterator(segments);
 	}
 }

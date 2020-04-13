@@ -3,6 +3,7 @@ package goryachev.fxtexteditor.op;
 import goryachev.fx.FxAction;
 import goryachev.fxtexteditor.Actions;
 import goryachev.fxtexteditor.FxTextEditor;
+import goryachev.fxtexteditor.SelectionController;
 import goryachev.fxtexteditor.VFlow;
 
 
@@ -35,5 +36,11 @@ public abstract class EditorAction
 	public VFlow vflow()
 	{
 		return actions.vflow();
+	}
+	
+	
+	public SelectionController selector()
+	{
+		return actions.selector();
 	}
 }

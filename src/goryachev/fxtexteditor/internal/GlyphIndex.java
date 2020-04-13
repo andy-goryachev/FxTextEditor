@@ -155,6 +155,12 @@ public class GlyphIndex
 	}
 	
 	
+	public GlyphIndex decrement()
+	{
+		return add(-1);
+	}
+	
+	
 	public GlyphIndex add(int delta)
 	{
 		if(isRegular())

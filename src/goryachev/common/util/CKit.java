@@ -32,6 +32,8 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -2461,5 +2463,33 @@ public final class CKit
 			return x;
 		}
 		return v;
+	}
+	
+	
+	public static <T> Iterator<T> iterator(T[] items)
+	{
+		if(items == null)
+		{
+			return Collections.emptyIterator();
+		}
+		else
+		{
+			return new Iterator<T>()
+			{
+				private int ix;
+				
+				
+				public boolean hasNext()
+				{
+					return ix < items.length;
+				}
+
+				
+				public T next()
+				{
+					return items[ix++];
+				}
+			};
+		}
 	}
 }

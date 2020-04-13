@@ -109,7 +109,13 @@ public class SelectionController
 
 	public void addSelectionSegment(Marker anchor, Marker caret)
 	{
-		mergeSegments(new SelectionSegment(anchor, caret));
+		addSelectionSegment(new SelectionSegment(anchor, caret));
+	}
+	
+	
+	public void addSelectionSegment(SelectionSegment seg)
+	{
+		mergeSegments(seg);
 		originalSelection = null;
 	}
 	

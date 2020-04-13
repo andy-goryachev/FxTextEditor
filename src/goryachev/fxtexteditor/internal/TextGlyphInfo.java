@@ -1,6 +1,7 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.common.util.text.IBreakIterator;
+import java.util.Arrays;
 
 
 /**
@@ -12,6 +13,8 @@ public abstract class TextGlyphInfo
 	public abstract String getGlyphText(int glyphIndex);
 
 	public abstract int getCharIndex(GlyphIndex glyphIndex);
+	
+	public abstract GlyphIndex getGlyphIndex(int charIndex);
 
 	public abstract int getGlyphCount();
 
@@ -179,6 +182,12 @@ public abstract class TextGlyphInfo
 		{
 			return glyphIndex.intValue();
 		}
+		
+		
+		public GlyphIndex getGlyphIndex(int charIndex)
+		{
+			return new GlyphIndex(charIndex);
+		}
 
 
 		public int getGlyphCount()
@@ -203,11 +212,11 @@ public abstract class TextGlyphInfo
 		private final int[] charOffsets;
 		
 		
-		public COMPLEX(String text, boolean hasTabs, boolean hasComplex, int[] offsets)
+		public COMPLEX(String text, boolean hasTabs, boolean hasComplex, int[] charOffsets)
 		{
 			super(text, hasTabs);
 			this.hasComplex = hasComplex;
-			this.charOffsets = offsets;
+			this.charOffsets = charOffsets;
 		}
 
 
@@ -220,6 +229,20 @@ public abstract class TextGlyphInfo
 		public int getCharIndex(GlyphIndex glyphIndex)
 		{
 			return charOffsets[glyphIndex.intValue()];
+		}
+		
+		
+		public GlyphIndex getGlyphIndex(int charIndex)
+		{
+			// this can be replaced either by a separate array
+			// possibly created on demand.
+			// but for now, let's assume the binary search should be faster and easier on memory
+			int ix = Arrays.binarySearch(charOffsets, charIndex);
+			if(ix < 0)
+			{
+				ix = -ix;
+			}
+			return GlyphIndex.of(ix);
 		}
 
 
