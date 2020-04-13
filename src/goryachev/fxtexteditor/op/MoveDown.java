@@ -6,12 +6,12 @@ import goryachev.fxtexteditor.internal.NavigationAction;
 
 
 /**
- * Moves Cursor(s) Up.
+ * Moves Cursor(s) Down.
  */
-public class MoveUp
+public class MoveDown
 	extends NavigationAction
 {
-	public MoveUp(Actions a)
+	public MoveDown(Actions a)
 	{
 		super(a);
 	}

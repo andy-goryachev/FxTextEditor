@@ -52,7 +52,6 @@ public class FxTextEditor
 	public final FxAction backspaceAction = new FxAction(this::doBackspace);
 	public final FxAction copyAction = new FxAction(this::doCopy);
 	public final FxAction deleteAction = new FxAction(this::doDelete);
-	public final FxAction moveDownAction = new FxAction(this::doMoveDown);
 	public final FxAction moveEndAction = new FxAction(this::doMoveEnd);
 	public final FxAction moveHomeAction = new FxAction(this::doMoveHome);
 	public final FxAction pageDownAction = new FxAction(this::doPageDown);
@@ -602,18 +601,6 @@ public class FxTextEditor
 		// single caret: create phantom x position, move caret + screen height
 		// multiple carets: reset to a single caret using last caret, then follow the single caret logic
 		vflow.pageDown();
-	}
-	
-	
-//	public void doMoveUp()
-//	{
-//		vflow.moveUp();
-//	}
-	
-	
-	public void doMoveDown()
-	{
-		vflow.moveDown();
 	}
 	
 	

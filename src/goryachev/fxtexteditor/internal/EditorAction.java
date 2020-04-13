@@ -1,7 +1,8 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
-package goryachev.fxtexteditor.op;
+package goryachev.fxtexteditor.internal;
 import goryachev.fx.FxAction;
 import goryachev.fxtexteditor.Actions;
+import goryachev.fxtexteditor.EditorSelection;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.SelectionController;
 import goryachev.fxtexteditor.VFlow;
@@ -42,5 +43,11 @@ public abstract class EditorAction
 	public SelectionController selector()
 	{
 		return actions.selector();
+	}
+	
+	
+	public EditorSelection selection()
+	{
+		return actions.selector().getSelection();
 	}
 }

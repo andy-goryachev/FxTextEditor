@@ -955,12 +955,6 @@ public class VFlow
 		// TODO
 	}
 	
-	
-	public void moveDown()
-	{
-		// TODO
-	}
-
 
 	public void scrollSelectionToVisible()
 	{
