@@ -956,9 +956,67 @@ public class VFlow
 	}
 	
 
+	/** 
+	 * scrolls the last selection caret to visible area.  
+	 * makes an attempt to make visible all the carets, if that is possible 
+	 */
 	public void scrollSelectionToVisible()
 	{
+		int min;
+		int max;
+		int last;
+		
+		// do we need to move at all (check only last caret)?
+		// if yes, find out where
+		
+//		SelectionSegment[] sel = getSelectionSegments();
+		EditorSelection sel = editor.getSelection();
+		Marker m = sel.getLastCaret();
+		if(isVisible(m))
+		{
+			return;
+		}
+		
 		// TODO
 		D.print("scrollSelectionToVisible TODO");
+	}
+	
+	
+	protected boolean isVisible(Marker m)
+	{
+		FlowLine fline = getTextLine(topLine);
+		int pos = fline.getCharIndex(topGlyphIndex);
+		if(m.isBefore(topLine, pos))
+		{
+			return false;
+		}
+		
+		int h = buffer.getHeight();
+		int w = buffer.getWidth();
+		
+		ScreenRow r = buffer.getScreenRow(h - 1);
+		int line = r.getLineIndex();
+		if(line < 0)
+		{
+			return true;
+		}
+		
+		if(topLine != line)
+		{
+			fline = getTextLine(line);
+			if(fline == null)
+			{
+				return true;
+			}
+		}
+		
+		GlyphIndex gix = r.getGlyphIndex(w - 1);
+		pos = fline.getCharIndex(gix);
+		if(m.isAfter(line, pos))
+		{
+			return false;
+		}
+		
+		return true;
 	}
 }
