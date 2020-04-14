@@ -18,7 +18,6 @@ This is achieved using monospaced font and rendering model, unlike its sibling, 
 
 * supports up to 2^31 lines of text
 * efficiently handles very long lines
-* multiple selection and carets
 * supports syntax highlight
 * basic text attributes: bold, italic, underline, strikethrough
 * variable tab width

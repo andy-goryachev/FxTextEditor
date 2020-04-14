@@ -1,22 +1,19 @@
 // Copyright © 2017-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
-import goryachev.common.util.CList;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.property.ReadOnlyProperty;
 
 
 /**
- * FxEditor Selection Controller.
+ * FxTextEditor Selection Controller.
  */
 public class SelectionController
 {
-	public final ObservableList<SelectionSegment> segments = FXCollections.observableArrayList();
+	private final ReadOnlyObjectWrapper<SelectionSegment> segment =  new ReadOnlyObjectWrapper(null);
 	private final ReadOnlyObjectWrapper<EditorSelection> selectionProperty = new ReadOnlyObjectWrapper(EditorSelection.EMPTY);
 	private Marker anchor;
-	private CList<SelectionSegment> originalSelection;
-	private ObservableList<SelectionSegment> readOnlySegmentsList;
+	private SelectionSegment originalSelection;
 
 
 	public SelectionController()
@@ -39,7 +36,7 @@ public class SelectionController
 
 	public void clear()
 	{
-		segments.clear();
+		segment.set(null);
 		originalSelection = null;
 	}
 	
@@ -47,7 +44,8 @@ public class SelectionController
 	/** returns true if marker is inside of any selection segment */
 	public boolean isSelected(Marker pos)
 	{
-		for(SelectionSegment s: segments)
+		SelectionSegment s = segment.get();
+		if(s != null)
 		{
 			if(s.contains(pos))
 			{
@@ -60,7 +58,8 @@ public class SelectionController
 
 	public boolean isSelected(int line, int pos)
 	{
-		for(SelectionSegment s: segments)
+		SelectionSegment s = segment.get();
+		if(s != null)
 		{
 			if(s.contains(line, pos))
 			{
@@ -75,7 +74,8 @@ public class SelectionController
 	{
 		if(line >= 0)
 		{
-			for(SelectionSegment s: segments)
+			SelectionSegment s = segment.get();
+			if(s != null)
 			{
 				if(s.isCaretLine(line))
 				{
@@ -89,7 +89,8 @@ public class SelectionController
 	
 	public boolean isCaret(int line, int pos)
 	{
-		for(SelectionSegment s: segments)
+		SelectionSegment s = segment.get();
+		if(s != null)
 		{
 			if(s.isCaret(line, pos))
 			{
@@ -140,7 +141,7 @@ public class SelectionController
 	public void setAnchor(Marker p)
 	{
 		anchor = p;
-		originalSelection = new CList<>(segments);
+		originalSelection = segment.get();
 	}
 	
 	
@@ -160,48 +161,46 @@ public class SelectionController
 	}
 	
 	
+	public ReadOnlyProperty<SelectionSegment> selectionSegmentProperty()
+	{
+		return segment.getReadOnlyProperty();
+	}
+	
+	
+	public SelectionSegment getSelectedSegment()
+	{
+		return segment.get();
+	}
+	
+	
 	protected void mergeSegments(SelectionSegment seg)
 	{
+		if(seg == null)
+		{
+			return;
+		}
+		
 		if(originalSelection == null)
 		{
-			originalSelection = new CList<>(segments);
+			originalSelection = segment.get();
 		}
 		
 		// merge last segment and original selection to produce ordered, non-overlapping segments
-		CList<SelectionSegment> ordered = new CList(originalSelection.size() + 1);
-		for(SelectionSegment s: originalSelection)
+		SelectionSegment rv;
+		if(originalSelection == null)
 		{
-			if(seg == null)
-			{
-				ordered.add(s);
-			}
-			else
-			{
-				if(seg.overlaps(s))
-				{
-					seg = seg.merge(s);
-				}
-				else if(seg.isBefore(s))
-				{
-					ordered.add(seg);
-					ordered.add(s);
-					seg = null;
-				}
-				else
-				{
-					ordered.add(s);
-				}
-			}
+			rv = seg;
+		}
+		else if(seg.overlaps(originalSelection))
+		{
+			rv = seg.merge(originalSelection);
+		}
+		else
+		{
+			rv = seg;
 		}
 		
-		if(seg != null)
-		{
-			ordered.add(seg);
-		}
-		
-		// sorted list contains the new selection
-		// we could merge the original list, but for now it's easier just to replace the items
-		segments.setAll(ordered);
+		segment.set(rv);
 	}
 	
 
@@ -210,17 +209,7 @@ public class SelectionController
 	{
 		originalSelection = null;
 		
-		EditorSelection es = new EditorSelection(segments.toArray(new SelectionSegment[segments.size()]));
+		EditorSelection es = new EditorSelection(segment.get());
 		selectionProperty.set(es);
-	}
-
-
-	public ObservableList<SelectionSegment> selectionSegmentsProperty()
-	{
-		if(readOnlySegmentsList == null)
-		{
-			readOnlySegmentsList = FXCollections.unmodifiableObservableList(segments);
-		}
-		return readOnlySegmentsList;
 	}
 }

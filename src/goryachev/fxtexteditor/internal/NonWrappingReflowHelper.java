@@ -18,7 +18,7 @@ public class NonWrappingReflowHelper
 		int lineIndex = flow.getTopLine();
 		int modelLineCount = flow.getModelLineCount();
 		int topCellIndex = flow.getTopCellIndex();
-		SelectionSegment[] selection = flow.getSelectionSegments();
+		SelectionSegment sel = flow.getSelectionSegment();
 		int selectedSegmentIndex;
 		
 		for(int y=0; y<ymax; y++)
@@ -118,19 +118,19 @@ public class NonWrappingReflowHelper
 				
 				// TODO selectedBefore, selectedAfter
 				boolean caretLine = false;
-				for(SelectionSegment seg: selection)
+				if(sel != null)
 				{
-					if(lineIndex < seg.getMinLine())
+					if(lineIndex < sel.getMinLine())
 					{
 						break;
 					}
 					
-					if((lineIndex >= seg.getMinLine()) && (lineIndex <= seg.getMaxLine()))
+					if((lineIndex >= sel.getMinLine()) && (lineIndex <= sel.getMaxLine()))
 					{
-						if(seg.getCaretLine() == lineIndex)
+						if(sel.getCaretLine() == lineIndex)
 						{
 							caretLine = true;
-							r.setCaret(seg.getCaretCharIndex() - topCellIndex);
+							r.setCaret(sel.getCaretCharIndex() - topCellIndex);
 						}
 					}
 				}

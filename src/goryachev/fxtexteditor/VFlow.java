@@ -20,7 +20,6 @@ import goryachev.fxtexteditor.internal.WrappingReflowHelper;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.BooleanExpression;
-import javafx.collections.ListChangeListener;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -120,9 +119,9 @@ public class VFlow
 	}
 	
 	
-	public SelectionSegment[] getSelectionSegments()
+	public SelectionSegment getSelectionSegment()
 	{
-		return editor.getSelection().getSegments();
+		return editor.getSelection().getSegment();
 	}
 	
 	
@@ -510,10 +509,13 @@ public class VFlow
 	}
 	
 	
-	public void repaintSegment(ListChangeListener.Change<? extends SelectionSegment> ss)
+	public void repaintSegment(SelectionSegment s)
 	{
-		// TODO repaint only the damaged area
-		repaint();
+		if(s != null)
+		{
+			// TODO repaint only the damaged area
+			repaint();
+		}
 	}
 	
 	
@@ -615,6 +617,9 @@ public class VFlow
 		{
 			reflow();
 			screenBufferValid = true;
+			
+			updateHorizontalScrollBarSize();
+			updateVerticalScrollBarSize();
 		}
 		return buffer;
 	}
@@ -670,10 +675,7 @@ public class VFlow
 		{
 			NonWrappingReflowHelper.reflow(this, buffer, bufferWidth, bufferHeight, tabPolicy);
 		}
-		
-		updateHorizontalScrollBarSize();
-		updateVerticalScrollBarSize();
-		
+				
 //		D.print(buffer.dump()); // FIX
 	}
 	
@@ -778,7 +780,7 @@ public class VFlow
 		double cw = tm.cellWidth;
 		double cy = y * ch;
 		
-		boolean caretLine = SelectionHelper.isCaretLine(editor.selector.segments, row);
+		boolean caretLine = SelectionHelper.isCaretLine(editor.selector.getSelectedSegment(), row);
 		
 		Color bg = lineNumberBackgroundColor(caretLine);
 		gx.setFill(bg);
@@ -821,7 +823,7 @@ public class VFlow
 		
 		cw *= count;
 		
-		int flags = SelectionHelper.getFlags(editor.selector.segments, row, x);
+		int flags = SelectionHelper.getFlags(editor.selector.getSelectedSegment(), row, x);
 		boolean caretLine = SelectionHelper.isCaretLine(flags);
 		boolean caret = paintCaret.get() ? SelectionHelper.isCaret(flags) : false;
 		boolean selected = SelectionHelper.isSelected(flags);
@@ -848,7 +850,7 @@ public class VFlow
 		double cx = x * cw + lineNumbersBarWidth;
 		double cy = y * ch;
 		
-		int flags = SelectionHelper.getFlags(editor.selector.segments, row, x);
+		int flags = SelectionHelper.getFlags(editor.selector.getSelectedSegment(), row, x);
 		boolean caretLine = SelectionHelper.isCaretLine(flags);
 		boolean caret = SelectionHelper.isCaret(flags);
 		boolean selected = SelectionHelper.isSelected(flags);
@@ -971,7 +973,7 @@ public class VFlow
 		
 //		SelectionSegment[] sel = getSelectionSegments();
 		EditorSelection sel = editor.getSelection();
-		Marker m = sel.getLastCaret();
+		Marker m = sel.getCaret();
 		if(isVisible(m))
 		{
 			return;

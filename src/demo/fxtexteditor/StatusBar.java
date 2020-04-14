@@ -6,7 +6,6 @@ import goryachev.fx.HPane;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.Marker;
 import goryachev.fxtexteditor.SelectionSegment;
-import java.util.List;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.Label;
 
@@ -39,20 +38,18 @@ public class StatusBar
 		(
 			() ->
 			{
-				List<SelectionSegment> sel = ed.selectionSegmentsProperty();
-				int sz = sel.size();
-				if(sz == 0)
+				SelectionSegment seg = ed.getSelectedSegment();
+				if(seg == null)
 				{
 					return null;
 				}
 				
 				// TODO format
 				// TODO glyph index?
-				SelectionSegment seg = sel.get(sz - 1);
 				Marker m = seg.getCaret();
 				return m.getLine() + " : " + m.getCharIndex();
 			},
-			ed.selectionSegmentsProperty()
+			ed.selectionSegmentProperty()
 		));
 	}
 }

@@ -7,7 +7,6 @@ import goryachev.fx.FX;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.internal.TabPolicy;
-import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 
@@ -28,7 +27,6 @@ public class MainPane
 		editor = new FxTextEditor();
 		editor.setContentPadding(new CInsets(2, 4));
 		editor.setBlinkRate(Duration.millis(600));
-		editor.setMultipleSelectionEnabled(true);
 		editor.setWrapLines(false);
 		editor.setTabPolicy(TabPolicy.create(4));
 		

@@ -19,14 +19,12 @@ import java.io.Writer;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -64,7 +62,6 @@ public class FxTextEditor
 	protected final FxBoolean editableProperty = new FxBoolean(false);
 	protected final ReadOnlyObjectWrapper<FxTextEditorModel> modelProperty = new ReadOnlyObjectWrapper<>();
 	protected final FxBoolean wrapLinesProperty = new FxBoolean(true);
-	protected final ReadOnlyBooleanWrapper multipleSelectionProperty = new ReadOnlyBooleanWrapper(false);
 	protected final FxBoolean displayCaretProperty = new FxBoolean(true);
 	protected final FxBoolean showLineNumbersProperty = new FxBoolean(false);
 	protected final FxBoolean highlightCaretLineProperty = new FxBoolean(true);
@@ -130,7 +127,7 @@ public class FxTextEditor
 		
 		getChildren().addAll(vflow, vscroll, hscroll);
 		
-		selector.segments.addListener((ListChangeListener.Change<? extends SelectionSegment> ss) -> handleSelectionSegmentUpdate(ss)); 
+		selector.selectionSegmentProperty().addListener((s,p,c) -> handleSelectionSegmentUpdate(c)); 
 		
 		// TODO
 //		FX.onChange(vflow::updateBlinkRate, true, blinkRateProperty());
@@ -218,9 +215,15 @@ public class FxTextEditor
 	}
 	
 	
-	public ObservableList<SelectionSegment> selectionSegmentsProperty()
+	public ReadOnlyProperty<SelectionSegment> selectionSegmentProperty()
 	{
-		return selector.selectionSegmentsProperty();
+		return selector.selectionSegmentProperty();
+	}
+	
+	
+	public SelectionSegment getSelectedSegment()
+	{
+		return selector.getSelectedSegment();
 	}
 	
 	
@@ -347,24 +350,6 @@ public class FxTextEditor
 	}
 	
 	
-	public void setMultipleSelectionEnabled(boolean on)
-	{
-		multipleSelectionProperty.set(on);
-	}
-	
-	
-	public boolean isMultipleSelectionEnabled()
-	{
-		return multipleSelectionProperty.get();
-	}
-	
-	
-	public ReadOnlyBooleanProperty multipleSelectionProperty()
-	{
-		return multipleSelectionProperty.getReadOnlyProperty();
-	}
-	
-	
 	public ReadOnlyObjectProperty<FxTextEditorModel> modelProperty()
 	{
 		return modelProperty.getReadOnlyProperty();
@@ -378,9 +363,9 @@ public class FxTextEditor
 	}
 	
 	
-	protected void handleSelectionSegmentUpdate(ListChangeListener.Change<? extends SelectionSegment> ss)
+	protected void handleSelectionSegmentUpdate(SelectionSegment s)
 	{
-		vflow.repaintSegment(ss);
+		vflow.repaintSegment(s);
 	}
 	
 	

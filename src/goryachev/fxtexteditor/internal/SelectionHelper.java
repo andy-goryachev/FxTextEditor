@@ -14,7 +14,7 @@ public class SelectionHelper
 	private static final int SELECTED = 4;
 	
 	
-	public static int getFlags(List<SelectionSegment> segments, ScreenRow row, int x)
+	public static int getFlags(SelectionSegment seg, ScreenRow row, int x)
 	{
 		if(row == null)
 		{
@@ -65,29 +65,32 @@ public class SelectionHelper
 			throw new Error(gix.toString());
 		}
 		
-		int flags = 0;
-		for(SelectionSegment ss: segments)
+		if(seg == null)
 		{
-			if(ss.isCaretLine(line))
+			return 0;
+		}
+		
+		int flags = 0;
+		
+		if(seg.isCaretLine(line))
+		{
+			flags |= CARET_LINE;
+			
+			if(off >= 0)
 			{
-				flags |= CARET_LINE;
-				
-				if(off >= 0)
+				if(seg.isCaret(line, off))
 				{
-					if(ss.isCaret(line, off))
-					{
-						flags |= CARET;
-					}
+					flags |= CARET;
 				}
 			}
-			
-			int selectionOffset = (selOff >= 0 ? selOff : off);
-			if(selectionOffset >= 0)
+		}
+		
+		int selectionOffset = (selOff >= 0 ? selOff : off);
+		if(selectionOffset >= 0)
+		{
+			if(seg.contains(line, selectionOffset))
 			{
-				if(ss.contains(line, selectionOffset))
-				{
-					flags |= SELECTED;
-				}
+				flags |= SELECTED;
 			}
 		}
 		
@@ -95,19 +98,19 @@ public class SelectionHelper
 	}
 	
 	
-	public static boolean isCaretLine(List<SelectionSegment> segments, ScreenRow row)
+	public static boolean isCaretLine(SelectionSegment seg, ScreenRow row)
 	{
 		if(row != null)
 		{
-			int line = row.getLineIndex();
-			if(line < 0)
+			if(seg != null)
 			{
-				line = row.getAppendModelIndex();
-			}
-			
-			for(SelectionSegment ss: segments)
-			{
-				if(ss.isCaretLine(line))
+				int line = row.getLineIndex();
+				if(line < 0)
+				{
+					line = row.getAppendModelIndex();
+				}
+				
+				if(seg.isCaretLine(line))
 				{
 					return true;
 				}

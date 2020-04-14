@@ -35,17 +35,18 @@ public abstract class NavigationAction
 		try
 		{
 			EditorSelection sel = selection();
-			int sz = sel.getSegmentCount();
+			SelectionSegment seg = sel.getSegment();
+			if(seg == null)
+			{
+				return;
+			}
 			
 			selector().clear();
 
-			for(SelectionSegment seg: sel)
-			{
-				Marker from = seg.getCaret();
-				Marker to = move(from);
-				
-				selector().addSelectionSegment(to, to);
-			}
+			Marker from = seg.getCaret();
+			Marker to = move(from);
+			
+			selector().addSelectionSegment(to, to);
 			
 			selector().commitSelection();
 		}

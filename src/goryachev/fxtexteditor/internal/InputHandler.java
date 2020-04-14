@@ -152,17 +152,8 @@ public class InputHandler
 		}
 		else if(ev.isShortcutDown())
 		{
-			if(selector.isSelected(pos) || (!editor.isMultipleSelectionEnabled()))
-			{
-				selector.setAnchor(pos);
-				selector.setSelection(pos);
-			}
-			else
-			{
-				// add a new caret
-				selector.setAnchor(pos);
-				selector.addSelectionSegment(pos, pos);
-			}
+			selector.setAnchor(pos);
+			selector.setSelection(pos);
 		}
 		else
 		{
