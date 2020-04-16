@@ -655,6 +655,15 @@ public class Log
 	// LogLevel.TRACE level
 	
 	
+	public void trace()
+	{
+		if(isEnabled(LogLevel.TRACE))
+		{
+			logEvent(LogLevel.TRACE, null, "");
+		}
+	}
+	
+	
 	public void trace(Throwable err)
 	{
 		if(isEnabled(LogLevel.TRACE))

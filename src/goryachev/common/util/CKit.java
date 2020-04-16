@@ -2492,4 +2492,21 @@ public final class CKit
 			};
 		}
 	}
+	
+	
+	/** trims a toString() representation of an object, limiting the text to maxLength */
+	public static String trim(Object x, int maxLength)
+	{
+		if(x == null)
+		{
+			return null;
+		}
+		
+		String s = x.toString();
+		if(s.length() > maxLength)
+		{
+			return s.substring(0, maxLength);
+		}
+		return s;
+	}
 }

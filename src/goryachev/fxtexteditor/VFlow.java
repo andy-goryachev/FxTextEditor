@@ -317,6 +317,7 @@ public class VFlow
 	
 	protected void updateModel()
 	{
+		log.trace();
 		invalidate();
 	}
 	
@@ -659,6 +660,8 @@ public class VFlow
 	
 	protected void reflow()
 	{
+		log.trace();
+		
 		boolean wrap = editor.isWrapLines();
 		int bufferWidth = getScreenColumnCount() + 1;
 		int bufferHeight = getScreenRowCount() + 1;
@@ -675,8 +678,8 @@ public class VFlow
 		{
 			NonWrappingReflowHelper.reflow(this, buffer, bufferWidth, bufferHeight, tabPolicy);
 		}
-				
-//		D.print(buffer.dump()); // FIX
+		
+		log.trace(() -> buffer.dump());
 	}
 	
 	
@@ -703,6 +706,8 @@ public class VFlow
 	
 	protected void paintAll()
 	{
+		log.trace();
+		
 		if((columnCount == 0) || (rowCount == 0))
 		{
 			return;

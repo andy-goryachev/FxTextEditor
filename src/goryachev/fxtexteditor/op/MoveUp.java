@@ -2,7 +2,10 @@
 package goryachev.fxtexteditor.op;
 import goryachev.fxtexteditor.Actions;
 import goryachev.fxtexteditor.Marker;
+import goryachev.fxtexteditor.internal.FlowLine;
+import goryachev.fxtexteditor.internal.GlyphIndex;
 import goryachev.fxtexteditor.internal.NavigationAction;
+import goryachev.fxtexteditor.internal.WrapInfo;
 
 
 /**
@@ -19,14 +22,16 @@ public class MoveUp
 
 	protected Marker move(Marker m)
 	{
-		// TODO
 		int pos = m.getCharIndex();
-		if(pos > 0)
-		{
-			pos--;
-		}
-		
 		int line = m.getLine();
+
+		FlowLine fline = vflow().getTextLine(line);
+		GlyphIndex gix = fline.getGlyphIndex(pos);
+		
+		// TODO phantom column
+		
+		// compute line + row.start
+		WrapInfo wr = vflow().getWrapInfo(fline);
 		
 		return editor().newMarker(line, pos);
 	}

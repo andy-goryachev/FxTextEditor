@@ -1,5 +1,6 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.common.util.CKit;
 import goryachev.common.util.Dump;
 import goryachev.common.util.SB;
 import goryachev.fxtexteditor.ITabPolicy;
@@ -162,7 +163,7 @@ public class ScreenBuffer
 		{
 			ScreenRow r = rows[i];
 			ITextLine tline = r.getTextLine();
-			String text = (tline == null ? "" : Dump.toPrintable(tline.getPlainText()));
+			String text = (tline == null ? "" : Dump.toPrintable(CKit.trim(tline.getPlainText(), 80)));
 			sb.format("%02d %s %s\n", i, r.dump(), text);
 		}
 		return sb.toString();

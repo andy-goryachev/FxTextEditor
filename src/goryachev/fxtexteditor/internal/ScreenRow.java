@@ -1,6 +1,7 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.common.util.CKit;
+import goryachev.common.util.D;
 import goryachev.common.util.SB;
 import goryachev.fxtexteditor.CellStyle;
 import goryachev.fxtexteditor.GlyphType;
@@ -152,6 +153,13 @@ public class ScreenRow
 			}
 			
 			int ct = getGlyphCount();
+
+			// FIX NPE
+			if(startGlyphIndex == null)
+			{
+				return GlyphIndex.BOL;
+			}
+			
 			int ix = startGlyphIndex.intValue() + x;
 			if(ix < ct)
 			{
