@@ -163,7 +163,9 @@ public class ScreenBuffer
 		{
 			ScreenRow r = rows[i];
 			ITextLine tline = r.getTextLine();
+			// TODO can we get displayed portion of the text?
 			String text = (tline == null ? "" : Dump.toPrintable(CKit.trim(tline.getPlainText(), 80)));
+			
 			sb.format("%02d %s %s\n", i, r.dump(), text);
 		}
 		return sb.toString();

@@ -298,20 +298,25 @@ public class ScreenRow
 			sb.append("S");
 		}
 		
-		sb.append("(").append(startGlyphIndex).append(") ");
+		sb.append("(");
+		sb.append(lineIndex);
+		sb.append(",");
+		sb.append(startGlyphIndex);
+		sb.append(") ");
 		
-		if(glyphOffsets != null)
-		{
-			int mx = Math.min(cellCount, glyphOffsets.length);
-			for(int i=0; i<mx; i++)
-			{
-				if(i > 0)
-				{
-					sb.append(',');
-				}
-				sb.append(glyphOffsets[i]);
-			}
-		}
+//		if(glyphOffsets != null)
+//		{
+//			int mx = Math.min(cellCount, glyphOffsets.length);
+//			for(int i=0; i<mx; i++)
+//			{
+//				if(i > 0)
+//				{
+//					sb.append(',');
+//				}
+//				sb.append(glyphOffsets[i]);
+//			}
+//		}
+		
 		return sb.toString();
 	}
 	
