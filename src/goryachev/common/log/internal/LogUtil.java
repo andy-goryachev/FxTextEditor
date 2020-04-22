@@ -117,9 +117,9 @@ public class LogUtil
 		{
 			for(String name: channels.keySet())
 			{
-				String s = channels.get(name);
-				LogLevel lv = parseLevel(s);
-				m.put(s, lv);
+				String v = channels.get(name);
+				LogLevel lv = parseLevel(v);
+				m.put(name, lv);
 			}
 		}
 	}

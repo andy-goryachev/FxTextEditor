@@ -75,6 +75,7 @@ public class Log
 			LogLevel lv = cf.getLogLevel(name);
 			if(lv == null)
 			{
+				cf.getLogLevel(name); // FIX
 				if(parent == null)
 				{
 					level = cf.getDefaultLogLevel();
@@ -102,7 +103,7 @@ public class Log
 		AbstractLogConfig cf;
 		try
 		{
-			cf = LogUtil.parseLogConfig(spec);			
+			cf = LogUtil.parseLogConfig(spec);
 		}
 		catch(Throwable e)
 		{
