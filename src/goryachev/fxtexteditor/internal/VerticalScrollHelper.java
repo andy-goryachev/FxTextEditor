@@ -17,7 +17,7 @@ public class VerticalScrollHelper
 {
 	private final VFlow vflow;
 	private final int max;
-	private final int top;
+	private final int initialLine;
 	private final double fraction;
 	private final int topGlyphIndex;
 	private int newLineNumber;
@@ -28,7 +28,7 @@ public class VerticalScrollHelper
 	{
 		this.vflow = vflow;
 		this.max = max;
-		this.top = top;
+		this.initialLine = top;
 		this.fraction = fraction;
 		this.topGlyphIndex = topGlyphIndex.intValue(); // TODO use this
 	}
@@ -48,20 +48,20 @@ public class VerticalScrollHelper
 
 	// looks at frameSize flow lines back and forward, computer the number of rows,
 	// then uses fraction to select the new origin.
-	// hopefully, this would lessen sudden jumps associated with uneven line lengths.
+	// hopefully, this would lessen sudden jumps associated with extra long lines.
 	public void process()
 	{
 		int width = vflow.getScreenColumnCount();
 		ITabPolicy tabPolicy = vflow.getEditor().getTabPolicy();
-		int frameSize = 2 * Math.max(100, vflow.getScreenRowCount());
+		int frameSize = 2 * Math.max(100, vflow.getScreenRowCount()); // ?
 
 		int topSize = 0;
 		int topRows = 0;
 		
-		if(top > 0)
+		if(initialLine > 0)
 		{
-			int start = Math.max(0, top - frameSize);
-			int end = Math.min(top, start + frameSize);
+			int start = Math.max(0, initialLine - frameSize);
+			int end = Math.min(initialLine, start + frameSize);
 			topSize = end - start;
 			
 			for(int ix=start; ix<end; ix++)
@@ -73,12 +73,12 @@ public class VerticalScrollHelper
 		}
 
 		int additionalTopCount  = topRows - topSize;
-		int end = Math.min(max, top + frameSize);
-		int bottomSize = end - top;
+		int end = Math.min(max, initialLine + frameSize);
+		int bottomSize = end - initialLine;
 		int bottomRows = 0;
 		boolean hasLastLine = (end == max);
 		
-		for(int ix=top; ix<=end; ix++)
+		for(int ix=initialLine; ix<=end; ix++)
 		{
 			FlowLine fline = vflow.getTextLine(ix);
 			WrapInfo wr = vflow.getWrapInfo(fline);
@@ -102,43 +102,60 @@ public class VerticalScrollHelper
 		
 		// TODO scan one more time to get the line number and glyph index
 		
-		int step = Integer.signum(ix - topRows);
-		if(step == 0)
+		int direction = Integer.signum(ix - topRows);
+		if(direction == 0)
 		{
 			// unchanged
-			newLineNumber = top;
+			newLineNumber = initialLine;
 			newGlyphIndex = 0;
 		}
 		else
-		{
-			int i = top;
+		{			
+			int toSkip = Math.abs(delta);
 			int gix = 0;
-			while(delta != 0)
+			int modelLineCount = vflow.getModelLineCount();
+			int lineix = initialLine;
+			
+			while(toSkip > 0)
 			{
-				i += step;
+				lineix = initialLine + direction;
 				
-				FlowLine fline = vflow.getTextLine(i);
-				WrapInfo wr = vflow.getWrapInfo(fline);
-				if(wr.getRowCount() < delta)
+				if((lineix < 0) || (lineix >= modelLineCount))
 				{
-					delta -= wr.getRowCount();
-					continue;
+					throw new Error("lineix=" + lineix); // sanity check
+				}
+				
+				FlowLine fline = vflow.getTextLine(lineix);
+				WrapInfo wr = vflow.getWrapInfo(fline);
+				
+				int ct = wr.getRowCount();
+				if(toSkip > ct)
+				{
+					toSkip -= ct;
+					// keep going
 				}
 				else
 				{
-					if(step < 0)
+					if(direction < 0)
 					{
-						gix = wr.getIndexForRow(wr.getRowCount() +  delta);
+						gix = wr.getIndexForRow(wr.getRowCount() - toSkip);
 					}
 					else
 					{
-						gix = wr.getIndexForRow(delta);
+						gix = wr.getIndexForRow(toSkip);
 					}
-					delta = 0;
+					
+					break;
 				}
 			}
+			
+			// FIX why?
+			if(gix < 0)
+			{
+				gix = gix + 0; // FIX
+			}
 
-			newLineNumber = i;
+			newLineNumber = lineix;
 			newGlyphIndex = gix;
 		}
 		

@@ -1,6 +1,5 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
-import goryachev.common.util.CKit;
 import goryachev.common.util.ElasticIntArray;
 import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITabPolicy;
@@ -165,7 +164,11 @@ public abstract class WrapInfo
 
 		public int getRowCount()
 		{
-			return CKit.binCount(length, width);
+			if(width == 0)
+			{
+				return length;
+			}
+			return 1 + (length - 1) / width;
 		}
 
 

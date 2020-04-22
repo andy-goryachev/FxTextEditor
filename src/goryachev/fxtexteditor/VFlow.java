@@ -40,13 +40,13 @@ import javafx.util.Duration;
 public class VFlow
 	extends CPane
 {
-	private static final int LINE_CACHE_SIZE = 1024;
-	private static final double LINE_NUMBERS_BG_OPACITY = 0.1;
-	private static final double CARET_LINE_OPACITY = 0.3;
-	private static final double SELECTION_BACKGROUND_OPACITY = 0.4;
-	private static final double CELL_BACKGROUND_OPACITY = 0.8;
+	protected static final Log log = Log.get("VFlow");
+	protected static final int LINE_CACHE_SIZE = 1024;
+	protected static final double LINE_NUMBERS_BG_OPACITY = 0.1;
+	protected static final double CARET_LINE_OPACITY = 0.3;
+	protected static final double SELECTION_BACKGROUND_OPACITY = 0.4;
+	protected static final double CELL_BACKGROUND_OPACITY = 0.8;
 	
-	protected final Log log = Log.get("VFlow");
 	protected final FxTextEditor editor;
 	protected final FxBoolean caretEnabledProperty = new FxBoolean(true);
 	protected final FxBoolean suppressBlink = new FxBoolean(false);
@@ -679,7 +679,7 @@ public class VFlow
 			NonWrappingReflowHelper.reflow(this, buffer, bufferWidth, bufferHeight, tabPolicy);
 		}
 		
-		log.trace(() -> buffer.dump());
+//		log.trace(() -> buffer.dump());
 	}
 	
 	
@@ -930,6 +930,11 @@ public class VFlow
 
 			top = h.getNewTopLine();
 			gix = h.getNewGlyphIndex();
+			
+			if(gix.intValue() < 0)
+			{
+				int zz = 0;
+			}
 		}
 		else
 		{

@@ -1,5 +1,6 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.common.log.Log;
 import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITabPolicy;
@@ -11,6 +12,7 @@ import goryachev.fxtexteditor.VFlow;
  */
 public class WrappingReflowHelper
 {
+	protected static final Log log = Log.get("WrappingReflowHelper");
 	private static final GlyphIndex[] AVOID_COMPILER_WARNING = { };
 	
 	
@@ -20,6 +22,8 @@ public class WrappingReflowHelper
 		int lineIndex = flow.getTopLine();
 		int startGlyphIndex = flow.getTopGlyphIndex().intValue();
 		boolean useStartGlyphIndex = true;
+		
+		log.trace("line={%d} start={%d}", lineIndex, startGlyphIndex);
 			
 		int modelLineCount = flow.getModelLineCount();
 		int cellIndex = 0;

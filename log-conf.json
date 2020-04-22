@@ -1,12 +1,16 @@
 {
 	defaultLevel: off,
+	channels:
+	{
+		VFlow: debug,
+		WrappingReflowHelper: debug
+	},
 	off:
 	[
 	],
 	all:
 	[
 		FxTextEditor,
-		VFlow
 	],
 	appenders:
 	[
