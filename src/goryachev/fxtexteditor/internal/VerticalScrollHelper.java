@@ -1,7 +1,5 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
-import goryachev.common.util.D;
-import goryachev.common.util.ElasticIntArray;
 import goryachev.fxtexteditor.ITabPolicy;
 import goryachev.fxtexteditor.VFlow;
 
@@ -72,7 +70,8 @@ public class VerticalScrollHelper
 			}
 		}
 
-		int additionalTopCount  = topRows - topSize;
+		int additionalTopCount = topRows - topSize;
+		
 		int end = Math.min(max, initialLine + frameSize);
 		int bottomSize = end - initialLine;
 		int bottomRows = 0;
@@ -100,7 +99,7 @@ public class VerticalScrollHelper
 			}
 		}
 		
-		// TODO scan one more time to get the line number and glyph index
+		// scan one more time to get the line number and glyph index
 		
 		int direction = Integer.signum(ix - topRows);
 		if(direction == 0)
@@ -149,31 +148,8 @@ public class VerticalScrollHelper
 				}
 			}
 			
-			// FIX why?
-			if(gix < 0)
-			{
-				gix = gix + 0; // FIX
-			}
-
 			newLineNumber = lineix;
 			newGlyphIndex = gix;
 		}
-		
-		// FIX
-//		D.print
-//		(
-//			"fraction=", fraction,
-//			"center=", center,
-//			"max=", max,
-//			"topSize=", topSize,
-//			"additionalTopCount=", additionalTopCount,
-//			"end=", end,
-//			"bottomSize=", bottomSize,
-//			"additionalBottomCount=", additionalBottomCount,
-//			"delta=", delta,
-//			"ix=", ix,
-//			"newLineNumber=", newLineNumber,
-//			"newGlyphIndex=", newGlyphIndex
-//		);
 	}
 }

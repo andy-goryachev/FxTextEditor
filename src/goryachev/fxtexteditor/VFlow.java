@@ -920,8 +920,11 @@ public class VFlow
 
 		if(wrapLines)
 		{
-			// TODO this does not account for all additional rows wrapped below the view port
-			// we need to account for those for correct scrolling of very long lines (or maybe approximate)
+			// FIX does not work right when scrolled to the end!
+//			if(fraction == 1.0)
+//			{
+//				int x = 0;
+//			}
 			
 			// TODO startGlyphIndex is also needed
 			
@@ -930,11 +933,6 @@ public class VFlow
 
 			top = h.getNewTopLine();
 			gix = h.getNewGlyphIndex();
-			
-			if(gix.intValue() < 0)
-			{
-				int zz = 0;
-			}
 		}
 		else
 		{
