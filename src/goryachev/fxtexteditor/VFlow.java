@@ -920,15 +920,7 @@ public class VFlow
 
 		if(wrapLines)
 		{
-			// FIX does not work right when scrolled to the end!
-//			if(fraction == 1.0)
-//			{
-//				int x = 0;
-//			}
-			
-			// TODO startGlyphIndex is also needed
-			
-			VerticalScrollHelper h = new VerticalScrollHelper(this, lineCount, top, fraction, topGlyphIndex);
+			VerticalScrollHelper h = new VerticalScrollHelper(this, lineCount, top, fraction);
 			h.process();
 
 			top = h.getNewTopLine();
