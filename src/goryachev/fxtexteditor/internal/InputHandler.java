@@ -55,16 +55,15 @@ public class InputHandler
 		
 		// key map
 		KeyMap.onKeyPressed(ed, KeyCode.A, KeyMap.SHORTCUT, ed.actions.selectAll);
-		KeyMap.onKeyPressed(ed, KeyCode.C, KeyMap.SHORTCUT, ed.copyAction);
-		//
-		KeyMap.onKeyPressed(ed, KeyCode.BACK_SPACE, ed.backspaceAction);
-		KeyMap.onKeyPressed(ed, KeyCode.DELETE, ed.deleteAction);
+		KeyMap.onKeyPressed(ed, KeyCode.C, KeyMap.SHORTCUT, ed.actions.copy);
+		KeyMap.onKeyPressed(ed, KeyCode.BACK_SPACE, ed.actions.backspace);
+		KeyMap.onKeyPressed(ed, KeyCode.DELETE, ed.actions.delete);
 		KeyMap.onKeyPressed(ed, KeyCode.DOWN, ed.actions.moveDown);
-		KeyMap.onKeyPressed(ed, KeyCode.END, ed.moveEndAction);
-		KeyMap.onKeyPressed(ed, KeyCode.HOME, ed.moveHomeAction);
+		KeyMap.onKeyPressed(ed, KeyCode.END, ed.actions.moveEnd);
+		KeyMap.onKeyPressed(ed, KeyCode.HOME, ed.actions.moveHome);
 		KeyMap.onKeyPressed(ed, KeyCode.LEFT, ed.actions.moveLeft);
-		KeyMap.onKeyPressed(ed, KeyCode.PAGE_DOWN, ed.pageDownAction);
-		KeyMap.onKeyPressed(ed, KeyCode.PAGE_UP, ed.pageUpAction);
+		KeyMap.onKeyPressed(ed, KeyCode.PAGE_DOWN, ed.actions.pageDown);
+		KeyMap.onKeyPressed(ed, KeyCode.PAGE_UP, ed.actions.pageUp);
 		KeyMap.onKeyPressed(ed, KeyCode.RIGHT, ed.actions.moveRight);
 		KeyMap.onKeyPressed(ed, KeyCode.UP, ed.actions.moveUp);
 		
@@ -87,11 +86,11 @@ public class InputHandler
 			// page up / page down
 			if(ev.getDeltaY() >= 0)
 			{
-				editor.doPageUp();
+				editor.actions.pageUp.action();
 			}
 			else
 			{
-				editor.doPageDown();
+				editor.actions.pageDown.action();
 			}
 		}
 		else

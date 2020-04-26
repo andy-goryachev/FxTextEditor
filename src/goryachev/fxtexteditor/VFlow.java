@@ -941,22 +941,6 @@ public class VFlow
 		return fline.getWrapInfo(editor.getTabPolicy(), getScreenColumnCount());
 	}
 	
-	
-	public void pageUp()
-	{
-		// TODO
-	}
-	
-	
-	public void pageDown()
-	{
-		// TODO need the concept of last caret
-		// single caret: create phantom x position, move caret + screen height
-		// multiple carets: reset to a single caret using last caret, then follow the single caret logic
-		
-		// TODO
-	}
-	
 
 	/** 
 	 * scrolls the last selection caret to visible area.  

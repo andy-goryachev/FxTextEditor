@@ -5,7 +5,6 @@ import goryachev.common.util.CKit;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.Formatters;
-import goryachev.fx.FxAction;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxFormatter;
 import goryachev.fx.FxObject;
@@ -45,15 +44,6 @@ public class FxTextEditor
 	extends CPane
 {
 	public final Actions actions = new Actions(this);
-	// TODO move to actions
-	public final FxAction backspaceAction = new FxAction(this::doBackspace);
-	public final FxAction copyAction = new FxAction(this::doCopy);
-	public final FxAction deleteAction = new FxAction(this::doDelete);
-	public final FxAction moveEndAction = new FxAction(this::doMoveEnd);
-	public final FxAction moveHomeAction = new FxAction(this::doMoveHome);
-	public final FxAction pageDownAction = new FxAction(this::doPageDown);
-	public final FxAction pageUpAction = new FxAction(this::doPageUp);
-
 	protected final Log log = Log.get("FxTextEditor");
 	protected final FxObject<Color> backgroundColorProperty = new FxObject(Color.WHITE);
 	protected final FxObject<Font> fontProperty = new FxObject(Font.font("Monospace", 12));
@@ -569,47 +559,6 @@ public class FxTextEditor
 //		catch(Exception ignored)
 //		{
 //		}
-	}
-	
-	
-	public void doPageUp()
-	{
-		vflow.pageUp();
-	}
-	
-	
-	public void doPageDown()
-	{
-		// TODO need the concept of last caret
-		// single caret: create phantom x position, move caret + screen height
-		// multiple carets: reset to a single caret using last caret, then follow the single caret logic
-		vflow.pageDown();
-	}
-	
-	
-	public void doMoveHome()
-	{
-		// TODO
-		// if wrapped: row start, then prev row start, then start of text line.
-	}
-	
-	
-	public void doMoveEnd()
-	{
-		// TODO
-		// if wrapped: end of row, then end of next row, ... finally end of text line.
-	}
-	
-	
-	public void doBackspace()
-	{
-		// TODO
-	}
-	
-	
-	public void doDelete()
-	{
-		// TODO
 	}
 	
 	
