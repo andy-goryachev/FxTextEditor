@@ -1,5 +1,6 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
 import goryachev.fxtexteditor.VFlow;
 
@@ -13,7 +14,8 @@ import goryachev.fxtexteditor.VFlow;
  */
 public class VerticalScrollHelper
 {
-	private static final int WINDOW_SIZE = 100;
+	protected static final int WINDOW_SIZE = 100;
+	protected static final Log log = Log.get("VerticalScrollHelper");
 	private final VFlow vflow;
 	private final int modelLineCount;
 	private final int originalTarget;
@@ -80,6 +82,9 @@ public class VerticalScrollHelper
 		// compute new origin
 		
 		int delta = CKit.round((additionalBottomRows - additionalTopRows) * fraction);
+		
+		log.debug("ori={%d} add.top={%d} add.bottom={%d} frac={%f} delta={%d}", originalTarget, additionalTopRows, additionalBottomRows, fraction, delta);
+		
 		if(delta == 0)
 		{
 			newLineNumber = originalTarget;

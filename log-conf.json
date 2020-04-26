@@ -3,7 +3,8 @@
 	channels:
 	{
 		VFlow: debug,
-		WrappingReflowHelper: debug
+		WrappingReflowHelper: debug,
+		VerticalScrollHelper: debug
 	},
 	off:
 	[
