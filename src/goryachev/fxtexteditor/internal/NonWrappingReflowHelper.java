@@ -120,17 +120,15 @@ public class NonWrappingReflowHelper
 				boolean caretLine = false;
 				if(sel != null)
 				{
-					if(lineIndex < sel.getMinLine())
+					if(lineIndex >= sel.getMinLine())
 					{
-						break;
-					}
-					
-					if((lineIndex >= sel.getMinLine()) && (lineIndex <= sel.getMaxLine()))
-					{
-						if(sel.getCaretLine() == lineIndex)
+						if((lineIndex >= sel.getMinLine()) && (lineIndex <= sel.getMaxLine()))
 						{
-							caretLine = true;
-							r.setCaret(sel.getCaretCharIndex() - topCellIndex);
+							if(sel.getCaretLine() == lineIndex)
+							{
+								caretLine = true;
+								r.setCaret(sel.getCaretCharIndex() - topCellIndex);
+							}
 						}
 					}
 				}

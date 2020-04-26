@@ -94,7 +94,7 @@ public class VerticalScrollHelper
 		
 		// new origin shall account for additional rows
 		// here we magically switch from text line indexes (start) to rows
-		int rowsToSkip = CKit.round((modelLineCount + 1 + additionalRows - screenRows) * fraction) - start;
+		int rowsToSkip = CKit.round((modelLineCount + 2 + additionalRows - screenRows) * fraction) - start;
 		
 		if(rowsToSkip == 0)
 		{
