@@ -14,7 +14,7 @@ import goryachev.fxtexteditor.VFlow;
  */
 public class VerticalScrollHelper
 {
-	protected static final int WINDOW_SIZE = 100;
+	protected static final int FRAME_SIZE = 100;
 	protected static final Log log = Log.get("VerticalScrollHelper");
 	private final VFlow vflow;
 	private final int modelLineCount;
@@ -46,86 +46,91 @@ public class VerticalScrollHelper
 	
 
 	// in order to minimize sudden jumps due to very long lines, this method
-	// looks at windowSize text lines back and forward, computes the number of wrapped rows,
+	// looks at frameSize text lines back and forward, computes the number of wrapped rows,
 	// in order to position the origin using the fraction argument.
 	public void process()
 	{
-		int screenRowCount = vflow.getScreenRowCount();
-		int windowSize = 2 * Math.max(WINDOW_SIZE, screenRowCount);
+		int screenRows = vflow.getScreenRowCount();
+		int frameSize = Math.max(FRAME_SIZE, screenRows);
 		
-		// count additional rows
+		// determine frame boundaries
 
-		int start = Math.max(originalTarget - windowSize, 0);
-		int end = Math.min(originalTarget + screenRowCount + windowSize, modelLineCount);
+		int start = originalTarget - frameSize;
+		int shift = 0;
+		if(start < 0)
+		{
+			shift = -start;
+			start = 0;
+		}
 		
-		int additionalTopRows = 0;
-		int additionalBottomRows = 0;
+		int end = originalTarget + screenRows + frameSize + shift;
+		shift = 0;
+		if(end > modelLineCount)
+		{
+			shift = end - modelLineCount;
+			end = modelLineCount;
+		}
+		
+		if(shift > 0)
+		{
+			start = Math.max(start - shift, 0);
+		}
+		
+		// count the number of additional rows appears when wrapping lines
+		// in the range of [start...end[
+		
+		int additionalRows = 0;
 		
 		for(int ix=start; ix<end; ix++)
 		{
 			FlowLine fline = vflow.getTextLine(ix);
 			WrapInfo wr = vflow.getWrapInfo(fline);
-			int additional = wr.getRowCount() - 1;
-			if(additional > 0)
+			int add = wr.getRowCount();
+			if(add > 1)
 			{
-				if(ix < originalTarget)
-				{
-					additionalTopRows += additional;
-				}
-				else
-				{
-					additionalBottomRows += additional;
-				}
+				additionalRows += (add - 1);
 			}
 		}
 		
-		// compute new origin
+		// new origin shall account for additional rows
+		// here we magically switch from text line indexes (start) to rows
+		int rowsToSkip = CKit.round((modelLineCount + 1 + additionalRows - screenRows) * fraction) - start;
 		
-		int delta = CKit.round((additionalBottomRows - additionalTopRows) * fraction);
-		
-		log.debug("ori={%d} add.top={%d} add.bottom={%d} frac={%f} delta={%d}", originalTarget, additionalTopRows, additionalBottomRows, fraction, delta);
-		
-		if(delta == 0)
+		if(rowsToSkip == 0)
 		{
 			newLineNumber = originalTarget;
 			newGlyphIndex = 0;
 		}
 		else
 		{
-			int adjustCount = Math.abs(delta);
-			int step = Integer.signum(delta);
 			int modelLineCount = vflow.getModelLineCount();
-			int lineix = originalTarget;
+			int lineix = start;
 			int gix = 0;
 			
-			while(adjustCount > 0)
+			while(rowsToSkip > 0)
 			{
 				FlowLine fline = vflow.getTextLine(lineix);
 				WrapInfo wr = vflow.getWrapInfo(fline);
 				
 				int ct = wr.getRowCount();
-				if(adjustCount > ct)
+				if(rowsToSkip > ct)
 				{
-					adjustCount -= ct;
-					lineix += step;
+					rowsToSkip -= ct;
+					lineix++;
 					// next text line
 					continue;
 				}
-				
-				if(step < 0)
-				{
-					gix = wr.getIndexForRow(ct - adjustCount);
-				}
 				else
 				{
-					gix = wr.getIndexForRow(adjustCount);
+					gix = wr.getIndexForRow(rowsToSkip);
+					break;
 				}
-				
-				break;
 			}
 			
 			newLineNumber = lineix;
 			newGlyphIndex = gix;
+			
+			log.trace("ori={%d} add={%d} frac={%f} start={%d} skip={%d} res={%d},{%d}", originalTarget, additionalRows, fraction, start, rowsToSkip, newLineNumber, gix);
 		}
 	}
 }
