@@ -913,16 +913,14 @@ public class VFlow
 	public void verticalScroll(double fraction, boolean wrapLines)
 	{
 		int lineCount = getModelLineCount();
-//		int vis = getScreenRowCount();
-//		int max = Math.max(0, lineCount + 1 - vis);
-//		int top = CKit.round(max * fraction);
-		
-		int top;
+		int vis = getScreenRowCount();
+		int max = Math.max(0, lineCount + 1 - vis);
+		int top = CKit.round(max * fraction);
 		GlyphIndex gix;
 
 		if(wrapLines)
 		{
-			VerticalScrollHelper h = new VerticalScrollHelper(this, lineCount, fraction);
+			VerticalScrollHelper h = new VerticalScrollHelper(this, lineCount, top, fraction);
 			h.process();
 
 			top = h.getNewTopLine();
@@ -930,9 +928,6 @@ public class VFlow
 		}
 		else
 		{
-			int vis = getScreenRowCount();
-			int max = Math.max(0, lineCount + 1 - vis);
-			top = CKit.round(max * fraction);
 			gix = GlyphIndex.ZERO;
 		}
 

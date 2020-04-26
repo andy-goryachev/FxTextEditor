@@ -5,8 +5,11 @@ import goryachev.fxtexteditor.VFlow;
 
 
 /**
- * Vertical Scroll Helper for wrapped mode, tries to account for wrapped rows
- * to provide a smooth scrolling experience.
+ * Vertical Scroll Helper for wrapped mode.
+ * 
+ * Computes line indexes and starting points for [count] rows up and down relative
+ * to the rough target scroll line [center], 
+ * in order to account for text lines that take more than one screen row.
  */
 public class VerticalScrollHelper
 {
@@ -19,14 +22,12 @@ public class VerticalScrollHelper
 	private int newGlyphIndex;
 	
 	
-	public VerticalScrollHelper(VFlow vflow, int modelLineCount, double fraction)
+	public VerticalScrollHelper(VFlow vflow, int modelLineCount, int top, double fraction)
 	{
 		this.vflow = vflow;
 		this.modelLineCount = modelLineCount;
+		this.originalTarget = top;
 		this.fraction = fraction;
-		
-		int max = Math.max(0, modelLineCount + 1);
-		this.originalTarget = CKit.round(max * fraction);
 	}
 	
 	
@@ -47,13 +48,13 @@ public class VerticalScrollHelper
 	// in order to position the origin using the fraction argument.
 	public void process()
 	{
-		int screenRows = vflow.getScreenRowCount();
-		int windowSize = 2 * Math.max(WINDOW_SIZE, screenRows);
+		int screenRowCount = vflow.getScreenRowCount();
+		int windowSize = 2 * Math.max(WINDOW_SIZE, screenRowCount);
 		
 		// count additional rows
 
 		int start = Math.max(originalTarget - windowSize, 0);
-		int end = Math.min(originalTarget + screenRows + windowSize, modelLineCount);
+		int end = Math.min(originalTarget + screenRowCount + windowSize, modelLineCount);
 		
 		int additionalTopRows = 0;
 		int additionalBottomRows = 0;
@@ -74,18 +75,6 @@ public class VerticalScrollHelper
 					additionalBottomRows += additional;
 				}
 			}
-		}
-		
-		// we should fill the screen with text when scrolling all the way to the bottom
-		
-		if(additionalBottomRows > screenRows)
-		{
-			additionalBottomRows -= screenRows;
-		}
-		else
-		{
-			additionalTopRows = Math.max(additionalTopRows - additionalBottomRows, 0);
-			additionalBottomRows = 0;
 		}
 		
 		// compute new origin
