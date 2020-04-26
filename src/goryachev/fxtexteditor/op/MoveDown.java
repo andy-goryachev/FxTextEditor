@@ -19,14 +19,17 @@ public class MoveDown
 
 	protected Marker move(Marker m)
 	{
-		// TODO
 		int pos = m.getCharIndex();
-		if(pos > 0)
-		{
-			pos--;
-		}
-		
 		int line = m.getLine();
+		
+		// TODO
+//		int pos = m.getCharIndex();
+//		if(pos > 0)
+//		{
+//			pos--;
+//		}
+//		
+//		int line = m.getLine();
 		
 		return editor().newMarker(line, pos);
 	}

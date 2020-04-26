@@ -25,13 +25,14 @@ public class MoveUp
 		int pos = m.getCharIndex();
 		int line = m.getLine();
 
-		FlowLine fline = vflow().getTextLine(line);
-		GlyphIndex gix = fline.getGlyphIndex(pos);
-		
-		// TODO phantom column
-		
-		// compute line + row.start
-		WrapInfo wr = vflow().getWrapInfo(fline);
+		// TODO
+//		FlowLine fline = vflow().getTextLine(line);
+//		GlyphIndex gix = fline.getGlyphIndex(pos);
+//		
+//		// TODO phantom column
+//		
+//		// compute line + row.start
+//		WrapInfo wr = vflow().getWrapInfo(fline);
 		
 		return editor().newMarker(line, pos);
 	}

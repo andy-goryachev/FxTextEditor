@@ -8,10 +8,10 @@ import goryachev.fxtexteditor.internal.EditorAction;
 /**
  * Select All Action.
  */
-public class SelectAllAction
+public class SelectAll
 	extends EditorAction
 {
-	public SelectAllAction(Actions a)
+	public SelectAll(Actions a)
 	{
 		super(a);
 	}

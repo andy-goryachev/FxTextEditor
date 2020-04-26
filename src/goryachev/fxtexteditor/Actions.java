@@ -5,7 +5,7 @@ import goryachev.fxtexteditor.op.MoveDown;
 import goryachev.fxtexteditor.op.MoveLeft;
 import goryachev.fxtexteditor.op.MoveRight;
 import goryachev.fxtexteditor.op.MoveUp;
-import goryachev.fxtexteditor.op.SelectAllAction;
+import goryachev.fxtexteditor.op.SelectAll;
 
 
 /**
@@ -17,7 +17,7 @@ public class Actions
 	public final MoveLeft moveLeft = new MoveLeft(this);
 	public final MoveRight moveRight = new MoveRight(this);
 	public final MoveUp moveUp = new MoveUp(this);
-	public final SelectAllAction selectAll = new SelectAllAction(this);
+	public final SelectAll selectAll = new SelectAll(this);
 	//
 	private final FxTextEditor editor;
 	
