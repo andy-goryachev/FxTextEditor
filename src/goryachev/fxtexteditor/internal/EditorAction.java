@@ -4,6 +4,7 @@ import goryachev.fx.FxAction;
 import goryachev.fxtexteditor.Actions;
 import goryachev.fxtexteditor.EditorSelection;
 import goryachev.fxtexteditor.FxTextEditor;
+import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.SelectionController;
 import goryachev.fxtexteditor.VFlow;
 
@@ -49,5 +50,17 @@ public abstract class EditorAction
 	public EditorSelection selection()
 	{
 		return actions.selector().getSelection();
+	}
+	
+	
+	public FxTextEditorModel model()
+	{
+		return actions.model();
+	}
+	
+	
+	public Markers markers()
+	{
+		return actions.markers();
 	}
 }

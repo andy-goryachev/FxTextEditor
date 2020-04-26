@@ -971,7 +971,6 @@ public class VFlow
 		// do we need to move at all (check only last caret)?
 		// if yes, find out where
 		
-//		SelectionSegment[] sel = getSelectionSegments();
 		EditorSelection sel = editor.getSelection();
 		Marker m = sel.getCaret();
 		if(isVisible(m))

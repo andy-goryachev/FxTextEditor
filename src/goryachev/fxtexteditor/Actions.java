@@ -1,9 +1,11 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
+import goryachev.fxtexteditor.internal.Markers;
 import goryachev.fxtexteditor.op.MoveDown;
 import goryachev.fxtexteditor.op.MoveLeft;
 import goryachev.fxtexteditor.op.MoveRight;
 import goryachev.fxtexteditor.op.MoveUp;
+import goryachev.fxtexteditor.op.SelectAllAction;
 
 
 /**
@@ -15,6 +17,7 @@ public class Actions
 	public final MoveLeft moveLeft = new MoveLeft(this);
 	public final MoveRight moveRight = new MoveRight(this);
 	public final MoveUp moveUp = new MoveUp(this);
+	public final SelectAllAction selectAll = new SelectAllAction(this);
 	//
 	private final FxTextEditor editor;
 	
@@ -40,5 +43,17 @@ public class Actions
 	public SelectionController selector()
 	{
 		return editor.selector;
+	}
+	
+	
+	public FxTextEditorModel model()
+	{
+		return editor.getModel();
+	}
+	
+	
+	public Markers markers()
+	{
+		return editor.markers;
 	}
 }

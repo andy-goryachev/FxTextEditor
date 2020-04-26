@@ -54,7 +54,7 @@ public class InputHandler
 		vflow.addEventFilter(ScrollEvent.ANY, (ev) -> handleScroll(ev));
 		
 		// key map
-		KeyMap.onKeyPressed(ed, KeyCode.A, KeyMap.SHORTCUT, ed.selectAllAction);
+		KeyMap.onKeyPressed(ed, KeyCode.A, KeyMap.SHORTCUT, ed.actions.selectAll);
 		KeyMap.onKeyPressed(ed, KeyCode.C, KeyMap.SHORTCUT, ed.copyAction);
 		//
 		KeyMap.onKeyPressed(ed, KeyCode.BACK_SPACE, ed.backspaceAction);

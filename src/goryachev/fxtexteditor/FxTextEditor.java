@@ -24,7 +24,6 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -54,7 +53,6 @@ public class FxTextEditor
 	public final FxAction moveHomeAction = new FxAction(this::doMoveHome);
 	public final FxAction pageDownAction = new FxAction(this::doPageDown);
 	public final FxAction pageUpAction = new FxAction(this::doPageUp);
-	public final FxAction selectAllAction = new FxAction(this::doSelectAll);
 
 	protected final Log log = Log.get("FxTextEditor");
 	protected final FxObject<Color> backgroundColorProperty = new FxObject(Color.WHITE);
@@ -642,23 +640,6 @@ public class FxTextEditor
 	{
 		// TODO
 //		getModel().copy(getSelection(), errorHandler, formats);
-	}
-	
-	
-	public void doSelectAll()
-	{
-		int ix = getLineCount();
-		if(ix > 0)
-		{
-			--ix;
-			
-			String s = getModel().getPlainText(ix);
-			Marker beg = markers.newMarker(0, 0);
-			Marker end = markers.newMarker(ix, Math.max(0, s.length()));
-			
-			selector.setSelection(beg, end);
-			selector.commitSelection();
-		}
 	}
 	
 
