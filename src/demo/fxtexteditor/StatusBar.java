@@ -2,6 +2,8 @@
 package demo.fxtexteditor;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
+import goryachev.fx.Formatters;
+import goryachev.fx.FxFormatter;
 import goryachev.fx.HPane;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.Marker;
@@ -44,10 +46,15 @@ public class StatusBar
 					return null;
 				}
 				
-				// TODO format
+				FxFormatter fmt = Formatters.getIntegerFormatter();
+				
 				// TODO glyph index?
 				Marker m = seg.getCaret();
-				return m.getLine() + " : " + m.getCharIndex();
+				
+				return 
+					fmt.format(m.getLine()) + 
+					" : " + 
+					fmt.format(m.getCharIndex());
 			},
 			ed.selectionSegmentProperty()
 		));
