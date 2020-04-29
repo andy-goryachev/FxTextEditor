@@ -65,4 +65,15 @@ public class EditorSelection
 		
 		return segment.getCaret();
 	}
+	
+	
+	public Marker getAnchor()
+	{
+		if(isEmpty())
+		{
+			return null;
+		}
+		
+		return segment.getAnchor();
+	}
 }

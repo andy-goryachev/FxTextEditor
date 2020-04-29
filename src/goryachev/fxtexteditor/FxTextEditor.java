@@ -770,12 +770,6 @@ public class FxTextEditor
 	}
 	
 	
-	public boolean isCaret(int line, int pos)
-	{
-		return selector.isCaret(line, pos);
-	}
-	
-	
 	public boolean isSelected(int line, int pos)
 	{
 		return selector.isSelected(line, pos);

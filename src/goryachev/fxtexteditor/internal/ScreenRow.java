@@ -154,7 +154,6 @@ public class ScreenRow
 			
 			int ct = getGlyphCount();
 
-			// FIX NPE
 			if(startGlyphIndex == null)
 			{
 				return GlyphIndex.BOL;

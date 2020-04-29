@@ -2,6 +2,7 @@
 package goryachev.fxtexteditor.internal;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
+import goryachev.fxtexteditor.GlyphPos;
 import goryachev.fxtexteditor.VFlow;
 
 
@@ -20,8 +21,6 @@ public class VerticalScrollHelper
 	private final int modelLineCount;
 	private final int originalTarget;
 	private final double fraction;
-	private int newLineNumber;
-	private int newGlyphIndex;
 	
 	
 	public VerticalScrollHelper(VFlow vflow, int modelLineCount, int top, double fraction)
@@ -32,23 +31,11 @@ public class VerticalScrollHelper
 		this.fraction = fraction;
 	}
 	
-	
-	public int getNewTopLine()
-	{
-		return newLineNumber;
-	}
-
-
-	public GlyphIndex getNewGlyphIndex()
-	{
-		return GlyphIndex.of(newGlyphIndex);
-	}
-	
 
 	// in order to minimize sudden jumps due to very long lines, this method
 	// looks at frameSize text lines back and forward, computes the number of wrapped rows,
 	// in order to position the origin using the fraction argument.
-	public void process()
+	public GlyphPos process()
 	{
 		int screenRows = vflow.getScreenRowCount();
 		int frameSize = Math.max(FRAME_SIZE, screenRows);
@@ -96,6 +83,9 @@ public class VerticalScrollHelper
 		// here we magically switch from text line indexes (start) to rows
 		int rowsToSkip = CKit.round((modelLineCount + 2 + additionalRows - screenRows) * fraction) - start;
 		
+		int newLineNumber;
+		int newGlyphIndex;
+
 		if(rowsToSkip == 0)
 		{
 			newLineNumber = originalTarget;
@@ -122,7 +112,7 @@ public class VerticalScrollHelper
 				}
 				else
 				{
-					gix = wr.getIndexForRow(rowsToSkip);
+					gix = wr.getGlyphIndexForRow(rowsToSkip);
 					break;
 				}
 			}
@@ -132,5 +122,7 @@ public class VerticalScrollHelper
 			
 			log.trace("ori={%d} add={%d} frac={%f} start={%d} skip={%d} res={%d},{%d}", originalTarget, additionalRows, fraction, start, rowsToSkip, newLineNumber, gix);
 		}
+		
+		return new GlyphPos(newLineNumber, newGlyphIndex);
 	}
 }

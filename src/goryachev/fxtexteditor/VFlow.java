@@ -15,6 +15,7 @@ import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenRow;
 import goryachev.fxtexteditor.internal.SelectionHelper;
 import goryachev.fxtexteditor.internal.VerticalScrollHelper;
+import goryachev.fxtexteditor.internal.WrapAssist;
 import goryachev.fxtexteditor.internal.WrapInfo;
 import goryachev.fxtexteditor.internal.WrappingReflowHelper;
 import javafx.animation.KeyFrame;
@@ -921,10 +922,10 @@ public class VFlow
 		if(wrapLines)
 		{
 			VerticalScrollHelper h = new VerticalScrollHelper(this, lineCount, top, fraction);
-			h.process();
+			GlyphPos p = h.process();
 
-			top = h.getNewTopLine();
-			gix = h.getNewGlyphIndex();
+			top = p.getLine();
+			gix = p.getGlyphIndex();
 		}
 		else
 		{
@@ -956,14 +957,36 @@ public class VFlow
 		// if yes, find out where
 		
 		EditorSelection sel = editor.getSelection();
-		Marker m = sel.getCaret();
-		if(isVisible(m))
+		Marker caret = sel.getCaret();
+		if(caret == null)
+		{
+			return;
+		}
+		else if(isVisible(caret))
 		{
 			return;
 		}
 		
-		// TODO
-		D.print("scrollSelectionToVisible TODO");
+		int caretLine = caret.getLine();
+		WrapAssist wr = new WrapAssist(this, caretLine, caret.getCharIndex());
+
+		int delta;
+		if(caretLine < topLine)
+		{
+			// above the view port: position caret on the 2nd line if possible
+			delta = -2;
+		}
+		else
+		{
+			// below the view port: position caret on the 2nd line from the bottom
+			delta = getScreenRowCount() - 2;
+		}
+
+		GlyphPos p = wr.move(delta);
+		int line = p.getLine();
+		GlyphIndex gix = p.getGlyphIndex();
+		
+		setOrigin(line, gix);
 	}
 	
 	
@@ -978,6 +1001,11 @@ public class VFlow
 		
 		int h = buffer.getHeight();
 		int w = buffer.getWidth();
+		
+		if(editor.isWrapLines())
+		{
+			h--;
+		}
 		
 		ScreenRow r = buffer.getScreenRow(h - 1);
 		int line = r.getLineIndex();

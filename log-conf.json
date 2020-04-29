@@ -2,9 +2,10 @@
 	defaultLevel: off,
 	channels:
 	{
+		VerticalScrollHelper: debug,
 		VFlow: debug,
-		WrappingReflowHelper: debug,
-		VerticalScrollHelper: debug
+		WrapAssist: debug,
+		WrappingReflowHelper: debug
 	},
 	off:
 	[

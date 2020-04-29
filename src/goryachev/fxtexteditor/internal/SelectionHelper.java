@@ -1,7 +1,7 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.common.util.D;
 import goryachev.fxtexteditor.SelectionSegment;
-import java.util.List;
 
 
 /**

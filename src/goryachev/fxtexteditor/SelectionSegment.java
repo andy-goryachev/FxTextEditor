@@ -109,6 +109,12 @@ public class SelectionSegment
 	}
 	
 	
+	public boolean isCaretAtMin()
+	{
+		return caretAtMin;
+	}
+	
+	
 	/** returns a marker which is closer to the beginning of the text */
 	public Marker getMin()
 	{

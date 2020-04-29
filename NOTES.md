@@ -1,9 +1,10 @@
 # BUGS
 
+- duplicate caret
+- scroll to visible
 
 
 # TODO
 
-- vertical scroll bar thumb size
 - mouse wheel scrolling
 - handle model mutation events

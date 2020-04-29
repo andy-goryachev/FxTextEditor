@@ -87,20 +87,6 @@ public class SelectionController
 	}
 	
 	
-	public boolean isCaret(int line, int pos)
-	{
-		SelectionSegment s = segment.get();
-		if(s != null)
-		{
-			if(s.isCaret(line, pos))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
-	
 	public void setSelection(Marker anchor, Marker caret)
 	{
 		clear();

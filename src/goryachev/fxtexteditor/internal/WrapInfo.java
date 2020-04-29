@@ -12,7 +12,11 @@ public abstract class WrapInfo
 {
 	public abstract int getRowCount();
 	
-	public abstract int getIndexForRow(int row);
+	/** returns glyph index for wrapped row */
+	public abstract int getGlyphIndexForRow(int row);
+	
+	/** finds wrapped row for the given glyph index */
+	public abstract int findRowForGlyphIndex(int glyphIndex);
 	
 	public abstract boolean isCompatible(ITabPolicy tabPolicy, int width);
 	
@@ -141,8 +145,9 @@ public abstract class WrapInfo
 	public static class Empty extends WrapInfo
 	{
 		public int getRowCount() { return 1; }
-		public int getIndexForRow(int row) { return 0; }
+		public int getGlyphIndexForRow(int row) { return 0; }
 		public boolean isCompatible(ITabPolicy tabPolicy, int width) { return true; }
+		public int findRowForGlyphIndex(int glyphIndex) { return 0; }
 	}
 	
 	
@@ -172,9 +177,15 @@ public abstract class WrapInfo
 		}
 
 
-		public int getIndexForRow(int row)
+		public int getGlyphIndexForRow(int row)
 		{
 			return row * width;
+		}
+		
+
+		public int findRowForGlyphIndex(int glyphIndex)
+		{
+			return glyphIndex / width;
 		}
 
 
@@ -214,9 +225,25 @@ public abstract class WrapInfo
 		}
 
 
-		public int getIndexForRow(int row)
+		public int getGlyphIndexForRow(int row)
 		{
 			return breaks.get(row);
+		}
+		
+		
+		public int findRowForGlyphIndex(int glyphIndex)
+		{
+			// TODO binary search would be better
+			int sz = getRowCount();
+			for(int i=0; i<sz; i++)
+			{
+				int ix = getGlyphIndexForRow(i);
+				if(ix > glyphIndex)
+				{
+					return i - 1;
+				}
+			}
+			return sz - 1;
 		}
 		
 		
