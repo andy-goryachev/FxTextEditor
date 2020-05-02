@@ -565,7 +565,6 @@ public class VFlow
 	{
 		Point2D p = canvas.screenToLocal(screenx, screeny);
 		TextMetrics m = textMetrics();
-		// TODO hor scrolling
 		
 		double sx = p.getX() - lineNumbersBarWidth;
 		if(sx < 0)
