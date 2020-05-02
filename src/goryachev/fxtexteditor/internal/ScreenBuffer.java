@@ -1,5 +1,6 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
 import goryachev.common.util.Dump;
 import goryachev.common.util.SB;
@@ -14,6 +15,7 @@ import goryachev.fxtexteditor.VFlow;
  */
 public class ScreenBuffer
 {
+	protected static final Log log = Log.get("ScreenBuffer");
 	protected final VFlow vflow;
 	private int height;
 	private int width;
@@ -152,7 +154,9 @@ public class ScreenBuffer
 			}
 		}
 		
-		return new TextPos(line, charIndex, synthetic);
+		TextPos p = new TextPos(line, charIndex, synthetic);
+		log.trace("{%d},{%d} {%s}", x, y, p);
+		return p;
 	}
 	
 	

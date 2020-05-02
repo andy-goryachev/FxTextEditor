@@ -529,6 +529,7 @@ public class VFlow
 		{
 			// TODO repaint only the damaged area
 			repaint();
+			// TODO scroll selection to visible (incl. horizontal scrolling)
 		}
 	}
 	
@@ -571,10 +572,20 @@ public class VFlow
 		{
 			sx = 0;
 		}
+
 		double sy = p.getY();
 		
 		int x = CKit.round(sx / m.cellWidth);
+		if(editor.isWrapLines())
+		{
+			if(x >= getScreenColumnCount())
+			{
+				x = getScreenColumnCount();
+			}
+		}
+		
 		int y = CKit.floor(sy / m.cellHeight);
+		
 		TextPos pos = buffer().getInsertPosition(x, y);
 		if(pos == null)
 		{
