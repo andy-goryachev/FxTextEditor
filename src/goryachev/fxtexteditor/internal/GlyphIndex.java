@@ -76,12 +76,14 @@ public class GlyphIndex
 	}
 	
 	
+	/** is end of a line */
 	public boolean isEOL()
 	{
 		return index == EOL_INDEX;
 	}
 	
 	
+	/** is beginning of a line */
 	public boolean isBOL()
 	{
 		return index == BOL_INDEX;
