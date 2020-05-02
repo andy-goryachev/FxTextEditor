@@ -1,7 +1,7 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
-import goryachev.common.util.D;
 import goryachev.fxtexteditor.SelectionSegment;
+import goryachev.fxtexteditor.VFlow;
 
 
 /**
@@ -14,7 +14,7 @@ public class SelectionHelper
 	private static final int SELECTED = 4;
 	
 	
-	public static int getFlags(SelectionSegment seg, ScreenRow row, int x)
+	public static int getFlags(VFlow vflow, SelectionSegment seg, ScreenRow row, int x)
 	{
 		if(row == null)
 		{
@@ -80,7 +80,10 @@ public class SelectionHelper
 			{
 				if(seg.isCaret(line, off))
 				{
-					flags |= CARET;
+					if(!vflow.isWrapColumn(x))
+					{
+						flags |= CARET;
+					}
 				}
 			}
 		}

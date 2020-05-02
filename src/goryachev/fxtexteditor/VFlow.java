@@ -2,7 +2,6 @@
 package goryachev.fxtexteditor;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
-import goryachev.common.util.D;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
@@ -184,6 +183,19 @@ public class VFlow
 	public int getMaxColumnCount()
 	{
 		return buffer().getWidth();
+	}
+	
+	
+	public boolean isWrapColumn(int x)
+	{
+		if(editor.isWrapLines())
+		{
+			if(x == getScreenColumnCount())
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	
@@ -829,7 +841,7 @@ public class VFlow
 		
 		cw *= count;
 		
-		int flags = SelectionHelper.getFlags(editor.selector.getSelectedSegment(), row, x);
+		int flags = SelectionHelper.getFlags(this, editor.selector.getSelectedSegment(), row, x);
 		boolean caretLine = SelectionHelper.isCaretLine(flags);
 		boolean caret = paintCaret.get() ? SelectionHelper.isCaret(flags) : false;
 		boolean selected = SelectionHelper.isSelected(flags);
@@ -856,7 +868,7 @@ public class VFlow
 		double cx = x * cw + lineNumbersBarWidth;
 		double cy = y * ch;
 		
-		int flags = SelectionHelper.getFlags(editor.selector.getSelectedSegment(), row, x);
+		int flags = SelectionHelper.getFlags(this, editor.selector.getSelectedSegment(), row, x);
 		boolean caretLine = SelectionHelper.isCaretLine(flags);
 		boolean caret = SelectionHelper.isCaret(flags);
 		boolean selected = SelectionHelper.isSelected(flags);

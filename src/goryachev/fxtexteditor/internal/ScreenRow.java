@@ -123,7 +123,8 @@ public class ScreenRow
 	
 	/**
 	 * returns a glyph index for the given x screen coordinate.
-	 * or a negative offset to the next tab position (if inside a tab),
+	 * if the x coordinate falls inside a tab, a special GlyphIndex
+	 * provides information about the tab end position.
 	 * or GlyphIndex.EOL if past the end of given line,
 	 * of GlyphIndex.BOL if before the beginning of line,
 	 * or GlyphIndex.EOF if past the end of file.
