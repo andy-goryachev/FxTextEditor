@@ -664,7 +664,7 @@ public class FxTextEditor
 		{
 			log.debug("val={}", val);
 			
-			vflow.verticalScroll(val, isWrapLines());
+			vflow.verticalScroll(val);
 		}
 	}
 	

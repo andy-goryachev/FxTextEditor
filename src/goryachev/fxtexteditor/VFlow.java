@@ -188,7 +188,7 @@ public class VFlow
 	
 	public boolean isWrapColumn(int x)
 	{
-		if(editor.isWrapLines())
+		if(isWrapLines())
 		{
 			if(x == getScreenColumnCount())
 			{
@@ -196,6 +196,12 @@ public class VFlow
 			}
 		}
 		return false;
+	}
+	
+	
+	public boolean isWrapLines()
+	{
+		return editor.isWrapLines();
 	}
 	
 	
@@ -437,7 +443,7 @@ public class VFlow
 	/** updates thumb size; depends on a wrapping pass in reflow() */
 	protected void updateHorizontalScrollBarSize()
 	{
-		if(!editor.isWrapLines())
+		if(!isWrapLines())
 		{
 			int max = getMaxCellCount() + 1; // allow for 1 blank space at the end
 			double vis = getMaxColumnCount();
@@ -449,7 +455,7 @@ public class VFlow
 	
 	protected void updateVerticalScrollBarSize()
 	{
-		if(editor.isWrapLines())
+		if(isWrapLines())
 		{
 			double val = computeVerticalScrollBarThumbSize();
 			editor.getVerticalScrollBar().setVisibleAmount(val);
@@ -577,7 +583,7 @@ public class VFlow
 		double sy = p.getY();
 		
 		int x = CKit.round(sx / m.cellWidth);
-		if(editor.isWrapLines())
+		if(isWrapLines())
 		{
 			if(x >= getScreenColumnCount())
 			{
@@ -686,7 +692,6 @@ public class VFlow
 	{
 		log.trace();
 		
-		boolean wrap = editor.isWrapLines();
 		int bufferWidth = getScreenColumnCount() + 1;
 		int bufferHeight = getScreenRowCount() + 1;
 		
@@ -694,7 +699,7 @@ public class VFlow
 		
 		ITabPolicy tabPolicy = editor.getTabPolicy();
 		
-		if(wrap)
+		if(isWrapLines())
 		{
 			WrappingReflowHelper.reflow(this, buffer, getScreenColumnCount(), bufferHeight, tabPolicy);
 		}
@@ -737,7 +742,7 @@ public class VFlow
 			return;
 		}
 		
-		boolean wrap = editor.isWrapLines();
+		boolean wrap = isWrapLines();
 		boolean showLineNumbers = editor.isShowLineNumbers(); // TODO
 		ScreenBuffer b = buffer();
 		
@@ -934,7 +939,7 @@ public class VFlow
 	}
 
 
-	public void verticalScroll(double fraction, boolean wrapLines)
+	public void verticalScroll(double fraction)
 	{
 		int lineCount = getModelLineCount();
 		int vis = getScreenRowCount();
@@ -942,7 +947,7 @@ public class VFlow
 		int top = CKit.round(max * fraction);
 		GlyphIndex gix;
 
-		if(wrapLines)
+		if(isWrapLines())
 		{
 			VerticalScrollHelper h = new VerticalScrollHelper(this, lineCount, top, fraction);
 			GlyphPos p = h.process();
@@ -1028,7 +1033,7 @@ public class VFlow
 		int h = buffer.getHeight();
 		int w = buffer.getWidth();
 		
-		if(editor.isWrapLines())
+		if(isWrapLines())
 		{
 			h--;
 		}
