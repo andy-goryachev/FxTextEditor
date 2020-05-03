@@ -120,7 +120,7 @@ public class VerticalScrollHelper
 			newLineNumber = lineix;
 			newGlyphIndex = gix;
 			
-			log.trace("ori={%d} add={%d} frac={%f} start={%d} skip={%d} res={%d},{%d}", originalTarget, additionalRows, fraction, start, rowsToSkip, newLineNumber, gix);
+			log.trace("ori=%d add=%d frac=%f start=%d skip=%d res=%d,%d", originalTarget, additionalRows, fraction, start, rowsToSkip, newLineNumber, gix);
 		}
 		
 		return new GlyphPos(newLineNumber, newGlyphIndex);

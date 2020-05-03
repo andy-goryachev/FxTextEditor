@@ -139,7 +139,7 @@ public class VFlow
 	
 	public void setOrigin(int top, GlyphIndex ix)
 	{
-		log.debug("{%d} {%s}", top, ix);
+		log.debug("%d %s", top, ix);
 		
 		topLine = top;
 		topGlyphIndex = ix;
@@ -159,7 +159,7 @@ public class VFlow
 	/** meaningful only in non-wrapped mode */
 	public void setTopCellIndex(int ix)
 	{
-		log.debug("{%d}", ix);
+		log.debug("%d", ix);
 		
 		topCellIndex = ix;
 		invalidate();
@@ -941,7 +941,7 @@ public class VFlow
 	public void scroll(double fractionOfHeight)
 	{
 		// TODO
-		log.debug("scroll={}", fractionOfHeight);
+		log.debug("scroll=%f", fractionOfHeight);
 	}
 
 
@@ -1038,7 +1038,7 @@ public class VFlow
 	protected boolean isVisible(Marker m)
 	{
 		boolean rv = isVisiblePrivate(m);
-		log.debug("{%s} {%s}", m, rv);
+		log.debug("%s %s", m, rv);
 		return rv;
 	}
 	

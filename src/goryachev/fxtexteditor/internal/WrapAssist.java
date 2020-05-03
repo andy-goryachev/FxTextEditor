@@ -79,7 +79,7 @@ public class WrapAssist
 			}
 		}
 		
-		log.debug("start={%d},{%s} delta={%d}, move: {%d},{%s}", startLine, gix, delta, line, pos);
+		log.debug("start=%d,%s delta=%d, move: %d,%s", startLine, gix, delta, line, pos);
 		
 		return new GlyphPos(line, pos);
 	}

@@ -23,7 +23,7 @@ public class WrappingReflowHelper
 		int startGlyphIndex = flow.getTopGlyphIndex().intValue();
 		boolean useStartGlyphIndex = true;
 		
-		log.trace("line={%d} start={%d}", lineIndex, startGlyphIndex);
+		log.trace("line=%d start=%d", lineIndex, startGlyphIndex);
 			
 		int modelLineCount = flow.getModelLineCount();
 		int cellIndex = 0;

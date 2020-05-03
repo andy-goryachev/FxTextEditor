@@ -155,7 +155,7 @@ public class ScreenBuffer
 		}
 		
 		TextPos p = new TextPos(line, charIndex, synthetic);
-		log.trace("{%d},{%d} {%s}", x, y, p);
+		log.trace("%d,%d %s", x, y, p);
 		return p;
 	}
 	
