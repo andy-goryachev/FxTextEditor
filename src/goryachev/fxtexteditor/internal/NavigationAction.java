@@ -53,7 +53,6 @@ public abstract class NavigationAction
 		finally
 		{
 			vflow().setSuppressBlink(false);
-			vflow().scrollSelectionToVisible();
 		}
 	}
 }

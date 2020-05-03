@@ -115,7 +115,7 @@ public class FxTextEditor
 		
 		getChildren().addAll(vflow, vscroll, hscroll);
 		
-		selector.selectionSegmentProperty().addListener((s,p,c) -> handleSelectionSegmentUpdate(c)); 
+		selector.selectionSegmentProperty().addListener((s,p,c) -> vflow.handleSelectionSegmentUpdate(c)); 
 		
 		// TODO
 //		FX.onChange(vflow::updateBlinkRate, true, blinkRateProperty());
@@ -348,12 +348,6 @@ public class FxTextEditor
 	{
 		requestLayout();
 		vflow.invalidate();
-	}
-	
-	
-	protected void handleSelectionSegmentUpdate(SelectionSegment s)
-	{
-		vflow.repaintSegment(s);
 	}
 	
 	

@@ -523,13 +523,14 @@ public class VFlow
 	}
 	
 	
-	public void repaintSegment(SelectionSegment s)
+	public void handleSelectionSegmentUpdate(SelectionSegment s)
 	{
 		if(s != null)
 		{
 			// TODO repaint only the damaged area
 			repaint();
-			// TODO scroll selection to visible (incl. horizontal scrolling)
+			
+			scrollSelectionToVisible();
 		}
 	}
 	
@@ -966,8 +967,7 @@ public class VFlow
 	
 
 	/** 
-	 * scrolls the last selection caret to visible area.  
-	 * makes an attempt to make visible all the carets, if that is possible 
+	 * adjusts the scroll bars to make the caret visible.
 	 */
 	public void scrollSelectionToVisible()
 	{
@@ -975,7 +975,10 @@ public class VFlow
 		int max;
 		int last;
 		
-		// do we need to move at all (check only last caret)?
+		// TODO this needs to work in non-wrapped mode
+		// TODO horizontal scroll
+		
+		// do we need to move at all?
 		// if yes, find out where
 		
 		EditorSelection sel = editor.getSelection();
@@ -1012,6 +1015,7 @@ public class VFlow
 	}
 	
 	
+	// TODO horizontal scroll in non-wrapping mode
 	protected boolean isVisible(Marker m)
 	{
 		FlowLine fline = getTextLine(topLine);

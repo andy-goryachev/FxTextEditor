@@ -64,7 +64,7 @@ public class WrapAssist
 			{
 				if(ct < toSkip)
 				{
-					toSkip -= row;
+					toSkip -= (Math.max(row, 1)); // FIX this is wrong
 					line++;
 					
 					fline = vflow.getTextLine(line);
