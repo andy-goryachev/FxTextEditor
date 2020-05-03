@@ -56,6 +56,11 @@ public class DemoTextEditorModel
 	
 	protected String plainText(int line)
 	{
+		if(line < 0)
+		{
+			throw new IllegalArgumentException("line=" + line);
+		}
+		
 		if(line < getLineCount())
 		{
 			int ix = line % lines.length;

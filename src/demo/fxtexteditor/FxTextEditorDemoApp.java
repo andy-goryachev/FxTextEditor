@@ -1,9 +1,9 @@
 // Copyright © 2016-2020 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
-import goryachev.common.log.Log;
 import goryachev.common.util.FileSettingsProvider;
 import goryachev.common.util.GlobalSettings;
 import goryachev.fx.CssLoader;
+import goryachev.log.config.JsonLogConfig;
 import java.io.File;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -17,7 +17,7 @@ public class FxTextEditorDemoApp
 {
 	public static void main(String[] args)
 	{
-		Log.configure(new File("log-conf.json"), 1000);
+		JsonLogConfig.configure(new File("log-conf.json"), 1000);
 		launch(args);
 	}
 

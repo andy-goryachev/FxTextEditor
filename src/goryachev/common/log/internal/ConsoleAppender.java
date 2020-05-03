@@ -13,10 +13,8 @@ public class ConsoleAppender
 	private final PrintStream out;
 	
 	
-	public ConsoleAppender(PrintStream out, String[] channels)
+	public ConsoleAppender(PrintStream out)
 	{
-		super(channels);
-		
 		this.out = out;
 	}
 	
@@ -24,12 +22,5 @@ public class ConsoleAppender
 	public void emit(String s)
 	{
 		out.println(s);
-	}
-
-
-	public static AppenderBase create(LogConfig.AppenderInfo inf, PrintStream out)
-	{
-		ConsoleAppender a = new ConsoleAppender(out, inf.channels);
-		return a;
 	}
 }

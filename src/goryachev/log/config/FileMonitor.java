@@ -1,5 +1,5 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
-package goryachev.common.log.internal;
+package goryachev.log.config;
 import goryachev.common.util.CTask;
 import goryachev.common.util.SystemTask;
 import java.io.File;
@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 
 
 /**
- * Monitors log configuration file.
+ * Monitors the log configuration file.
  */
 public class FileMonitor
 {

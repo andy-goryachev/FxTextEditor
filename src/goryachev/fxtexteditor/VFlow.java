@@ -139,6 +139,8 @@ public class VFlow
 	
 	public void setOrigin(int top, GlyphIndex ix)
 	{
+		log.debug("{%d} {%s}", top, ix);
+		
 		topLine = top;
 		topGlyphIndex = ix;
 		
@@ -157,6 +159,8 @@ public class VFlow
 	/** meaningful only in non-wrapped mode */
 	public void setTopCellIndex(int ix)
 	{
+		log.debug("{%d}", ix);
+		
 		topCellIndex = ix;
 		invalidate();
 	}
@@ -529,15 +533,17 @@ public class VFlow
 	}
 	
 	
-	public void handleSelectionSegmentUpdate(SelectionSegment s)
+	public void handleSelectionSegmentUpdate(SelectionSegment prev, SelectionSegment sel)
 	{
-		if(s != null)
-		{
-			// TODO repaint only the damaged area
-			repaint();
-			
-			scrollSelectionToVisible();
-		}
+		// TODO repaint only the damaged area
+		repaint();
+		
+		// FIX bad idea.
+		// need to call scrollSelectionToVisible directly with a hint (page up, page down, move up, etc).
+		
+		// must perform in later() because of some other listeners
+		// this might cause problems when scrolling TODO
+		FX.later(this::scrollSelectionToVisible);
 	}
 	
 	
@@ -976,6 +982,7 @@ public class VFlow
 	 */
 	public void scrollSelectionToVisible()
 	{
+		// TODO pass a hint
 		int min;
 		int max;
 		int last;
@@ -998,30 +1005,45 @@ public class VFlow
 		}
 		
 		int caretLine = caret.getLine();
-		WrapAssist wr = new WrapAssist(this, caretLine, caret.getCharIndex());
-
-		int delta;
-		if(caretLine < topLine)
+		
+		if(isWrapLines())
 		{
-			// above the view port: position caret on the 2nd line if possible
-			delta = -2;
+			WrapAssist wr = new WrapAssist(this, caretLine, caret.getCharIndex());
+	
+			int delta;
+			if(caretLine < topLine)
+			{
+				// above the view port: position caret on the 2nd line if possible
+				delta = -2;
+			}
+			else
+			{
+				// below the view port: position caret on the 2nd line from the bottom
+				delta = getScreenRowCount() - 2;
+			}
+	
+			GlyphPos p = wr.move(delta);
+			int line = p.getLine();
+			GlyphIndex gix = p.getGlyphIndex();
+			
+			setOrigin(line, gix);
 		}
 		else
 		{
-			// below the view port: position caret on the 2nd line from the bottom
-			delta = getScreenRowCount() - 2;
+			// TODO
 		}
-
-		GlyphPos p = wr.move(delta);
-		int line = p.getLine();
-		GlyphIndex gix = p.getGlyphIndex();
-		
-		setOrigin(line, gix);
 	}
 	
 	
-	// TODO horizontal scroll in non-wrapping mode
 	protected boolean isVisible(Marker m)
+	{
+		boolean rv = isVisiblePrivate(m);
+		log.debug("{%s} {%s}", m, rv);
+		return rv;
+	}
+	
+	
+	protected boolean isVisiblePrivate(Marker m)
 	{
 		FlowLine fline = getTextLine(topLine);
 		int pos = fline.getCharIndex(topGlyphIndex);
@@ -1030,35 +1052,51 @@ public class VFlow
 			return false;
 		}
 		
-		int h = buffer.getHeight();
-		int w = buffer.getWidth();
-		
 		if(isWrapLines())
 		{
-			h--;
-		}
-		
-		ScreenRow r = buffer.getScreenRow(h - 1);
-		int line = r.getLineIndex();
-		if(line < 0)
-		{
-			return true;
-		}
-		
-		if(topLine != line)
-		{
-			fline = getTextLine(line);
-			if(fline == null)
+			int h = buffer.getHeight() - 1;
+			int w = buffer.getWidth();
+			
+			ScreenRow r = buffer.getScreenRow(h - 1);
+			int line = r.getLineIndex();
+			if(line < 0)
 			{
 				return true;
 			}
+			
+			if(topLine != line)
+			{
+				fline = getTextLine(line);
+				if(fline == null)
+				{
+					return true;
+				}
+			}
+			
+			GlyphIndex gix = r.getGlyphIndex(w - 1);
+			pos = fline.getCharIndex(gix);
+			if(m.isAfter(line, pos))
+			{
+				return false;
+			}
 		}
-		
-		GlyphIndex gix = r.getGlyphIndex(w - 1);
-		pos = fline.getCharIndex(gix);
-		if(m.isAfter(line, pos))
+		else
 		{
-			return false;
+			pos = fline.getGlyphIndex(m.getCharIndex()).intValue();
+			if(pos < topCellIndex)
+			{
+				return false;
+			}
+			else if(pos >= (topCellIndex + getScreenColumnCount()))
+			{
+				return false;
+			}
+			
+			int line = m.getLine();
+			if(line >= (topLine + getScreenRowCount()))
+			{
+				return false;
+			}
 		}
 		
 		return true;

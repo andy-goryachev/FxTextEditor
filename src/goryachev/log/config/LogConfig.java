@@ -1,19 +1,29 @@
 // Copyright © 2018-2020 Andy Goryachev <andy@goryachev.com>
-package goryachev.common.log.internal;
+package goryachev.log.config;
 import goryachev.common.log.AbstractLogConfig;
 import goryachev.common.log.AppenderBase;
 import goryachev.common.log.LogLevel;
+import goryachev.common.log.LogUtil;
+import goryachev.common.log.internal.ConsoleAppender;
 import goryachev.common.util.CList;
 import goryachev.common.util.CMap;
+import goryachev.common.util.Keep;
+import java.io.PrintStream;
 import java.util.List;
 
 
 /**
  * Log Config.
  */
+@Keep
 public class LogConfig
 	extends AbstractLogConfig
 {
+	protected static final String STDOUT = "stdout";
+	protected static final String STDERR = "stderr";
+	
+
+	@Keep
 	public static class Profile
 	{
 		public boolean enabled;
@@ -29,6 +39,7 @@ public class LogConfig
 	
 	//
 	
+	@Keep
 	public static class AppenderInfo
 	{
 		public String type; 
@@ -131,11 +142,38 @@ public class LogConfig
 		{
 			for(AppenderInfo inf: appenders)
 			{
-				AppenderBase a = AppenderBase.create(inf);
+				AppenderBase a = createAppender(inf);
 				rv.add(a);
 			}
 		}
 		
 		return rv;
+	}
+	
+	
+	protected static AppenderBase createAppender(AppenderInfo inf) throws Exception
+	{
+		if(inf.type == null)
+		{
+			throw new Exception("undefined appender type (null)");
+		}
+		
+		switch(inf.type)
+		{
+		case STDOUT:
+			return createConsoleAppender(inf, System.out);
+		case STDERR:
+			return createConsoleAppender(inf, System.err);
+		default:
+			throw new Exception("unknown appender type: " + inf.type);
+		}
+	}
+
+
+	protected static ConsoleAppender createConsoleAppender(LogConfig.AppenderInfo inf, PrintStream out)
+	{
+		ConsoleAppender a = new ConsoleAppender(out);
+		// TODO configure
+		return a;
 	}
 }
