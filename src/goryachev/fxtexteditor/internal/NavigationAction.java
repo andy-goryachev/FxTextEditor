@@ -16,9 +16,13 @@ public abstract class NavigationAction
 	
 	//
 	
-	public NavigationAction(Actions a)
+	protected final NavDirection direction;
+
+
+	public NavigationAction(Actions a, NavDirection dir)
 	{
 		super(a);
+		this.direction = dir;
 	}
 	
 	
@@ -47,12 +51,12 @@ public abstract class NavigationAction
 			Marker to = move(from);
 			
 			selector().addSelectionSegment(to, to);
-			
 			selector().commitSelection();
 		}
 		finally
 		{
 			vflow().setSuppressBlink(false);
+			vflow().scrollSelectionToVisible(direction);
 		}
 	}
 }

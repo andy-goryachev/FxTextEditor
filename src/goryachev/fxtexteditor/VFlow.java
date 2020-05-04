@@ -9,6 +9,7 @@ import goryachev.fx.FxBooleanBinding;
 import goryachev.fxtexteditor.internal.FlowLine;
 import goryachev.fxtexteditor.internal.FlowLineCache;
 import goryachev.fxtexteditor.internal.GlyphIndex;
+import goryachev.fxtexteditor.internal.NavDirection;
 import goryachev.fxtexteditor.internal.NonWrappingReflowHelper;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenRow;
@@ -543,7 +544,7 @@ public class VFlow
 		
 		// must perform in later() because of some other listeners
 		// this might cause problems when scrolling TODO
-		FX.later(this::scrollSelectionToVisible);
+		//FX.later(this::scrollSelectionToVisible);
 	}
 	
 	
@@ -980,7 +981,7 @@ public class VFlow
 	/** 
 	 * adjusts the scroll bars to make the caret visible.
 	 */
-	public void scrollSelectionToVisible()
+	public void scrollSelectionToVisible(NavDirection dir)
 	{
 		// TODO pass a hint
 		int min;
@@ -1030,6 +1031,33 @@ public class VFlow
 		}
 		else
 		{
+			boolean toLeft = false;
+			boolean toRight = false;
+			boolean toUp = false;
+			boolean toDown = false;
+			
+			// TODO
+			FlowLine fline = getTextLine(caretLine);
+			int pos = fline.getGlyphIndex(caret.getCharIndex()).intValue();
+			if(pos < topCellIndex)
+			{
+				toLeft = true;
+			}
+			else if(pos >= (topCellIndex + getScreenColumnCount()))
+			{
+				toRight = true;
+			}
+			
+			if(caretLine < topLine)
+			{
+				toUp = true;
+			}
+			else if(caretLine >= (topLine + getScreenRowCount()))
+			{
+				toDown = true;
+			}
+			
+			log.debug("left=%s right=%s up=%s dn=%s", toLeft, toRight, toUp, toDown);
 			// TODO
 		}
 	}

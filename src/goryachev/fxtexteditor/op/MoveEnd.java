@@ -2,6 +2,7 @@
 package goryachev.fxtexteditor.op;
 import goryachev.fxtexteditor.Actions;
 import goryachev.fxtexteditor.Marker;
+import goryachev.fxtexteditor.internal.NavDirection;
 import goryachev.fxtexteditor.internal.NavigationAction;
 
 
@@ -13,7 +14,7 @@ public class MoveEnd
 {
 	public MoveEnd(Actions a)
 	{
-		super(a);
+		super(a, NavDirection.RIGHT);
 	}
 	
 
