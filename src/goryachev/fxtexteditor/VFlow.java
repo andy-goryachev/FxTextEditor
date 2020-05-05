@@ -47,6 +47,8 @@ public class VFlow
 	protected static final double CARET_LINE_OPACITY = 0.3;
 	protected static final double SELECTION_BACKGROUND_OPACITY = 0.4;
 	protected static final double CELL_BACKGROUND_OPACITY = 0.8;
+	protected static final int HORIZONTAL_SAFETY = 8;
+	protected static final int VERTICAL_SAFETY = 2;
 	
 	protected final FxTextEditor editor;
 	protected final FxBoolean caretEnabledProperty = new FxBoolean(true);
@@ -160,10 +162,13 @@ public class VFlow
 	/** meaningful only in non-wrapped mode */
 	public void setTopCellIndex(int ix)
 	{
-		log.debug("%d", ix);
-		
-		topCellIndex = ix;
-		invalidate();
+		if(topCellIndex != ix)
+		{
+			log.debug("%d", ix);
+			
+			topCellIndex = ix;
+			invalidate();
+		}
 	}
 	
 	
@@ -1031,34 +1036,51 @@ public class VFlow
 		}
 		else
 		{
-			boolean toLeft = false;
-			boolean toRight = false;
-			boolean toUp = false;
-			boolean toDown = false;
+			int topCell = topCellIndex;
 			
-			// TODO
 			FlowLine fline = getTextLine(caretLine);
-			int pos = fline.getGlyphIndex(caret.getCharIndex()).intValue();
-			if(pos < topCellIndex)
+			int x = fline.getGlyphIndex(caret.getCharIndex()).intValue();
+			if(x < topCellIndex)
 			{
-				toLeft = true;
+				x = x - HORIZONTAL_SAFETY;
+				if(x < HORIZONTAL_SAFETY)
+				{
+					x = 0;
+				}
+				topCell = x;
 			}
-			else if(pos >= (topCellIndex + getScreenColumnCount()))
+			else if(x >= (topCellIndex + getScreenColumnCount()))
 			{
-				toRight = true;
+				x = x + HORIZONTAL_SAFETY - getScreenColumnCount();
+				if(x < 0)
+				{
+					x = 0;
+				}
+				topCell = x;
 			}
 			
+			int top = topLine;
 			if(caretLine < topLine)
 			{
-				toUp = true;
+				int y = caretLine - VERTICAL_SAFETY;
+				if(y < VERTICAL_SAFETY)
+				{
+					y = 0;
+				}
+				top = y;
 			}
 			else if(caretLine >= (topLine + getScreenRowCount()))
 			{
-				toDown = true;
+				int y = caretLine + VERTICAL_SAFETY - getScreenRowCount();
+				if(y < 0)
+				{
+					y = 0;
+				}
+				top = y;
 			}
 			
-			log.debug("left=%s right=%s up=%s dn=%s", toLeft, toRight, toUp, toDown);
-			// TODO
+			setTopCellIndex(topCell);
+			setOrigin(top, GlyphIndex.ZERO);
 		}
 	}
 	

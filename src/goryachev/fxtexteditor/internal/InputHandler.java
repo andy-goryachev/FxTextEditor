@@ -162,6 +162,7 @@ public class InputHandler
 		}
 		
 		editor.requestFocus();
+		vflow.scrollSelectionToVisible(null);
 	}
 	
 
