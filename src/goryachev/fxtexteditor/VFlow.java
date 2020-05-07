@@ -2,6 +2,7 @@
 package goryachev.fxtexteditor;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
+import goryachev.common.util.D;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
@@ -222,6 +223,11 @@ public class VFlow
 	 */
 	public int getMaxCellCount()
 	{
+		if(isWrapLines())
+		{
+			throw new Error();
+		}
+		
 		ITabPolicy p = editor.getTabPolicy();
 		return buffer().getMaxCellCount(p);
 	}
@@ -376,7 +382,7 @@ public class VFlow
 	}
 	
 	
-	/** makes screen buffer invalid.  triggers full screen update */
+	/** makes screen buffer invalid, triggers full screen update */
 	public void invalidate()
 	{
 		screenBufferValid = false;
@@ -444,9 +450,6 @@ public class VFlow
 
 		columnCount = CKit.floor(w / tm.cellWidth);
 		rowCount = CKit.floor(h / tm.cellHeight);
-		
-//		FX.later(this::updateScrollBars);
-//		updateScrollBars();
 	}
 	
 	
@@ -458,7 +461,37 @@ public class VFlow
 			int max = getMaxCellCount() + 1; // allow for 1 blank space at the end
 			double vis = getMaxColumnCount();
 			double thumbSize = vis / max;
-			editor.hscroll.setVisibleAmount(thumbSize);
+			editor.getHorizontalScrollBar().setVisibleAmount(thumbSize);
+		}
+	}
+	
+	
+	protected void updateHorizontalScrollBarPosition()
+	{
+		if(!isWrapLines())
+		{
+			double v;
+			
+			int max = getMaxCellCount();
+			if(max <= getScreenColumnCount())
+			{
+				v = 0.0;
+			}
+			else
+			{
+				max -= getScreenColumnCount();
+				v = topCellIndex / (double)max;
+			}
+			
+			editor.setHandleScrollEvents(false);
+			try
+			{
+				editor.getHorizontalScrollBar().setValue(v);
+			}
+			finally
+			{
+				editor.setHandleScrollEvents(true);
+			}
 		}
 	}
 	
@@ -470,6 +503,12 @@ public class VFlow
 			double val = computeVerticalScrollBarThumbSize();
 			editor.getVerticalScrollBar().setVisibleAmount(val);
 		}
+	}
+	
+	
+	protected void updateVerticalScrollBarPosition()
+	{
+		D.print(); // FIX
 	}
 	
 	
@@ -512,7 +551,7 @@ public class VFlow
 			}
 		}
 		
-		// TODO add the number of extra rows due to wrapping (for visible lines)
+		// add the number of extra rows due to wrapping (for visible lines)
 		int total = model.getLineCount() + 2 + extraRows;
 		int visible = getScreenRowCount();
 		if(visible > total)
@@ -524,7 +563,7 @@ public class VFlow
 	}
 	
 
-	/** requests a repaint.  the actual drawing happens in runLater() */
+	/** requests a repaint, the actual drawing will happen in runLater() */
 	protected void repaint()
 	{
 		if(!repaintRequested)
@@ -543,13 +582,6 @@ public class VFlow
 	{
 		// TODO repaint only the damaged area
 		repaint();
-		
-		// FIX bad idea.
-		// need to call scrollSelectionToVisible directly with a hint (page up, page down, move up, etc).
-		
-		// must perform in later() because of some other listeners
-		// this might cause problems when scrolling TODO
-		//FX.later(this::scrollSelectionToVisible);
 	}
 	
 	
@@ -1051,7 +1083,7 @@ public class VFlow
 			}
 			else if(x >= (topCellIndex + getScreenColumnCount()))
 			{
-				x = x + HORIZONTAL_SAFETY - getScreenColumnCount();
+				x = x + /*HORIZONTAL_SAFETY*/ 1 - getScreenColumnCount();
 				if(x < 0)
 				{
 					x = 0;
@@ -1079,8 +1111,21 @@ public class VFlow
 				top = y;
 			}
 			
+			int prevTopCell = topCellIndex;
+			int prevTopLine = topLine;
+			
 			setTopCellIndex(topCell);
 			setOrigin(top, GlyphIndex.ZERO);
+			
+			if(topCell != prevTopCell)
+			{
+				updateHorizontalScrollBarPosition();
+			}
+			
+			if(top != prevTopLine)
+			{
+				updateVerticalScrollBarPosition();
+			}
 		}
 	}
 	
