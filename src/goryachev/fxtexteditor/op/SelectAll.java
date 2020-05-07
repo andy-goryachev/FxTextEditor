@@ -30,6 +30,7 @@ public class SelectAll
 			
 			selector().setSelection(beg, end);
 			selector().commitSelection();
+			vflow().scrollSelectionToVisible(null);
 		}
 	}
 }
