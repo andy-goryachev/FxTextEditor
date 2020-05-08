@@ -52,8 +52,9 @@ public class StatusBar
 				Marker m = seg.getCaret();
 				
 				return 
-					fmt.format(m.getLine()) + 
-					" : " + 
+					"line: " +
+					fmt.format(m.getLine() + 1) + 
+					", char: " + 
 					fmt.format(m.getCharIndex());
 			},
 			ed.selectionSegmentProperty()
