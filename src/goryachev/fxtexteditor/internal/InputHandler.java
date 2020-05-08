@@ -198,8 +198,9 @@ public class InputHandler
 	public void handleMouseReleased(MouseEvent ev)
 	{
 		stopAutoScroll();
-		vflow.setSuppressBlink(false);
 		selector.commitSelection();
+		vflow.setSuppressBlink(false);
+		vflow.scrollSelectionToVisible(null);
 	}
 	
 	
