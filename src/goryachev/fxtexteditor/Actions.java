@@ -18,7 +18,7 @@ import goryachev.fxtexteditor.op.SelectAll;
 
 
 /**
- * Actions.
+ * Built-in Actions.
  */
 public class Actions
 {
