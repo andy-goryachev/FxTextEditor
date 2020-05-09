@@ -17,7 +17,6 @@ public abstract class NavigationAction
 	//
 	
 	protected final NavDirection direction;
-	private int phantomPosition = -1;
 
 
 	public NavigationAction(Actions a, NavDirection dir)
@@ -30,13 +29,13 @@ public abstract class NavigationAction
 	/** retains the cursor x position when navigating up/down */
 	protected int getPhantomPosition()
 	{
-		return phantomPosition;
+		return actions.getPhantomPosition();
 	}
 	
 	
 	protected void setPhantomPosition(int x)
 	{
-		phantomPosition = x;
+		actions.setPhantomPosition(x);
 	}
 	
 	
