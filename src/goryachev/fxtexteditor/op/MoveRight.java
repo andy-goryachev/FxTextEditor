@@ -4,7 +4,6 @@ import goryachev.fxtexteditor.Actions;
 import goryachev.fxtexteditor.Marker;
 import goryachev.fxtexteditor.internal.FlowLine;
 import goryachev.fxtexteditor.internal.GlyphIndex;
-import goryachev.fxtexteditor.internal.NavDirection;
 import goryachev.fxtexteditor.internal.NavigationAction;
 
 
@@ -16,7 +15,7 @@ public class MoveRight
 {
 	public MoveRight(Actions a)
 	{
-		super(a, NavDirection.RIGHT);
+		super(a);
 	}
 	
 

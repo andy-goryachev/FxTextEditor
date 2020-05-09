@@ -2,7 +2,6 @@
 package goryachev.fxtexteditor.op;
 import goryachev.fxtexteditor.Actions;
 import goryachev.fxtexteditor.Marker;
-import goryachev.fxtexteditor.internal.NavDirection;
 import goryachev.fxtexteditor.internal.NavigationAction;
 
 
@@ -14,7 +13,7 @@ public class PageDown
 {
 	public PageDown(Actions a)
 	{
-		super(a, NavDirection.DOWN);
+		super(a);
 	}
 	
 	

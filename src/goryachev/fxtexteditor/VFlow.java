@@ -10,7 +10,6 @@ import goryachev.fx.FxBooleanBinding;
 import goryachev.fxtexteditor.internal.FlowLine;
 import goryachev.fxtexteditor.internal.FlowLineCache;
 import goryachev.fxtexteditor.internal.GlyphIndex;
-import goryachev.fxtexteditor.internal.NavDirection;
 import goryachev.fxtexteditor.internal.NonWrappingReflowHelper;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenRow;
@@ -1018,7 +1017,7 @@ public class VFlow
 	/** 
 	 * adjusts the scroll bars to make the caret visible.
 	 */
-	public void scrollSelectionToVisible(NavDirection dir)
+	public void scrollSelectionToVisible()
 	{
 		// TODO pass a hint
 		int min;

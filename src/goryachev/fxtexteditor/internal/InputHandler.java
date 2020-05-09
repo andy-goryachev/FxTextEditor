@@ -202,7 +202,7 @@ public class InputHandler
 		stopAutoScroll();
 		selector.commitSelection();
 		vflow.setSuppressBlink(false);
-		vflow.scrollSelectionToVisible(null);
+		vflow.scrollSelectionToVisible();
 	}
 	
 	

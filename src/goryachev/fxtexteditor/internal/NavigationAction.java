@@ -16,13 +16,9 @@ public abstract class NavigationAction
 	
 	//
 	
-	protected final NavDirection direction;
-
-
-	public NavigationAction(Actions a, NavDirection dir)
+	public NavigationAction(Actions a)
 	{
 		super(a);
-		this.direction = dir;
 	}
 	
 	
@@ -69,7 +65,7 @@ public abstract class NavigationAction
 		finally
 		{
 			vflow().setSuppressBlink(false);
-			vflow().scrollSelectionToVisible(direction);
+			vflow().scrollSelectionToVisible();
 		}
 	}
 }
