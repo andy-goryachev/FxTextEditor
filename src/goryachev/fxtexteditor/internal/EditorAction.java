@@ -41,6 +41,12 @@ public abstract class EditorAction
 	}
 	
 	
+	public boolean isWrapLines()
+	{
+		return vflow().isWrapLines();
+	}
+	
+	
 	public SelectionController selector()
 	{
 		return actions.selector();

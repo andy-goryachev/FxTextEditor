@@ -4,6 +4,8 @@ import goryachev.fxtexteditor.internal.Markers;
 import goryachev.fxtexteditor.op.Backspace;
 import goryachev.fxtexteditor.op.Copy;
 import goryachev.fxtexteditor.op.Delete;
+import goryachev.fxtexteditor.op.MoveDocumentEnd;
+import goryachev.fxtexteditor.op.MoveDocumentStart;
 import goryachev.fxtexteditor.op.MoveDown;
 import goryachev.fxtexteditor.op.MoveEnd;
 import goryachev.fxtexteditor.op.MoveHome;
@@ -23,6 +25,8 @@ public class Actions
 	public final Backspace backspace = new Backspace(this);
 	public final Copy copy = new Copy(this);
 	public final Delete delete = new Delete(this);
+	public final MoveDocumentEnd moveDocumentEnd = new MoveDocumentEnd(this);
+	public final MoveDocumentStart moveDocumentStart = new MoveDocumentStart(this);
 	public final MoveDown moveDown = new MoveDown(this);
 	public final MoveEnd moveEnd = new MoveEnd(this);
 	public final MoveHome moveHome = new MoveHome(this);

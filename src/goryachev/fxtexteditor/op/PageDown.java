@@ -7,7 +7,7 @@ import goryachev.fxtexteditor.internal.NavigationAction;
 
 
 /**
- * Moves Cursor(s) one page down.
+ * Moves cursor one page down.
  */
 public class PageDown
 	extends NavigationAction

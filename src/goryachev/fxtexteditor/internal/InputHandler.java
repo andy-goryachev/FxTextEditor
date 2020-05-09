@@ -60,7 +60,9 @@ public class InputHandler
 		KeyMap.onKeyPressed(ed, KeyCode.DELETE, ed.actions.delete);
 		KeyMap.onKeyPressed(ed, KeyCode.DOWN, ed.actions.moveDown);
 		KeyMap.onKeyPressed(ed, KeyCode.END, ed.actions.moveEnd);
+		KeyMap.onKeyPressed(ed, KeyCode.END, KeyMap.SHORTCUT, ed.actions.moveDocumentEnd);
 		KeyMap.onKeyPressed(ed, KeyCode.HOME, ed.actions.moveHome);
+		KeyMap.onKeyPressed(ed, KeyCode.HOME, KeyMap.SHORTCUT, ed.actions.moveDocumentStart);
 		KeyMap.onKeyPressed(ed, KeyCode.LEFT, ed.actions.moveLeft);
 		KeyMap.onKeyPressed(ed, KeyCode.PAGE_DOWN, ed.actions.pageDown);
 		KeyMap.onKeyPressed(ed, KeyCode.PAGE_UP, ed.actions.pageUp);

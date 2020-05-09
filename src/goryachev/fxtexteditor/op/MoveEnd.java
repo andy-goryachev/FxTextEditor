@@ -7,7 +7,7 @@ import goryachev.fxtexteditor.internal.NavigationAction;
 
 
 /**
- * Moves Cursor(s) to the end of row.
+ * Moves cursor to the end of row.
  */
 public class MoveEnd
 	extends NavigationAction

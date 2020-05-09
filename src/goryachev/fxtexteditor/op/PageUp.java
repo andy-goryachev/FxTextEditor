@@ -7,7 +7,7 @@ import goryachev.fxtexteditor.internal.NavigationAction;
 
 
 /**
- * Moves Cursor(s) one page up.
+ * Moves cursor one page up.
  */
 public class PageUp
 	extends NavigationAction

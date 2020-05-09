@@ -9,7 +9,7 @@ import goryachev.fxtexteditor.internal.NavigationAction;
 
 
 /**
- * Moves Cursor(s) Left.
+ * Moves cursor Left.
  */
 public class MoveLeft
 	extends NavigationAction
@@ -47,6 +47,8 @@ public class MoveLeft
 		}
 		
 		pos = fline.getCharIndex(gix);
+
+		// TODO set phantom position (wrap/no wrap)
 		
 		return editor().newMarker(line, pos);
 	}

@@ -7,7 +7,7 @@ import goryachev.fxtexteditor.internal.NavigationAction;
 
 
 /**
- * Moves Cursor(s) to the beginning of row.
+ * Moves cursor to the beginning of row.
  */
 public class MoveHome
 	extends NavigationAction

@@ -9,7 +9,7 @@ import goryachev.fxtexteditor.internal.NavigationAction;
 
 
 /**
- * Moves Cursor(s) Right.
+ * Moves cursor right.
  */
 public class MoveRight
 	extends NavigationAction

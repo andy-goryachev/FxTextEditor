@@ -7,31 +7,19 @@ import goryachev.fxtexteditor.internal.NavigationAction;
 
 
 /**
- * Moves cursor Down.
+ * Moves cursor to the start of the document.
  */
-public class MoveDown
+public class MoveDocumentStart
 	extends NavigationAction
 {
-	public MoveDown(Actions a)
+	public MoveDocumentStart(Actions a)
 	{
-		super(a, NavDirection.DOWN);
+		super(a, NavDirection.LEFT);
 	}
 	
 
 	protected Marker move(Marker m)
 	{
-		int pos = m.getCharIndex();
-		int line = m.getLine();
-		
-		// TODO
-//		int pos = m.getCharIndex();
-//		if(pos > 0)
-//		{
-//			pos--;
-//		}
-//		
-//		int line = m.getLine();
-		
-		return editor().newMarker(line, pos);
+		return editor().newMarker(0, 0);
 	}
 }

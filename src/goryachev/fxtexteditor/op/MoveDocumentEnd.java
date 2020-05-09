@@ -2,35 +2,28 @@
 package goryachev.fxtexteditor.op;
 import goryachev.fxtexteditor.Actions;
 import goryachev.fxtexteditor.Marker;
+import goryachev.fxtexteditor.internal.FlowLine;
 import goryachev.fxtexteditor.internal.NavDirection;
 import goryachev.fxtexteditor.internal.NavigationAction;
 
 
 /**
- * Moves cursor Down.
+ * Moves cursor to the end of the document.
  */
-public class MoveDown
+public class MoveDocumentEnd
 	extends NavigationAction
 {
-	public MoveDown(Actions a)
+	public MoveDocumentEnd(Actions a)
 	{
-		super(a, NavDirection.DOWN);
+		super(a, NavDirection.RIGHT);
 	}
 	
 
 	protected Marker move(Marker m)
 	{
-		int pos = m.getCharIndex();
-		int line = m.getLine();
-		
-		// TODO
-//		int pos = m.getCharIndex();
-//		if(pos > 0)
-//		{
-//			pos--;
-//		}
-//		
-//		int line = m.getLine();
+		int line = vflow().getModelLineCount();
+		FlowLine fline = vflow().getTextLine(line);
+		int pos = fline.getTextLength();
 		
 		return editor().newMarker(line, pos);
 	}
