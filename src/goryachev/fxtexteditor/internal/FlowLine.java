@@ -93,6 +93,13 @@ public class FlowLine
 	}
 	
 	
+	/** returns the offest into plain text string for the given glyph index */
+	public int getCharIndex(int glyphIndex)
+	{
+		return info.getCharIndex(glyphIndex);
+	}
+	
+	
 	public GlyphIndex getGlyphIndex(int charIndex)
 	{
 		return info.getGlyphIndex(charIndex);

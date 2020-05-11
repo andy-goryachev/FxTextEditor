@@ -81,7 +81,7 @@ public class VFlow
 	private boolean screenBufferValid;
 	private boolean repaintRequested;
 	protected final FlowLineCache cache;
-	protected final SelectionHelper selectionHelper = new SelectionHelper();
+	private int phantomColumn = -1;
 	private static final CellStyle NO_STYLE = new CellStyle();
 	
 	
@@ -152,7 +152,7 @@ public class VFlow
 	}
 	
 	
-	/** returns the leftmost display cell index */
+	/** returns the leftmost display cell index (glyph index) */
 	public int getTopCellIndex()
 	{
 		return topCellIndex;
@@ -1194,5 +1194,63 @@ public class VFlow
 		}
 		
 		return true;
+	}
+	
+	
+	public int getPhantomColumn()
+	{
+		return phantomColumn;
+	}
+	
+	
+	/** 
+	 * returns the cursor column at the moment the movement was first initiated.
+	 * sets the phantom column if it's the first move
+	 */
+	public int updatePhantomColumn(int line, int charIndex)
+	{
+		int col = getPhantomColumn();
+		if(col < 0)
+		{
+			col = toPhantomColumn(line, charIndex);
+			setPhantomColumn(col);
+		}
+		return col;
+	}
+	
+	
+	protected int toPhantomColumn(int line, int charIndex)
+	{
+		FlowLine fline = getTextLine(line);
+		int gix = fline.getGlyphIndex(charIndex).intValue();
+		int row = line - topLine;
+		ScreenRow r = buffer.getRow(row);
+		return r.getColumnForGlyphIndex(gix);
+	}
+	
+	
+	public GlyphIndex screenColumnToGlyphIndex(int line, int screenColumn)
+	{
+		int row = line - topLine;
+		// FIX do not use screen row here: unavailable outside of the screen
+		ScreenRow r = buffer.getRow(row);
+		return r.getGlyphIndex(screenColumn);
+	}
+	
+	
+	public void setPhantomColumn(int x)
+	{
+		log.debug(x);
+		phantomColumn = x;
+	}
+	
+	
+	public void setPhantomColumnFromCursor()
+	{
+		Marker m = editor.getSelection().getCaret();
+		int line = m.getLine();
+		int charIndex = m.getCharIndex();
+		int col = toPhantomColumn(line, charIndex);
+		setPhantomColumn(col);
 	}
 }

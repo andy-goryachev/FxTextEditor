@@ -203,6 +203,7 @@ public class InputHandler
 		selector.commitSelection();
 		vflow.setSuppressBlink(false);
 		vflow.scrollSelectionToVisible();
+		vflow.setPhantomColumnFromCursor();
 	}
 	
 	

@@ -12,7 +12,7 @@ public abstract class TextGlyphInfo
 {
 	public abstract String getGlyphText(int glyphIndex);
 
-	public abstract int getCharIndex(GlyphIndex glyphIndex);
+	public abstract int getCharIndex(int glyphIndex);
 	
 	public abstract GlyphIndex getGlyphIndex(int charIndex);
 
@@ -155,6 +155,31 @@ public abstract class TextGlyphInfo
 	{
 		return getGlyphText(glyphIndex.intValue());
 	}
+	
+	
+	public int getCharIndex(GlyphIndex gix)
+	{
+		if(gix.isBOL())
+		{
+			return 0;
+		}
+		else if(gix.isEOF())
+		{
+			return 0;
+		}
+		else if(gix.isEOL())
+		{
+			return text.length();
+		}
+		else if(gix.isInsideTab())
+		{
+			return gix.getLeadingCharIndex();
+		}
+		else
+		{
+			return getCharIndex(gix.intValue());
+		}
+	}
 
 
 	//
@@ -178,9 +203,17 @@ public abstract class TextGlyphInfo
 		}
 
 
-		public int getCharIndex(GlyphIndex glyphIndex)
+		public int getCharIndex(int glyphIndex)
 		{
-			return glyphIndex.intValue();
+			if(glyphIndex < 0)
+			{
+				return 0;
+			}
+			else if(glyphIndex > text.length())
+			{
+				return text.length();
+			}
+			return glyphIndex;
 		}
 		
 		
@@ -226,9 +259,9 @@ public abstract class TextGlyphInfo
 		}
 		
 
-		public int getCharIndex(GlyphIndex glyphIndex)
+		public int getCharIndex(int glyphIndex)
 		{
-			return charOffsets[glyphIndex.intValue()];
+			return charOffsets[glyphIndex];
 		}
 		
 		

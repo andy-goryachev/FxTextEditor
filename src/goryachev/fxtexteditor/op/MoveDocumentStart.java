@@ -19,7 +19,7 @@ public class MoveDocumentStart
 
 	protected Marker move(Marker m)
 	{
-		setPhantomPosition(0);
+		setPhantomColumn(0);
 		return editor().newMarker(0, 0);
 	}
 }

@@ -2,6 +2,7 @@
 	defaultLevel: off,
 	channels:
 	{
+		MoveUp: all,
 		ScreenBuffer: all,
 		VerticalScrollHelper: debug,
 		VFlow: debug,

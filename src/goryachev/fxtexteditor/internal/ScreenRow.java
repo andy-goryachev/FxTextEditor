@@ -368,4 +368,40 @@ public class ScreenRow
 	{
 		caretLine = on;
 	}
+	
+	
+	public int getColumnForGlyphIndex(int glyphIndex)
+	{
+		// TODO implement binary search
+		for(int i=0; i<cellCount; i++)
+		{
+			int ix;
+			
+			GlyphIndex gix = glyphOffsets[i];
+			if(gix.isEOF())
+			{
+				return 0;
+			}
+			else if(gix.isEOL())
+			{
+				return i;
+			}
+			else if(gix.isInsideTab())
+			{
+				int cix = gix.getLeadingCharIndex();
+				ix = fline.getGlyphIndex(cix).intValue();
+			}
+			else
+			{
+				ix = gix.intValue();
+			}
+			
+			if(ix >= glyphIndex)
+			{
+				return i;
+			}
+		}
+		
+		return cellCount;
+	}
 }

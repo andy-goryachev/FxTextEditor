@@ -38,7 +38,6 @@ public class Actions
 	public final SelectAll selectAll = new SelectAll(this);
 	//
 	private final FxTextEditor editor;
-	private int phantomPosition = -1;
 	
 	
 	public Actions(FxTextEditor ed)
@@ -74,18 +73,5 @@ public class Actions
 	public Markers markers()
 	{
 		return editor.markers;
-	}
-	
-	
-	/** retains the cursor x position when navigating up/down */
-	public int getPhantomPosition()
-	{
-		return phantomPosition;
-	}
-	
-	
-	public void setPhantomPosition(int x)
-	{
-		phantomPosition = x;
 	}
 }

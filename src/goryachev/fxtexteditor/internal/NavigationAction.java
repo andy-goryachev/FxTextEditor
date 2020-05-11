@@ -22,16 +22,33 @@ public abstract class NavigationAction
 	}
 	
 	
-	/** retains the cursor x position when navigating up/down */
-	protected int getPhantomPosition()
+	/** 
+	 * returns the cursor column at the moment the movement was first initiated.
+	 * sets the phantom column if it's the first move
+	 */
+	protected int updatePhantomColumn(int line, int charIndex)
 	{
-		return actions.getPhantomPosition();
+		return vflow().updatePhantomColumn(line, charIndex);
 	}
 	
 	
-	protected void setPhantomPosition(int x)
+	/** retains the cursor x position when navigating up/down */
+	protected int getPhantomColumn()
 	{
-		actions.setPhantomPosition(x);
+		return vflow().getPhantomColumn();
+	}
+	
+	
+	protected void setPhantomColumn(int x)
+	{
+		vflow().setPhantomColumn(x);
+	}
+	
+	
+	/** returns the leftmost display cell index (glyph index) */
+	protected int getTopCellIndex()
+	{
+		return vflow().getTopCellIndex();
 	}
 	
 	
