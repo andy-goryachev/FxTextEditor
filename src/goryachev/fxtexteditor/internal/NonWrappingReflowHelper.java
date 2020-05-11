@@ -38,8 +38,6 @@ public class NonWrappingReflowHelper
 			r.setComplex(complex);
 			r.setAppendModelIndex(-1);
 			
-			byte[] flags = r.prepareFlagsForWidth(xmax);
-
 			if(complex)
 			{
 				GlyphIndex[] glyphOffsets = r.prepareGlyphOffsetsForWidth(xmax);
@@ -116,7 +114,6 @@ public class NonWrappingReflowHelper
 				// cell index coincides with glyph index
 				r.setStartGlyphIndex(GlyphIndex.of(topCellIndex));
 				
-				// TODO selectedBefore, selectedAfter
 				boolean caretLine = false;
 				if(sel != null)
 				{
@@ -127,7 +124,6 @@ public class NonWrappingReflowHelper
 							if(sel.getCaretLine() == lineIndex)
 							{
 								caretLine = true;
-								r.setCaret(sel.getCaretCharIndex() - topCellIndex);
 							}
 						}
 					}

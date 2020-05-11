@@ -24,7 +24,6 @@ public class ScreenRow
 	private boolean bol;
 	private GlyphIndex startGlyphIndex;
 	private GlyphIndex[] glyphOffsets;
-	private byte[] flags;
 	private int cellCount;
 	private boolean complex;
 	private int appendIndex;
@@ -107,17 +106,6 @@ public class ScreenRow
 			glyphOffsets = new GlyphIndex[CKit.toNeatSize(width)];
 		}
 		return glyphOffsets;
-	}
-	
-	
-	public byte[] prepareFlagsForWidth(int width)
-	{
-		if((flags == null) || (flags.length < width))
-		{
-			flags = new byte[CKit.toNeatSize(width)];
-		}
-		Arrays.fill(flags, (byte)0);
-		return flags;
 	}
 	
 	
@@ -354,15 +342,6 @@ public class ScreenRow
 		return fline.glyphInfo().getGlyphText(glyphIndex);
 	}
 
-
-	public void setCaret(int x)
-	{
-		if((x >= 0) && (x < flags.length))
-		{
-			flags[x] |= CARET;
-		}
-	}
-	
 
 	public void setCaretLine(boolean on)
 	{
