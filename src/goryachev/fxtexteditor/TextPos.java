@@ -12,14 +12,14 @@ import goryachev.common.util.SB;
 public class TextPos
 {
 	private final int line;
-	private final int offset;
+	private final int charIndex;
 	private final boolean synthetic;
 	
 	
-	public TextPos(int line, int offset, boolean synthetic)
+	public TextPos(int line, int charIndex, boolean synthetic)
 	{
 		this.line = line;
-		this.offset = offset;
+		this.charIndex = charIndex;
 		this.synthetic = synthetic;
 	}
 	
@@ -30,9 +30,9 @@ public class TextPos
 	}
 	
 	
-	public int getOffset()
+	public int getCharIndex()
 	{
-		return offset;
+		return charIndex;
 	}
 	
 	
@@ -57,7 +57,7 @@ public class TextPos
 		}
 		sb.a(line);
 		sb.a(':');
-		sb.a(getOffset());
+		sb.a(getCharIndex());
 		sb.a("]");
 		return sb.toString();
 	}

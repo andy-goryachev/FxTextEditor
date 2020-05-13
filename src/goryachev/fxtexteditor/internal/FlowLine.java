@@ -43,17 +43,17 @@ public class FlowLine
 	}
 	
 	
-	public WrapInfo getWrapInfo(ITabPolicy tabPolicy, int width)
+	public WrapInfo getWrapInfo(ITabPolicy tabPolicy, int width, boolean wrapLines)
 	{
 		if(wrap != null)
 		{
-			if(wrap.isCompatible(tabPolicy, width))
+			if(wrap.isCompatible(tabPolicy, width, wrapLines))
 			{
 				return wrap;
 			}
 		}
 		
-		wrap = WrapInfo.create(this, tabPolicy, width);
+		wrap = WrapInfo.create(this, tabPolicy, width, wrapLines);
 		return wrap;
 	}
 	

@@ -12,6 +12,7 @@ import goryachev.fxtexteditor.SelectionSegment;
 public abstract class NavigationAction
 	extends EditorAction
 {
+	/** returns the new cursor position, or null to stay in place */
 	protected abstract Marker move(Marker m);
 	
 	//
@@ -75,14 +76,16 @@ public abstract class NavigationAction
 
 			Marker from = seg.getCaret();
 			Marker to = move(from);
-			
-			selector().addSelectionSegment(to, to);
-			selector().commitSelection();
+			if(to != null)
+			{
+				selector().addSelectionSegment(to, to);
+				selector().commitSelection();
+			}
 		}
 		finally
 		{
 			vflow().setSuppressBlink(false);
-			vflow().scrollSelectionToVisible();
+			vflow().scrollCaretToView();
 		}
 	}
 }

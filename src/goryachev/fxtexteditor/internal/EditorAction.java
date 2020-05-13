@@ -69,4 +69,10 @@ public abstract class EditorAction
 	{
 		return actions.markers();
 	}
+	
+	
+	public WrapInfo wrapInfo(int line)
+	{
+		return vflow().getWrapInfo(line);
+	}
 }

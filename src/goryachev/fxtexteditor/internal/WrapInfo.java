@@ -1,28 +1,40 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
-import goryachev.common.util.ElasticIntArray;
 import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITabPolicy;
 
 
 /**
- * retains wrapping information (screen text rows) for the given FlowLine.
+ * Provides mapping between text characters, glyphs, and screen cells.
+ * This information is cached by FlowLine.
  */
 public abstract class WrapInfo
 {
-	public abstract int getRowCount();
+	/** returns the number of screen rows occupied by the flow line */
+	public abstract int getWrapRowCount();
 	
 	/** returns glyph index for wrapped row */
+	@Deprecated // TODO may not return the right index (if in a tab)
 	public abstract int getGlyphIndexForRow(int row);
 	
 	/** finds wrapped row for the given glyph index */
 	public abstract int findRowForGlyphIndex(int glyphIndex);
 	
-	public abstract boolean isCompatible(ITabPolicy tabPolicy, int width);
+	/** returns true if the current wrap info can be reused with the new screen configuration */
+	public abstract boolean isCompatible(ITabPolicy tabPolicy, int width, boolean wrapLines);
+	
+	/** returns the wrapped row index for the given character */
+	public abstract int getWrapRowForCharIndex(int charIndex);
+
+	/** returns the screen column for the given character */
+	public abstract int getColumnForCharIndex(int charIndex);
+
+	/** returns the character index for the given column and wrap row */
+	public abstract int getCharIndexForColumn(int wrapRow, int column);
 	
 	//
 	
-	public static final WrapInfo EMPTY = new Empty();
+	public static final WrapInfo EMPTY = new EmptyWrapInfo();
 	
 	
 	public WrapInfo()
@@ -30,7 +42,7 @@ public abstract class WrapInfo
 	}
 	
 	
-	public static WrapInfo create(FlowLine fline, ITabPolicy tabPolicy, int width)
+	public static WrapInfo create(FlowLine fline, ITabPolicy tabPolicy, int width, boolean wrapLines)
 	{
 		// TODO move to caller?
 		int lineIndex = fline.getModelIndex();
@@ -39,11 +51,11 @@ public abstract class WrapInfo
 			return EMPTY;
 		}
 		
-		int cellIndex = 0;
-		int x = 0;
-		int startGlyphIndex = 0;
-		int glyphIndex = 0;
-		int tabDistance = 0;
+//		int cellIndex = 0;
+//		int x = 0;
+//		int startGlyphIndex = 0;
+//		int glyphIndex = 0;
+//		int tabDistance = 0;
 		
 		boolean complex = fline.hasComplexGlyphs();
 		if(!complex)
@@ -54,13 +66,26 @@ public abstract class WrapInfo
 			}
 		}
 		
-		if(!complex)
+		if(complex)
+		{
+			return ComplexWrapInfo.createComplexWrapInfo(fline, tabPolicy, width, wrapLines);
+		}
+		else
 		{
 			int len = fline.getGlyphCount();
-			return new Simple(len, width);
+			if(wrapLines)
+			{
+				return new SimpleWrapInfo(len, width);
+			}
+			else
+			{
+				return new SingleRowWrapInfo(len);
+			}
 		}
 		
-		Complex wrap = new Complex(tabPolicy, width);
+		/*
+		// TODO move to ComplexWrapInfo.create(), also move the helpers there.
+		ComplexWrapInfo wrap = new ComplexWrapInfo(tabPolicy, width, wrapLines);
 		wrap.addBreak(startGlyphIndex);
 		
 		for(;;)
@@ -136,122 +161,6 @@ public abstract class WrapInfo
 				wrap.addBreak(startGlyphIndex);
 			}
 		}
-	}
-	
-	
-	//
-	
-	
-	public static class Empty extends WrapInfo
-	{
-		public int getRowCount() { return 1; }
-		public int getGlyphIndexForRow(int row) { return 0; }
-		public boolean isCompatible(ITabPolicy tabPolicy, int width) { return true; }
-		public int findRowForGlyphIndex(int glyphIndex) { return 0; }
-	}
-	
-	
-	//
-	
-	
-	public static class Simple extends WrapInfo
-	{
-		private final int width;
-		private final int length;
-		
-		
-		public Simple(int length, int width)
-		{
-			this.length = length;
-			this.width = width;
-		}
-
-
-		public int getRowCount()
-		{
-			if(width == 0)
-			{
-				return length;
-			}
-			return 1 + (length - 1) / width;
-		}
-
-
-		public int getGlyphIndexForRow(int row)
-		{
-			return row * width;
-		}
-		
-
-		public int findRowForGlyphIndex(int glyphIndex)
-		{
-			return glyphIndex / width;
-		}
-
-
-		public boolean isCompatible(ITabPolicy tabPolicy, int width)
-		{
-			return (this.width == width);
-		}
-	}
-	
-	
-	//
-	
-	
-	public static class Complex extends WrapInfo
-	{
-		private final ITabPolicy tabPolicy;
-		private final int width;
-		private final ElasticIntArray breaks = new ElasticIntArray();
-		
-		
-		public Complex(ITabPolicy tabPolicy, int width)
-		{
-			this.tabPolicy = tabPolicy;
-			this.width = width;
-		}
-		
-		
-		protected void addBreak(int start)
-		{
-			breaks.add(start);
-		}
-		
-		
-		public int getRowCount()
-		{
-			return breaks.size();
-		}
-
-
-		public int getGlyphIndexForRow(int row)
-		{
-			return breaks.get(row);
-		}
-		
-		
-		public int findRowForGlyphIndex(int glyphIndex)
-		{
-			// TODO binary search would be better
-			int sz = getRowCount();
-			for(int i=0; i<sz; i++)
-			{
-				int ix = getGlyphIndexForRow(i);
-				if(ix > glyphIndex)
-				{
-					return i - 1;
-				}
-			}
-			return sz - 1;
-		}
-		
-		
-		public boolean isCompatible(ITabPolicy tabPolicy, int width)
-		{
-			return 
-				(this.width == width) &&
-				(this.tabPolicy == tabPolicy);
-		}
+		*/
 	}
 }

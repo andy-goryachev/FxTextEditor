@@ -529,7 +529,7 @@ public class VFlow
 		{
 			FlowLine fline = getTextLine(ix);
 			WrapInfo wr = getWrapInfo(fline);
-			int ct = wr.getRowCount();
+			int ct = wr.getWrapRowCount();
 			if(ct > 1)
 			{
 				extraRows += (ct - 1);
@@ -543,7 +543,7 @@ public class VFlow
 		{
 			FlowLine fline = getTextLine(ix);
 			WrapInfo wr = getWrapInfo(fline);
-			int ct = wr.getRowCount();
+			int ct = wr.getWrapRowCount();
 			if(ct > 1)
 			{
 				extraRows += (ct - 1);
@@ -742,6 +742,7 @@ public class VFlow
 		
 		ITabPolicy tabPolicy = editor.getTabPolicy();
 		
+		// TODO populate ScreenBuffer from FlowLines, move the helpers to getWrapInfo()
 		if(isWrapLines())
 		{
 			WrappingReflowHelper.reflow(this, buffer, getScreenColumnCount(), bufferHeight, tabPolicy);
@@ -1005,21 +1006,25 @@ public class VFlow
 
 		setOrigin(top, gix);
 	}
+	
+	
+	public WrapInfo getWrapInfo(int line)
+	{
+		FlowLine fline = getTextLine(line);
+		return getWrapInfo(fline);
+	}
 
 
 	public WrapInfo getWrapInfo(FlowLine fline)
 	{
-		// wrapping info is cached
-		return fline.getWrapInfo(editor.getTabPolicy(), getScreenColumnCount());
+		// wrapping info is cached byFlowLine
+		return fline.getWrapInfo(editor.getTabPolicy(), getScreenColumnCount(), isWrapLines());
 	}
 	
 
-	/** 
-	 * adjusts the scroll bars to make the caret visible.
-	 */
-	public void scrollSelectionToVisible()
+	/** adjusts the scroll bars to make the caret visible. */
+	public void scrollCaretToView()
 	{
-		// TODO pass a hint
 		int min;
 		int max;
 		int last;
@@ -1221,20 +1226,8 @@ public class VFlow
 	
 	protected int toPhantomColumn(int line, int charIndex)
 	{
-		FlowLine fline = getTextLine(line);
-		int gix = fline.getGlyphIndex(charIndex).intValue();
-		int row = line - topLine;
-		ScreenRow r = buffer.getRow(row);
-		return r.getColumnForGlyphIndex(gix);
-	}
-	
-	
-	public GlyphIndex screenColumnToGlyphIndex(int line, int screenColumn)
-	{
-		int row = line - topLine;
-		// FIX do not use screen row here: unavailable outside of the screen
-		ScreenRow r = buffer.getRow(row);
-		return r.getGlyphIndex(screenColumn);
+		WrapInfo wr = getWrapInfo(line);
+		return wr.getColumnForCharIndex(charIndex);
 	}
 	
 	

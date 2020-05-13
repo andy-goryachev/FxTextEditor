@@ -6,6 +6,7 @@ import goryachev.fxtexteditor.Marker;
 import goryachev.fxtexteditor.internal.FlowLine;
 import goryachev.fxtexteditor.internal.GlyphIndex;
 import goryachev.fxtexteditor.internal.NavigationAction;
+import goryachev.fxtexteditor.internal.WrapInfo;
 
 
 /**
@@ -27,34 +28,40 @@ public class MoveUp
 	{
 		int pos = m.getCharIndex();
 		int line = m.getLine();
+		WrapInfo wr = wrapInfo(line);
 		
 		int col = updatePhantomColumn(line, pos);
 		
 		if(isWrapLines())
 		{
-			// TODO
-//			FlowLine fline = vflow().getTextLine(line);
-//			GlyphIndex gix = fline.getGlyphIndex(pos);
-//			
-//			// TODO phantom column
-//			
-//			// compute line + row.start
-//			WrapInfo wr = vflow().getWrapInfo(fline);
+			int wrapRow = wr.getWrapRowForCharIndex(pos);
+			if(wrapRow > 0)
+			{
+				pos = wr.getCharIndexForColumn(wrapRow - 1, col);
+			}
+			else
+			{
+				if(line == 0)
+				{
+					return null;
+				}
+				
+				--line;
+				wr = wrapInfo(line);
+				wrapRow = wr.getWrapRowCount() - 1;
+				pos = wr.getCharIndexForColumn(wrapRow, col);
+			}
 		}
 		else
 		{
-			if(line > 0)
+			if(line == 0)
 			{
-				--line;
+				return null;
 			}
 			
-			int x = col - getTopCellIndex();
-			
-			// FIX scroll to visible may be needed here
-			GlyphIndex gix = vflow().screenColumnToGlyphIndex(line, col);
-			
-			FlowLine fline = vflow().getTextLine(line);
-			pos = fline.getCharIndex(gix);
+			--line;
+			wr = wrapInfo(line);
+			pos = wr.getCharIndexForColumn(0, col);
 		}
 
 		log.debug("col=%d line=%d pos=%d", col, line, pos);

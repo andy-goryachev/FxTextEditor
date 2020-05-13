@@ -72,7 +72,7 @@ public class VerticalScrollHelper
 		{
 			FlowLine fline = vflow.getTextLine(ix);
 			WrapInfo wr = vflow.getWrapInfo(fline);
-			int add = wr.getRowCount();
+			int add = wr.getWrapRowCount();
 			if(add > 1)
 			{
 				additionalRows += (add - 1);
@@ -102,7 +102,7 @@ public class VerticalScrollHelper
 				FlowLine fline = vflow.getTextLine(lineix);
 				WrapInfo wr = vflow.getWrapInfo(fline);
 				
-				int ct = wr.getRowCount();
+				int ct = wr.getWrapRowCount();
 				if(rowsToSkip > ct)
 				{
 					rowsToSkip -= ct;

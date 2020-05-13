@@ -388,7 +388,7 @@ public class FxTextEditor
 	{
 		TextPos p = vflow.getInsertPosition(screenx, screeny);
 		int line = p.getLine();
-		int off = p.getOffset();
+		int off = p.getCharIndex();
 		
 		if(line < 0)
 		{

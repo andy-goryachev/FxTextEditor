@@ -1,12 +1,10 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.common.util.CKit;
-import goryachev.common.util.D;
 import goryachev.common.util.SB;
 import goryachev.fxtexteditor.CellStyle;
 import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITextLine;
-import java.util.Arrays;
 
 
 /**
@@ -80,6 +78,7 @@ public class ScreenRow
 	
 	
 	/** returns the type of a glyph at the specified glyph (cell) index. */
+	@Deprecated // TODO remove
 	public GlyphType getGlyphType(GlyphIndex glyphIndex)
 	{
 		return fline.getGlyphType(glyphIndex);
@@ -346,41 +345,5 @@ public class ScreenRow
 	public void setCaretLine(boolean on)
 	{
 		caretLine = on;
-	}
-	
-	
-	public int getColumnForGlyphIndex(int glyphIndex)
-	{
-		// TODO implement binary search
-		for(int i=0; i<cellCount; i++)
-		{
-			int ix;
-			
-			GlyphIndex gix = glyphOffsets[i];
-			if(gix.isEOF())
-			{
-				return 0;
-			}
-			else if(gix.isEOL())
-			{
-				return i;
-			}
-			else if(gix.isInsideTab())
-			{
-				int cix = gix.getLeadingCharIndex();
-				ix = fline.getGlyphIndex(cix).intValue();
-			}
-			else
-			{
-				ix = gix.intValue();
-			}
-			
-			if(ix >= glyphIndex)
-			{
-				return i;
-			}
-		}
-		
-		return cellCount;
 	}
 }

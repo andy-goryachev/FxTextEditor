@@ -47,7 +47,7 @@ public class WrapAssist
 					
 					fline = vflow.getTextLine(line);
 					wr = vflow.getWrapInfo(fline);
-					row = wr.getRowCount() - 1;
+					row = wr.getWrapRowCount() - 1;
 				}
 				else
 				{
@@ -58,7 +58,7 @@ public class WrapAssist
 		}
 		else
 		{
-			int ct = wr.getRowCount() - row;
+			int ct = wr.getWrapRowCount() - row;
 			
 			while(toSkip > 0)
 			{
@@ -69,7 +69,7 @@ public class WrapAssist
 					
 					fline = vflow.getTextLine(line);
 					wr = vflow.getWrapInfo(fline);
-					ct = wr.getRowCount();
+					ct = wr.getWrapRowCount();
 				}
 				else
 				{
