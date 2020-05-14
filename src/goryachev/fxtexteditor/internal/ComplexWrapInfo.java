@@ -92,7 +92,7 @@ public class ComplexWrapInfo
 				return row - 1;
 			}
 		}
-		return row;
+		return row - 1;
 	}
 
 
@@ -123,11 +123,28 @@ public class ComplexWrapInfo
 
 	public int getCharIndexForColumn(int wrapRow, int column)
 	{
-		int gix = cells[wrapRow][column];
+		if((wrapRow < 0) || (wrapRow >= cells.length))
+		{
+			throw new Error("wrapRow=" + wrapRow);
+		}
+		
+		int[] cs = cells[wrapRow];
+		if(column < 0)
+		{
+			column = 0;
+		}
+		
+		if(column >= cs.length)
+		{
+			column = cs.length - 1;
+		}
+		
+		int gix = cs[column];
 		if(gix < 0)
 		{
 			gix = (-gix) - 1;
 		}
+		
 		return fline.getCharIndex(gix);
 	}
 	

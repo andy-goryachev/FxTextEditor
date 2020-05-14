@@ -64,9 +64,12 @@ public class ScreenBuffer
 	
 	public ScreenRow getScreenRow(int y)
 	{
-		if(y < height)
+		if(y >= 0)
 		{
-			return rows[y];
+			if(y < height)
+			{
+				return rows[y];
+			}
 		}
 		return null;
 	}
@@ -108,6 +111,7 @@ public class ScreenBuffer
 		int charIndex;
 		boolean synthetic = false;
 		
+		// FIX we need to use wrap info for that (use case: click and drag over the top line)
 		ScreenRow row = getScreenRow(y);
 		if(row == null)
 		{
