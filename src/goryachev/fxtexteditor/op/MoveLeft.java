@@ -25,11 +25,11 @@ public class MoveLeft
 		int line = m.getLine();
 
 		FlowLine fline = vflow().getTextLine(line);
-		GlyphIndex gix = fline.getGlyphIndex(pos);
+		int gix = fline.getGlyphIndex(pos);
 		
-		if(gix.intValue() > 0)
+		if(gix > 0)
 		{
-			gix = gix.decrement();
+			gix--;
 		}
 		else
 		{
@@ -37,7 +37,7 @@ public class MoveLeft
 			{
 				--line;
 				fline = vflow().getTextLine(line); 
-				gix = GlyphIndex.of(fline.getGlyphCount());
+				gix = fline.getGlyphCount();
 			}
 			else
 			{

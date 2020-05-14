@@ -14,7 +14,7 @@ public abstract class TextGlyphInfo
 
 	public abstract int getCharIndex(int glyphIndex);
 	
-	public abstract GlyphIndex getGlyphIndex(int charIndex);
+	public abstract int getGlyphIndex(int charIndex);
 
 	public abstract int getGlyphCount();
 
@@ -217,9 +217,9 @@ public abstract class TextGlyphInfo
 		}
 		
 		
-		public GlyphIndex getGlyphIndex(int charIndex)
+		public int getGlyphIndex(int charIndex)
 		{
-			return new GlyphIndex(charIndex);
+			return charIndex;
 		}
 
 
@@ -265,7 +265,7 @@ public abstract class TextGlyphInfo
 		}
 		
 		
-		public GlyphIndex getGlyphIndex(int charIndex)
+		public int getGlyphIndex(int charIndex)
 		{
 			// this can be replaced either by a separate array
 			// possibly created on demand.
@@ -275,7 +275,7 @@ public abstract class TextGlyphInfo
 			{
 				ix = -ix;
 			}
-			return GlyphIndex.of(ix);
+			return ix;
 		}
 
 

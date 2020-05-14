@@ -29,7 +29,7 @@ public class WrapAssist
 	{
 		int line = startLine;
 		FlowLine fline = vflow.getTextLine(line);
-		int gix = fline.getGlyphIndex(charIndex).intValue();
+		int gix = fline.getGlyphIndex(charIndex);
 		WrapInfo wr = vflow.getWrapInfo(fline);
 		int row = wr.findRowForGlyphIndex(gix);
 		

@@ -4,6 +4,7 @@ import goryachev.common.util.CList;
 import goryachev.common.util.ElasticIntArray;
 import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITabPolicy;
+import java.util.Arrays;
 
 
 /**
@@ -14,6 +15,7 @@ import goryachev.fxtexteditor.ITabPolicy;
 public class ComplexWrapInfo 
 	extends WrapInfo
 {
+	protected final FlowLine fline;
 	protected final ITabPolicy tabPolicy;
 	protected final int width;
 	protected final boolean wrapLines;
@@ -25,8 +27,9 @@ public class ComplexWrapInfo
 	protected final int[][] cells;
 	
 	
-	public ComplexWrapInfo(ITabPolicy tabPolicy, int width, boolean wrapLines, int[][] cells)
+	public ComplexWrapInfo(FlowLine fline, ITabPolicy tabPolicy, int width, boolean wrapLines, int[][] cells)
 	{
+		this.fline = fline;
 		this.tabPolicy = tabPolicy;
 		this.width = width;
 		this.wrapLines = wrapLines;
@@ -73,16 +76,48 @@ public class ComplexWrapInfo
 
 	public int getWrapRowForCharIndex(int charIndex)
 	{
-//		int gix = charToGlyphIndex(charIndex);
-//		return 0;
-		throw new Error(); // TODO
+		int gix = fline.getGlyphIndex(charIndex);
+		return getWrapRowForGlyphIndex(gix);
+	}
+	
+	
+	protected int getWrapRowForGlyphIndex(int gix)
+	{
+		int row = 0;
+		for( ; row<cells.length; row++)
+		{
+			int start = cells[row][0];
+			if(gix < start)
+			{
+				return row - 1;
+			}
+		}
+		return row;
 	}
 
 
 	public int getColumnForCharIndex(int charIndex)
 	{
-//		return 0;
-		throw new Error(); // TODO
+		int gix = fline.getGlyphIndex(charIndex);
+		int row = getWrapRowForGlyphIndex(gix);
+		int[] cs = cells[row];
+		
+		// TODO binary search, keep in mind negative values for tabs
+		for(int i=0; i<cs.length; i++)
+		{
+			int ix = cs[i];
+			if(ix < 0)
+			{
+				ix = -ix - 1;
+			}
+			
+			if(gix <= ix)
+			{
+				return ix;
+			}
+		}
+		
+		return cs.length;
 	}
 
 
@@ -91,9 +126,9 @@ public class ComplexWrapInfo
 		int gix = cells[wrapRow][column];
 		if(gix < 0)
 		{
-			// TODO backtrack to first, then add 
+			gix = (-gix) - 1;
 		}
-		return gix;
+		return fline.getCharIndex(gix);
 	}
 	
 	
@@ -165,7 +200,7 @@ public class ComplexWrapInfo
 						}
 						int[][] rs = new int[rows.size()][];
 						rows.toArray(rs);
-						return new ComplexWrapInfo(tabPolicy, width, wrapLines, rs);
+						return new ComplexWrapInfo(fline, tabPolicy, width, wrapLines, rs);
 						
 					case TAB:
 						tabSpan = tabPolicy.nextTabStop(x) - x;

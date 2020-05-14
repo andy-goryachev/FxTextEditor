@@ -1075,7 +1075,7 @@ public class VFlow
 			int topCell = topCellIndex;
 			
 			FlowLine fline = getTextLine(caretLine);
-			int x = fline.getGlyphIndex(caret.getCharIndex()).intValue();
+			int x = fline.getGlyphIndex(caret.getCharIndex());
 			if(x < topCellIndex)
 			{
 				x = x - HORIZONTAL_SAFETY;
@@ -1181,12 +1181,12 @@ public class VFlow
 		}
 		else
 		{
-			pos = fline.getGlyphIndex(m.getCharIndex()).intValue();
-			if(pos < topCellIndex)
+			int gix = fline.getGlyphIndex(m.getCharIndex());
+			if(gix < topCellIndex)
 			{
 				return false;
 			}
-			else if(pos >= (topCellIndex + getScreenColumnCount()))
+			else if(gix >= (topCellIndex + getScreenColumnCount()))
 			{
 				return false;
 			}

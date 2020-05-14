@@ -25,23 +25,23 @@ public class MoveRight
 		int line = m.getLine();
 
 		FlowLine fline = vflow().getTextLine(line);
-		GlyphIndex gix = fline.getGlyphIndex(pos);
+		int gix = fline.getGlyphIndex(pos);
 		
-		if(gix.intValue() < fline.getGlyphCount())
+		if(gix < fline.getGlyphCount())
 		{
-			gix = gix.increment();
+			gix++;
 		}
 		else
 		{
 			if(line < vflow().getModelLineCount())
 			{
 				line++;
-				gix = GlyphIndex.ZERO;
+				gix = 0;
 			}
 			else
 			{
 				line = vflow().getModelLineCount();
-				gix = GlyphIndex.ZERO;
+				gix = 0;
 			}
 		}
 		

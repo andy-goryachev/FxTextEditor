@@ -100,7 +100,7 @@ public class FlowLine
 	}
 	
 	
-	public GlyphIndex getGlyphIndex(int charIndex)
+	public int getGlyphIndex(int charIndex)
 	{
 		return info.getGlyphIndex(charIndex);
 	}
