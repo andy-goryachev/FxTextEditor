@@ -52,6 +52,11 @@ public class SingleRowWrapInfo
 
 	public int getColumnForCharIndex(int charIndex)
 	{
+		if(charIndex > length)
+		{
+			return length;
+		}
+		
 		return charIndex;
 	}
 
@@ -61,6 +66,11 @@ public class SingleRowWrapInfo
 		if(wrapRow != 0)
 		{
 			throw new Error("wrapRow=" + wrapRow);
+		}
+		
+		if(column > length)
+		{
+			return length;
 		}
 		
 		return column;
