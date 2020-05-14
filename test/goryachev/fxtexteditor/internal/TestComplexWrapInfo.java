@@ -134,7 +134,7 @@ public class TestComplexWrapInfo
 		};
 		
 		ITabPolicy tp = TabPolicy.create(tabSize);
-		FlowLine fline = new FlowLine(tline, TextGlyphInfo.create(tline.getPlainText(), null));
+		FlowLine fline = new FlowLine(tline, AGlyphInfo.create(tline.getPlainText(), null));
 		ComplexWrapInfo wr = ComplexWrapInfo.createComplexWrapInfo(fline, tp, width, wrapLines);
 		
 		TF.eq(wr.cells, expected, "cells");

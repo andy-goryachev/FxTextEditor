@@ -72,15 +72,15 @@ public class FlowLineCache
 	}
 	
 	
-	protected TextGlyphInfo createInfo(ITextLine t)
+	protected AGlyphInfo createInfo(ITextLine t)
 	{
 		if(t == null)
 		{
-			return TextGlyphInfo.BLANK;
+			return AGlyphInfo.BLANK;
 		}
 		
 		String text = t.getPlainText();
-		return TextGlyphInfo.create(text, breakIterator());
+		return AGlyphInfo.create(text, breakIterator());
 	}
 
 

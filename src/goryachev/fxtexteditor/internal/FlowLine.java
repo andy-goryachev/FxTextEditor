@@ -11,14 +11,14 @@ import goryachev.fxtexteditor.ITextLine;
  */
 public class FlowLine
 {
-	public static final FlowLine BLANK = new FlowLine(null, TextGlyphInfo.BLANK);
+	public static final FlowLine BLANK = new FlowLine(null, AGlyphInfo.BLANK);
 	
 	private final ITextLine tline;
-	private final TextGlyphInfo info;
+	private final AGlyphInfo info;
 	private WrapInfo wrap;
 	
 	
-	public FlowLine(ITextLine tline, TextGlyphInfo info)
+	public FlowLine(ITextLine tline, AGlyphInfo info)
 	{
 		this.tline = tline;
 		this.info = info;
@@ -37,7 +37,7 @@ public class FlowLine
 	}
 	
 	
-	public TextGlyphInfo glyphInfo()
+	public AGlyphInfo glyphInfo()
 	{
 		return info;
 	}
