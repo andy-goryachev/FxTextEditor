@@ -1,12 +1,13 @@
 # BUGS
 
-- 
+- click and drag selection up beyond top line
 
 
 # TODO
 
-- move all to FlowLine: char to glyph mapping, screen coordinates to glyph mapping (dep. on tab policy + width + wrap)
+- remove column to gplyph index mapping from ScreenRow
 
+- basic navigation
 - scroll to visible
 - mouse wheel scrolling
 - handle model mutation events

@@ -113,7 +113,7 @@ public class ComplexWrapInfo
 			
 			if(gix <= ix)
 			{
-				return ix;
+				return i;
 			}
 		}
 		
@@ -139,16 +139,51 @@ public class ComplexWrapInfo
 			column = cs.length - 1;
 		}
 		
-		int gix = cs[column];
-		if(gix < 0)
-		{
-			gix = (-gix) - 1;
-		}
-		
+		int gix = findNearestInsertPoint(cs, column);
+
 		return fline.getCharIndex(gix);
 	}
 	
 	
+	protected int findNearestInsertPoint(int[] cs, int column)
+	{
+		int gix = cs[column];
+		if(gix >= 0)
+		{
+			return gix;
+		}
+		
+		// in the middle of a tab: either tab start or tab end will be the closest point
+		for(int i=1; i<cs.length; i++)
+		{
+			// step to the righth
+			int ix = column + i;
+			if(ix >= cs.length)
+			{
+				return cs.length;
+			}
+			else if(cs[ix] != gix)
+			{
+				return ix;
+			}
+			
+			// step to the left
+			ix = column - i;
+			if(ix <= 0)
+			{
+				return 0;
+			}
+			else if(cs[ix] != gix)
+			{
+				return ix;
+			}
+		}
+		
+		// should never get here
+		throw new Error();
+	}
+
+
 	public static ComplexWrapInfo createComplexWrapInfo(FlowLine fline, ITabPolicy tabPolicy, int width, boolean wrapLines)
 	{
 		CList<int[]> rows = new CList(4);
