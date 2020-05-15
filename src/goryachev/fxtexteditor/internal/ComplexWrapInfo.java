@@ -1,5 +1,6 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.common.log.Log;
 import goryachev.common.util.CList;
 import goryachev.common.util.ElasticIntArray;
 import goryachev.fxtexteditor.GlyphType;
@@ -45,7 +46,18 @@ public class ComplexWrapInfo
 
 	public int getGlyphIndexForRow(int row)
 	{
-		return cells[row][0];
+		try
+		{
+			// TODO check
+			int[] cs = cells[row];
+			return cs[0];
+		}
+		catch(Exception e)
+		{
+			// FIX
+			Log.err(e); // FIX
+			return 0;
+		}
 	}
 	
 	

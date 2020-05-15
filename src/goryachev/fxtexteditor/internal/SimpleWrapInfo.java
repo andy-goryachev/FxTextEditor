@@ -66,6 +66,11 @@ public class SimpleWrapInfo
 
 	public int getCharIndexForColumn(int wrapRow, int column)
 	{
-		return (wrapRow * width) + column;
+		int ix = (wrapRow * width) + column;
+		if(ix < length)
+		{
+			return ix;
+		}
+		return length;
 	}
 }
