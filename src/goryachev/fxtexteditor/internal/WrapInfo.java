@@ -125,7 +125,19 @@ public abstract class WrapInfo
 			throw new Error("not a tab at row=" + row + " col=" + column); 
 		}
 		
-		// does not test for EOF or EOL
-		return -gix;
+		for(int span=1; ; span++)
+		{
+			int next = getGlyphIndex(row + span, column);
+			if(gix != next)
+			{
+				return span;
+			}
+			
+			// check for overflow, should not happen
+			if(span < 0)
+			{
+				throw new Error();
+			}
+		}
 	}
 }

@@ -65,7 +65,7 @@ public class ComplexWrapInfo
 	{
 		if(wrapRow >= cells.length)
 		{
-			throw new Error("wrapRow=" + wrapRow + " exceeds the number of rows: " + cells.length);
+			return GlyphIndex.EOF_INDEX;
 		}
 		
 		int[] cs = cells[wrapRow];
