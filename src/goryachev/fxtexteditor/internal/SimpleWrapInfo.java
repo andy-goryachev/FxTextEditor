@@ -32,7 +32,7 @@ public class SimpleWrapInfo
 	}
 
 
-	public int getGlyphIndexForRow(int row)
+	public int getGlyphIndexForRow_DELETE(int row)
 	{
 		return row * width;
 	}
@@ -98,5 +98,17 @@ public class SimpleWrapInfo
 			return ix;
 		}
 		return length;
+	}
+	
+	
+	protected int getGlyphIndex(int wrapRow, int column)
+	{
+		int ix = (wrapRow * width) + column;
+		if(ix < length)
+		{
+			return ix;
+		}
+		
+		return GlyphIndex.EOL_INDEX;
 	}
 }

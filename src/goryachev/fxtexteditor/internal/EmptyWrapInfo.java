@@ -20,7 +20,7 @@ public class EmptyWrapInfo
 	}
 
 
-	public int getGlyphIndexForRow(int row)
+	public int getGlyphIndexForRow_DELETE(int row)
 	{
 		return 0;
 	}
@@ -59,5 +59,11 @@ public class EmptyWrapInfo
 	public int getCharIndexForColumn(int wrapRow, int column)
 	{
 		return 0;
+	}
+
+
+	protected int getGlyphIndex(int row, int column)
+	{
+		return GlyphIndex.EOF_INDEX;
 	}
 }

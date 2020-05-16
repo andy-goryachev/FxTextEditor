@@ -17,7 +17,12 @@ public class ScreenRow
 	private static final int SELECTED = 0x0000_0002;
 	
 	private FlowLine fline = FlowLine.BLANK;
+	private WrapInfo wrap;
 	private int lineNumber;
+	private int wrapRow;
+	private int startGlyphIndex;
+	
+	// TODO is this needed?
 	private boolean eof;
 	private boolean bol;
 	
@@ -89,7 +94,7 @@ public class ScreenRow
 	
 	
 	/** returns the type of a glyph at the specified glyph (cell) index. */
-	public GlyphType getGlyphType(int glyphIndex)
+	public GlyphType getGlyphType_OLD(int glyphIndex)
 	{
 		return fline_OLD.getGlyphType(glyphIndex);
 	}
@@ -346,10 +351,13 @@ public class ScreenRow
 	// TODO new interface
 
 
-	public void init(FlowLine fline, int lineNumber, int row, int startGlyphIndex)
+	public void init(FlowLine fline, WrapInfo wrap, int lineNumber, int wrapRow, int startGlyphIndex)
 	{
 		this.fline = fline;
+		this.wrap = wrap;
 		this.lineNumber = lineNumber;
+		this.wrapRow = wrapRow;
+		this.startGlyphIndex = startGlyphIndex;
 	}
 	
 
@@ -357,5 +365,22 @@ public class ScreenRow
 	public int getLineNumber()
 	{
 		return lineNumber;
+	}
+	
+	
+	/** returns the type of a glyph at the specified column */
+	public GlyphType getGlyphTypeAtColumn(int column)
+	{
+		return wrap.getGlyphType(wrapRow, column);
+	}
+	
+	
+	/** 
+	 * returns tab span (distance to the next glyph), or throws an Error if it is not a tab.
+	 * must always be preceded by a call to getGlyphTypeAtColumn() and a chech against GlyphType.TAB.
+	 */
+	public int getTabSpan(int column)
+	{
+		return wrap.getTabSpan(wrapRow, column);
 	}
 }

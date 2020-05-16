@@ -102,17 +102,17 @@ public class VerticalScrollHelper
 				FlowLine fline = vflow.getTextLine(lineix);
 				WrapInfo wr = vflow.getWrapInfo(fline);
 				
-				int ct = wr.getWrapRowCount();
-				if(rowsToSkip > ct)
+				int wrapRowCount = wr.getWrapRowCount();
+				if(rowsToSkip >= wrapRowCount)
 				{
-					rowsToSkip -= ct;
+					rowsToSkip -= wrapRowCount;
 					lineix++;
 					// next text line
 					continue;
 				}
 				else
 				{
-					gix = wr.getGlyphIndexForRow(rowsToSkip);
+					gix = wr.getGlyphIndexForRow_DELETE(rowsToSkip);
 					break;
 				}
 			}

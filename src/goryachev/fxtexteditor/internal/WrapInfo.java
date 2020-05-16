@@ -15,7 +15,7 @@ public abstract class WrapInfo
 	
 	/** returns glyph index for wrapped row */
 	@Deprecated // TODO may not return the right index (if in a tab)
-	public abstract int getGlyphIndexForRow(int row);
+	public abstract int getGlyphIndexForRow_DELETE(int row);
 	
 	/** finds wrapped row for the given glyph index */
 	public abstract int findRowForGlyphIndex(int glyphIndex);
@@ -35,12 +35,20 @@ public abstract class WrapInfo
 	/** returns the character index for the given column and wrap row */
 	public abstract int getCharIndexForColumn(int wrapRow, int column);
 	
+	/** 
+	 * returns a glyph index (>=0),
+	 * or a negative value that corresponds to either
+	 * -glyphIndex for a tab, or
+	 * a value that can be checked with GlyphIndex.isEOL(x) or GlyphIndex.isEOF(x)
+	 */
+	protected abstract int getGlyphIndex(int row, int column);
+	
 	//
 	
 	public static final WrapInfo EMPTY = new EmptyWrapInfo();
 	
 	
-	public WrapInfo()
+	protected WrapInfo()
 	{
 	}
 	
@@ -53,12 +61,6 @@ public abstract class WrapInfo
 		{
 			return EMPTY;
 		}
-		
-//		int cellIndex = 0;
-//		int x = 0;
-//		int startGlyphIndex = 0;
-//		int glyphIndex = 0;
-//		int tabDistance = 0;
 		
 		boolean complex = fline.hasComplexGlyphs();
 		if(!complex)
@@ -85,85 +87,45 @@ public abstract class WrapInfo
 				return new SingleRowWrapInfo(len);
 			}
 		}
-		
-		/*
-		// TODO move to ComplexWrapInfo.create(), also move the helpers there.
-		ComplexWrapInfo wrap = new ComplexWrapInfo(tabPolicy, width, wrapLines);
-		wrap.addBreak(startGlyphIndex);
-		
-		for(;;)
+	}
+	
+	
+	/** returns the type of a glyph at the specified row and column */
+	public GlyphType getGlyphType(int row, int column)
+	{
+		int gix = getGlyphIndex(row, column);
+		if(gix >= 0)
 		{
-			if(tabDistance > 0)
-			{
-				if(x >= width)
-				{
-					// carry on to next line, resetting tab distance
-					startGlyphIndex = glyphIndex;
-					tabDistance = 0;
-					x = 0;
-				}
-				else
-				{
-					--tabDistance;
-					x++;
-				}
-			}
-			else if(complex)
-			{
-				if(x >= width)
-				{
-					// next row
-					startGlyphIndex = glyphIndex;
-					tabDistance = 0;
-					x = 0;
-					
-					wrap.addBreak(startGlyphIndex);
-				}
-				else
-				{
-					GlyphType gt = fline.getGlyphType(glyphIndex);
-					switch(gt)
-					{
-					case EOL:
-						return wrap;
-					case TAB:
-						tabDistance = tabPolicy.nextTabStop(x) - x;
-						--tabDistance;
-						glyphIndex++;
-						cellIndex++;
-						x++;
-						break;
-					case NORMAL:
-						glyphIndex++;
-						cellIndex++;
-						x++;
-						break;
-					default:
-						throw new Error("?" + gt);
-					}
-				}
-			}
-			else
-			{
-				// simple case, cell indexes coincide with glyph indexes
-				if(cellIndex + width >= fline.glyphInfo().getGlyphCount())
-				{
-					// end of line
-					return wrap;
-				}
-				else
-				{
-					// middle of line
-					glyphIndex += width;
-					cellIndex += width;
-					startGlyphIndex = glyphIndex;
-				}
-				
-				x = 0;
-
-				wrap.addBreak(startGlyphIndex);
-			}
+			return GlyphType.REG;
 		}
-		*/
+		
+		if(GlyphIndex.isEOL(gix))
+		{
+			return GlyphType.EOL;
+		}
+		else if(GlyphIndex.isEOF(gix))
+		{
+			return GlyphType.EOF;
+		}
+		else
+		{
+			return GlyphType.TAB;
+		}
+	}
+	
+	/** 
+	 * returns tab span (distance to the next glyph), or throws an Error if it is not a tab.
+	 * must always be preceded by a call to getGlyphTypeAtColumn() and a chech against GlyphType.TAB.
+	 */
+	public int getTabSpan(int row, int column)
+	{
+		int gix = getGlyphIndex(row, column);
+		if(gix >= 0)
+		{
+			throw new Error("not a tab at row=" + row + " col=" + column); 
+		}
+		
+		// does not test for EOF or EOL
+		return -gix;
 	}
 }

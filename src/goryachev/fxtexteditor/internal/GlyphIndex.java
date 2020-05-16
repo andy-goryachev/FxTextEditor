@@ -8,14 +8,18 @@ import goryachev.common.util.SB;
  */
 public class GlyphIndex
 {
-	private static final int EOF_INDEX = Integer.MIN_VALUE;
-	private static final int EOL_INDEX = Integer.MIN_VALUE + 1;
-	private static final int BOL_INDEX = Integer.MIN_VALUE + 2;
+	public static final int EOF_INDEX = Integer.MIN_VALUE;
+	public static final int EOL_INDEX = Integer.MIN_VALUE + 1;
+
+	@Deprecated // TODO remove
+	public static final int BOL_INDEX = Integer.MIN_VALUE + 2;
 	
 	public static final GlyphIndex EOF = new GlyphIndex(EOF_INDEX);
-	public static final GlyphIndex BOL = new GlyphIndex(BOL_INDEX);
 	public static final GlyphIndex ZERO = new GlyphIndex(0);
-	
+
+	@Deprecated // TODO remove
+	public static final GlyphIndex BOL = new GlyphIndex(BOL_INDEX);
+
 	private final int index;
 	
 	
@@ -203,5 +207,19 @@ public class GlyphIndex
 	public boolean isAtEOL()
 	{
 		return false;
+	}
+	
+	
+	/** is end of file */
+	public static boolean isEOF(int glyphIndex)
+	{
+		return glyphIndex == EOF_INDEX;
+	}
+	
+	
+	/** is end of a line */
+	public  static boolean isEOL(int glyphIndex)
+	{
+		return glyphIndex == EOL_INDEX;
 	}
 }

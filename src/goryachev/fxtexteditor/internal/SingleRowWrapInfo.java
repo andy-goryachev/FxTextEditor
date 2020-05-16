@@ -26,7 +26,7 @@ public class SingleRowWrapInfo
 	}
 
 
-	public int getGlyphIndexForRow(int row)
+	public int getGlyphIndexForRow_DELETE(int row)
 	{
 		return 0;
 	}
@@ -77,6 +77,22 @@ public class SingleRowWrapInfo
 		if(column > length)
 		{
 			return length;
+		}
+		
+		return column;
+	}
+	
+	
+	protected int getGlyphIndex(int wrapRow, int column)
+	{
+		if(wrapRow != 0)
+		{
+			throw new Error("wrapRow=" + wrapRow);
+		}
+		
+		if(column >= length)
+		{
+			return GlyphIndex.EOL_INDEX;
 		}
 		
 		return column;

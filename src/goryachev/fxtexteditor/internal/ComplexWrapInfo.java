@@ -44,7 +44,7 @@ public class ComplexWrapInfo
 	}
 
 
-	public int getGlyphIndexForRow(int row)
+	public int getGlyphIndexForRow_DELETE(int row)
 	{
 		try
 		{
@@ -61,13 +61,30 @@ public class ComplexWrapInfo
 	}
 	
 	
+	protected int getGlyphIndex(int wrapRow, int column)
+	{
+		if(wrapRow >= cells.length)
+		{
+			throw new Error("wrapRow=" + wrapRow + " exceeds the number of rows: " + cells.length);
+		}
+		
+		int[] cs = cells[wrapRow];
+		if(column >= cs.length)
+		{
+			return GlyphIndex.EOL_INDEX;
+		}
+		
+		return cs[column];
+	}
+	
+	
 	public int findRowForGlyphIndex(int glyphIndex)
 	{
 		// TODO binary search would be better
 		int sz = getWrapRowCount();
 		for(int i=0; i<sz; i++)
 		{
-			int ix = getGlyphIndexForRow(i);
+			int ix = getGlyphIndexForRow_DELETE(i);
 			if(ix > glyphIndex)
 			{
 				return i - 1;

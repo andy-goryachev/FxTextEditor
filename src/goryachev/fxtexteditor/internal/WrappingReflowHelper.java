@@ -126,7 +126,7 @@ public class WrappingReflowHelper
 				}
 				else
 				{
-					GlyphType gt = r.getGlyphType(glyphIndex);
+					GlyphType gt = r.getGlyphType_OLD(glyphIndex);
 					switch(gt)
 					{
 					case EOL:

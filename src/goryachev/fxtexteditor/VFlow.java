@@ -778,13 +778,13 @@ public class VFlow
 				}
 				else
 				{
-					startGlyphIndex = wr.getGlyphIndexForRow(row);
+					startGlyphIndex = wr.getGlyphIndexForRow_DELETE(row);
 				}
 				
 				int lineNumber = (line <= lineCount) ? line : -1;
 				
 				ScreenRow r = buffer.getRow(y);
-				r.init(fline, lineNumber, row, startGlyphIndex);
+				r.init(fline, wr, lineNumber, row, startGlyphIndex);
 				
 				++row;
 				if(row >= rowCount)
@@ -808,11 +808,12 @@ public class VFlow
 			for(int y=0; y<bufferHeight; y++)
 			{
 				FlowLine fline = getTextLine(line);
+				WrapInfo wr = getWrapInfo(fline);
 				
 				int lineNumber = (line <= lineCount) ? line : -1;
 				
 				ScreenRow r = buffer.getRow(y);
-				r.init(fline, lineNumber, 0, startGlyphIndex);
+				r.init(fline, wr, lineNumber, 0, startGlyphIndex);
 				
 				line++;
 			}
@@ -872,27 +873,26 @@ public class VFlow
 			
 			for(int x=0; x<xmax; x++)
 			{
-				GlyphIndex gix = row.getGlyphIndex(x);
-				if(gix.isEOF())
+				GlyphType t = row.getGlyphTypeAtColumn(x);
+				switch(t)
 				{
+				case EOF:
 					paintBlank(row, x, y, xmax - x);
 					break;
-				}
-				
-				if(gix.isEOL())
-				{
+				case EOL:
 					paintBlank(row, x, y, xmax - x);
 					x = xmax;
-				}
-				else if(gix.isInsideTab())
-				{
-					int w = -gix.intValue();
+					break;
+				case TAB:
+					int w = row.getTabSpan(x);
 					paintBlank(row, x, y, w);
 					x += (w - 1);
-				}
-				else
-				{
-					paintCell(row, x, y);	
+					break;
+				case REG:
+					paintCell(row, x, y);
+					break;
+				default:
+					throw new Error("?" + t);
 				}
 			}
 			
