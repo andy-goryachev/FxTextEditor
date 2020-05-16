@@ -2,10 +2,7 @@
 package goryachev.fxtexteditor.internal;
 import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITabPolicy;
-import goryachev.fxtexteditor.ITextLine;
-import goryachev.fxtexteditor.SelectionSegment;
 import goryachev.fxtexteditor.VFlow;
-import java.util.List;
 
 
 /**
@@ -18,8 +15,6 @@ public class NonWrappingReflowHelper
 		int lineIndex = flow.getTopLine();
 		int modelLineCount = flow.getModelLineCount();
 		int topCellIndex = flow.getTopCellIndex();
-		SelectionSegment sel = flow.getSelectionSegment();
-		int selectedSegmentIndex;
 		
 		for(int y=0; y<ymax; y++)
 		{
@@ -113,23 +108,6 @@ public class NonWrappingReflowHelper
 			{
 				// cell index coincides with glyph index
 				r.setStartGlyphIndex(GlyphIndex.of(topCellIndex));
-				
-				boolean caretLine = false;
-				if(sel != null)
-				{
-					if(lineIndex >= sel.getMinLine())
-					{
-						if((lineIndex >= sel.getMinLine()) && (lineIndex <= sel.getMaxLine()))
-						{
-							if(sel.getCaretLine() == lineIndex)
-							{
-								caretLine = true;
-							}
-						}
-					}
-				}
-				
-				r.setCaretLine(caretLine);
 			}
 			
 			lineIndex++;

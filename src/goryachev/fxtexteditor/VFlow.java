@@ -737,22 +737,86 @@ public class VFlow
 		
 		int bufferWidth = getScreenColumnCount() + 1;
 		int bufferHeight = getScreenRowCount() + 1;
-		
 		buffer.setSize(bufferWidth, bufferHeight);
 		
 		ITabPolicy tabPolicy = editor.getTabPolicy();
+		int lineCount = getModelLineCount();
 		
-		// TODO populate ScreenBuffer from FlowLines, move the helpers to getWrapInfo()
 		if(isWrapLines())
 		{
+			// FIX remove
 			WrappingReflowHelper.reflow(this, buffer, getScreenColumnCount(), bufferHeight, tabPolicy);
+			
+			FlowLine fline = null;
+			WrapInfo wr = null;
+			int line = topLine;
+			int rowCount = -1;
+			int row = -1;
+			
+			for(int y=0; y<bufferHeight; y++)
+			{
+				if(fline == null)
+				{
+					fline = getTextLine(line);
+				}
+				
+				if(wr == null)
+				{
+					wr = getWrapInfo(fline);
+				}
+				
+				if(rowCount < 0)
+				{
+					rowCount = wr.getWrapRowCount();
+				}
+
+				int startGlyphIndex;
+				if(y == 0)
+				{
+					startGlyphIndex = topGlyphIndex.intValue(); // TODO replace with int
+					row = wr.getWrapRowForGlyphIndex(startGlyphIndex);
+				}
+				else
+				{
+					startGlyphIndex = wr.getGlyphIndexForRow(row);
+				}
+				
+				int lineNumber = (line <= lineCount) ? line : -1;
+				
+				ScreenRow r = buffer.getRow(y);
+				r.init(fline, lineNumber, row, startGlyphIndex);
+				
+				++row;
+				if(row >= rowCount)
+				{
+					line++;
+					fline = null;
+					wr = null;
+					row = 0;
+					rowCount = -1;
+				}
+			}
 		}
 		else
 		{
+			// FIX remove
 			NonWrappingReflowHelper.reflow(this, buffer, bufferWidth, bufferHeight, tabPolicy);
+
+			int line = topLine;
+			int startGlyphIndex = topGlyphIndex.intValue(); // TODO replace with int
+			
+			for(int y=0; y<bufferHeight; y++)
+			{
+				FlowLine fline = getTextLine(line);
+				
+				int lineNumber = (line <= lineCount) ? line : -1;
+				
+				ScreenRow r = buffer.getRow(y);
+				r.init(fline, lineNumber, 0, startGlyphIndex);
+				
+				line++;
+			}
 		}
-		
-//		log.trace(() -> buffer.dump());
 	}
 	
 	
@@ -869,7 +933,7 @@ public class VFlow
 		
 		if((y == 0) || row.isBOL())
 		{
-			int ix = row.getLineIndex();
+			int ix = row.getLineNumber();
 			if((ix >= 0) && (ix <= (editor.getLineCount() + 1)))
 			{
 				String text = editor.getLineNumberFormatter().format(ix + 1);
@@ -1157,7 +1221,7 @@ public class VFlow
 			int w = buffer.getWidth();
 			
 			ScreenRow r = buffer.getScreenRow(h - 1);
-			int line = r.getLineIndex();
+			int line = r.getLineNumber();
 			if(line < 0)
 			{
 				return true;

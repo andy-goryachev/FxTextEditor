@@ -120,7 +120,7 @@ public class ScreenBuffer
 		}
 		else
 		{
-			line = row.getLineIndex();
+			line = row.getLineNumber();
 			if(line < 0)
 			{
 				return null;

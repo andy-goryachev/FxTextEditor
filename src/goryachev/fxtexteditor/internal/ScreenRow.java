@@ -17,18 +17,24 @@ public class ScreenRow
 	private static final int SELECTED = 0x0000_0002;
 	
 	private FlowLine fline = FlowLine.BLANK;
-	private int lineIndex;
+	private int lineNumber;
 	private boolean eof;
 	private boolean bol;
-	private GlyphIndex startGlyphIndex;
+	
+	@Deprecated // FIX remove
+	private FlowLine fline_OLD = FlowLine.BLANK;
+	@Deprecated // FIX remove
+	private GlyphIndex startGlyphIndex_OLD;
 	@Deprecated // FIX remove
 	private GlyphIndex[] glyphOffsets;
+	@Deprecated // FIX remove
 	private int cellCount;
 	@Deprecated // FIX remove
 	private boolean complex;
 	@Deprecated // FIX remove
 	private int appendIndex;
-	private boolean caretLine;
+	@Deprecated
+	private int lineIndex_OLD;
 	
 	
 	public ScreenRow()
@@ -55,8 +61,8 @@ public class ScreenRow
 			throw new Error();
 		}
 		
-		this.fline = f;
-		this.lineIndex = (lineIndex <= modelLineCount ? lineIndex : -1);
+		this.fline_OLD = f;
+		this.lineIndex_OLD = (lineIndex <= modelLineCount ? lineIndex : -1);
 		this.eof = (lineIndex >= modelLineCount);
 		this.bol = bol;
 	}
@@ -64,13 +70,7 @@ public class ScreenRow
 	
 	public FlowLine getFlowLine()
 	{
-		return fline;
-	}
-	
-	
-	public boolean isEOF()
-	{
-		return eof;
+		return fline_OLD;
 	}
 	
 	
@@ -84,20 +84,20 @@ public class ScreenRow
 	@Deprecated // TODO remove
 	public GlyphType getGlyphType(GlyphIndex glyphIndex)
 	{
-		return fline.getGlyphType(glyphIndex);
+		return fline_OLD.getGlyphType(glyphIndex);
 	}
 	
 	
 	/** returns the type of a glyph at the specified glyph (cell) index. */
 	public GlyphType getGlyphType(int glyphIndex)
 	{
-		return fline.getGlyphType(glyphIndex);
+		return fline_OLD.getGlyphType(glyphIndex);
 	}
 	
 	
 	public void setStartGlyphIndex(GlyphIndex gix)
 	{
-		this.startGlyphIndex = gix;
+		this.startGlyphIndex_OLD = gix;
 	}
 	
 	
@@ -148,12 +148,12 @@ public class ScreenRow
 			
 			int ct = getGlyphCount();
 
-			if(startGlyphIndex == null)
+			if(startGlyphIndex_OLD == null)
 			{
 				return GlyphIndex.BOL;
 			}
 			
-			int ix = startGlyphIndex.intValue() + x;
+			int ix = startGlyphIndex_OLD.intValue() + x;
 			if(ix < ct)
 			{
 				return GlyphIndex.of(ix);
@@ -232,19 +232,19 @@ public class ScreenRow
 
 	public ITextLine getTextLine()
 	{
-		return fline.getTextLine();
+		return fline_OLD.getTextLine();
 	}
 	
 	
 	public int getTextLength()
 	{
-		return fline.getTextLength();
+		return fline_OLD.getTextLength();
 	}
 	
 	
 	public GlyphIndex getStartGlyphIndex()
 	{
-		return startGlyphIndex;
+		return startGlyphIndex_OLD;
 	}
 
 
@@ -254,17 +254,11 @@ public class ScreenRow
 		int off = glyphIndex.intValue();
 		if(off >= 0)
 		{
-			return fline.getCellStyle(off);
+			return fline_OLD.getCellStyle(off);
 		}
 		return null;
 	}
 
-
-	public int getLineIndex()
-	{
-		return lineIndex;
-	}
-	
 	
 	public void setAppendModelIndex(int ix)
 	{
@@ -293,9 +287,9 @@ public class ScreenRow
 		}
 		
 		sb.append("(");
-		sb.append(lineIndex);
+		sb.append(lineIndex_OLD);
 		sb.append(",");
-		sb.append(startGlyphIndex);
+		sb.append(startGlyphIndex_OLD);
 		sb.append(") ");
 		
 //		if(glyphOffsets != null)
@@ -322,14 +316,14 @@ public class ScreenRow
 	 */
 	public int getGlyphCount()
 	{
-		return fline.glyphInfo().getGlyphCount();
+		return fline_OLD.glyphInfo().getGlyphCount();
 	}
 	
 	
 	/** returns the offest into plain text string for the given glyph index */
 	protected int getCharIndex(GlyphIndex glyphIndex)
 	{
-		return fline.glyphInfo().getCharIndex(glyphIndex); //startGlyphIndex + glyphIndex);
+		return fline_OLD.glyphInfo().getCharIndex(glyphIndex); //startGlyphIndex + glyphIndex);
 	}
 	
 	
@@ -345,12 +339,23 @@ public class ScreenRow
 	
 	protected String getGlyphText(GlyphIndex glyphIndex)
 	{
-		return fline.glyphInfo().getGlyphText(glyphIndex);
+		return fline_OLD.glyphInfo().getGlyphText(glyphIndex);
 	}
 
+	
+	// TODO new interface
 
-	public void setCaretLine(boolean on)
+
+	public void init(FlowLine fline, int lineNumber, int row, int startGlyphIndex)
 	{
-		caretLine = on;
+		this.fline = fline;
+		this.lineNumber = lineNumber;
+	}
+	
+
+	/** returns line number (starts at 0) or -1 if line number should not be displayed */
+	public int getLineNumber()
+	{
+		return lineNumber;
 	}
 }

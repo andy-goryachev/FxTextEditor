@@ -48,6 +48,12 @@ public class SingleRowWrapInfo
 	{
 		return 0;
 	}
+	
+	
+	public int getWrapRowForGlyphIndex(int glyphIndex)
+	{
+		return 0;
+	}
 
 
 	public int getColumnForCharIndex(int charIndex)

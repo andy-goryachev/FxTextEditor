@@ -54,12 +54,38 @@ public class SimpleWrapInfo
 
 	public int getWrapRowForCharIndex(int charIndex)
 	{
-		return 0;
+		if(charIndex < 0)
+		{
+			return 0;
+		}
+		
+		if(charIndex > length)
+		{
+			charIndex = length;
+		}
+		
+		return charIndex / width;
+	}
+	
+	
+	public int getWrapRowForGlyphIndex(int glyphIndex)
+	{
+		return getWrapRowForCharIndex(glyphIndex);
 	}
 
 
 	public int getColumnForCharIndex(int charIndex)
 	{
+		if(charIndex < 0)
+		{
+			return 0;
+		}
+		
+		if(charIndex > length)
+		{
+			charIndex = length;
+		}
+		
 		return charIndex % width;
 	}
 

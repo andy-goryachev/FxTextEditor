@@ -22,7 +22,7 @@ public class SelectionHelper
 			return 0;
 		}
 		
-		int line = row.getLineIndex();
+		int line = row.getLineNumber();
 		if(line < 0)
 		{
 			line = row.getAppendModelIndex();
@@ -42,7 +42,7 @@ public class SelectionHelper
 		}
 		else if(gix.isEOF())
 		{
-			if((x == 0) && (row.getLineIndex() == line))
+			if((x == 0) && (row.getLineNumber() == line))
 			{
 				off = 0;
 			}
@@ -107,7 +107,7 @@ public class SelectionHelper
 		{
 			if(seg != null)
 			{
-				int line = row.getLineIndex();
+				int line = row.getLineNumber();
 				if(line < 0)
 				{
 					line = row.getAppendModelIndex();

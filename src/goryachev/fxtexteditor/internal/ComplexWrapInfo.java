@@ -93,7 +93,7 @@ public class ComplexWrapInfo
 	}
 	
 	
-	protected int getWrapRowForGlyphIndex(int gix)
+	public int getWrapRowForGlyphIndex(int gix)
 	{
 		int row = 0;
 		for( ; row<cells.length; row++)

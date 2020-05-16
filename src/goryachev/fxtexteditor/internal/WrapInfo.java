@@ -23,6 +23,9 @@ public abstract class WrapInfo
 	/** returns true if the current wrap info can be reused with the new screen configuration */
 	public abstract boolean isCompatible(ITabPolicy tabPolicy, int width, boolean wrapLines);
 	
+	/** returns the wrapped row index for the given glyph index */
+	public abstract int getWrapRowForGlyphIndex(int glyphIndex);
+	
 	/** returns the wrapped row index for the given character */
 	public abstract int getWrapRowForCharIndex(int charIndex);
 
