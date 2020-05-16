@@ -398,4 +398,10 @@ public class ScreenRow
 	{
 		return fline.glyphInfo().getGlyphText(glyphIndex);
 	}
+	
+	
+	public int getCellCount()
+	{
+		return wrap.getGlyphCountAtRow(wrapRow);
+	}
 }

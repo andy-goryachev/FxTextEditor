@@ -85,7 +85,7 @@ public class ScreenBuffer
 		int w = 0;
 		for(int i=0; i<height; i++)
 		{
-			int len = NonWrappingReflowHelper.computeCellCount(rows[i].getFlowLine(), tabPolicy);
+			int len = getRow(i).getCellCount();
 			if(len > w)
 			{
 				w = len;

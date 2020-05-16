@@ -123,6 +123,12 @@ public class ComplexWrapInfo
 		}
 		return row - 1;
 	}
+	
+	
+	public int getGlyphCountAtRow(int wrapRow)
+	{
+		return cells[wrapRow].length;
+	}
 
 
 	public int getColumnForCharIndex(int charIndex)

@@ -65,14 +65,20 @@ public class SingleRowWrapInfo
 		
 		return charIndex;
 	}
-
-
-	public int getCharIndexForColumn(int wrapRow, int column)
+	
+	
+	protected void checkRow(int wrapRow)
 	{
 		if(wrapRow != 0)
 		{
 			throw new Error("wrapRow=" + wrapRow);
 		}
+	}
+
+
+	public int getCharIndexForColumn(int wrapRow, int column)
+	{
+		checkRow(wrapRow);
 		
 		if(column > length)
 		{
@@ -85,10 +91,7 @@ public class SingleRowWrapInfo
 	
 	protected int getGlyphIndex(int wrapRow, int column)
 	{
-		if(wrapRow != 0)
-		{
-			throw new Error("wrapRow=" + wrapRow);
-		}
+		checkRow(wrapRow);
 		
 		if(column >= length)
 		{
@@ -96,5 +99,13 @@ public class SingleRowWrapInfo
 		}
 		
 		return column;
+	}
+	
+	
+	public int getGlyphCountAtRow(int wrapRow)
+	{
+		checkRow(wrapRow);
+		
+		return length;
 	}
 }

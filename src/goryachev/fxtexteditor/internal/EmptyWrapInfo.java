@@ -66,4 +66,10 @@ public class EmptyWrapInfo
 	{
 		return GlyphIndex.EOF_INDEX;
 	}
+
+
+	public int getGlyphCountAtRow(int wrapRow)
+	{
+		return 0;
+	}
 }

@@ -111,4 +111,16 @@ public class SimpleWrapInfo
 		
 		return GlyphIndex.EOL_INDEX;
 	}
+
+
+	public int getGlyphCountAtRow(int wrapRow)
+	{
+		int rows = getWrapRowCount();
+		if(wrapRow < (rows - 1))
+		{
+			return width;
+		}
+		
+		return length % width;
+	}
 }

@@ -35,6 +35,9 @@ public abstract class WrapInfo
 	/** returns the character index for the given column and wrap row */
 	public abstract int getCharIndexForColumn(int wrapRow, int column);
 	
+	/** returns the number of text glyphs at the specific wrap row */
+	public abstract int getGlyphCountAtRow(int wrapRow);
+	
 	/** 
 	 * returns a glyph index (>=0),
 	 * or a negative value that corresponds to either

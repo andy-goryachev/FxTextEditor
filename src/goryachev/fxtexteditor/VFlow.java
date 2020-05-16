@@ -10,14 +10,12 @@ import goryachev.fx.FxBooleanBinding;
 import goryachev.fxtexteditor.internal.FlowLine;
 import goryachev.fxtexteditor.internal.FlowLineCache;
 import goryachev.fxtexteditor.internal.GlyphIndex;
-import goryachev.fxtexteditor.internal.NonWrappingReflowHelper;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenRow;
 import goryachev.fxtexteditor.internal.SelectionHelper;
 import goryachev.fxtexteditor.internal.VerticalScrollHelper;
 import goryachev.fxtexteditor.internal.WrapAssist;
 import goryachev.fxtexteditor.internal.WrapInfo;
-import goryachev.fxtexteditor.internal.WrappingReflowHelper;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.BooleanExpression;
@@ -744,9 +742,6 @@ public class VFlow
 		
 		if(isWrapLines())
 		{
-			// FIX remove
-			WrappingReflowHelper.reflow(this, buffer, getScreenColumnCount(), bufferHeight, tabPolicy);
-			
 			FlowLine fline = null;
 			WrapInfo wr = null;
 			int line = topLine;
@@ -799,9 +794,6 @@ public class VFlow
 		}
 		else
 		{
-			// FIX remove
-			NonWrappingReflowHelper.reflow(this, buffer, bufferWidth, bufferHeight, tabPolicy);
-
 			int line = topLine;
 			int startGlyphIndex = topGlyphIndex.intValue(); // TODO replace with int
 			
