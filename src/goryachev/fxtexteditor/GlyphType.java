@@ -7,7 +7,8 @@ package goryachev.fxtexteditor;
  */
 public enum GlyphType
 {
+	EOF,
 	EOL,
-	NORMAL,
+	REG,
 	TAB;
 }

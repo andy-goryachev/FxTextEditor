@@ -149,7 +149,7 @@ public class FlowLine
 		}
 		else
 		{
-			return GlyphType.NORMAL;
+			return GlyphType.REG;
 		}
 	}
 }

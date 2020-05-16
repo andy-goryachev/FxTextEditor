@@ -273,7 +273,7 @@ public class ComplexWrapInfo
 						x++;
 						break;
 						
-					case NORMAL:
+					case REG:
 						cells.add(glyphIndex);
 						glyphIndex++;
 						x++;

@@ -73,7 +73,7 @@ public class NonWrappingReflowHelper
 						}
 						glyphIndex = glyphIndex.increment();
 						break;
-					case NORMAL:
+					case REG:
 						if((cellIndex >= topCellIndex) && (cellIndex < maxCellIndex))
 						{
 							if(cellIndex == topCellIndex)
@@ -149,7 +149,7 @@ public class NonWrappingReflowHelper
 					}
 					glyphIndex = glyphIndex.increment();
 					break;
-				case NORMAL:
+				case REG:
 					size++;
 					glyphIndex = glyphIndex.increment();
 					cellIndex++;

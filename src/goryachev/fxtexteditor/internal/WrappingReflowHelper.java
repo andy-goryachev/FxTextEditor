@@ -145,7 +145,7 @@ public class WrappingReflowHelper
 						cellIndex++;
 						x++;
 						break;
-					case NORMAL:
+					case REG:
 						glyphOffsets[x] = new GlyphIndex(glyphIndex);
 						glyphIndex++;
 						cellIndex++;
