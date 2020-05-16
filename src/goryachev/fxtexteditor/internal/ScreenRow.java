@@ -21,9 +21,12 @@ public class ScreenRow
 	private boolean eof;
 	private boolean bol;
 	private GlyphIndex startGlyphIndex;
+	@Deprecated // FIX remove
 	private GlyphIndex[] glyphOffsets;
 	private int cellCount;
+	@Deprecated // FIX remove
 	private boolean complex;
+	@Deprecated // FIX remove
 	private int appendIndex;
 	private boolean caretLine;
 	
@@ -98,6 +101,8 @@ public class ScreenRow
 	}
 	
 	
+	
+	@Deprecated // FIX
 	public GlyphIndex[] prepareGlyphOffsetsForWidth(int width)
 	{
 		if((glyphOffsets == null) || (glyphOffsets.length < width))
@@ -116,6 +121,7 @@ public class ScreenRow
 	 * of GlyphIndex.BOL if before the beginning of line,
 	 * or GlyphIndex.EOF if past the end of file.
 	 */
+	@Deprecated // FIX
 	public GlyphIndex getGlyphIndex(int x)
 	{
 		if(complex)
@@ -170,6 +176,7 @@ public class ScreenRow
 	 * or
 	 * 1:  a|- - - b
 	 */ 
+	@Deprecated // FIX
 	public int getNearestInsertPosition(int x)
 	{
 		if(complex)

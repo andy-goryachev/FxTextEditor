@@ -13,14 +13,12 @@ public class TextPos
 {
 	private final int line;
 	private final int charIndex;
-	private final boolean synthetic;
 	
 	
-	public TextPos(int line, int charIndex, boolean synthetic)
+	public TextPos(int line, int charIndex)
 	{
 		this.line = line;
 		this.charIndex = charIndex;
-		this.synthetic = synthetic;
 	}
 	
 
@@ -36,25 +34,10 @@ public class TextPos
 	}
 	
 	
-	/** 
-	 * returns true if this insert position differs from a position which otherwise would exist
-	 * at the requested coordinates, for example, when the user clicks beyond the end of line
-	 * or end of file
-	 */ 
-	public boolean isSynthetic()
-	{
-		return synthetic;
-	}
-	
-	
 	public String toString()
 	{
 		SB sb = new SB(32);
 		sb.a("TextPos[");
-		if(synthetic)
-		{
-			sb.a("S:");
-		}
 		sb.a(line);
 		sb.a(':');
 		sb.a(getCharIndex());

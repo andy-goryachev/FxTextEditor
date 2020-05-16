@@ -639,7 +639,7 @@ public class VFlow
 		TextPos pos = buffer().getInsertPosition(x, y);
 		if(pos == null)
 		{
-			pos = new TextPos(getModelLineCount(), 0, true);
+			pos = new TextPos(getModelLineCount(), 0);
 		}
 		
 		log.debug(pos);

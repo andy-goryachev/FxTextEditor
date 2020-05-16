@@ -109,9 +109,10 @@ public class ScreenBuffer
 	{
 		int line;
 		int charIndex;
-		boolean synthetic = false;
 		
 		// FIX we need to use wrap info for that (use case: click and drag over the top line)
+		// y may be negative here
+		
 		ScreenRow row = getScreenRow(y);
 		if(row == null)
 		{
@@ -133,8 +134,6 @@ public class ScreenBuffer
 				}
 				else
 				{
-					synthetic = true;
-				
 					if(gix.isEOF())
 					{
 						line = vflow.getModelLineCount();
@@ -158,7 +157,7 @@ public class ScreenBuffer
 			}
 		}
 		
-		TextPos p = new TextPos(line, charIndex, synthetic);
+		TextPos p = new TextPos(line, charIndex);
 		log.trace("%d,%d %s", x, y, p);
 		return p;
 	}
