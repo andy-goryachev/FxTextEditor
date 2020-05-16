@@ -75,7 +75,7 @@ public class ScreenRow
 	
 	public FlowLine getFlowLine()
 	{
-		return fline_OLD;
+		return fline;
 	}
 	
 	
@@ -237,33 +237,15 @@ public class ScreenRow
 
 	public ITextLine getTextLine()
 	{
-		return fline_OLD.getTextLine();
+		return fline.getTextLine();
 	}
 	
 	
 	public int getTextLength()
 	{
-		return fline_OLD.getTextLength();
+		return fline.getTextLength();
 	}
 	
-	
-	public GlyphIndex getStartGlyphIndex()
-	{
-		return startGlyphIndex_OLD;
-	}
-
-
-	public CellStyle getCellStyles(int cellIndex)
-	{
-		GlyphIndex glyphIndex = getGlyphIndex(cellIndex);
-		int off = glyphIndex.intValue();
-		if(off >= 0)
-		{
-			return fline_OLD.getCellStyle(off);
-		}
-		return null;
-	}
-
 	
 	public void setAppendModelIndex(int ix)
 	{
@@ -319,6 +301,7 @@ public class ScreenRow
 	 * one glyph is rendered in one fixed width cell (even full width CJK)
 	 * A tab is one glyph.
 	 */
+	@Deprecated // TODO remove
 	public int getGlyphCount()
 	{
 		return fline_OLD.glyphInfo().getGlyphCount();
@@ -331,22 +314,6 @@ public class ScreenRow
 		return fline_OLD.glyphInfo().getCharIndex(glyphIndex); //startGlyphIndex + glyphIndex);
 	}
 	
-	
-	/** 
-	 * returns the text to be rendered in one cell
-	 */
-	public String getCellText(int cellIndex)
-	{
-		GlyphIndex glyphIndex = getGlyphIndex(cellIndex);
-		return getGlyphText(glyphIndex);
-	}
-	
-	
-	protected String getGlyphText(GlyphIndex glyphIndex)
-	{
-		return fline_OLD.glyphInfo().getGlyphText(glyphIndex);
-	}
-
 	
 	// TODO new interface
 
@@ -382,5 +349,53 @@ public class ScreenRow
 	public int getTabSpan(int column)
 	{
 		return wrap.getTabSpan(wrapRow, column);
+	}
+	
+	
+	/** 
+	 * returns the text to be rendered in one cell
+	 */
+	public String getCellText(int col)
+	{
+		int gix = wrap.getGlyphIndex(wrapRow, col);
+		if(gix < 0)
+		{
+			return null;
+		}
+		
+		return getGlyphText(gix);
+	}
+	
+
+	public CellStyle getCellStyles(int col)
+	{
+		int gix = wrap.getGlyphIndex(wrapRow, col);
+		if(gix < 0)
+		{
+			if(GlyphIndex.isTab(gix))
+			{
+				gix = -gix;
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+		int charIndex = getCharIndex(gix);
+		return fline.getCellStyle(charIndex);
+	}
+	
+
+	/** returns the offest into plain text string for the given glyph index */
+	protected int getCharIndex(int glyphIndex)
+	{
+		return fline.glyphInfo().getCharIndex(glyphIndex);
+	}
+	
+	
+	protected String getGlyphText(int glyphIndex)
+	{
+		return fline.glyphInfo().getGlyphText(glyphIndex);
 	}
 }

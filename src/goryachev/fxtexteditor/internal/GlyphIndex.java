@@ -96,15 +96,25 @@ public class GlyphIndex
 	
 	public boolean isInsideTab()
 	{
-		switch(index)
+		return isTab(index);
+	}
+	
+	
+	public static boolean isTab(int ix)
+	{
+		if(ix < 0)
 		{
-		case EOF_INDEX:
-		case EOL_INDEX:
-		case BOL_INDEX:
-			return false;
+			switch(ix)
+			{
+			case EOF_INDEX:
+			case EOL_INDEX:
+			case BOL_INDEX:
+				return false;
+			default:
+				return true;
+			}
 		}
-		
-		return (index < 0);
+		return false;
 	}
 	
 	
