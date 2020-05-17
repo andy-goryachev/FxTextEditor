@@ -1,5 +1,6 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.SelectionSegment;
 import goryachev.fxtexteditor.VFlow;
 
@@ -16,6 +17,11 @@ public class SelectionHelper
 	
 	public static int getFlags(VFlow vflow, SelectionSegment seg, ScreenRow row, int x)
 	{
+		if(seg == null)
+		{
+			return 0;
+		}
+		
 		if(row == null)
 		{
 			// except when last line
@@ -25,50 +31,44 @@ public class SelectionHelper
 		int line = row.getLineNumber();
 		if(line < 0)
 		{
-			line = row.getAppendModelIndex();
-		}
-		
-		GlyphIndex gix = row.getGlyphIndex(x);
-		int off;
-		int selOff = -1;
-		if(gix.isRegular())
-		{
-			off = row.getCharIndex(gix);
-		}
-		else if(gix.isEOL())
-		{
-			off = gix.isAtEOL() ? row.getTextLength() : -1;
-			selOff = row.getTextLength();
-		}
-		else if(gix.isEOF())
-		{
-			if((x == 0) && (row.getLineNumber() == line))
-			{
-				off = 0;
-			}
-			else
-			{
-				off = -1;
-			}
-		}
-		else if(gix.isBOL())
-		{
-			off = 0; // TODO check
-		}
-		else if(gix.isInsideTab())
-		{
-			off = gix.getLeadingCharIndex();
-			selOff = gix.getTabCharIndex();
-		}
-		else
-		{
-			throw new Error(gix.toString());
-		}
-		
-		if(seg == null)
-		{
 			return 0;
 		}
+		
+		int off;
+		int selOff = -1;
+
+		GlyphType t = row.getGlyphTypeAtColumn(x);
+		switch(t)
+		{
+		case REG:
+			off = row.getCharIndexForColumn(x);
+			break;
+		case EOL:
+			// TODO check
+//			off = gix.isAtEOL() ? row.getTextLength() : -1;
+//			selOff = row.getTextLength();
+			off = row.getCharIndexForColumn(x);
+			break;
+		case EOF:
+//			if((x == 0) && (row.getLineNumber() == line))
+//			{
+//				off = 0;
+//			}
+//			else
+//			{
+//				off = -1;
+//			}
+			off = 0;
+			break;
+		case TAB:
+//			off = gix.getLeadingCharIndex();
+//			selOff = gix.getTabCharIndex();
+			off = row.getCharIndexForColumn(x);
+			break;
+		default:
+			throw new Error("?" + t);
+		}
+		
 		
 		int flags = 0;
 		

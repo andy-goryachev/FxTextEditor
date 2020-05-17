@@ -27,49 +27,11 @@ public class ScreenRow
 	private boolean bol;
 	
 	@Deprecated // FIX remove
-	private FlowLine fline_OLD = FlowLine.BLANK;
-	@Deprecated // FIX remove
-	private GlyphIndex startGlyphIndex_OLD;
-	@Deprecated // FIX remove
-	private GlyphIndex[] glyphOffsets;
-	@Deprecated // FIX remove
-	private int cellCount;
-	@Deprecated // FIX remove
-	private boolean complex;
-	@Deprecated // FIX remove
 	private int appendIndex;
-	@Deprecated
-	private int lineIndex_OLD;
 	
 	
 	public ScreenRow()
 	{
-	}
-	
-	
-	public void setCellCount(int sz)
-	{
-		cellCount = sz;
-	}
-	
-	
-	public void setComplex(boolean on)
-	{
-		complex = on;
-	}
-	
-	
-	public void initLine(FlowLine f, int lineIndex, int modelLineCount, boolean bol)
-	{
-		if(f == null)
-		{
-			throw new Error();
-		}
-		
-		this.fline_OLD = f;
-		this.lineIndex_OLD = (lineIndex <= modelLineCount ? lineIndex : -1);
-		this.eof = (lineIndex >= modelLineCount);
-		this.bol = bol;
 	}
 	
 	
@@ -85,39 +47,6 @@ public class ScreenRow
 	}
 	
 	
-	/** returns the type of a glyph at the specified glyph (cell) index. */
-	@Deprecated // TODO remove
-	public GlyphType getGlyphType(GlyphIndex glyphIndex)
-	{
-		return fline_OLD.getGlyphType(glyphIndex);
-	}
-	
-	
-	/** returns the type of a glyph at the specified glyph (cell) index. */
-	public GlyphType getGlyphType_OLD(int glyphIndex)
-	{
-		return fline_OLD.getGlyphType(glyphIndex);
-	}
-	
-	
-	public void setStartGlyphIndex(GlyphIndex gix)
-	{
-		this.startGlyphIndex_OLD = gix;
-	}
-	
-	
-	
-	@Deprecated // FIX
-	public GlyphIndex[] prepareGlyphOffsetsForWidth(int width)
-	{
-		if((glyphOffsets == null) || (glyphOffsets.length < width))
-		{
-			glyphOffsets = new GlyphIndex[CKit.toNeatSize(width)];
-		}
-		return glyphOffsets;
-	}
-	
-	
 	/**
 	 * returns a glyph index for the given x screen coordinate.
 	 * if the x coordinate falls inside a tab, a special GlyphIndex
@@ -126,49 +55,49 @@ public class ScreenRow
 	 * of GlyphIndex.BOL if before the beginning of line,
 	 * or GlyphIndex.EOF if past the end of file.
 	 */
-	@Deprecated // FIX
-	public GlyphIndex getGlyphIndex(int x)
-	{
-		if(complex)
-		{
-			if(x < 0)
-			{
-				return GlyphIndex.BOL;
-			}
-			else if(x < cellCount)
-			{
-				return glyphOffsets[x];
-			}
-			else
-			{
-				return GlyphIndex.atEOL(x == cellCount);
-			}
-		}
-		else
-		{
-			if(eof)
-			{
-				return GlyphIndex.EOF;
-			}
-			
-			int ct = getGlyphCount();
-
-			if(startGlyphIndex_OLD == null)
-			{
-				return GlyphIndex.BOL;
-			}
-			
-			int ix = startGlyphIndex_OLD.intValue() + x;
-			if(ix < ct)
-			{
-				return GlyphIndex.of(ix);
-			}
-			else
-			{
-				return GlyphIndex.atEOL(ix == ct);
-			}
-		}
-	}
+//	@Deprecated // FIX
+//	public GlyphIndex getGlyphIndex(int x)
+//	{
+//		if(complex)
+//		{
+//			if(x < 0)
+//			{
+//				return GlyphIndex.BOL;
+//			}
+//			else if(x < cellCount)
+//			{
+//				return glyphOffsets[x];
+//			}
+//			else
+//			{
+//				return GlyphIndex.atEOL(x == cellCount);
+//			}
+//		}
+//		else
+//		{
+//			if(eof)
+//			{
+//				return GlyphIndex.EOF;
+//			}
+//			
+//			int ct = getGlyphCount();
+//
+//			if(startGlyphIndex_OLD == null)
+//			{
+//				return GlyphIndex.BOL;
+//			}
+//			
+//			int ix = startGlyphIndex_OLD.intValue() + x;
+//			if(ix < ct)
+//			{
+//				return GlyphIndex.of(ix);
+//			}
+//			else
+//			{
+//				return GlyphIndex.atEOL(ix == ct);
+//			}
+//		}
+//	}
 	
 	
 	/** 
@@ -181,58 +110,58 @@ public class ScreenRow
 	 * or
 	 * 1:  a|- - - b
 	 */ 
-	@Deprecated // FIX
-	public int getNearestInsertPosition(int x)
-	{
-		if(complex)
-		{
-			// look for the nearest insertion point before or after the specified screen coordinate.
-			// this should not take more than the tabsize iterations, 
-			// but let's introduce the upper limit anyway.
-			for(int i=1; i<10000; i++)
-			{
-				// backward
-				GlyphIndex gix = getGlyphIndex(x - i);
-				if(gix.isRegular())
-				{
-					return getCharIndex(gix) + 1;
-				}
-				else if(gix.isInsideTab())
-				{
-					int ix = gix.getLeadingCharIndex();
-					if(ix >= 0)
-					{
-						return ix; 
-					}
-				}
-				else if(gix.isBOL())
-				{
-					return getCharIndex(GlyphIndex.ZERO);
-				}
-				
-				// forward
-				gix = getGlyphIndex(x + i);
-				if(gix.isRegular())
-				{
-					return getCharIndex(gix);
-				}
-				else if(gix.isInsideTab())
-				{
-					int ix = gix.getLeadingCharIndex();
-					if(ix >= 0)
-					{
-						return ix; 
-					}
-				}
-			}
-			throw new Error();
-		}
-		else
-		{
-			// TODO
-			return x;
-		}
-	}
+//	@Deprecated // FIX
+//	public int getNearestInsertPosition(int x)
+//	{
+//		if(complex)
+//		{
+//			// look for the nearest insertion point before or after the specified screen coordinate.
+//			// this should not take more than the tabsize iterations, 
+//			// but let's introduce the upper limit anyway.
+//			for(int i=1; i<10000; i++)
+//			{
+//				// backward
+//				GlyphIndex gix = getGlyphIndex(x - i);
+//				if(gix.isRegular())
+//				{
+//					return getCharIndex(gix) + 1;
+//				}
+//				else if(gix.isInsideTab())
+//				{
+//					int ix = gix.getLeadingCharIndex();
+//					if(ix >= 0)
+//					{
+//						return ix; 
+//					}
+//				}
+//				else if(gix.isBOL())
+//				{
+//					return getCharIndex(GlyphIndex.ZERO);
+//				}
+//				
+//				// forward
+//				gix = getGlyphIndex(x + i);
+//				if(gix.isRegular())
+//				{
+//					return getCharIndex(gix);
+//				}
+//				else if(gix.isInsideTab())
+//				{
+//					int ix = gix.getLeadingCharIndex();
+//					if(ix >= 0)
+//					{
+//						return ix; 
+//					}
+//				}
+//			}
+//			throw new Error();
+//		}
+//		else
+//		{
+//			// TODO
+//			return x;
+//		}
+//	}
 
 
 	public ITextLine getTextLine()
@@ -247,12 +176,6 @@ public class ScreenRow
 	}
 	
 	
-	public void setAppendModelIndex(int ix)
-	{
-		appendIndex = ix;
-	}
-	
-	
 	/** returns model.getRowCount() index if this row immediately follows the last row with non-null textLine, or -1 */
 	public int getAppendModelIndex()
 	{
@@ -264,54 +187,13 @@ public class ScreenRow
 	{
 		SB sb = new SB();
 		
-		if(complex)
-		{
-			sb.append("C");
-		}
-		else
-		{
-			sb.append("S");
-		}
-		
 		sb.append("(");
-		sb.append(lineIndex_OLD);
+		sb.append(lineNumber);
 		sb.append(",");
-		sb.append(startGlyphIndex_OLD);
+		sb.append(wrapRow);
 		sb.append(") ");
 		
-//		if(glyphOffsets != null)
-//		{
-//			int mx = Math.min(cellCount, glyphOffsets.length);
-//			for(int i=0; i<mx; i++)
-//			{
-//				if(i > 0)
-//				{
-//					sb.append(',');
-//				}
-//				sb.append(glyphOffsets[i]);
-//			}
-//		}
-		
 		return sb.toString();
-	}
-	
-	
-	/** 
-	 * returns the number of glyphs in the text line.  
-	 * one glyph is rendered in one fixed width cell (even full width CJK)
-	 * A tab is one glyph.
-	 */
-	@Deprecated // TODO remove
-	public int getGlyphCount()
-	{
-		return fline_OLD.glyphInfo().getGlyphCount();
-	}
-	
-	
-	/** returns the offest into plain text string for the given glyph index */
-	protected int getCharIndex(GlyphIndex glyphIndex)
-	{
-		return fline_OLD.glyphInfo().getCharIndex(glyphIndex); //startGlyphIndex + glyphIndex);
 	}
 	
 	
@@ -394,6 +276,12 @@ public class ScreenRow
 	}
 	
 	
+	public int getCharIndexForColumn(int column)
+	{
+		return wrap.getCharIndexForColumn(wrapRow, column);
+	}
+	
+	
 	protected String getGlyphText(int glyphIndex)
 	{
 		return fline.glyphInfo().getGlyphText(glyphIndex);
@@ -403,5 +291,23 @@ public class ScreenRow
 	public int getCellCount()
 	{
 		return wrap.getGlyphCountAtRow(wrapRow);
+	}
+	
+	
+	public WrapInfo getWrapInfo()
+	{
+		return wrap;
+	}
+	
+	
+	public int getWrapRow()
+	{
+		return wrapRow;
+	}
+	
+	
+	public int getWrapRowCount()
+	{
+		return wrap.getWrapRowCount();
 	}
 }

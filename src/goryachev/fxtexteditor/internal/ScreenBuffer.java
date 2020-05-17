@@ -105,62 +105,62 @@ public class ScreenBuffer
 	 * returns an insert position for the given screen coordinates,
 	 * or null if beyond the end of file.
 	 */
-	public TextPos getInsertPosition(int x, int y)
-	{
-		int line;
-		int charIndex;
-		
-		// FIX we need to use wrap info for that (use case: click and drag over the top line)
-		// y may be negative here
-		
-		ScreenRow row = getScreenRow(y);
-		if(row == null)
-		{
-			return null;
-		}
-		else
-		{
-			line = row.getLineNumber();
-			if(line < 0)
-			{
-				return null;
-			}
-			else
-			{
-				GlyphIndex gix = row.getGlyphIndex(x);
-				if(gix.isRegular())
-				{
-					charIndex = row.getCharIndex(gix);
-				}
-				else
-				{
-					if(gix.isEOF())
-					{
-						line = vflow.getModelLineCount();
-						charIndex = 0;
-					}
-					else if(gix.isEOL())
-					{
-						// at or after end of line
-						charIndex = row.getTextLength();
-					}
-					else if(gix.isInsideTab() && (gix.getLeadingCharIndex() >= 0))
-					{
-						charIndex = gix.getLeadingCharIndex();
-					}
-					else
-					{
-						// inside a tab
-						charIndex = row.getNearestInsertPosition(x);
-					}
-				}
-			}
-		}
-		
-		TextPos p = new TextPos(line, charIndex);
-		log.trace("%d,%d %s", x, y, p);
-		return p;
-	}
+//	public TextPos getInsertPosition(int x, int y)
+//	{
+//		int line;
+//		int charIndex;
+//		
+//		// FIX we need to use wrap info for that (use case: click and drag over the top line)
+//		// y may be negative here
+//		
+//		ScreenRow row = getScreenRow(y);
+//		if(row == null)
+//		{
+//			return null;
+//		}
+//		else
+//		{
+//			line = row.getLineNumber();
+//			if(line < 0)
+//			{
+//				return null;
+//			}
+//			else
+//			{
+//				GlyphIndex gix = row.getGlyphIndex(x);
+//				if(gix.isRegular())
+//				{
+//					charIndex = row.getCharIndex(gix);
+//				}
+//				else
+//				{
+//					if(gix.isEOF())
+//					{
+//						line = vflow.getModelLineCount();
+//						charIndex = 0;
+//					}
+//					else if(gix.isEOL())
+//					{
+//						// at or after end of line
+//						charIndex = row.getTextLength();
+//					}
+//					else if(gix.isInsideTab() && (gix.getLeadingCharIndex() >= 0))
+//					{
+//						charIndex = gix.getLeadingCharIndex();
+//					}
+//					else
+//					{
+//						// inside a tab
+//						charIndex = row.getNearestInsertPosition(x);
+//					}
+//				}
+//			}
+//		}
+//		
+//		TextPos p = new TextPos(line, charIndex);
+//		log.trace("%d,%d %s", x, y, p);
+//		return p;
+//	}
 	
 	
 	public String dump()

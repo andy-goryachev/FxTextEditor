@@ -180,6 +180,7 @@ public class ComplexWrapInfo
 	}
 	
 	
+	// TODO this might belong to WrapInfo
 	protected int findNearestInsertPoint(int[] cs, int column)
 	{
 		int gix = cs[column];

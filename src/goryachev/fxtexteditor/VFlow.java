@@ -634,10 +634,28 @@ public class VFlow
 		
 		int y = CKit.floor(sy / m.cellHeight);
 		
-		TextPos pos = buffer().getInsertPosition(x, y);
-		if(pos == null)
+		int topWrapRow = buffer().getRow(0).getWrapRow();
+		WrapPos wp = navigate(topLine, topWrapRow, y, false);
+		
+		TextPos pos;
+		if(wp == null)
 		{
-			pos = new TextPos(getModelLineCount(), 0);
+			if(y < 0)
+			{
+				pos = new TextPos(0, 0);
+			}
+			else
+			{
+				pos = new TextPos(getModelLineCount(), 0);
+			}
+		}
+		else
+		{
+			// TODO one method
+			int charIndex = wp.getWrapInfo().getCharIndexForColumn(wp.getRow(), x);
+			int line = wp.getLine();
+		
+			pos = new TextPos(line, charIndex);
 		}
 		
 		log.debug(pos);
@@ -1228,8 +1246,16 @@ public class VFlow
 				}
 			}
 			
-			GlyphIndex gix = r.getGlyphIndex(w - 1);
-			pos = fline.getCharIndex(gix);
+			WrapPos wp = navigate(line, r.getWrapRow(), 1, false);
+			if(wp == null)
+			{
+				// beyond EOF
+				return true;
+			}
+			
+			WrapInfo wr = getWrapInfo(wp.getLine());
+			pos = wr.getCharIndexForColumn(wp.getRow(), 0);
+			
 			if(m.isAfter(line, pos))
 			{
 				return false;
@@ -1301,5 +1327,63 @@ public class VFlow
 		int charIndex = m.getCharIndex();
 		int col = toPhantomColumn(line, charIndex);
 		setPhantomColumn(col);
+	}
+	
+	
+	/** 
+	 * Navigates the wrapped rows, starting with (startLine, startWrapRow) + delta.
+	 * When the resulting position goes beyond the text limits, returns:
+	 * clip=true: either the position at the beginning or the end of the document, or
+	 * clip=false: null  
+	 */ 
+	public WrapPos navigate(int startLine, int startWrapRow, int delta, boolean clip)
+	{
+		WrapInfo wr = getWrapInfo(startLine);
+		
+		int line = startLine;
+		int row = startWrapRow;
+		int toSkip = Math.abs(delta);
+		
+		if(delta < 0)
+		{
+			while(toSkip > 0)
+			{
+				if(row < toSkip)
+				{
+					toSkip -= row;
+					line--;
+					wr = getWrapInfo(line);
+					row = wr.getWrapRowCount() - 1;
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+		else if(delta > 0)
+		{
+			int ct = wr.getWrapRowCount() - row;
+			
+			while(toSkip > 0)
+			{
+				if(ct < toSkip)
+				{
+					toSkip -= (Math.max(row, 1)); // FIX this is wrong
+					line++;
+					
+					wr = getWrapInfo(line);
+					ct = wr.getWrapRowCount();
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+		
+		WrapPos p = new WrapPos(line, row, wr);
+		log.debug(p);
+		return p;
 	}
 }
