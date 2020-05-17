@@ -11,14 +11,8 @@ public class GlyphIndex
 	public static final int EOF_INDEX = Integer.MIN_VALUE;
 	public static final int EOL_INDEX = Integer.MIN_VALUE + 1;
 
-	@Deprecated // TODO remove
-	public static final int BOL_INDEX = Integer.MIN_VALUE + 2;
-	
 	public static final GlyphIndex EOF = new GlyphIndex(EOF_INDEX);
 	public static final GlyphIndex ZERO = new GlyphIndex(0);
-
-	@Deprecated // TODO remove
-	public static final GlyphIndex BOL = new GlyphIndex(BOL_INDEX);
 
 	private final int index;
 	
@@ -87,13 +81,6 @@ public class GlyphIndex
 	}
 	
 	
-	/** is beginning of a line */
-	public boolean isBOL()
-	{
-		return index == BOL_INDEX;
-	}
-	
-	
 	public boolean isInsideTab()
 	{
 		return isTab(index);
@@ -108,7 +95,6 @@ public class GlyphIndex
 			{
 			case EOF_INDEX:
 			case EOL_INDEX:
-			case BOL_INDEX:
 				return false;
 			default:
 				return true;
@@ -124,7 +110,6 @@ public class GlyphIndex
 		{
 		case EOF_INDEX:
 		case EOL_INDEX:
-		case BOL_INDEX:
 			return false;
 		}
 		
@@ -144,9 +129,6 @@ public class GlyphIndex
 			break;
 		case EOL_INDEX:
 			sb.append("EOL");
-			break;
-		case BOL_INDEX:
-			sb.append("BOL");
 			break;
 		default:
 			if(index < 0)
@@ -231,5 +213,27 @@ public class GlyphIndex
 	public  static boolean isEOL(int glyphIndex)
 	{
 		return glyphIndex == EOL_INDEX;
+	}
+	
+	
+	/** 
+	 * converts glyph index to a positie value if inside a tab, 
+	 * returns a positive value as is,
+	 * throws an Error for EOF or EOL
+	 */
+	public static int fixGlypIndex(int gix)
+	{
+		switch(gix)
+		{
+		case EOF_INDEX:
+		case EOL_INDEX:
+			throw new Error("gix=" + gix);
+		}
+		
+		if(gix < 0)
+		{
+			return -gix - 1;
+		}
+		return gix;
 	}
 }

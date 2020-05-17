@@ -156,11 +156,7 @@ public abstract class AGlyphInfo
 	
 	public int getCharIndex(GlyphIndex gix)
 	{
-		if(gix.isBOL())
-		{
-			return 0;
-		}
-		else if(gix.isEOF())
+		if(gix.isEOF())
 		{
 			return 0;
 		}

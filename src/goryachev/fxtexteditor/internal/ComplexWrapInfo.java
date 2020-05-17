@@ -180,6 +180,25 @@ public class ComplexWrapInfo
 	}
 	
 	
+	public boolean isLeadingTabColumn(int wrapRow, int column)
+	{
+		int[] cs = cells[wrapRow];
+		int gix = cs[column];
+		if(GlyphIndex.isTab(gix))
+		{
+			if(column == 0)
+			{
+				return true;
+			}
+			else if(cs[column - 1] != gix)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
 	// TODO this might belong to WrapInfo
 	protected int findNearestInsertPoint(int[] cs, int column)
 	{
@@ -192,7 +211,7 @@ public class ComplexWrapInfo
 		// in the middle of a tab: either tab start or tab end will be the closest point
 		for(int i=1; i<cs.length; i++)
 		{
-			// step to the righth
+			// step to the right
 			int ix = column + i;
 			if(ix >= cs.length)
 			{
@@ -200,18 +219,18 @@ public class ComplexWrapInfo
 			}
 			else if(cs[ix] != gix)
 			{
-				return ix;
+				return GlyphIndex.fixGlypIndex(cs[ix]);
 			}
 			
 			// step to the left
 			ix = column - i;
 			if(ix <= 0)
 			{
-				return 0;
+				return GlyphIndex.fixGlypIndex(cs[0]);
 			}
 			else if(cs[ix] != gix)
 			{
-				return ix;
+				return GlyphIndex.fixGlypIndex(cs[ix + 1]);
 			}
 		}
 		

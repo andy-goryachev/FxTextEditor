@@ -72,4 +72,10 @@ public class EmptyWrapInfo
 	{
 		return 0;
 	}
+
+
+	public boolean isLeadingTabColumn(int wrapRow, int column)
+	{
+		return false;
+	}
 }

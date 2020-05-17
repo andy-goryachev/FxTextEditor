@@ -36,7 +36,7 @@ public class SelectionHelper
 		}
 		
 		int off;
-		int selOff = -1;
+		int selOff = -1; // TODO
 
 		GlyphType t = row.getGlyphTypeAtColumn(x);
 		switch(t)
@@ -48,6 +48,7 @@ public class SelectionHelper
 			// TODO check
 //			off = gix.isAtEOL() ? row.getTextLength() : -1;
 //			selOff = row.getTextLength();
+			
 			off = row.getCharIndexForColumn(x);
 			break;
 		case EOF:
@@ -62,15 +63,19 @@ public class SelectionHelper
 			off = 0;
 			break;
 		case TAB:
-//			off = gix.getLeadingCharIndex();
-//			selOff = gix.getTabCharIndex();
-			off = row.getCharIndexForColumn(x);
-			off = -1; // FIX
+			// TODO add a special method to return tab char index only for the leading column 
+			if(row.isLeadingTabColumn(x))
+			{
+				off = row.getCharIndexForColumn(x);
+			}
+			else
+			{
+				off = -1;
+			}
 			break;
 		default:
 			throw new Error("?" + t);
 		}
-		
 		
 		int flags = 0;
 		

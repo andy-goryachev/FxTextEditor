@@ -35,9 +35,16 @@ public abstract class WrapInfo
 	/** 
 	 * returns the character index for the given column and wrap row.
 	 * returns the nearest insert position if inside a tab:
-	 * a|--tab---|b
+	 * a|--tab--|b
 	 */
 	public abstract int getCharIndexForColumn(int wrapRow, int column);
+	
+	/** 
+	 * returns true if and onl if the column points to the leading edge of the tab:
+	 * a--tab--b
+	 * nYnnnnnnn
+	 */
+	public abstract boolean isLeadingTabColumn(int wrapRow, int column);
 	
 	/** returns the number of text glyphs at the specific wrap row */
 	public abstract int getGlyphCountAtRow(int wrapRow);

@@ -265,6 +265,12 @@ public class ScreenRow
 	}
 	
 	
+	public boolean isLeadingTabColumn(int column)
+	{
+		return wrap.isLeadingTabColumn(wrapRow, column);
+	}
+	
+	
 	protected String getGlyphText(int glyphIndex)
 	{
 		return fline.glyphInfo().getGlyphText(glyphIndex);

@@ -108,4 +108,10 @@ public class SingleRowWrapInfo
 		
 		return length;
 	}
+
+
+	public boolean isLeadingTabColumn(int wrapRow, int column)
+	{
+		return false;
+	}
 }

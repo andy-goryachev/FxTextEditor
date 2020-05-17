@@ -47,4 +47,11 @@ public class WrapPos
 			":" + row +
 			"]";
 	}
+
+
+	/** returns insert position (char index) for the given column */  
+	public int getInsertPosition(int column)
+	{
+		return wrap.getCharIndexForColumn(row, column);
+	}
 }

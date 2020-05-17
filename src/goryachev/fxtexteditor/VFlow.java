@@ -637,8 +637,6 @@ public class VFlow
 		int topWrapRow = buffer().getRow(0).getWrapRow();
 		WrapPos wp = navigate(topLine, topWrapRow, y, false);
 		
-		D.print(x, y, wp); // FIX
-		
 		TextPos pos;
 		if(wp == null)
 		{
@@ -653,11 +651,11 @@ public class VFlow
 		}
 		else
 		{
-			// TODO one method
-			int charIndex = wp.getWrapInfo().getCharIndexForColumn(wp.getRow(), x);
+			int charIndex = wp.getInsertPosition(x);
 			int line = wp.getLine();
 		
 			pos = new TextPos(line, charIndex);
+			D.print(pos); // FIX
 		}
 		
 		log.debug(pos);
