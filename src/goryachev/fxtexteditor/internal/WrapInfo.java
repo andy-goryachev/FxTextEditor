@@ -32,7 +32,11 @@ public abstract class WrapInfo
 	/** returns the screen column for the given character */
 	public abstract int getColumnForCharIndex(int charIndex);
 
-	/** returns the character index for the given column and wrap row */
+	/** 
+	 * returns the character index for the given column and wrap row.
+	 * returns the nearest insert position if inside a tab:
+	 * a|--tab---|b
+	 */
 	public abstract int getCharIndexForColumn(int wrapRow, int column);
 	
 	/** returns the number of text glyphs at the specific wrap row */

@@ -637,6 +637,8 @@ public class VFlow
 		int topWrapRow = buffer().getRow(0).getWrapRow();
 		WrapPos wp = navigate(topLine, topWrapRow, y, false);
 		
+		D.print(x, y, wp); // FIX
+		
 		TextPos pos;
 		if(wp == null)
 		{
@@ -1124,6 +1126,7 @@ public class VFlow
 		
 		if(isWrapLines())
 		{
+			// TODO use navigate()
 			WrapAssist wr = new WrapAssist(this, caretLine, caret.getCharIndex());
 	
 			int delta;
@@ -1338,46 +1341,48 @@ public class VFlow
 	 */ 
 	public WrapPos navigate(int startLine, int startWrapRow, int delta, boolean clip)
 	{
-		WrapInfo wr = getWrapInfo(startLine);
+		log.debug("line=%d row=%d delta=%d clip=%s", startLine, startWrapRow, delta, clip);
 		
+		WrapInfo wr = getWrapInfo(startLine);
 		int line = startLine;
 		int row = startWrapRow;
-		int toSkip = Math.abs(delta);
+		int steps = Math.abs(delta);
 		
 		if(delta < 0)
 		{
-			while(toSkip > 0)
+			while(steps > 0)
 			{
-				if(row < toSkip)
+				if(steps <= row)
 				{
-					toSkip -= row;
-					line--;
-					wr = getWrapInfo(line);
-					row = wr.getWrapRowCount() - 1;
+					row -= steps;
+					break;
 				}
 				else
 				{
-					break;
+					steps -= row;
+					line--;
+					wr = getWrapInfo(line);
+					row = wr.getWrapRowCount() - 1;
 				}
 			}
 		}
 		else if(delta > 0)
 		{
-			int ct = wr.getWrapRowCount() - row;
-			
-			while(toSkip > 0)
+			int size = wr.getWrapRowCount() - row;
+
+			while(steps > 0)
 			{
-				if(ct <= toSkip)
+				if(steps < size)
 				{
-					toSkip -= ct;
-					line++;
-					
-					wr = getWrapInfo(line);
-					ct = wr.getWrapRowCount();
+					row += steps;
+					break;
 				}
 				else
 				{
-					break;
+					steps -= size;
+					line++;
+					wr = getWrapInfo(line);
+					size = wr.getWrapRowCount();
 				}
 			}
 		}

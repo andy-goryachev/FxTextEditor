@@ -1,5 +1,6 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.common.util.D;
 import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.SelectionSegment;
 import goryachev.fxtexteditor.VFlow;
@@ -64,6 +65,7 @@ public class SelectionHelper
 //			off = gix.getLeadingCharIndex();
 //			selOff = gix.getTabCharIndex();
 			off = row.getCharIndexForColumn(x);
+			off = -1; // FIX
 			break;
 		default:
 			throw new Error("?" + t);
@@ -83,6 +85,7 @@ public class SelectionHelper
 					if(!vflow.isWrapColumn(x))
 					{
 						flags |= CARET;
+//						D.print(x, off); // FIX
 					}
 				}
 			}
