@@ -1367,9 +1367,9 @@ public class VFlow
 			
 			while(toSkip > 0)
 			{
-				if(ct < toSkip)
+				if(ct <= toSkip)
 				{
-					toSkip -= (Math.max(row, 1)); // FIX this is wrong
+					toSkip -= ct;
 					line++;
 					
 					wr = getWrapInfo(line);

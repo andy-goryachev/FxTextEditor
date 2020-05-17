@@ -22,13 +22,6 @@ public class ScreenRow
 	private int wrapRow;
 	private int startGlyphIndex;
 	
-	// TODO is this needed?
-	private boolean eof;
-	private boolean bol;
-	
-	@Deprecated // FIX remove
-	private int appendIndex;
-	
 	
 	public ScreenRow()
 	{
@@ -43,7 +36,7 @@ public class ScreenRow
 	
 	public boolean isBOL()
 	{
-		return bol;
+		return wrapRow == 0;
 	}
 	
 	
@@ -175,13 +168,6 @@ public class ScreenRow
 		return fline.getTextLength();
 	}
 	
-	
-	/** returns model.getRowCount() index if this row immediately follows the last row with non-null textLine, or -1 */
-	public int getAppendModelIndex()
-	{
-		return appendIndex;
-	}
-
 
 	public String dump()
 	{
@@ -196,9 +182,6 @@ public class ScreenRow
 		return sb.toString();
 	}
 	
-	
-	// TODO new interface
-
 
 	public void init(FlowLine fline, WrapInfo wrap, int lineNumber, int wrapRow, int startGlyphIndex)
 	{

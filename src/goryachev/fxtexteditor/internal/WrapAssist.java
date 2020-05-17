@@ -8,6 +8,7 @@ import goryachev.fxtexteditor.VFlow;
 /**
  * Assists with vertical movement in wrapping mode.
  */
+@Deprecated // use VFlow.navigate 
 public class WrapAssist
 {
 	protected static final Log log = Log.get("WrapAssist");
@@ -64,7 +65,7 @@ public class WrapAssist
 			{
 				if(ct < toSkip)
 				{
-					toSkip -= (Math.max(row, 1)); // FIX this is wrong
+					toSkip -= ct;
 					line++;
 					
 					fline = vflow.getTextLine(line);

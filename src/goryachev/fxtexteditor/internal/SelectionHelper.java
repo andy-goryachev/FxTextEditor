@@ -108,11 +108,6 @@ public class SelectionHelper
 			if(seg != null)
 			{
 				int line = row.getLineNumber();
-				if(line < 0)
-				{
-					line = row.getAppendModelIndex();
-				}
-				
 				if(seg.isCaretLine(line))
 				{
 					return true;
