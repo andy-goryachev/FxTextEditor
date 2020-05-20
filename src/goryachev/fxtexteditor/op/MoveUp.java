@@ -10,7 +10,7 @@ import goryachev.fxtexteditor.internal.WrapInfo;
 
 
 /**
- * Moves cursor up.
+ * Moves the cursor up.
  */
 public class MoveUp
 	extends NavigationAction

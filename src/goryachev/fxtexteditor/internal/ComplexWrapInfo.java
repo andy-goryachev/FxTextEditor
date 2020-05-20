@@ -142,13 +142,6 @@ public class ComplexWrapInfo
 			column = 0;
 		}
 		
-		if(column >= cs.length)
-		{
-			// FIX incorrect: this is either EOL (but we need char index)
-			D.print("TODO EOL"); // FIX
-			column = cs.length - 1;
-		}
-		
 		int gix = findNearestInsertPoint(cs, column);
 
 		return fline.getCharIndex(gix);
@@ -303,6 +296,13 @@ public class ComplexWrapInfo
 	/** returns glyph index */
 	protected static int findNearestInsertPoint(int[] cs, int column)
 	{
+		if(column >= cs.length)
+		{
+			int gix = cs[cs.length - 1];
+			++gix;
+			return gix;
+		}
+		
 		int gix = cs[column];
 		if(gix >= 0)
 		{
