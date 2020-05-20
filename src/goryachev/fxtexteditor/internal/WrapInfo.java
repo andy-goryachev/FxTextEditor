@@ -44,15 +44,6 @@ public abstract class WrapInfo
 	public abstract int getCharIndexForColumn(int wrapRow, int column);
 	
 	/** 
-	 * returns a glyph index (>=0),
-	 * or a negative value that corresponds to either
-	 * -glyphIndex for a tab, or
-	 * a value that can be checked with GlyphIndex.isEOL(x) or GlyphIndex.isEOF(x)
-	 */
-	@Deprecated // replace with getCell() TODO
-	protected abstract int getGlyphIndex(int wrapRow, int column);
-	
-	/** 
 	 * returns all information about screen cell at the given wrap row and column.
 	 * this method should be sufficient for paintCell and getInsertPosition.
 	 * 

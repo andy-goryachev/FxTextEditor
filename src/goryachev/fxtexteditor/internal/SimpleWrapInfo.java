@@ -101,18 +101,6 @@ public class SimpleWrapInfo
 		return length;
 	}
 	
-	
-	protected int getGlyphIndex(int wrapRow, int column)
-	{
-		int ix = (wrapRow * width) + column;
-		if(ix < length)
-		{
-			return ix;
-		}
-		
-		return GlyphIndex.EOL_INDEX;
-	}
-
 
 	public int getGlyphCountAtRow(int wrapRow)
 	{

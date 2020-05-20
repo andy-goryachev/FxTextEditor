@@ -90,19 +90,6 @@ public class SingleRowWrapInfo
 	}
 	
 	
-	protected int getGlyphIndex(int wrapRow, int column)
-	{
-		checkRow(wrapRow);
-		
-		if(column >= length)
-		{
-			return GlyphIndex.EOL_INDEX;
-		}
-		
-		return column;
-	}
-	
-	
 	public int getGlyphCountAtRow(int wrapRow)
 	{
 		checkRow(wrapRow);

@@ -1017,7 +1017,7 @@ public class VFlow
 		boolean selected = SelectionHelper.isSelected(flags);
 		
 		// style
-		CellStyle style = row.getCellStyles(x);
+		CellStyle style = row.getCellStyles(cell);
 		if(style == null)
 		{
 			style = NO_STYLE;
@@ -1040,7 +1040,7 @@ public class VFlow
 		}
 		
 		// text
-		String text = row.getCellText(x);
+		String text = row.getCellText(cell);
 		if(text != null)
 		{
 			Color fg = style.getTextColor();

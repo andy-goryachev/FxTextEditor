@@ -79,38 +79,31 @@ public class ScreenRow
 	}
 	
 	
-	/** 
-	 * returns the text to be rendered in one cell
-	 */
-	@Deprecated // TODO use TextCell
-	public String getCellText(int col)
+	public String getCellText(TextCell cell)
 	{
-		int gix = wrap.getGlyphIndex(wrapRow, col);
-		if(gix < 0)
+		switch(cell.getGlyphType())
 		{
+		case EOF:
+		case EOL:
+		case TAB:
 			return null;
 		}
 		
+		int gix = cell.getGlyphIndex();
 		return fline.glyphInfo().getGlyphText(gix);
 	}
 	
 
-	@Deprecated // TODO use TextCell
-	public CellStyle getCellStyles(int col)
+	public CellStyle getCellStyles(TextCell cell)
 	{
-		int gix = wrap.getGlyphIndex(wrapRow, col);
-		if(gix < 0)
+		switch(cell.getGlyphType())
 		{
-			if(GlyphIndex.isTab(gix))
-			{
-				gix = GlyphIndex.fixGlypIndex(gix);
-			}
-			else
-			{
-				return null;
-			}
+		case EOF:
+		case EOL:
+			return null;
 		}
 		
+		int gix = cell.getGlyphIndex();
 		int charIndex = fline.glyphInfo().getCharIndex(gix);
 		return fline.getCellStyle(charIndex);
 	}

@@ -61,23 +61,6 @@ public class ComplexWrapInfo
 	}
 	
 	
-	protected int getGlyphIndex(int wrapRow, int column)
-	{
-		if(wrapRow >= cells.length)
-		{
-			return GlyphIndex.EOF_INDEX;
-		}
-		
-		int[] cs = cells[wrapRow];
-		if(column >= cs.length)
-		{
-			return GlyphIndex.EOL_INDEX;
-		}
-		
-		return cs[column];
-	}
-	
-	
 	public int findRowForGlyphIndex(int glyphIndex)
 	{
 		// TODO binary search would be better
