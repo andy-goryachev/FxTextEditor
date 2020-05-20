@@ -264,12 +264,6 @@ public class ScreenRow
 	}
 	
 	
-	public int getCharIndexForColumn(int column)
-	{
-		return wrap.getCharIndexForColumn(wrapRow, column);
-	}
-	
-	
 	protected String getGlyphText(int glyphIndex)
 	{
 		return fline.glyphInfo().getGlyphText(glyphIndex);
