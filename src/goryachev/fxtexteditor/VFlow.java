@@ -866,7 +866,7 @@ public class VFlow
 		}
 		
 		boolean wrap = isWrapLines();
-		boolean showLineNumbers = editor.isShowLineNumbers(); // TODO
+		boolean showLineNumbers = editor.isShowLineNumbers();
 		ScreenBuffer b = buffer();
 		
 		int xmax = columnCount;

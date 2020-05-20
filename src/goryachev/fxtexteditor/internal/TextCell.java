@@ -60,13 +60,12 @@ public class TextCell
 	 * returns a non-negative index of a glyph displayed in this cell,
 	 * or GlyphIndex.EOL_INDEX if the cell is beyond EOL,
 	 * or GlyphIndex.EOF_INDEX if the cell is beyond EOF.
-	 * 
-	 * TODO specify behavior exactly at EOL/EOF.
 	 */
 	public int getGlyphIndex()
 	{
 		return glyphIndex;
 	}
+	
 	
 	/** returns a char index where a caret must be positioned if a mouse click lands on this cell */
 	public int getInsertCharIndex()

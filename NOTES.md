@@ -1,11 +1,9 @@
 # BUGS
 
-- click and drag selection up beyond top line
+- lost horizontal scrolling after refactoring 
 
 
 # TODO
-
-- remove column to gplyph index mapping from ScreenRow
 
 - basic navigation
 - scroll to visible
