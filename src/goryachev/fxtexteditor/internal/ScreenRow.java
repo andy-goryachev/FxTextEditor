@@ -1,6 +1,5 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
-import goryachev.common.util.CKit;
 import goryachev.common.util.SB;
 import goryachev.fxtexteditor.CellStyle;
 import goryachev.fxtexteditor.GlyphType;
@@ -207,6 +206,12 @@ public class ScreenRow
 	}
 	
 	
+	/** returns the text cell at the specified column */
+	public TextCell getCell(int column)
+	{
+		return wrap.getCell(wrapRow, column);
+	}
+	
 	/** 
 	 * returns tab span (distance to the next glyph), or throws an Error if it is not a tab.
 	 * must always be preceded by a call to getGlyphTypeAtColumn() and a chech against GlyphType.TAB.
@@ -239,7 +244,7 @@ public class ScreenRow
 		{
 			if(GlyphIndex.isTab(gix))
 			{
-				gix = -gix;
+				gix = GlyphIndex.fixGlypIndex(gix);
 			}
 			else
 			{
@@ -262,12 +267,6 @@ public class ScreenRow
 	public int getCharIndexForColumn(int column)
 	{
 		return wrap.getCharIndexForColumn(wrapRow, column);
-	}
-	
-	
-	public boolean isLeadingTabColumn(int column)
-	{
-		return wrap.isLeadingTabColumn(wrapRow, column);
 	}
 	
 	

@@ -32,6 +32,8 @@ public class MoveUp
 		
 		int col = updatePhantomColumn(line, pos);
 		
+		// TODO use VFlow.navigate()
+		
 		if(isWrapLines())
 		{
 			int wrapRow = wr.getWrapRowForCharIndex(pos);

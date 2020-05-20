@@ -10,18 +10,14 @@ import goryachev.fxtexteditor.ITabPolicy;
  */
 public abstract class WrapInfo
 {
+	/** returns true if the current wrap info can be reused with the new screen configuration */
+	public abstract boolean isCompatible(ITabPolicy tabPolicy, int width, boolean wrapLines);
+	
 	/** returns the number of screen rows occupied by the flow line */
 	public abstract int getWrapRowCount();
 	
-	/** returns glyph index for wrapped row */
-	@Deprecated // TODO may not return the right index (if in a tab)
-	public abstract int getGlyphIndexForRow_DELETE(int row);
-	
 	/** finds wrapped row for the given glyph index */
 	public abstract int findRowForGlyphIndex(int glyphIndex);
-	
-	/** returns true if the current wrap info can be reused with the new screen configuration */
-	public abstract boolean isCompatible(ITabPolicy tabPolicy, int width, boolean wrapLines);
 	
 	/** returns the wrapped row index for the given glyph index */
 	public abstract int getWrapRowForGlyphIndex(int glyphIndex);
@@ -32,22 +28,20 @@ public abstract class WrapInfo
 	/** returns the screen column for the given character */
 	public abstract int getColumnForCharIndex(int charIndex);
 
+	/** returns the number of text glyphs at the specific wrap row */
+	public abstract int getGlyphCountAtRow(int wrapRow);
+	
+	/** returns glyph index for wrapped row */
+	@Deprecated // FIX may not return the right index (if in a tab)
+	public abstract int getGlyphIndexForRow_DELETE(int row);
+	
 	/** 
 	 * returns the character index for the given column and wrap row.
 	 * returns the nearest insert position if inside a tab:
 	 * a|--tab--|b
 	 */
+	@Deprecated // replace with getCell() TODO
 	public abstract int getCharIndexForColumn(int wrapRow, int column);
-	
-	/** 
-	 * returns true if and onl if the column points to the leading edge of the tab:
-	 * a--tab--b
-	 * nYnnnnnnn
-	 */
-	public abstract boolean isLeadingTabColumn(int wrapRow, int column);
-	
-	/** returns the number of text glyphs at the specific wrap row */
-	public abstract int getGlyphCountAtRow(int wrapRow);
 	
 	/** 
 	 * returns a glyph index (>=0),
@@ -55,11 +49,20 @@ public abstract class WrapInfo
 	 * -glyphIndex for a tab, or
 	 * a value that can be checked with GlyphIndex.isEOL(x) or GlyphIndex.isEOF(x)
 	 */
-	protected abstract int getGlyphIndex(int row, int column);
+	@Deprecated // replace with getCell() TODO
+	protected abstract int getGlyphIndex(int wrapRow, int column);
+	
+	/** 
+	 * returns all information about screen cell at the given wrap row and column.
+	 * this method should be sufficient for paintCell and getInsertPosition.
+	 * 
+	 * TODO for performance reasons, we may pass a pointer to a statically allocated TextCell instance.
+	 */
+	public abstract TextCell getCell(int wrapRow, int column);
 	
 	//
 	
-	public static final WrapInfo EMPTY = new EmptyWrapInfo();
+	public static final WrapInfo EMPTY = new SingleRowWrapInfo(0);
 	
 	
 	protected WrapInfo()

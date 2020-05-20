@@ -35,6 +35,14 @@ public class SelectionHelper
 			return 0;
 		}
 		
+		// new API
+		
+		TextCell cell = row.getCell(x);
+		
+		int off = cell.getCaretCharIndex();
+		int selOff = cell.getLeadingEdgeCharIndex();
+		
+		/*
 		int off;
 		int selOff = -1; // TODO
 
@@ -76,6 +84,9 @@ public class SelectionHelper
 		default:
 			throw new Error("?" + t);
 		}
+		*/
+		
+		// flags
 		
 		int flags = 0;
 		
@@ -90,7 +101,7 @@ public class SelectionHelper
 					if(!vflow.isWrapColumn(x))
 					{
 						flags |= CARET;
-//						D.print(x, off); // FIX
+						D.print(x, off); // FIX
 					}
 				}
 			}

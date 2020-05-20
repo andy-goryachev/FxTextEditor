@@ -2,10 +2,10 @@
 package goryachev.fxtexteditor.internal;
 import goryachev.common.log.Log;
 import goryachev.common.util.CList;
+import goryachev.common.util.D;
 import goryachev.common.util.ElasticIntArray;
 import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITabPolicy;
-import java.util.Arrays;
 
 
 /**
@@ -85,6 +85,7 @@ public class ComplexWrapInfo
 		for(int i=0; i<sz; i++)
 		{
 			int ix = getGlyphIndexForRow_DELETE(i);
+			// FIX handle tabs
 			if(ix > glyphIndex)
 			{
 				return i - 1;
@@ -171,6 +172,8 @@ public class ComplexWrapInfo
 		
 		if(column >= cs.length)
 		{
+			// FIX incorrect: this is either EOL (but we need char index)
+			D.print("TODO EOL"); // FIX
 			column = cs.length - 1;
 		}
 		
@@ -180,27 +183,129 @@ public class ComplexWrapInfo
 	}
 	
 	
-	public boolean isLeadingTabColumn(int wrapRow, int column)
+	public TextCell getCell(int wrapRow, int column)
 	{
-		int[] cs = cells[wrapRow];
-		int gix = cs[column];
-		if(GlyphIndex.isTab(gix))
+		if(wrapRow >= cells.length)
 		{
-			if(column == 0)
+			throw new Error("wrapRow=" + wrapRow);
+		}
+		
+		int[] cs = cells[wrapRow];
+
+		GlyphType type;
+		int caretIndex;
+		int leadingCharIndex;
+		int insertCharIndex;
+		int glyphIndex;
+		
+		if(column < cs.length)
+		{
+			int gix = cs[column];
+			if(gix < 0)
 			{
-				return true;
+				type = GlyphType.TAB;
+				int gx = GlyphIndex.fixGlypIndex(gix);
+				
+				int ix = fline.getCharIndex(gx);
+				int gi = backtrackToLeadingTabEdge(cs, column, gx);
+				int leadIndex = fline.getCharIndex(gi);
+				boolean leading = isLeading(cs, column, gix);
+				int caret = leading ? ix : -1;
+				
+				// delaying lead/insert position computations to speed up painting
+				// as these may not be always required
+				return new TextCell(type, caret, ix, ix, gx)
+				{
+					public int getLeadingEdgeCharIndex()
+					{
+						return leadIndex;
+					}
+					
+					
+					public int getInsertCharIndex()
+					{
+						int gi = findNearestInsertPoint(cs, column);
+						return fline.getCharIndex(gi);
+					}
+				};
 			}
-			else if(cs[column - 1] != gix)
+			else
 			{
-				return true;
+				type = GlyphType.REG;
+				int ix = fline.getCharIndex(gix);
+				
+				caretIndex = ix;
+				leadingCharIndex = ix;
+				insertCharIndex = ix;
+				glyphIndex = ix;
 			}
 		}
-		return false;
+		else if(column == cs.length)
+		{
+			type = GlyphType.EOL;
+			// last+1
+			int last = cs[cs.length - 1];
+			int ix = fline.getCharIndex(last) + 1;
+			caretIndex = ix;
+			leadingCharIndex = ix;
+			insertCharIndex = ix;
+			glyphIndex = ix;
+		}
+		else
+		{
+			type = GlyphType.EOL;
+			
+			// last+1
+			int last = cs[cs.length - 1];
+			int ix = fline.getCharIndex(last) + 1;
+			
+			caretIndex = -1;
+			leadingCharIndex = -1;
+			insertCharIndex = ix;
+			glyphIndex = -1;
+		}
+		
+		return new TextCell(type, caretIndex, leadingCharIndex, insertCharIndex, glyphIndex);
 	}
 	
 	
-	// TODO this might belong to WrapInfo
-	protected int findNearestInsertPoint(int[] cs, int column)
+	/** returns true of glyph at index ix is the leading tab index */
+	protected static boolean isLeading(int[] cs, int ix, int gix)
+	{
+		if(ix == 0)
+		{
+			return true;
+		}
+		return (cs[ix - 1] != gix);
+	}
+
+	
+	/** backtracks from the cell at index ix (value gix) to find the leading egde.  returns glyph index */
+	protected static int backtrackToLeadingTabEdge(int[] cs, int ix, int gix)
+	{
+		for(int i=ix; i>=0; --i)
+		{
+			int j = i - 1;
+			if(j < 0)
+			{
+				int v = cs[0];
+				return GlyphIndex.fixGlypIndex(v);
+			}
+			
+			int gv = cs[j];
+			if(gv != gix)
+			{
+				int v = cs[i];
+				return GlyphIndex.fixGlypIndex(v);
+			}
+		}
+		
+		throw new Error();
+	}
+	
+	
+	/** returns glyph index */
+	protected static int findNearestInsertPoint(int[] cs, int column)
 	{
 		int gix = cs[column];
 		if(gix >= 0)
@@ -215,29 +320,33 @@ public class ComplexWrapInfo
 			int ix = column + i;
 			if(ix >= cs.length)
 			{
-				return cs.length;
+				gix = cs[cs.length - 1];
+				return GlyphIndex.fixGlypIndex(gix);
 			}
 			else if(cs[ix] != gix)
 			{
-				return GlyphIndex.fixGlypIndex(cs[ix]);
+				gix = cs[ix];
+				return GlyphIndex.fixGlypIndex(gix);
 			}
 			
 			// step to the left
 			ix = column - i;
 			if(ix <= 0)
 			{
-				return GlyphIndex.fixGlypIndex(cs[0]);
+				gix = cs[0];
+				return GlyphIndex.fixGlypIndex(gix);
 			}
 			else if(cs[ix] != gix)
 			{
-				return GlyphIndex.fixGlypIndex(cs[ix + 1]);
+				gix = cs[ix] + 1;
+				return GlyphIndex.fixGlypIndex(gix);
 			}
 		}
 		
 		// should never get here
 		throw new Error();
 	}
-
+	
 
 	public static ComplexWrapInfo createComplexWrapInfo(FlowLine fline, ITabPolicy tabPolicy, int width, boolean wrapLines)
 	{

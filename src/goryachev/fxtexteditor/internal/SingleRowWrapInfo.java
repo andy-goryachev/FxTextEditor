@@ -1,5 +1,6 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITabPolicy;
 
 
@@ -110,8 +111,29 @@ public class SingleRowWrapInfo
 	}
 
 
-	public boolean isLeadingTabColumn(int wrapRow, int column)
+	public TextCell getCell(int wrapRow, int column)
 	{
-		return false;
+		checkRow(wrapRow);
+		
+		GlyphType type;
+		int ix;
+		
+		if(column < length)
+		{
+			type = GlyphType.REG;
+			ix = column;
+		}
+		else if(column == length)
+		{
+			type = GlyphType.EOL;
+			ix = column;
+		}
+		else
+		{
+			type = GlyphType.EOL;
+			ix = -1;
+		}
+		
+		return new TextCell(type, ix, ix, ix, ix);
 	}
 }

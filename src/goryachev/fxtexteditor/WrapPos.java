@@ -1,5 +1,6 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
+import goryachev.fxtexteditor.internal.TextCell;
 import goryachev.fxtexteditor.internal.WrapInfo;
 
 
@@ -52,6 +53,7 @@ public class WrapPos
 	/** returns insert position (char index) for the given column */  
 	public int getInsertPosition(int column)
 	{
-		return wrap.getCharIndexForColumn(row, column);
+		TextCell cell = wrap.getCell(row, column);
+		return cell.getInsertCharIndex();
 	}
 }
