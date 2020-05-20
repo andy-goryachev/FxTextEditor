@@ -48,13 +48,14 @@ public class StatusBar
 				
 				FxFormatter fmt = Formatters.getIntegerFormatter();
 				
-				// TODO glyph index?
 				Marker m = seg.getCaret();
 				
 				return 
-					"line: " +
-					fmt.format(m.getLine() + 1) + 
-					", char: " + 
+					"line:" +
+					fmt.format(m.getLine() + 1) +
+					"  column:" +
+					fmt.format(ed.getColumnAt(m) + 1) +
+					"  char:" + 
 					fmt.format(m.getCharIndex());
 			},
 			ed.selectionSegmentProperty()

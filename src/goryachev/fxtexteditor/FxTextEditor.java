@@ -778,4 +778,12 @@ public class FxTextEditor
 	{
 		return backgroundColorProperty;
 	}
+	
+	
+	public int getColumnAt(Marker m)
+	{
+		int line = m.getLine();
+		int pos = m.getCharIndex();
+		return vflow.getColumnAt(line, pos);
+	}
 }

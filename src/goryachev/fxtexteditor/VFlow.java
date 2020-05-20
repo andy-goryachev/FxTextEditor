@@ -1328,14 +1328,14 @@ public class VFlow
 		int col = getPhantomColumn();
 		if(col < 0)
 		{
-			col = toPhantomColumn(line, charIndex);
+			col = getColumnAt(line, charIndex);
 			setPhantomColumn(col);
 		}
 		return col;
 	}
 	
 	
-	protected int toPhantomColumn(int line, int charIndex)
+	public int getColumnAt(int line, int charIndex)
 	{
 		WrapInfo wr = getWrapInfo(line);
 		return wr.getColumnForCharIndex(charIndex);
@@ -1354,7 +1354,7 @@ public class VFlow
 		Marker m = editor.getSelection().getCaret();
 		int line = m.getLine();
 		int charIndex = m.getCharIndex();
-		int col = toPhantomColumn(line, charIndex);
+		int col = getColumnAt(line, charIndex);
 		setPhantomColumn(col);
 	}
 	
@@ -1383,9 +1383,14 @@ public class VFlow
 					row -= steps;
 					break;
 				}
+				else if(line == 0)
+				{
+					// TODO
+					break;
+				}
 				else
 				{
-					steps -= row;
+					steps -= (row + 1);
 					line--;
 					wr = getWrapInfo(line);
 					row = wr.getWrapRowCount() - 1;

@@ -3,8 +3,7 @@ package goryachev.fxtexteditor.op;
 import goryachev.common.log.Log;
 import goryachev.fxtexteditor.Actions;
 import goryachev.fxtexteditor.Marker;
-import goryachev.fxtexteditor.internal.FlowLine;
-import goryachev.fxtexteditor.internal.GlyphIndex;
+import goryachev.fxtexteditor.WrapPos;
 import goryachev.fxtexteditor.internal.NavigationAction;
 import goryachev.fxtexteditor.internal.WrapInfo;
 
@@ -28,46 +27,21 @@ public class MoveUp
 	{
 		int pos = m.getCharIndex();
 		int line = m.getLine();
-		WrapInfo wr = wrapInfo(line);
-		
 		int col = updatePhantomColumn(line, pos);
 		
-		// TODO use VFlow.navigate()
+		WrapInfo wr = wrapInfo(line);
+		int wrapRow = wr.getWrapRowForCharIndex(pos);
 		
-		if(isWrapLines())
-		{
-			int wrapRow = wr.getWrapRowForCharIndex(pos);
-			if(wrapRow > 0)
-			{
-				pos = wr.getCharIndexForColumn(wrapRow - 1, col);
-			}
-			else
-			{
-				if(line == 0)
-				{
-					return null;
-				}
-				
-				--line;
-				wr = wrapInfo(line);
-				wrapRow = wr.getWrapRowCount() - 1;
-				pos = wr.getCharIndexForColumn(wrapRow, col);
-			}
-		}
-		else
-		{
-			if(line == 0)
-			{
-				return null;
-			}
-			
-			--line;
-			wr = wrapInfo(line);
-			pos = wr.getCharIndexForColumn(0, col);
-		}
-
+		WrapPos wp = vflow().navigate(line, wrapRow, -1, true);
+		
+		int newLine = wp.getLine();
+		int newWrapRow = wp.getRow();
+		
+		wr = wrapInfo(newLine);
+		int newPos = wr.getCharIndexForColumn(newWrapRow, col);
+		
 		log.debug("col=%d line=%d pos=%d", col, line, pos);
 		
-		return editor().newMarker(line, pos);
+		return editor().newMarker(newLine, newPos);
 	}
 }
