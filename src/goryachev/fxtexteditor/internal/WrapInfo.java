@@ -72,7 +72,6 @@ public abstract class WrapInfo
 	
 	public static WrapInfo create(FlowLine fline, ITabPolicy tabPolicy, int width, boolean wrapLines)
 	{
-		// TODO move to caller?
 		int lineIndex = fline.getModelIndex();
 		if(lineIndex < 0)
 		{

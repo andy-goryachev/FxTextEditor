@@ -321,12 +321,12 @@ public class ComplexWrapInfo
 			if(ix >= cs.length)
 			{
 				gix = cs[cs.length - 1];
-				return GlyphIndex.fixGlypIndex(gix);
+				break;
 			}
 			else if(cs[ix] != gix)
 			{
 				gix = cs[ix];
-				return GlyphIndex.fixGlypIndex(gix);
+				break;
 			}
 			
 			// step to the left
@@ -334,17 +334,16 @@ public class ComplexWrapInfo
 			if(ix <= 0)
 			{
 				gix = cs[0];
-				return GlyphIndex.fixGlypIndex(gix);
+				break;
 			}
 			else if(cs[ix] != gix)
 			{
-				gix = cs[ix] + 1;
-				return GlyphIndex.fixGlypIndex(gix);
+				gix = cs[ix + 1];
+				break;
 			}
 		}
 		
-		// should never get here
-		throw new Error();
+		return GlyphIndex.fixGlypIndex(gix);
 	}
 	
 

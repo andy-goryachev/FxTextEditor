@@ -655,7 +655,7 @@ public class VFlow
 			int line = wp.getLine();
 		
 			pos = new TextPos(line, charIndex);
-			D.print(pos); // FIX
+			D.print("col=", x, "pos=", pos); // FIX
 		}
 		
 		log.debug(pos);
