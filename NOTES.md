@@ -1,6 +1,5 @@
 # BUGS
 
-- lost horizontal scrolling after refactoring 
 
 
 # TODO
