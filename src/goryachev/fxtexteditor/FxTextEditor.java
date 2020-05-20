@@ -119,7 +119,6 @@ public class FxTextEditor
 		
 		// TODO
 //		FX.onChange(vflow::updateBlinkRate, true, blinkRateProperty());
-		FX.onChange(this::handleWrapChange, wrapLinesProperty);
 		
 		initInputHandler();
 		setFocusTraversable(true);
@@ -341,13 +340,6 @@ public class FxTextEditor
 	public ReadOnlyObjectProperty<FxTextEditorModel> modelProperty()
 	{
 		return modelProperty.getReadOnlyProperty();
-	}
-	
-	
-	protected void handleWrapChange()
-	{
-		requestLayout();
-		vflow.invalidate();
 	}
 	
 	

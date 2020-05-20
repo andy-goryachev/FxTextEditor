@@ -48,12 +48,4 @@ public class WrapPos
 			":" + row +
 			"]";
 	}
-
-
-	/** returns insert position (char index) for the given column */  
-	public int getInsertPosition(int column)
-	{
-		TextCell cell = wrap.getCell(row, column);
-		return cell.getInsertCharIndex();
-	}
 }

@@ -101,6 +101,7 @@ public class VFlow
 		FX.onChange(this::updateModel, ed.modelProperty());
 		FX.onChange(this::updateLineNumbers, ed.showLineNumbersProperty, ed.lineNumberFormatterProperty, ed.modelProperty);
 		FX.onChange(this::updateFont, true, ed.fontProperty);
+		FX.onChange(this::handleWrapChange, ed.wrapLinesProperty);
 		
 		// TODO clip rect
 		
@@ -576,6 +577,22 @@ public class VFlow
 	}
 	
 	
+	protected void handleWrapChange()
+	{
+		if(editor.isWrapLines())
+		{
+			topCellIndex = 0;
+		}
+		else
+		{
+			editor.getHorizontalScrollBar().setValue(0);
+		}
+		
+		requestLayout();
+		invalidate();
+	}
+	
+	
 	public void handleSelectionSegmentUpdate(SelectionSegment prev, SelectionSegment sel)
 	{
 		// TODO repaint only the damaged area
@@ -652,7 +669,9 @@ public class VFlow
 		}
 		else
 		{
-			int charIndex = wp.getInsertPosition(x);
+			TextCell cell = wp.getWrapInfo().getCell(wp.getRow(), x + topCellIndex);
+			int charIndex = cell.getInsertCharIndex();
+			
 			int line = wp.getLine();
 			if(line > getModelLineCount())
 			{
@@ -889,7 +908,7 @@ public class VFlow
 			
 			for(int x=0; x<xmax; x++)
 			{
-				cell = row.getCell(x);
+				cell = row.getCell(x + topCellIndex);
 				GlyphType t = cell.getGlyphType();
 				switch(t)
 				{
