@@ -1349,6 +1349,13 @@ public class VFlow
 	}
 	
 	
+	public void setPhantomColumn(int line, int charIndex)
+	{
+		int col = getColumnAt(line, charIndex);
+		setPhantomColumn(col);
+	}
+	
+	
 	public void setPhantomColumnFromCursor()
 	{
 		Marker m = editor.getSelection().getCaret();

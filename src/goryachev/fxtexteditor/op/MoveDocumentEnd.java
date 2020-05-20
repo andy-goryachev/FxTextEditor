@@ -24,6 +24,8 @@ public class MoveDocumentEnd
 		FlowLine fline = vflow().getTextLine(line);
 		int pos = fline.getTextLength();
 		
+		setPhantomColumn(line, pos);
+		
 		return editor().newMarker(line, pos);
 	}
 }

@@ -47,7 +47,7 @@ public class MoveLeft
 		
 		pos = fline.getCharIndex(gix);
 
-		// TODO set phantom position (wrap/no wrap)
+		setPhantomColumn(line, pos);
 		
 		return editor().newMarker(line, pos);
 	}

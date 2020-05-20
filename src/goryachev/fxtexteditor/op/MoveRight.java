@@ -47,6 +47,8 @@ public class MoveRight
 		
 		pos = fline.getCharIndex(gix);
 		
+		setPhantomColumn(line, pos);
+		
 		return editor().newMarker(line, pos);
 	}
 }

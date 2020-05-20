@@ -46,6 +46,12 @@ public abstract class NavigationAction
 	}
 	
 	
+	protected void setPhantomColumn(int line, int charIndex)
+	{
+		vflow().setPhantomColumn(line, charIndex);
+	}
+	
+	
 	/** returns the leftmost display cell index (glyph index) */
 	protected int getTopCellIndex()
 	{
