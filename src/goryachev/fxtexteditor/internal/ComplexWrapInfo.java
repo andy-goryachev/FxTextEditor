@@ -44,20 +44,10 @@ public class ComplexWrapInfo
 	}
 
 
-	public int getGlyphIndexForRow_DELETE(int row)
+	public int getGlyphIndexForRow(int row)
 	{
-		try
-		{
-			// TODO check
-			int[] cs = cells[row];
-			return cs[0];
-		}
-		catch(Exception e)
-		{
-			// FIX
-			Log.err(e); // FIX
-			return 0;
-		}
+		int[] cs = cells[row];
+		return GlyphIndex.fixGlypIndex(cs[0]);
 	}
 	
 	
@@ -67,8 +57,7 @@ public class ComplexWrapInfo
 		int sz = getWrapRowCount();
 		for(int i=0; i<sz; i++)
 		{
-			int ix = getGlyphIndexForRow_DELETE(i);
-			// FIX handle tabs
+			int ix = getGlyphIndexForRow(i);
 			if(ix > glyphIndex)
 			{
 				return i - 1;

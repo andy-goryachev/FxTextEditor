@@ -52,7 +52,7 @@ public class WrapAssist
 				}
 				else
 				{
-					pos = wr.getGlyphIndexForRow_DELETE(row - toSkip);
+					pos = wr.getGlyphIndexForRow(row - toSkip);
 					break;
 				}
 			}
@@ -74,7 +74,7 @@ public class WrapAssist
 				}
 				else
 				{
-					pos = wr.getGlyphIndexForRow_DELETE(toSkip);
+					pos = wr.getGlyphIndexForRow(toSkip);
 					break;
 				}
 			}

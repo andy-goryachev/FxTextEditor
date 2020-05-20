@@ -1,6 +1,5 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
-import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITabPolicy;
 
 
@@ -32,15 +31,13 @@ public abstract class WrapInfo
 	public abstract int getGlyphCountAtRow(int wrapRow);
 	
 	/** returns glyph index for wrapped row */
-	@Deprecated // FIX may not return the right index (if in a tab)
-	public abstract int getGlyphIndexForRow_DELETE(int row);
+	public abstract int getGlyphIndexForRow(int row);
 	
 	/** 
 	 * returns the character index for the given column and wrap row.
 	 * returns the nearest insert position if inside a tab:
 	 * a|--tab--|b
 	 */
-	@Deprecated // replace with getCell() TODO
 	public abstract int getCharIndexForColumn(int wrapRow, int column);
 	
 	/** 

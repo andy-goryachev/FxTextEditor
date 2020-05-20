@@ -814,7 +814,7 @@ public class VFlow
 				}
 				else
 				{
-					startGlyphIndex = wr.getGlyphIndexForRow_DELETE(row);
+					startGlyphIndex = wr.getGlyphIndexForRow(row);
 				}
 				
 				int lineNumber = (line <= lineCount) ? line : -1;

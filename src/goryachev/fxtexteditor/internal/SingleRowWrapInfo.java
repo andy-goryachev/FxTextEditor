@@ -27,7 +27,7 @@ public class SingleRowWrapInfo
 	}
 
 
-	public int getGlyphIndexForRow_DELETE(int row)
+	public int getGlyphIndexForRow(int row)
 	{
 		return 0;
 	}

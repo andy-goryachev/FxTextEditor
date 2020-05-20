@@ -112,8 +112,7 @@ public class VerticalScrollHelper
 				}
 				else
 				{
-					//  FIX handle tabs
-					gix = wr.getGlyphIndexForRow_DELETE(rowsToSkip);
+					gix = wr.getGlyphIndexForRow(rowsToSkip);
 					break;
 				}
 			}

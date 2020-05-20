@@ -33,7 +33,7 @@ public class SimpleWrapInfo
 	}
 
 
-	public int getGlyphIndexForRow_DELETE(int row)
+	public int getGlyphIndexForRow(int row)
 	{
 		return row * width;
 	}
