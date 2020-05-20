@@ -73,4 +73,11 @@ public class TextCell
 	{
 		return insertCharIndex;
 	}
+	
+	
+	public int getTabSpan()
+	{
+		// only in a Tab
+		throw new Error();
+	}
 }

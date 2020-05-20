@@ -199,26 +199,10 @@ public class ScreenRow
 	}
 	
 	
-	/** returns the type of a glyph at the specified column */
-	public GlyphType getGlyphTypeAtColumn(int column)
-	{
-		return wrap.getGlyphType(wrapRow, column);
-	}
-	
-	
 	/** returns the text cell at the specified column */
 	public TextCell getCell(int column)
 	{
 		return wrap.getCell(wrapRow, column);
-	}
-	
-	/** 
-	 * returns tab span (distance to the next glyph), or throws an Error if it is not a tab.
-	 * must always be preceded by a call to getGlyphTypeAtColumn() and a chech against GlyphType.TAB.
-	 */
-	public int getTabSpan(int column)
-	{
-		return wrap.getTabSpan(wrapRow, column);
 	}
 	
 	

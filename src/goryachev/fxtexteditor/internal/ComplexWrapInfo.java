@@ -227,6 +227,12 @@ public class ComplexWrapInfo
 						int gi = findNearestInsertPoint(cs, column);
 						return fline.getCharIndex(gi);
 					}
+					
+					
+					public int getTabSpan()
+					{
+						return computeTabSpan(cs, column);
+					}
 				};
 			}
 			else
@@ -266,6 +272,24 @@ public class ComplexWrapInfo
 		}
 		
 		return new TextCell(type, caretIndex, leadingCharIndex, insertCharIndex, glyphIndex);
+	}
+	
+	
+	protected static int computeTabSpan(int[] cs, int ix)
+	{
+		int span = 1;
+		int val = cs[ix];
+		for(int i=ix+1; i<cs.length; i++)
+		{
+			if(cs[i] != val)
+			{
+				return span; 
+			}
+			
+			span++;
+		}
+		
+		return span;
 	}
 	
 	

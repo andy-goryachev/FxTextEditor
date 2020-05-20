@@ -13,6 +13,7 @@ import goryachev.fxtexteditor.internal.GlyphIndex;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenRow;
 import goryachev.fxtexteditor.internal.SelectionHelper;
+import goryachev.fxtexteditor.internal.TextCell;
 import goryachev.fxtexteditor.internal.VerticalScrollHelper;
 import goryachev.fxtexteditor.internal.WrapAssist;
 import goryachev.fxtexteditor.internal.WrapInfo;
@@ -873,6 +874,8 @@ public class VFlow
 		{
 			xmax++;
 		}
+
+		TextCell cell = null;
 		int ymax = rowCount + 1;
 		
 		for(int y=0; y<ymax; y++)
@@ -886,23 +889,24 @@ public class VFlow
 			
 			for(int x=0; x<xmax; x++)
 			{
-				GlyphType t = row.getGlyphTypeAtColumn(x);
+				cell = row.getCell(x);
+				GlyphType t = cell.getGlyphType();
 				switch(t)
 				{
 				case EOF:
-					paintBlank(row, x, y, xmax - x);
+					paintBlank(row, cell, x, y, xmax - x);
 					break;
 				case EOL:
-					paintBlank(row, x, y, xmax - x);
+					paintBlank(row, cell, x, y, xmax - x);
 					x = xmax;
 					break;
 				case TAB:
-					int w = row.getTabSpan(x);
-					paintBlank(row, x, y, w);
+					int w = cell.getTabSpan();
+					paintBlank(row, cell, x, y, w);
 					x += (w - 1);
 					break;
 				case REG:
-					paintCell(row, x, y);
+					paintCell(row, cell, x, y);
 					break;
 				default:
 					throw new Error("?" + t);
@@ -911,7 +915,7 @@ public class VFlow
 			
 			if(wrap)
 			{
-				paintBlank(row, xmax, y, 1);
+				paintBlank(row, cell, xmax, y, 1);
 			}
 		}
 	}
@@ -968,7 +972,7 @@ public class VFlow
 	}
 	
 	
-	protected void paintBlank(ScreenRow row, int x, int y, int count)
+	protected void paintBlank(ScreenRow row, TextCell cell, int x, int y, int count)
 	{
 		TextMetrics tm = textMetrics();
 		double ch = tm.cellHeight;
@@ -978,7 +982,8 @@ public class VFlow
 		
 		cw *= count;
 		
-		int flags = SelectionHelper.getFlags(this, editor.selector.getSelectedSegment(), row, x);
+		int line = row.getLineNumber();
+		int flags = SelectionHelper.getFlags(this, editor.selector.getSelectedSegment(), line, cell, x);
 		boolean caretLine = SelectionHelper.isCaretLine(flags);
 		boolean caret = paintCaret.get() ? SelectionHelper.isCaret(flags) : false;
 		boolean selected = SelectionHelper.isSelected(flags);
@@ -997,7 +1002,7 @@ public class VFlow
 	}
 	
 
-	protected void paintCell(ScreenRow row, int x, int y)
+	protected void paintCell(ScreenRow row, TextCell cell, int x, int y)
 	{
 		TextMetrics tm = textMetrics();
 		double ch = tm.cellHeight;
@@ -1005,7 +1010,8 @@ public class VFlow
 		double cx = x * cw + lineNumbersBarWidth;
 		double cy = y * ch;
 		
-		int flags = SelectionHelper.getFlags(this, editor.selector.getSelectedSegment(), row, x);
+		int line = row.getLineNumber();
+		int flags = SelectionHelper.getFlags(this, editor.selector.getSelectedSegment(), line, cell, x);
 		boolean caretLine = SelectionHelper.isCaretLine(flags);
 		boolean caret = SelectionHelper.isCaret(flags);
 		boolean selected = SelectionHelper.isSelected(flags);

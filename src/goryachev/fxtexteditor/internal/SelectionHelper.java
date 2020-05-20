@@ -14,28 +14,19 @@ public class SelectionHelper
 	private static final int SELECTED = 4;
 	
 	
-	public static int getFlags(VFlow vflow, SelectionSegment seg, ScreenRow row, int x)
+	public static int getFlags(VFlow vflow, SelectionSegment seg, int line, TextCell cell, int x)
 	{
 		if(seg == null)
 		{
 			return 0;
 		}
 		
-		if(row == null)
-		{
-			// except when last line
-			return 0;
-		}
-		
-		int line = row.getLineNumber();
 		if(line < 0)
 		{
 			return 0;
 		}
 		
 		// new API
-		
-		TextCell cell = row.getCell(x);
 		
 		int off = cell.getCaretCharIndex();
 		int selOff = cell.getLeadingEdgeCharIndex();
