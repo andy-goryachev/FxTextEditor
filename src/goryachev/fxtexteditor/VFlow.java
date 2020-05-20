@@ -653,9 +653,12 @@ public class VFlow
 		{
 			int charIndex = wp.getInsertPosition(x);
 			int line = wp.getLine();
+			if(line > getModelLineCount())
+			{
+				line = getModelLineCount();
+			}
 		
 			pos = new TextPos(line, charIndex);
-			D.print("col=", x, "pos=", pos); // FIX
 		}
 		
 		log.debug(pos);
