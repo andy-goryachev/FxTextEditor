@@ -81,6 +81,7 @@ public class VFlow
 	private boolean repaintRequested;
 	protected final FlowLineCache cache;
 	private int phantomColumn = -1;
+	protected boolean handleScrollEvents = true;
 	private static final CellStyle NO_STYLE = new CellStyle();
 	
 	
@@ -102,6 +103,9 @@ public class VFlow
 		FX.onChange(this::updateLineNumbers, ed.showLineNumbersProperty, ed.lineNumberFormatterProperty, ed.modelProperty);
 		FX.onChange(this::updateFont, true, ed.fontProperty);
 		FX.onChange(this::handleWrapChange, ed.wrapLinesProperty);
+		
+		ed.getVerticalScrollBar().valueProperty().addListener((s,p,c) -> handleVerticalScroll(c.doubleValue()));
+		ed.getHorizontalScrollBar().valueProperty().addListener((s,p,c) -> handleHorizontalScroll(c.doubleValue()));
 		
 		// TODO clip rect
 		
@@ -278,6 +282,18 @@ public class VFlow
 
 		updateLineNumbers();
 		invalidate();
+	}
+	
+	
+	protected void setHandleScrollEvents(boolean on)
+	{
+		handleScrollEvents = on;
+	}
+	
+	
+	protected boolean isHandleScrollEvents()
+	{
+		return handleScrollEvents;
 	}
 	
 	
@@ -482,14 +498,14 @@ public class VFlow
 				v = topCellIndex / (double)max;
 			}
 			
-			editor.setHandleScrollEvents(false);
+			setHandleScrollEvents(false);
 			try
 			{
 				editor.getHorizontalScrollBar().setValue(v);
 			}
 			finally
 			{
-				editor.setHandleScrollEvents(true);
+				setHandleScrollEvents(true);
 			}
 		}
 	}
@@ -597,6 +613,34 @@ public class VFlow
 	{
 		// TODO repaint only the damaged area
 		repaint();
+	}
+	
+	
+	protected void handleHorizontalScroll(double val)
+	{
+		if(handleScrollEvents)
+		{
+			if(!isWrapLines())
+			{
+				int max = getMaxCellCount() + 1; // allow for 1 blank space at the end
+				int vis = getMaxColumnCount();
+				int fr = Math.max(0, max - vis);
+				
+				int off = CKit.round(fr * val);
+				setTopCellIndex(off);
+			}
+		}
+	}
+	
+	
+	protected void handleVerticalScroll(double val)
+	{
+		if(handleScrollEvents)
+		{
+			log.debug("val={}", val);
+			
+			verticalScroll(val);
+		}
 	}
 	
 	

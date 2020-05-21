@@ -62,7 +62,6 @@ public class FxTextEditor
 	protected final VFlow vflow;
 	protected final ScrollBar vscroll;
 	protected final ScrollBar hscroll;
-	protected boolean handleScrollEvents = true;
 	protected final ChangeListener<LoadStatus> loadStatusListener;
 	protected BiConsumer<FxTextEditor,Marker> wordSelector = new SimpleWordSelector();
 
@@ -94,15 +93,12 @@ public class FxTextEditor
 		
 		selector = createSelectionController();
 		
-		vflow = new VFlow(this);
-		
 		vscroll = createVScrollBar();
 		vscroll.setOrientation(Orientation.VERTICAL);
 		vscroll.setManaged(true);
 		vscroll.setMin(0.0);
 		vscroll.setMax(1.0);
 		vscroll.addEventFilter(ScrollEvent.ANY, (ev) -> ev.consume());
-		vscroll.valueProperty().addListener((s,p,c) -> handleVerticalScroll(c.doubleValue()));
 		
 		hscroll = createHScrollBar();
 		hscroll.setOrientation(Orientation.HORIZONTAL);
@@ -111,7 +107,8 @@ public class FxTextEditor
 		hscroll.setMax(1.0);
 		hscroll.addEventFilter(ScrollEvent.ANY, (ev) -> ev.consume());
 		hscroll.visibleProperty().bind(wrapLinesProperty.not());
-		hscroll.valueProperty().addListener((s,p,c) -> handleHorizontalScroll(c.doubleValue()));
+		
+		vflow = new VFlow(this);
 		
 		getChildren().addAll(vflow, vscroll, hscroll);
 		
@@ -304,18 +301,6 @@ public class FxTextEditor
 				vs.setPainer(null);
 			}
 		}
-	}
-	
-	
-	protected void setHandleScrollEvents(boolean on)
-	{
-		handleScrollEvents = on;
-	}
-	
-	
-	protected boolean isHandleScrollEvents()
-	{
-		return handleScrollEvents;
 	}
 	
 	
@@ -630,34 +615,6 @@ public class FxTextEditor
 //			int ix = vflow.getTopLine() + Math.max(0, vflow.getVisibleLineCount() - 1);
 //			vflow.scrollToVisible(ix);
 //		}
-	}
-	
-	
-	protected void handleHorizontalScroll(double val)
-	{
-		if(handleScrollEvents)
-		{
-			if(!isWrapLines())
-			{
-				int max = vflow.getMaxCellCount() + 1; // allow for 1 blank space at the end
-				int vis = vflow.getMaxColumnCount();
-				int fr = Math.max(0, max - vis);
-				
-				int off = CKit.round(fr * val);
-				vflow.setTopCellIndex(off);
-			}
-		}
-	}
-	
-	
-	protected void handleVerticalScroll(double val)
-	{
-		if(handleScrollEvents)
-		{
-			log.debug("val={}", val);
-			
-			vflow.verticalScroll(val);
-		}
 	}
 	
 	
