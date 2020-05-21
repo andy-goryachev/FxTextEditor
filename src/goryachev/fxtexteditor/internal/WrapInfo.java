@@ -16,6 +16,7 @@ public abstract class WrapInfo
 	public abstract int getWrapRowCount();
 	
 	/** finds wrapped row for the given glyph index */
+	@Deprecated // not used
 	public abstract int findRowForGlyphIndex(int glyphIndex);
 	
 	/** returns the wrapped row index for the given glyph index */

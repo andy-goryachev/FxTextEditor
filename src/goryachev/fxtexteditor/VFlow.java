@@ -9,13 +9,11 @@ import goryachev.fx.FxBoolean;
 import goryachev.fx.FxBooleanBinding;
 import goryachev.fxtexteditor.internal.FlowLine;
 import goryachev.fxtexteditor.internal.FlowLineCache;
-import goryachev.fxtexteditor.internal.GlyphIndex;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenRow;
 import goryachev.fxtexteditor.internal.SelectionHelper;
 import goryachev.fxtexteditor.internal.TextCell;
 import goryachev.fxtexteditor.internal.VerticalScrollHelper;
-import goryachev.fxtexteditor.internal.WrapAssist;
 import goryachev.fxtexteditor.internal.WrapInfo;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -1133,49 +1131,23 @@ public class VFlow
 		
 		if(isWrapLines())
 		{
-			if(true)
+			int delta;
+			if(caretLine < topLine)
 			{
-				int delta;
-				if(caretLine < topLine)
-				{
-					// above the view port: position caret on the 2nd line if possible
-					delta = -2;
-				}
-				else
-				{
-					// below the view port: position caret on the 2nd line from the bottom
-					delta = getScreenRowCount() - 2;
-				}
-				
-				WrapInfo wr = getWrapInfo(caretLine);
-				int caretWrapRow = wr.getWrapRowForCharIndex(caret.getCharIndex());
-				WrapPos wp = advance(caretLine, caretWrapRow, delta);
-				int gix = wp.getStartGlyphIndex();
-				setOrigin(wp.getLine(), gix);
+				// above the view port: position caret on the 2nd line if possible
+				delta = -2;
 			}
 			else
 			{
-				// TODO use navigate()
-//				WrapAssist wr = new WrapAssist(this, caretLine, caret.getCharIndex());
-//		
-//				int delta;
-//				if(caretLine < topLine)
-//				{
-//					// above the view port: position caret on the 2nd line if possible
-//					delta = -2;
-//				}
-//				else
-//				{
-//					// below the view port: position caret on the 2nd line from the bottom
-//					delta = getScreenRowCount() - 2;
-//				}
-//		
-//				GlyphPos p = wr.move(delta);
-//				int line = p.getLine();
-//				GlyphIndex gix = p.getGlyphIndex();
-//				
-//				setOrigin(line, gix);
+				// below the view port: position caret on the 2nd line from the bottom
+				delta = getScreenRowCount() - 2;
 			}
+
+			WrapInfo wr = getWrapInfo(caretLine);
+			int caretWrapRow = wr.getWrapRowForCharIndex(caret.getCharIndex());
+			WrapPos wp = advance(caretLine, caretWrapRow, delta);
+			int gix = wp.getStartGlyphIndex();
+			setOrigin(wp.getLine(), gix);
 		}
 		else
 		{
@@ -1394,7 +1366,6 @@ public class VFlow
 				}
 				else if(line == 0)
 				{
-					// TODO
 					break;
 				}
 				else
@@ -1420,6 +1391,11 @@ public class VFlow
 				else
 				{
 					steps -= size;
+					
+					if(line >= (getModelLineCount() - 1))
+					{
+						break;
+					}
 					line++;
 					wr = getWrapInfo(line);
 					size = wr.getWrapRowCount();

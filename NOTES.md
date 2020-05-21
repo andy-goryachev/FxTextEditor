@@ -2,13 +2,13 @@
 
 - wrap mode, long line, ctrl-End
 - click and drag down outside of the view
-- scrollCaretToView in non-wrapped mode
+- caret rendering in \t\t
 
 
 
 # TODO
 
+- VFlow.updateVerticalScrollBarPosition
 - basic navigation
-- scroll to visible
 - mouse wheel scrolling
 - handle model mutation events

@@ -20,7 +20,11 @@ public class MoveDocumentEnd
 
 	protected Marker move(Marker m)
 	{
-		int line = vflow().getModelLineCount();
+		int line = vflow().getModelLineCount() - 1;
+		if(line < 0)
+		{
+			line = 0;
+		}
 		FlowLine fline = vflow().getTextLine(line);
 		int pos = fline.getTextLength();
 		
