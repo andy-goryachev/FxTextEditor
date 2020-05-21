@@ -1,9 +1,8 @@
 # BUGS
 
-- wrap mode, long line, ctrl-End
 - click and drag down outside of the view
 - caret rendering in \t\t
-
+- vertical scroll at 1.0 goes slightly beyond acceptable
 
 
 # TODO

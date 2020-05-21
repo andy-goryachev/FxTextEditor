@@ -9,6 +9,7 @@ import goryachev.fxtexteditor.internal.WrapInfo;
  * line index (and its WrapInfo), and a wrap row within. 
  */
 public class WrapPos
+	implements Comparable<WrapPos>
 {
 	private final int line;
 	private final int row;
@@ -38,6 +39,23 @@ public class WrapPos
 	public WrapInfo getWrapInfo()
 	{
 		return wrap;
+	}
+	
+	
+	public boolean isAfter(WrapPos p)
+	{
+		return compareTo(p) > 0;
+	}
+	
+	
+	public int compareTo(WrapPos p)
+	{
+		int d = line - p.line;
+		if(d == 0)
+		{
+			d = row - p.row;
+		}
+		return d;
 	}
 	
 	

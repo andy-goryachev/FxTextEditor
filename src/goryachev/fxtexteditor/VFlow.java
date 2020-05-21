@@ -64,8 +64,8 @@ public class VFlow
 	private GraphicsContext lineNumberGx;
 	private Canvas canvas;
 	private GraphicsContext gx;
-	private int columnCount;
-	private int rowCount;
+	private int screenColumnCount;
+	private int screenRowCount;
 	private int lineNumbersCellCount;
 	private int lineNumbersBarWidth;
 	private int minLineNumberCellCount = 3; // arbitrary number
@@ -175,16 +175,16 @@ public class VFlow
 		}
 	}
 	
-	
+
 	public int getScreenColumnCount()
 	{
-		return columnCount;
+		return screenColumnCount;
 	}
 	
 	
 	public int getScreenRowCount()
 	{
-		return rowCount;
+		return screenRowCount;
 	}
 	
 	
@@ -204,7 +204,7 @@ public class VFlow
 	{
 		if(isWrapLines())
 		{
-			if(x == getScreenColumnCount())
+			if(x == screenColumnCount)
 			{
 				return true;
 			}
@@ -416,7 +416,7 @@ public class VFlow
 		int count;
 		if(editor.isShowLineNumbers())
 		{
-			int lastLine = getTopLine() + rowCount;
+			int lastLine = getTopLine() + screenRowCount;
 			String s = editor.getLineNumberFormatter().format(lastLine);
 			count = Math.max(minLineNumberCellCount, s.length());
 		}
@@ -463,8 +463,8 @@ public class VFlow
 			w = 0.0;
 		}
 
-		columnCount = CKit.floor(w / tm.cellWidth);
-		rowCount = CKit.floor(h / tm.cellHeight);
+		screenColumnCount = CKit.floor(w / tm.cellWidth);
+		screenRowCount = CKit.floor(h / tm.cellHeight);
 	}
 	
 	
@@ -488,13 +488,13 @@ public class VFlow
 			double v;
 			
 			int max = getMaxCellCount();
-			if(max <= getScreenColumnCount())
+			if(max <= screenColumnCount)
 			{
 				v = 0.0;
 			}
 			else
 			{
-				max -= getScreenColumnCount();
+				max -= screenColumnCount;
 				v = topCellIndex / (double)max;
 			}
 			
@@ -554,7 +554,7 @@ public class VFlow
 		
 		// TODO when startGlyphIndex != 0
 		
-		int max = Math.min(topLine + getScreenRowCount() + frameSize, model.getLineCount());
+		int max = Math.min(topLine + screenRowCount + frameSize, model.getLineCount());
 		for(int ix=topLine; ix<max; ix++)
 		{
 			FlowLine fline = getTextLine(ix);
@@ -568,7 +568,7 @@ public class VFlow
 		
 		// add the number of extra rows due to wrapping (for visible lines)
 		int total = model.getLineCount() + 2 + extraRows;
-		int visible = getScreenRowCount();
+		int visible = screenRowCount;
 		if(visible > total)
 		{
 			// TODO perhaps suppress scrollbar thumb, but keep the scroll bar itself to avoid another reflow
@@ -688,9 +688,9 @@ public class VFlow
 		int x = CKit.round(sx / m.cellWidth);
 		if(isWrapLines())
 		{
-			if(x >= getScreenColumnCount())
+			if(x >= screenColumnCount)
 			{
-				x = getScreenColumnCount();
+				x = screenColumnCount;
 			}
 		}
 		
@@ -802,8 +802,8 @@ public class VFlow
 	{
 		log.trace();
 		
-		int bufferWidth = getScreenColumnCount() + 1;
-		int bufferHeight = getScreenRowCount() + 1;
+		int bufferWidth = screenColumnCount + 1;
+		int bufferHeight = screenRowCount + 1;
 		buffer.setSize(bufferWidth, bufferHeight);
 		
 		ITabPolicy tabPolicy = editor.getTabPolicy();
@@ -890,7 +890,7 @@ public class VFlow
 		{
 			return false;
 		}
-		else if(startLine > (topLine + getScreenRowCount()))
+		else if(startLine > (topLine + screenRowCount))
 		{
 			return false;
 		}
@@ -907,7 +907,7 @@ public class VFlow
 	{
 		log.trace();
 		
-		if((columnCount == 0) || (rowCount == 0))
+		if((screenColumnCount == 0) || (screenRowCount == 0))
 		{
 			return;
 		}
@@ -916,14 +916,14 @@ public class VFlow
 		boolean showLineNumbers = editor.isShowLineNumbers();
 		ScreenBuffer b = buffer();
 		
-		int xmax = columnCount;
+		int xmax = screenColumnCount;
 		if(!wrap)
 		{
 			xmax++;
 		}
 
 		TextCell cell = null;
-		int ymax = rowCount + 1;
+		int ymax = screenRowCount + 1;
 		
 		for(int y=0; y<ymax; y++)
 		{
@@ -1116,7 +1116,7 @@ public class VFlow
 	public void verticalScroll(double fraction)
 	{
 		int lineCount = getModelLineCount();
-		int vis = getScreenRowCount();
+		int vis = screenRowCount;
 		int max = Math.max(0, lineCount + 1 - vis);
 		int top = CKit.round(max * fraction);
 		int gix;
@@ -1148,7 +1148,7 @@ public class VFlow
 	public WrapInfo getWrapInfo(FlowLine fline)
 	{
 		// wrapping info is cached byFlowLine
-		return fline.getWrapInfo(editor.getTabPolicy(), getScreenColumnCount(), isWrapLines());
+		return fline.getWrapInfo(editor.getTabPolicy(), screenColumnCount, isWrapLines());
 	}
 	
 
@@ -1184,14 +1184,38 @@ public class VFlow
 			else
 			{
 				// below the view port: position caret on the 2nd line from the bottom
-				delta = getScreenRowCount() - 2;
+				delta = screenRowCount - 2;
 			}
 
 			WrapInfo wr = getWrapInfo(caretLine);
 			int caretWrapRow = wr.getWrapRowForCharIndex(caret.getCharIndex());
+			
 			WrapPos wp = advance(caretLine, caretWrapRow, delta);
+			int line = wp.getLine();
 			int gix = wp.getStartGlyphIndex();
-			setOrigin(wp.getLine(), gix);
+			
+			int lineCount = getModelLineCount();
+			if(line > (lineCount - screenRowCount))
+			{
+				// do not scroll past topLine - screenRowCount
+				int endLine = lineCount - 1;
+				if(endLine < 0)
+				{
+					endLine = 0;
+				}
+				wr = getWrapInfo(endLine);
+				int endRow = wr.getWrapRowCount() - 1;
+				
+				// do not go beyond this point
+				WrapPos wp2 = advance(endLine, endRow, 1 - screenRowCount);
+				if(wp.isAfter(wp2))
+				{
+					line = wp2.getLine();
+					gix = wp2.getStartGlyphIndex();
+				}
+			}
+			
+			setOrigin(line, gix);
 		}
 		else
 		{
@@ -1208,9 +1232,9 @@ public class VFlow
 				}
 				topCell = x;
 			}
-			else if(x >= (topCellIndex + getScreenColumnCount()))
+			else if(x >= (topCellIndex + screenColumnCount))
 			{
-				x = x + 1 - getScreenColumnCount();
+				x = x + 1 - screenColumnCount;
 				if(x < 0)
 				{
 					x = 0;
@@ -1228,9 +1252,9 @@ public class VFlow
 				}
 				top = y;
 			}
-			else if(caretLine >= (topLine + getScreenRowCount()))
+			else if(caretLine >= (topLine + screenRowCount))
 			{
-				int y = caretLine + VERTICAL_SAFETY - getScreenRowCount();
+				int y = caretLine + VERTICAL_SAFETY - screenRowCount;
 				if(y < 0)
 				{
 					y = 0;
@@ -1315,13 +1339,13 @@ public class VFlow
 			{
 				return false;
 			}
-			else if(col >= (topCellIndex + getScreenColumnCount()))
+			else if(col >= (topCellIndex + screenColumnCount))
 			{
 				return false;
 			}
 			
 			int line = m.getLine();
-			if(line >= (topLine + getScreenRowCount()))
+			if(line >= (topLine + screenRowCount))
 			{
 				return false;
 			}
