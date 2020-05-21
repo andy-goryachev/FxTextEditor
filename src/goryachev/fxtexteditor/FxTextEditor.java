@@ -675,8 +675,18 @@ public class FxTextEditor
 			int line = m.getLine();
 			Marker start = markers.newMarker(line, 0);
 			
-			int len = getTextLength(line);
-			Marker end = markers.newMarker(line, len);
+			int endLine = line + 1;
+			
+			Marker end;
+			if(endLine >= getLineCount())
+			{
+				int len = getTextLength(line);
+				end = markers.newMarker(line, len);
+			}
+			else
+			{
+				end = markers.newMarker(endLine, 0);
+			}
 			
 			selector.setSelection(start, end);
 		}
