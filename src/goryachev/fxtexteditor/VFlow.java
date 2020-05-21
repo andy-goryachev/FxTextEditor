@@ -1127,11 +1127,6 @@ public class VFlow
 	/** adjusts the scroll bars to make the caret visible. */
 	public void scrollCaretToView()
 	{
-		int min;
-		int max;
-		int last;
-		
-		// TODO this needs to work in non-wrapped mode
 		// TODO horizontal scroll
 		
 		// do we need to move at all?
@@ -1190,7 +1185,7 @@ public class VFlow
 			}
 			else if(x >= (topCellIndex + getScreenColumnCount()))
 			{
-				x = x + /*HORIZONTAL_SAFETY*/ 1 - getScreenColumnCount();
+				x = x + 1 - getScreenColumnCount();
 				if(x < 0)
 				{
 					x = 0;
