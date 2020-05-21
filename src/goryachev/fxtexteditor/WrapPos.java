@@ -41,6 +41,12 @@ public class WrapPos
 	}
 	
 	
+	public int getStartGlyphIndex()
+	{
+		return wrap.getGlyphIndexForRow(row);
+	}
+	
+	
 	public String toString()
 	{
 		return

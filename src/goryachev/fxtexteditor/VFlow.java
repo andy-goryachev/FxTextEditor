@@ -75,7 +75,9 @@ public class VFlow
 	private Color textColor = Color.BLACK;
 	private Color caretColor = Color.BLACK;
 	private int topLine;
-	private GlyphIndex topGlyphIndex = GlyphIndex.ZERO;
+	private int topGlyphIndex;
+	/** leftmost column in non-wrapped mode */
+	// TODO rename
 	private int topCellIndex;
 	private boolean screenBufferValid;
 	private boolean repaintRequested;
@@ -134,13 +136,13 @@ public class VFlow
 	}
 	
 	
-	public GlyphIndex getTopGlyphIndex()
+	public int getTopGlyphIndex()
 	{
 		return topGlyphIndex;
 	}
 	
 	
-	public void setOrigin(int top, GlyphIndex ix)
+	public void setOrigin(int top, int ix)
 	{
 		log.debug("%d %s", top, ix);
 		
@@ -653,34 +655,18 @@ public class VFlow
 		int y = CKit.floor(sy / m.cellHeight);
 		
 		int topWrapRow = buffer().getRow(0).getWrapRow();
-		WrapPos wp = navigate(topLine, topWrapRow, y, false);
+		WrapPos wp = advance(topLine, topWrapRow, y);
 		
-		TextPos pos;
-		if(wp == null)
+		TextCell cell = wp.getWrapInfo().getCell(wp.getRow(), x + topCellIndex);
+		int charIndex = cell.getInsertCharIndex();
+		
+		int line = wp.getLine();
+		if(line > getModelLineCount())
 		{
-			if(y < 0)
-			{
-				pos = new TextPos(0, 0);
-			}
-			else
-			{
-				pos = new TextPos(getModelLineCount(), 0);
-			}
+			line = getModelLineCount();
 		}
-		else
-		{
-			TextCell cell = wp.getWrapInfo().getCell(wp.getRow(), x + topCellIndex);
-			int charIndex = cell.getInsertCharIndex();
-			
-			int line = wp.getLine();
-			if(line > getModelLineCount())
-			{
-				line = getModelLineCount();
-			}
-		
-			pos = new TextPos(line, charIndex);
-		}
-		
+	
+		TextPos pos = new TextPos(line, charIndex);
 		log.debug(pos);
 		return pos;
 	}
@@ -809,7 +795,7 @@ public class VFlow
 				int startGlyphIndex;
 				if(y == 0)
 				{
-					startGlyphIndex = topGlyphIndex.intValue(); // TODO replace with int
+					startGlyphIndex = topGlyphIndex;
 					row = wr.getWrapRowForGlyphIndex(startGlyphIndex);
 				}
 				else
@@ -836,7 +822,7 @@ public class VFlow
 		else
 		{
 			int line = topLine;
-			int startGlyphIndex = topGlyphIndex.intValue(); // TODO replace with int
+			int startGlyphIndex = topGlyphIndex;
 			
 			for(int y=0; y<bufferHeight; y++)
 			{
@@ -1091,7 +1077,7 @@ public class VFlow
 		int vis = getScreenRowCount();
 		int max = Math.max(0, lineCount + 1 - vis);
 		int top = CKit.round(max * fraction);
-		GlyphIndex gix;
+		int gix;
 
 		if(isWrapLines())
 		{
@@ -1103,7 +1089,7 @@ public class VFlow
 		}
 		else
 		{
-			gix = GlyphIndex.ZERO;
+			gix = 0;
 		}
 
 		setOrigin(top, gix);
@@ -1147,26 +1133,49 @@ public class VFlow
 		
 		if(isWrapLines())
 		{
-			// TODO use navigate()
-			WrapAssist wr = new WrapAssist(this, caretLine, caret.getCharIndex());
-	
-			int delta;
-			if(caretLine < topLine)
+			if(true)
 			{
-				// above the view port: position caret on the 2nd line if possible
-				delta = -2;
+				int delta;
+				if(caretLine < topLine)
+				{
+					// above the view port: position caret on the 2nd line if possible
+					delta = -2;
+				}
+				else
+				{
+					// below the view port: position caret on the 2nd line from the bottom
+					delta = getScreenRowCount() - 2;
+				}
+				
+				WrapInfo wr = getWrapInfo(caretLine);
+				int caretWrapRow = wr.getWrapRowForCharIndex(caret.getCharIndex());
+				WrapPos wp = advance(caretLine, caretWrapRow, delta);
+				int gix = wp.getStartGlyphIndex();
+				setOrigin(wp.getLine(), gix);
 			}
 			else
 			{
-				// below the view port: position caret on the 2nd line from the bottom
-				delta = getScreenRowCount() - 2;
+				// TODO use navigate()
+//				WrapAssist wr = new WrapAssist(this, caretLine, caret.getCharIndex());
+//		
+//				int delta;
+//				if(caretLine < topLine)
+//				{
+//					// above the view port: position caret on the 2nd line if possible
+//					delta = -2;
+//				}
+//				else
+//				{
+//					// below the view port: position caret on the 2nd line from the bottom
+//					delta = getScreenRowCount() - 2;
+//				}
+//		
+//				GlyphPos p = wr.move(delta);
+//				int line = p.getLine();
+//				GlyphIndex gix = p.getGlyphIndex();
+//				
+//				setOrigin(line, gix);
 			}
-	
-			GlyphPos p = wr.move(delta);
-			int line = p.getLine();
-			GlyphIndex gix = p.getGlyphIndex();
-			
-			setOrigin(line, gix);
 		}
 		else
 		{
@@ -1217,7 +1226,7 @@ public class VFlow
 			int prevTopLine = topLine;
 			
 			setTopCellIndex(topCell);
-			setOrigin(top, GlyphIndex.ZERO);
+			setOrigin(top, 0);
 			
 			if(topCell != prevTopCell)
 			{
@@ -1270,15 +1279,11 @@ public class VFlow
 				}
 			}
 			
-			WrapPos wp = navigate(line, r.getWrapRow(), 1, false);
-			if(wp == null)
-			{
-				// beyond EOF
-				return true;
-			}
-			
-			WrapInfo wr = getWrapInfo(wp.getLine());
-			pos = wr.getCharIndexForColumn(wp.getRow(), 0);
+			WrapPos wp = advance(line, r.getWrapRow(), 1);
+			int wline = wp.getLine();
+			int wrow = wp.getRow();
+			WrapInfo wr = getWrapInfo(wline);
+			pos = wr.getCharIndexForColumn(wrow, 0);
 			
 			if(m.isAfter(line, pos))
 			{
@@ -1287,12 +1292,14 @@ public class VFlow
 		}
 		else
 		{
-			int gix = fline.getGlyphIndex(m.getCharIndex());
-			if(gix < topCellIndex)
+			WrapInfo wr = getWrapInfo(m.getLine());
+			int col = wr.getColumnForCharIndex(m.getCharIndex());
+			
+			if(col < topCellIndex)
 			{
 				return false;
 			}
-			else if(gix >= (topCellIndex + getScreenColumnCount()))
+			else if(col >= (topCellIndex + getScreenColumnCount()))
 			{
 				return false;
 			}
@@ -1362,14 +1369,14 @@ public class VFlow
 	
 	
 	/** 
-	 * Navigates the wrapped rows, starting with (startLine, startWrapRow) + delta.
-	 * When the resulting position goes beyond the text limits, returns:
-	 * clip=true: either the position at the beginning or the end of the document, or
-	 * clip=false: null  
+	 * Walks the wrapped rows, starting with (startLine, startWrapRow),
+	 * either forwards (delta > 0) or backwards (delta < 0).
+	 * 
+	 * Returns the new row position.
 	 */ 
-	public WrapPos navigate(int startLine, int startWrapRow, int delta, boolean clip)
+	public WrapPos advance(int startLine, int startWrapRow, int delta)
 	{
-		log.debug("line=%d row=%d delta=%d clip=%s", startLine, startWrapRow, delta, clip);
+		log.debug("line=%d row=%d delta=%d", startLine, startWrapRow, delta);
 		
 		WrapInfo wr = getWrapInfo(startLine);
 		int line = startLine;

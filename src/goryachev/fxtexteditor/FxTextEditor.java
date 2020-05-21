@@ -597,7 +597,7 @@ public class FxTextEditor
 			row = 0;
 		}
 		
-		vflow.setOrigin(row, GlyphIndex.ZERO);
+		vflow.setOrigin(row, 0);
 	}
 	
 

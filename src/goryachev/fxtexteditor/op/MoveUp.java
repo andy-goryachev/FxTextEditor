@@ -32,8 +32,7 @@ public class MoveUp
 		WrapInfo wr = wrapInfo(line);
 		int wrapRow = wr.getWrapRowForCharIndex(pos);
 		
-		WrapPos wp = vflow().navigate(line, wrapRow, -1, true);
-		
+		WrapPos wp = vflow().advance(line, wrapRow, -1);
 		int newLine = wp.getLine();
 		int newWrapRow = wp.getRow();
 		

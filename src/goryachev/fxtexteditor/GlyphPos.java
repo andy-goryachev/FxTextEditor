@@ -1,6 +1,5 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
-import goryachev.fxtexteditor.internal.GlyphIndex;
 
 
 /**
@@ -26,8 +25,8 @@ public class GlyphPos
 	}
 	
 	
-	public GlyphIndex getGlyphIndex()
+	public int getGlyphIndex()
 	{
-		return GlyphIndex.of(glyphIndex);
+		return glyphIndex;
 	}
 }

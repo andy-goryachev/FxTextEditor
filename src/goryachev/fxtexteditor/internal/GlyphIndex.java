@@ -8,11 +8,10 @@ import goryachev.common.util.SB;
  */
 public class GlyphIndex
 {
-	public static final int EOF_INDEX = Integer.MIN_VALUE;
-	public static final int EOL_INDEX = Integer.MIN_VALUE + 1;
-
-	public static final GlyphIndex EOF = new GlyphIndex(EOF_INDEX);
-	public static final GlyphIndex ZERO = new GlyphIndex(0);
+	/** end of file glyph index value */
+	public static final int EOF = Integer.MIN_VALUE;
+	/** end of line glyph index value */
+	public static final int EOL = Integer.MIN_VALUE + 1;
 
 	private final int index;
 	
@@ -31,7 +30,7 @@ public class GlyphIndex
 	
 	public static GlyphIndex atEOL(boolean atEOL)
 	{
-		return new GlyphIndex(EOL_INDEX)
+		return new GlyphIndex(EOL)
 		{
 			@Override
 			public boolean isAtEOL()
@@ -70,14 +69,14 @@ public class GlyphIndex
 	
 	public boolean isEOF()
 	{
-		return index == EOF_INDEX;
+		return index == EOF;
 	}
 	
 	
 	/** is end of a line */
 	public boolean isEOL()
 	{
-		return index == EOL_INDEX;
+		return index == EOL;
 	}
 	
 	
@@ -93,8 +92,8 @@ public class GlyphIndex
 		{
 			switch(ix)
 			{
-			case EOF_INDEX:
-			case EOL_INDEX:
+			case EOF:
+			case EOL:
 				return false;
 			default:
 				return true;
@@ -108,8 +107,8 @@ public class GlyphIndex
 	{
 		switch(index)
 		{
-		case EOF_INDEX:
-		case EOL_INDEX:
+		case EOF:
+		case EOL:
 			return false;
 		}
 		
@@ -124,10 +123,10 @@ public class GlyphIndex
 		
 		switch(index)
 		{
-		case EOF_INDEX:
+		case EOF:
 			sb.append("EOF");
 			break;
-		case EOL_INDEX:
+		case EOL:
 			sb.append("EOL");
 			break;
 		default:
@@ -205,14 +204,14 @@ public class GlyphIndex
 	/** is end of file */
 	public static boolean isEOF(int glyphIndex)
 	{
-		return glyphIndex == EOF_INDEX;
+		return glyphIndex == EOF;
 	}
 	
 	
 	/** is end of a line */
 	public  static boolean isEOL(int glyphIndex)
 	{
-		return glyphIndex == EOL_INDEX;
+		return glyphIndex == EOL;
 	}
 	
 	
@@ -225,8 +224,8 @@ public class GlyphIndex
 	{
 		switch(gix)
 		{
-		case EOF_INDEX:
-		case EOL_INDEX:
+		case EOF:
+		case EOL:
 			throw new Error("gix=" + gix);
 		}
 		
