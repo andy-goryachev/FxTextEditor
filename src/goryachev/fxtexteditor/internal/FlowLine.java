@@ -87,13 +87,6 @@ public class FlowLine
 
 	
 	/** returns the offest into plain text string for the given glyph index */
-	public int getCharIndex(GlyphIndex glyphIndex)
-	{
-		return info.getCharIndex(glyphIndex);
-	}
-	
-	
-	/** returns the offest into plain text string for the given glyph index */
 	public int getCharIndex(int glyphIndex)
 	{
 		return info.getCharIndex(glyphIndex);
@@ -127,13 +120,6 @@ public class FlowLine
 		return null;
 	}
 
-
-	/** returns the type of a glyph at the specified cell index. */
-	public GlyphType getGlyphType(GlyphIndex glyphIndex)
-	{
-		return getGlyphType(glyphIndex.intValue());
-	}
-	
 	
 	/** returns the type of a glyph at the specified cell index. */
 	public GlyphType getGlyphType(int glyphIndex)

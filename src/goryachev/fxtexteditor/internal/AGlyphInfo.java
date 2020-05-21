@@ -146,31 +146,4 @@ public abstract class AGlyphInfo
 		
 		return new GlyphInfoComplex(text, hasTabs, offsets);
 	}
-	
-	
-	public String getGlyphText(GlyphIndex glyphIndex)
-	{
-		return getGlyphText(glyphIndex.intValue());
-	}
-	
-	
-	public int getCharIndex(GlyphIndex gix)
-	{
-		if(gix.isEOF())
-		{
-			return 0;
-		}
-		else if(gix.isEOL())
-		{
-			return text.length();
-		}
-		else if(gix.isInsideTab())
-		{
-			return gix.getLeadingCharIndex();
-		}
-		else
-		{
-			return getCharIndex(gix.intValue());
-		}
-	}
 }
