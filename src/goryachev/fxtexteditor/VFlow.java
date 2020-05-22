@@ -1178,13 +1178,13 @@ public class VFlow
 			int delta;
 			if(caretLine < topLine)
 			{
-				// above the view port: position caret on the 2nd line if possible
-				delta = -2;
+				// above the view port: position caret on the top line
+				delta = 0;
 			}
 			else
 			{
-				// below the view port: position caret on the 2nd line from the bottom
-				delta = 2 - screenRowCount;
+				// below the view port: position caret on the bottom line
+				delta = 1 - screenRowCount;
 			}
 
 			WrapInfo wr = getWrapInfo(caretLine);
@@ -1465,6 +1465,7 @@ public class VFlow
 						break;
 					}
 					line++;
+					row = 0;
 					wr = getWrapInfo(line);
 					size = wr.getWrapRowCount();
 				}

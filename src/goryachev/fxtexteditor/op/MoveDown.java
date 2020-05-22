@@ -36,8 +36,8 @@ public class MoveDown
 		int newLine = wp.getLine();
 		int newWrapRow = wp.getRow();
 		
-		wr = wrapInfo(newLine);
-		int newPos = wr.getCharIndexForColumn(newWrapRow, col);
+		WrapInfo wr2 = wrapInfo(newLine);
+		int newPos = wr2.getCharIndexForColumn(newWrapRow, col);
 		
 		log.debug("col=%d line=%d pos=%d", col, newLine, newPos);
 		
