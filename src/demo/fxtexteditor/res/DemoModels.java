@@ -17,7 +17,7 @@ public class DemoModels
 {
 	public static final AnItem NO_TABS_NO_UNICODE = new AnItem("NO_TABS_NO_UNICODE", "No Tabs, No Unicode");
 	public static final AnItem TABS_NO_UNICODE = new AnItem("TABS_NO_UNICODE", "Tabs, No Unicode");
-	public static final AnItem JAVA_LARGE = new AnItem("JAVA", "A large java file");
+	public static final AnItem JAVA_LARGE = new AnItem("JAVA", "CKit.java");
 	public static final AnItem JAVA_SMALL = new AnItem("JAVA_SMALL", "A small java file");
 	public static final AnItem LONG_LINES = new AnItem("LONG_LINES", "Long lines (1M characters)");
 	public static final AnItem BILLION_LINES = new AnItem("BILLION_LINES", "One billion lines");
@@ -58,6 +58,7 @@ public class DemoModels
 			(
 				"\t1\t2\t3\t4\t5\t6\t7\n" +
 				"\t\t\t3\t\t\t6\n" +
+				"\t\t\n" +
 				" h 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
 				" //end"
 			);

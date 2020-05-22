@@ -1,7 +1,6 @@
 # BUGS
 
 - click and drag down outside of the view
-- caret rendering in \t\t
 
 
 

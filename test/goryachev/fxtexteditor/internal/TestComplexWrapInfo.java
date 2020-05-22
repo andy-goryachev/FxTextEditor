@@ -5,7 +5,6 @@ import goryachev.common.test.Test;
 import goryachev.common.util.CList;
 import goryachev.common.util.D;
 import goryachev.common.util.SB;
-import goryachev.fxtexteditor.CellStyle;
 import goryachev.fxtexteditor.ITabPolicy;
 import goryachev.fxtexteditor.ITextLine;
 
@@ -18,6 +17,20 @@ public class TestComplexWrapInfo
 	public static void main(String[] args)
 	{
 		TF.run();
+	}
+	
+	
+	@Test
+	public void testTabIssue()
+	{
+		ITextLine tline = new MockTextLine("\t\t"); 
+		ITabPolicy tp = TabPolicy.create(4);
+		FlowLine fline = new FlowLine(tline, AGlyphInfo.create(tline.getPlainText(), null));
+		ComplexWrapInfo wr = ComplexWrapInfo.createComplexWrapInfo(fline, tp, 100, true);
+		TextCell c1 = wr.getCell(0, 4);
+		TextCell c2 = wr.getCell(0, 8); // FIX wrong caretCharIndex
+		
+		D.print(c1, c2);
 	}
 	
 	
@@ -101,38 +114,7 @@ public class TestComplexWrapInfo
 		int[][] expected = new int[cells.size()][];
 		cells.toArray(expected);
 		
-		ITextLine tline = new ITextLine()
-		{
-			public int getLineNumber()
-			{
-				return 0;
-			}
-
-
-			public int getModelIndex()
-			{
-				return 0;
-			}
-
-
-			public String getPlainText()
-			{
-				return text;
-			}
-
-
-			public int getTextLength()
-			{
-				return text.length();
-			}
-
-
-			public CellStyle getCellStyle(int charOffset)
-			{
-				return null;
-			}
-		};
-		
+		ITextLine tline = new MockTextLine(text); 
 		ITabPolicy tp = TabPolicy.create(tabSize);
 		FlowLine fline = new FlowLine(tline, AGlyphInfo.create(tline.getPlainText(), null));
 		ComplexWrapInfo wr = ComplexWrapInfo.createComplexWrapInfo(fline, tp, width, wrapLines);
