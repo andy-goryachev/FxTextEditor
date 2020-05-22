@@ -4,7 +4,6 @@ import goryachev.common.util.Parsers;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxAction;
-import goryachev.fx.FxBoolean;
 import goryachev.fx.FxComboBox;
 import goryachev.fx.FxDump;
 import goryachev.fx.FxMenuBar;
@@ -29,7 +28,6 @@ public class MainWindow
 	public final MainPane mainPane;
 	public final CPane content;
 	public final StatusBar statusBar;
-	protected FxBoolean tailMode = new FxBoolean();
 	protected final FxComboBox modelSelector = new FxComboBox();
 	protected final FxComboBox fontSelector = new FxComboBox();
 	
@@ -63,18 +61,14 @@ public class MainWindow
 		setBottom(statusBar);
 		setSize(600, 700);
 		
-		fontSelector.select("12");
 		fontSelector.setEditable(true);
+		fontSelector.select("12");
 
 		LocalSettings.get(this).
 			add("LINE_WRAP", editor().wrapLinesProperty()).
 			add("SHOW_LINE_NUMBERS", editor().showLineNumbersProperty()).
-			add("TAIL_MODE", tailMode).
 			add("MODEL", modelSelector).
 			add("FONT_SIZE", fontSelector);
-		
-		tailMode.addListener((s,p,c) -> updateModel());
-		updateModel();
 		
 //		FX.setPopupMenu(editor(), this::createPopupMenu);
 		
@@ -82,28 +76,6 @@ public class MainWindow
 		
 		// debug
 		FxDump.attach(this);
-	}
-	
-	
-	protected void updateModel()
-	{
-//		if(tailMode.get())
-//		{
-//			if(growingModel == null)
-//			{
-//				growingModel = new DemoGrowingModel();
-//			}
-//			model = growingModel;
-//		}
-//		else
-//		{
-//			if(largeModel == null)
-//			{
-//				largeModel = new DemoColorEditorModel(2_000_000_000);
-//			}
-//			model = largeModel;
-//		}
-//		editor().setModel(model);
 	}
 	
 	
@@ -200,7 +172,6 @@ public class MainWindow
 	protected void newWindow()
 	{
 		MainWindow w = new MainWindow();
-		w.tailMode.set(tailMode.get());
 		w.open();
 	}
 	

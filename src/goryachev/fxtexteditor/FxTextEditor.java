@@ -501,7 +501,12 @@ public class FxTextEditor
 	/** returns plain text on the specified line */
 	public String getPlainText(int line)
 	{
-		return getModel().getPlainText(line);
+		FxTextEditorModel m = getModel();
+		if(m == null)
+		{
+			return null;
+		}
+		return m.getPlainText(line);
 	}
 
 
