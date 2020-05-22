@@ -11,6 +11,7 @@ import goryachev.fx.FxMenuBar;
 import goryachev.fx.FxPopupMenu;
 import goryachev.fx.FxToolBar;
 import goryachev.fx.FxWindow;
+import goryachev.fx.internal.LocalSettings;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.FxTextEditorModel;
 import demo.fxtexteditor.res.DemoModels;
@@ -62,15 +63,15 @@ public class MainWindow
 		setBottom(statusBar);
 		setSize(600, 700);
 		
-		// props
-		bind("LINE_WRAP", editor().wrapLinesProperty());
-		bind("SHOW_LINE_NUMBERS", editor().showLineNumbersProperty());
-		bind("TAIL_MODE", tailMode);
-		// TODO
-//		bind("MODEL", modelSelector.valueProperty(), AnItem.converter(modelSelector));
-//		bind("FONT_SIZE", fontSelector.valueProperty(), AnItem.converter(fontSelector));
-		// FIX
 		fontSelector.select("12");
+		fontSelector.setEditable(true);
+
+		LocalSettings.get(this).
+			add("LINE_WRAP", editor().wrapLinesProperty()).
+			add("SHOW_LINE_NUMBERS", editor().showLineNumbersProperty()).
+			add("TAIL_MODE", tailMode).
+			add("MODEL", modelSelector).
+			add("FONT_SIZE", fontSelector);
 		
 		tailMode.addListener((s,p,c) -> updateModel());
 		updateModel();
@@ -81,8 +82,6 @@ public class MainWindow
 		
 		// debug
 		FxDump.attach(this);
-		
-		FX.later(() -> modelSelector.select(DemoModels.TABS_NO_UNICODE));
 	}
 	
 	
