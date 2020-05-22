@@ -4,6 +4,7 @@ import goryachev.fxtexteditor.Actions;
 import goryachev.fxtexteditor.EditorSelection;
 import goryachev.fxtexteditor.Marker;
 import goryachev.fxtexteditor.SelectionSegment;
+import goryachev.fxtexteditor.WrapPos;
 
 
 /**
@@ -78,12 +79,11 @@ public abstract class NavigationAction
 				return;
 			}
 			
-			selector().clear();
-
 			Marker from = seg.getCaret();
 			Marker to = move(from);
 			if(to != null)
 			{
+				selector().clear();
 				selector().addSelectionSegment(to, to);
 				selector().commitSelection();
 			}
@@ -93,5 +93,21 @@ public abstract class NavigationAction
 			vflow().setSuppressBlink(false);
 			vflow().scrollCaretToView();
 		}
+	}
+	
+	
+	protected void advanceTop(int delta)
+	{
+		int line = vflow().getTopLine();
+		int gix = vflow().getTopGlyphIndex();
+		
+		WrapInfo wr = wrapInfo(line);
+		int wrapRow = wr.getWrapRowForGlyphIndex(gix);
+		
+		WrapPos wp = vflow().advance(line, wrapRow, delta);
+		int newLine = wp.getLine();
+		int newGlyphIndex = wp.getStartGlyphIndex();
+		
+		vflow().setOrigin(newLine, newGlyphIndex);
 	}
 }

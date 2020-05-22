@@ -3,6 +3,8 @@
 	channels:
 	{
 		MoveUp: all,
+		PageDown: all,
+		PageUp: all,
 		ScreenBuffer: all,
 		VerticalScrollHelper: debug,
 		VFlow: debug,

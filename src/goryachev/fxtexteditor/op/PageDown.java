@@ -1,16 +1,21 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.op;
+import goryachev.common.log.Log;
 import goryachev.fxtexteditor.Actions;
 import goryachev.fxtexteditor.Marker;
+import goryachev.fxtexteditor.WrapPos;
 import goryachev.fxtexteditor.internal.NavigationAction;
+import goryachev.fxtexteditor.internal.WrapInfo;
 
 
 /**
- * Moves cursor one page down.
+ * Moves the cursor one page down.
  */
 public class PageDown
 	extends NavigationAction
 {
+	protected static final Log log = Log.get("PageDown");
+	
 	public PageDown(Actions a)
 	{
 		super(a);
@@ -25,14 +30,26 @@ public class PageDown
 
 	protected Marker move(Marker m)
 	{
+		int screenHeight = vflow().getScreenRowCount();
+				
+		advanceTop(screenHeight);
+
 		int pos = m.getCharIndex();
 		int line = m.getLine();
+		int col = updatePhantomColumn(line, pos);
 		
-		// TODO
-		// TODO need the concept of last caret
-		// single caret: create phantom x position, move caret + screen height
-		// multiple carets: reset to a single caret using last caret, then follow the single caret logic
+		WrapInfo wr = wrapInfo(line);
+		int wrapRow = wr.getWrapRowForCharIndex(pos);
 		
-		return editor().newMarker(line, pos);
+		WrapPos wp = vflow().advance(line, wrapRow, screenHeight);
+		int newLine = wp.getLine();
+		int newWrapRow = wp.getRow();
+		
+		wr = wrapInfo(newLine);
+		int newPos = wr.getCharIndexForColumn(newWrapRow, col);
+		
+		log.debug("col=%d line=%d pos=%d", col, newLine, newPos);
+		
+		return editor().newMarker(newLine, newPos);
 	}
 }

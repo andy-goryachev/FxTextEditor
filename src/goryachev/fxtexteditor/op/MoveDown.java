@@ -39,7 +39,7 @@ public class MoveDown
 		wr = wrapInfo(newLine);
 		int newPos = wr.getCharIndexForColumn(newWrapRow, col);
 		
-		log.debug("col=%d line=%d pos=%d", col, line, pos);
+		log.debug("col=%d line=%d pos=%d", col, newLine, newPos);
 		
 		return editor().newMarker(newLine, newPos);
 	}

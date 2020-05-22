@@ -144,12 +144,12 @@ public class VFlow
 	}
 	
 	
-	public void setOrigin(int top, int ix)
+	public void setOrigin(int topLine, int glyphIndex)
 	{
-		log.debug("%d %s", top, ix);
+		log.debug("%d %s", topLine, glyphIndex);
 		
-		topLine = top;
-		topGlyphIndex = ix;
+		this.topLine = topLine;
+		this.topGlyphIndex = glyphIndex;
 		
 		updateLineNumbers();
 		invalidate();
@@ -1184,7 +1184,7 @@ public class VFlow
 			else
 			{
 				// below the view port: position caret on the 2nd line from the bottom
-				delta = screenRowCount - 2;
+				delta = 2 - screenRowCount;
 			}
 
 			WrapInfo wr = getWrapInfo(caretLine);
@@ -1292,8 +1292,8 @@ public class VFlow
 	protected boolean isVisiblePrivate(Marker m)
 	{
 		FlowLine fline = getTextLine(topLine);
-		int pos = fline.getCharIndex(topGlyphIndex);
-		if(m.isBefore(topLine, pos))
+		int cix = fline.getCharIndex(topGlyphIndex);
+		if(m.isBefore(topLine, cix))
 		{
 			return false;
 		}
@@ -1323,9 +1323,9 @@ public class VFlow
 			int wline = wp.getLine();
 			int wrow = wp.getRow();
 			WrapInfo wr = getWrapInfo(wline);
-			pos = wr.getCharIndexForColumn(wrow, 0);
+			cix = wr.getCharIndexForColumn(wrow, 0);
 			
-			if(m.isAfter(line, pos))
+			if(m.isAfter(line, cix))
 			{
 				return false;
 			}
@@ -1416,7 +1416,7 @@ public class VFlow
 	 */ 
 	public WrapPos advance(int startLine, int startWrapRow, int delta)
 	{
-		log.debug("line=%d row=%d delta=%d", startLine, startWrapRow, delta);
+		log.trace("line=%d row=%d delta=%d", startLine, startWrapRow, delta);
 		
 		WrapInfo wr = getWrapInfo(startLine);
 		int line = startLine;
@@ -1472,7 +1472,7 @@ public class VFlow
 		}
 		
 		WrapPos p = new WrapPos(line, row, wr);
-		log.debug(p);
+		log.trace(p);
 		return p;
 	}
 }
