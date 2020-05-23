@@ -1235,8 +1235,6 @@ public class VFlow
 	/** adjusts the scroll bars to make the caret visible. */
 	public void scrollCaretToView()
 	{
-		// TODO horizontal scroll
-		
 		// do we need to move at all?
 		// if yes, find out where
 		
@@ -1256,7 +1254,7 @@ public class VFlow
 		if(isWrapLines())
 		{
 			int delta;
-			if(caretLine < topLine)
+			if(caretLine <= topLine)
 			{
 				// above the view port: position caret on the top line
 				delta = 0;
@@ -1275,31 +1273,6 @@ public class VFlow
 			int line = wp.getLine();
 			int gix = wp.getStartGlyphIndex();
 			
-//			int lineCount = getModelLineCount();
-//			if(line > (lineCount - screenRowCount))
-//			{
-//				// do not scroll past topLine - screenRowCount
-//				int endLine = lineCount - 1;
-//				if(endLine < 0)
-//				{
-//					endLine = 0;
-//				}
-//				wr = getWrapInfo(endLine);
-//				int endRow = wr.getWrapRowCount() - 1;
-//				
-//				// do not go beyond this point
-//				WrapPos wp2 = advance(endLine, endRow, 1 - screenRowCount);
-//				if(wp.isAfter(wp2))
-//				{
-//					line = wp2.getLine();
-//					gix = wp2.getStartGlyphIndex();
-//				}
-//				else
-//				{
-//					int zz = 0;
-//				}
-//			}
-			
 			setOrigin(line, gix);
 		}
 		else
@@ -1317,7 +1290,7 @@ public class VFlow
 				}
 				topCell = x;
 			}
-			else if(x >= (topCellIndex + screenColumnCount))
+			else if(x >= (topCellIndex + screenColumnCount)) // FIX mixing cell and glyph indexes!
 			{
 				x = x + 1 - screenColumnCount;
 				if(x < 0)
