@@ -45,7 +45,7 @@ public class VFlow
 	protected static final double SELECTION_BACKGROUND_OPACITY = 0.4;
 	protected static final double CELL_BACKGROUND_OPACITY = 0.8;
 	protected static final int HORIZONTAL_SAFETY = 8;
-	protected static final int VERTICAL_SAFETY = 2;
+	protected static final int VERTICAL_SAFETY = 1;
 	
 	protected final FxTextEditor editor;
 	protected final FxBoolean caretEnabledProperty = new FxBoolean(true);
@@ -1330,11 +1330,7 @@ public class VFlow
 			int top = topLine;
 			if(caretLine < topLine)
 			{
-				int y = caretLine - VERTICAL_SAFETY;
-				if(y < VERTICAL_SAFETY)
-				{
-					y = 0;
-				}
+				int y = caretLine;
 				top = y;
 			}
 			else if(caretLine >= (topLine + screenRowCount))
@@ -1376,41 +1372,38 @@ public class VFlow
 	
 	protected boolean isVisiblePrivate(Marker m)
 	{
-		FlowLine fline = getTextLine(topLine);
-		int cix = fline.getCharIndex(topGlyphIndex);
-		if(m.isBefore(topLine, cix))
+		// some quick checks
+		int line = m.getLine();
+		if(line < topLine)
+		{
+			return false;
+		}
+		else if(line >= (topLine + screenRowCount))
 		{
 			return false;
 		}
 		
+		// FIX fails if last line is wrapped line
+//		FlowLine fline = getTextLine(topLine);
+//		int cix = fline.getCharIndex(topGlyphIndex);
+//		if(m.isBefore(topLine, cix))
+//		{
+//			return false;
+//		}
+		
 		if(isWrapLines())
 		{
-			int h = buffer.getHeight() - 1;
-			int w = buffer.getWidth();
+			FlowLine fline = getTextLine(line);
+			int gix = fline.getGlyphIndex(m.getCharIndex());
 			
-			ScreenRow r = buffer.getScreenRow(h - 1);
-			int line = r.getLineNumber();
-			if(line < 0)
+			ScreenRow r = buffer().getScreenRow(0);
+			if(compare(line, gix, r.getLineNumber(), r.getStartGlyphIndex()) < 0)
 			{
-				return true;
+				return false;
 			}
 			
-			if(topLine != line)
-			{
-				fline = getTextLine(line);
-				if(fline == null)
-				{
-					return true;
-				}
-			}
-			
-			WrapPos wp = advance(line, r.getWrapRow(), 1);
-			int wline = wp.getLine();
-			int wrow = wp.getRow();
-			WrapInfo wr = getWrapInfo(wline);
-			cix = wr.getCharIndexForColumn(wrow, 0);
-			
-			if(m.isAfter(line, cix))
+			r = buffer().getScreenRow(screenRowCount - 1);
+			if(compare(line, gix, r.getLineNumber(), r.getStartGlyphIndex() + r.getGlyphCount()) > 0)
 			{
 				return false;
 			}
@@ -1419,7 +1412,6 @@ public class VFlow
 		{
 			WrapInfo wr = getWrapInfo(m.getLine());
 			int col = wr.getColumnForCharIndex(m.getCharIndex());
-			
 			if(col < topCellIndex)
 			{
 				return false;
@@ -1428,15 +1420,40 @@ public class VFlow
 			{
 				return false;
 			}
-			
-			int line = m.getLine();
-			if(line >= (topLine + screenRowCount))
-			{
-				return false;
-			}
 		}
 		
 		return true;
+	}
+	
+	
+	protected static int compare(int lineA, int glyphIndexA, int lineB, int glyphIndexB)
+	{
+		// sanity checks
+		if(lineA < 0)
+		{
+			throw new Error();
+		}
+		else if(lineB < 0)
+		{
+			throw new Error();
+		}
+		
+		int d = lineA - lineB;
+		if(d == 0)
+		{
+			// sanity checks
+			if(glyphIndexA < 0)
+			{
+				throw new Error();
+			}
+			else if(glyphIndexB < 0)
+			{
+				throw new Error();
+			}
+			
+			d = glyphIndexA - glyphIndexB;
+		}
+		return d;
 	}
 	
 	

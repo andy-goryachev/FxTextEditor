@@ -85,7 +85,7 @@ public class ScreenBuffer
 		int w = 0;
 		for(int i=0; i<height; i++)
 		{
-			int len = getRow(i).getCellCount();
+			int len = getRow(i).getGlyphCount();
 			if(len > w)
 			{
 				w = len;

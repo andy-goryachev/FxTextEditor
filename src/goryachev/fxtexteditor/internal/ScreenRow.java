@@ -72,6 +72,12 @@ public class ScreenRow
 	}
 	
 	
+	public int getStartGlyphIndex()
+	{
+		return startGlyphIndex;
+	}
+	
+	
 	/** returns the text cell at the specified column */
 	public TextCell getCell(int column)
 	{
@@ -109,7 +115,7 @@ public class ScreenRow
 	}
 	
 	
-	public int getCellCount()
+	public int getGlyphCount()
 	{
 		return wrap.getGlyphCountAtRow(wrapRow);
 	}
