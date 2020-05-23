@@ -106,6 +106,7 @@ public class VFlow
 		
 		ed.getVerticalScrollBar().valueProperty().addListener((s,p,c) -> handleVerticalScroll(c.doubleValue()));
 		ed.getHorizontalScrollBar().valueProperty().addListener((s,p,c) -> handleHorizontalScroll(c.doubleValue()));
+		ed.selector.selectionSegmentProperty().addListener((s,p,c) -> handleSelectionSegmentUpdate(p, c)); 
 		
 		// TODO clip rect
 		
@@ -1112,6 +1113,14 @@ public class VFlow
 		log.debug("scroll=%f", fractionOfHeight);
 	}
 
+	
+	/** scrolls up (deltaInPixels < 0) or down (deltaInPixels > 0) */
+	public void blockScroll(double deltaInPixels)
+	{
+		// TODO
+		log.debug("blockScroll=%f", deltaInPixels);
+	}
+	
 
 	public void verticalScroll(double fraction)
 	{

@@ -1,7 +1,6 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.log.Log;
-import goryachev.common.util.CKit;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.Formatters;
@@ -9,7 +8,6 @@ import goryachev.fx.FxBoolean;
 import goryachev.fx.FxFormatter;
 import goryachev.fx.FxObject;
 import goryachev.fx.XScrollBar;
-import goryachev.fxtexteditor.internal.GlyphIndex;
 import goryachev.fxtexteditor.internal.InputHandler;
 import goryachev.fxtexteditor.internal.Markers;
 import goryachev.fxtexteditor.internal.TabPolicy;
@@ -43,8 +41,8 @@ import javafx.util.Duration;
 public class FxTextEditor
 	extends CPane
 {
-	public final Actions actions = new Actions(this);
 	protected final Log log = Log.get("FxTextEditor");
+	public final Actions actions = new Actions(this);
 	protected final FxObject<Color> backgroundColorProperty = new FxObject(Color.WHITE);
 	protected final FxObject<Font> fontProperty = new FxObject(Font.font("Monospace", 12));
 	protected final FxBoolean editableProperty = new FxBoolean(false);
@@ -111,21 +109,33 @@ public class FxTextEditor
 		vflow = new VFlow(this);
 		
 		getChildren().addAll(vflow, vscroll, hscroll);
-		
-		selector.selectionSegmentProperty().addListener((s,p,c) -> vflow.handleSelectionSegmentUpdate(p, c)); 
-		
+				
 		// TODO
 //		FX.onChange(vflow::updateBlinkRate, true, blinkRateProperty());
 		
-		initInputHandler();
+		createInputHandler();
 		setFocusTraversable(true);
 		
 		setTabPolicy(TabPolicy.create(4));
 	}
 	
 	
-	/** override to provide your own input handler */
-	protected void initInputHandler()
+	/** override to provide your own implementation.  warning: this method is called from the constructor */
+	protected ScrollBar createVScrollBar()
+	{
+		return new XScrollBar();
+	}
+	
+	
+	/** override to provide your own implementation.  warning: this method is called from the constructor */
+	protected ScrollBar createHScrollBar()
+	{
+		return new XScrollBar();
+	}
+	
+	
+	/** override to provide your own implementation.  warning: this method is called from the constructor */
+	protected void createInputHandler()
 	{
 		new InputHandler(this, vflow, selector);
 	}
@@ -264,18 +274,6 @@ public class FxTextEditor
 	{
 		FxTextEditorModel m = getModel();
 		return m == null ? 0 : m.getLineCount();
-	}
-	
-	
-	protected ScrollBar createVScrollBar()
-	{
-		return new XScrollBar();
-	}
-	
-	
-	protected ScrollBar createHScrollBar()
-	{
-		return new XScrollBar();
 	}
 	
 	
@@ -535,20 +533,6 @@ public class FxTextEditor
 //		catch(Exception ignored)
 //		{
 //		}
-	}
-	
-	
-	public void scroll(double fractionOfHeight)
-	{
-		vflow.scroll(fractionOfHeight);
-	}
-	
-	
-	/** scrolls up (deltaInPixels < 0) or down (deltaInPixels > 0) */
-	public void blockScroll(double deltaInPixels)
-	{
-		// TODO
-//		vflow.blockScroll(deltaInPixels);
 	}
 	
 	
