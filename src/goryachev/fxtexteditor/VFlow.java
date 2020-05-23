@@ -1280,7 +1280,7 @@ public class VFlow
 			int topCell = topCellIndex;
 			
 			FlowLine fline = getTextLine(caretLine);
-			int x = fline.getGlyphIndex(caret.getCharIndex());
+			int x = getColumnAt(caretLine, caret.getCharIndex());
 			if(x < topCellIndex)
 			{
 				x = x - HORIZONTAL_SAFETY;
@@ -1290,7 +1290,7 @@ public class VFlow
 				}
 				topCell = x;
 			}
-			else if(x >= (topCellIndex + screenColumnCount)) // FIX mixing cell and glyph indexes!
+			else if(x >= (topCellIndex + screenColumnCount))
 			{
 				x = x + 1 - screenColumnCount;
 				if(x < 0)
