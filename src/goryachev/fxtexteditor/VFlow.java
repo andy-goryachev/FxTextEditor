@@ -524,6 +524,16 @@ public class VFlow
 	protected void updateVerticalScrollBarPosition()
 	{
 		D.print(); // FIX
+		
+		setHandleScrollEvents(false);
+		try
+		{
+//			editor.getVerticalScrollBar().setValue(v);
+		}
+		finally
+		{
+			setHandleScrollEvents(true);
+		}
 	}
 	
 	
