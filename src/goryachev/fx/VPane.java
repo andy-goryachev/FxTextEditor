@@ -19,6 +19,7 @@ import javafx.scene.layout.Region;
 public class VPane
 	extends Pane
 {
+	protected static final Log log = Log.get("VPane");
 	public static final double FILL = -1.0;
 	public static final double PREF = -2.0;
 	protected int gap;
@@ -139,7 +140,7 @@ public class VPane
 		}
 		catch(Exception e)
 		{
-			Log.err(e);
+			log.error(e);
 		}
 	}
 	

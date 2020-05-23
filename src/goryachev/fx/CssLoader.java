@@ -21,6 +21,7 @@ import javafx.application.Platform;
  */
 public class CssLoader
 {
+	protected static final Log log = Log.get("CssLoader");
 	public static final String PREFIX = "javafxcss";
 	private static CssLoader instance;
 	private String url;
@@ -77,7 +78,7 @@ public class CssLoader
 		catch(Throwable e)
 		{
 			// css will be disabled
-			Log.err(e);
+			log.error(e);
 		}
 	}
 	
@@ -166,12 +167,12 @@ public class CssLoader
 		}
 		catch(Error e)
 		{
-			Log.err(e);
+			log.error(e);
 			throw e;
 		}
 		catch(Throwable e)
 		{
-			Log.err(e);
+			log.error(e);
 		}
 	}
 		

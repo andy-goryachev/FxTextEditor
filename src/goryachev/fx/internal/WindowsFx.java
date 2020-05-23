@@ -28,6 +28,7 @@ import javafx.stage.WindowEvent;
  */
 public class WindowsFx
 {
+	protected static final Log log = Log.get("WindowsFx");
 	/** in the focus order */
 	protected final WeakList<FxWindow> windowStack = new WeakList<>();
 	/** prefix->window and window->prefix */
@@ -254,7 +255,7 @@ public class WindowsFx
 		}
 		catch(Exception e)
 		{
-			Log.err(e);
+			log.error(e);
 		}
 		
 		w.show();
@@ -415,7 +416,7 @@ public class WindowsFx
 		}
 		catch(Throwable e)
 		{
-			Log.err(e);
+			log.error(e);
 		}
 	}
 }
