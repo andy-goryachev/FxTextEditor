@@ -1,5 +1,6 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
+import goryachev.fx.FxAction;
 import goryachev.fxtexteditor.internal.Markers;
 import goryachev.fxtexteditor.op.Backspace;
 import goryachev.fxtexteditor.op.Copy;
@@ -22,20 +23,20 @@ import goryachev.fxtexteditor.op.SelectAll;
  */
 public class Actions
 {
-	public final Backspace backspace = new Backspace(this);
-	public final Copy copy = new Copy(this);
-	public final Delete delete = new Delete(this);
-	public final MoveDocumentEnd moveDocumentEnd = new MoveDocumentEnd(this);
-	public final MoveDocumentStart moveDocumentStart = new MoveDocumentStart(this);
-	public final MoveDown moveDown = new MoveDown(this);
-	public final MoveEnd moveEnd = new MoveEnd(this);
-	public final MoveHome moveHome = new MoveHome(this);
-	public final MoveLeft moveLeft = new MoveLeft(this);
-	public final MoveRight moveRight = new MoveRight(this);
-	public final MoveUp moveUp = new MoveUp(this);
-	public final PageDown pageDown = new PageDown(this);
-	public final PageUp pageUp = new PageUp(this);
-	public final SelectAll selectAll = new SelectAll(this);
+	public FxAction backspace = new Backspace(this);
+	public FxAction copy = new Copy(this);
+	public FxAction delete = new Delete(this);
+	public FxAction moveDocumentEnd = new MoveDocumentEnd(this);
+	public FxAction moveDocumentStart = new MoveDocumentStart(this);
+	public FxAction moveDown = new MoveDown(this);
+	public FxAction moveEnd = new MoveEnd(this);
+	public FxAction moveHome = new MoveHome(this);
+	public FxAction moveLeft = new MoveLeft(this);
+	public FxAction moveRight = new MoveRight(this);
+	public FxAction moveUp = new MoveUp(this);
+	public FxAction pageDown = new PageDown(this);
+	public FxAction pageUp = new PageUp(this);
+	public FxAction selectAll = new SelectAll(this);
 	//
 	private final FxTextEditor editor;
 	

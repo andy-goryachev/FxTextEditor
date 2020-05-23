@@ -81,25 +81,25 @@ public class InputHandler
 		if(ev.isShiftDown())
 		{
 			// TODO horizontal scroll perhaps?
-			D.print("horizontal scroll", ev.getDeltaX());
+			D.print("horizontal scroll?", ev.getDeltaX());
 		}
 		else if(ev.isShortcutDown())
 		{
 			// page up / page down
 			if(ev.getDeltaY() >= 0)
 			{
-				editor.actions.pageUp.action();
+				editor.actions.pageUp.execute();
 			}
 			else
 			{
-				editor.actions.pageDown.action();
+				editor.actions.pageDown.execute();
 			}
 		}
 		else
 		{
 			// vertical block scroll
 			double frac = scrollWheelStepSize * (ev.getDeltaY() >= 0 ? -1 : 1); 
-			editor.scroll(frac); 
+			vflow.scroll(frac); 
 		}
 	}
 	
@@ -228,7 +228,7 @@ public class InputHandler
 		{
 			delta = -delta;
 		}
-		editor.blockScroll(delta);
+		vflow.blockScroll(delta);
 		
 		Point2D p;
 		if(autoScrollUp)
