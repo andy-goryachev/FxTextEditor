@@ -6,6 +6,7 @@ import goryachev.fx.FX;
 import goryachev.fx.Formatters;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxFormatter;
+import goryachev.fx.FxInt;
 import goryachev.fx.FxObject;
 import goryachev.fx.XScrollBar;
 import goryachev.fxtexteditor.internal.InputHandler;
@@ -51,6 +52,7 @@ public class FxTextEditor
 	protected final FxBoolean displayCaretProperty = new FxBoolean(true);
 	protected final FxBoolean showLineNumbersProperty = new FxBoolean(false);
 	protected final FxBoolean highlightCaretLineProperty = new FxBoolean(true);
+	protected final FxInt scrollWheelStepSize = new FxInt(Integer.MAX_VALUE);
 	protected final ReadOnlyObjectWrapper<Duration> caretBlinkRateProperty = new ReadOnlyObjectWrapper(Duration.millis(500));
 	protected final FxObject<FxFormatter> lineNumberFormatterProperty = new FxObject<>();
 	protected final FxObject<ITabPolicy> tabPolicy = new FxObject();
@@ -421,6 +423,19 @@ public class FxTextEditor
 	public void setEditable(boolean on)
 	{
 		editableProperty.set(on);
+	}
+	
+	
+	/** sets the scroll wheel step size (in lines).  the actual value will be clipped to the range [1..screenRowCount] */
+	public void setScrollWheelStepSize(int n)
+	{
+		scrollWheelStepSize.set(n);
+	}
+	
+	
+	public int getScrollWheelStepSize()
+	{
+		return scrollWheelStepSize.get();
 	}
 
 	

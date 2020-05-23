@@ -51,7 +51,7 @@ public class InputHandler
 		vflow.addEventFilter(MouseEvent.MOUSE_PRESSED, (ev) -> handleMousePressed(ev));
 		vflow.addEventFilter(MouseEvent.MOUSE_RELEASED, (ev) -> handleMouseReleased(ev));
 		vflow.addEventFilter(MouseEvent.MOUSE_DRAGGED, (ev) -> handleMouseDragged(ev));
-		vflow.addEventFilter(ScrollEvent.ANY, (ev) -> handleScroll(ev));
+		vflow.addEventFilter(ScrollEvent.ANY, (ev) -> handleScrollWheel(ev));
 		
 		// key map
 		KeyMap.onKeyPressed(ed, KeyCode.A, KeyMap.SHORTCUT, ed.actions.selectAll);
@@ -76,31 +76,20 @@ public class InputHandler
 	}
 	
 	
-	protected void handleScroll(ScrollEvent ev)
+	protected void handleScrollWheel(ScrollEvent ev)
 	{
-		if(ev.isShiftDown())
+		int step;
+		if(ev.isShortcutDown())
 		{
-			// TODO horizontal scroll perhaps?
-			D.print("horizontal scroll?", ev.getDeltaX());
-		}
-		else if(ev.isShortcutDown())
-		{
-			// page up / page down
-			if(ev.getDeltaY() >= 0)
-			{
-				editor.actions.pageUp.execute();
-			}
-			else
-			{
-				editor.actions.pageDown.execute();
-			}
+			step = Integer.MAX_VALUE;
 		}
 		else
 		{
-			// vertical block scroll
-			double frac = scrollWheelStepSize * (ev.getDeltaY() >= 0 ? -1 : 1); 
-			vflow.scroll(frac); 
+			step = editor.getScrollWheelStepSize();
 		}
+		
+		boolean up = (ev.getDeltaY() >= 0);
+		vflow.scroll(step, up); 
 	}
 	
 	

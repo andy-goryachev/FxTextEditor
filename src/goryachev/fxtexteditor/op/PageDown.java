@@ -32,7 +32,7 @@ public class PageDown
 	{
 		int screenHeight = vflow().getScreenRowCount();
 				
-		advanceTop(screenHeight);
+		vflow().shiftViewPort(screenHeight);
 
 		int pos = m.getCharIndex();
 		int line = m.getLine();

@@ -94,20 +94,4 @@ public abstract class NavigationAction
 			vflow().scrollCaretToView();
 		}
 	}
-	
-	
-	protected void advanceTop(int delta)
-	{
-		int line = vflow().getTopLine();
-		int gix = vflow().getTopGlyphIndex();
-		
-		WrapInfo wr = wrapInfo(line);
-		int wrapRow = wr.getWrapRowForGlyphIndex(gix);
-		
-		WrapPos wp = vflow().advance(line, wrapRow, delta);
-		int newLine = wp.getLine();
-		int newGlyphIndex = wp.getStartGlyphIndex();
-		
-		vflow().setOrigin(newLine, newGlyphIndex);
-	}
 }

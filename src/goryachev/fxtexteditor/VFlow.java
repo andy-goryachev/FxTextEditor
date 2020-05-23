@@ -145,6 +145,42 @@ public class VFlow
 	}
 	
 	
+	/** shift viewport delta rows up (delta<0) or down (delta>0) */
+	public void shiftViewPort(int delta)
+	{
+		int line = getTopLine();
+		int gix = getTopGlyphIndex();
+		
+		WrapInfo wr = getWrapInfo(line);
+		int wrapRow = wr.getWrapRowForGlyphIndex(gix);
+		
+		WrapPos wp = advance(line, wrapRow, delta);
+		int newLine = wp.getLine();
+		int newGlyphIndex = wp.getStartGlyphIndex();
+		
+		// avoid going beyond (lastRow - screenRowCount)
+		int lineCount = getModelLineCount();
+		if(newLine > (lineCount - screenRowCount))
+		{
+			wp = advance(lineCount, 0, -screenRowCount);
+			if(newLine > wp.getLine())
+			{
+				newLine = wp.getLine();
+				newGlyphIndex = wp.getStartGlyphIndex();
+			}
+			else if(newLine == wp.getLine())
+			{
+				if(newGlyphIndex > wp.getStartGlyphIndex())
+				{
+					newGlyphIndex = wp.getStartGlyphIndex();
+				}
+			}
+		}
+		
+		setOrigin(newLine, newGlyphIndex);
+	}
+	
+	
 	public void setOrigin(int topLine, int glyphIndex)
 	{
 		log.debug("%d %s", topLine, glyphIndex);
@@ -707,7 +743,7 @@ public class VFlow
 		
 		int y = CKit.floor(sy / m.cellHeight);
 		
-		int topWrapRow = buffer().getRow(0).getWrapRow();
+		int topWrapRow = getTopWrapRow();
 		WrapPos wp = advance(topLine, topWrapRow, y);
 		
 		TextCell cell = wp.getWrapInfo().getCell(wp.getRow(), x + topCellIndex);
@@ -722,6 +758,13 @@ public class VFlow
 		TextPos pos = new TextPos(line, charIndex);
 		log.debug(pos);
 		return pos;
+	}
+	
+	
+	protected int getTopWrapRow()
+	{
+		// I wonder if it's better to derive from topGlyphIndex
+		return buffer().getRow(0).getWrapRow();
 	}
 	
 	
@@ -1117,10 +1160,20 @@ public class VFlow
 	}
 	
 	
-	public void scroll(double fractionOfHeight)
+	public void scroll(int scrollSizeInLines, boolean up)
 	{
-		// TODO
-		log.debug("scroll=%f", fractionOfHeight);
+		log.trace("scroll=%f %s", scrollSizeInLines, up);
+
+		if(scrollSizeInLines < 1)
+		{
+			scrollSizeInLines = 1;
+		}
+		else if(scrollSizeInLines > getScreenRowCount())
+		{
+			scrollSizeInLines = getScreenRowCount();
+		}
+		
+		shiftViewPort(up ? -scrollSizeInLines : scrollSizeInLines);
 	}
 
 	
