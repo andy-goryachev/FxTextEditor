@@ -155,6 +155,16 @@ public class VFlow
 		int wrapRow = wr.getWrapRowForGlyphIndex(gix);
 		
 		WrapPos wp = advance(line, wrapRow, delta);
+		wp = ensureLastPageFullView(wp);
+		
+		int newLine = wp.getLine();
+		int newGlyphIndex = wp.getStartGlyphIndex();
+		setOrigin(newLine, newGlyphIndex);
+	}
+	
+	
+	protected WrapPos ensureLastPageFullView(WrapPos wp)
+	{
 		int newLine = wp.getLine();
 		int newGlyphIndex = wp.getStartGlyphIndex();
 		
@@ -162,22 +172,20 @@ public class VFlow
 		int lineCount = getModelLineCount();
 		if(newLine > (lineCount - screenRowCount))
 		{
-			wp = advance(lineCount, 0, -screenRowCount);
-			if(newLine > wp.getLine())
+			WrapPos wp2 = advance(lineCount, 0, -screenRowCount);
+			if(newLine > wp2.getLine())
 			{
-				newLine = wp.getLine();
-				newGlyphIndex = wp.getStartGlyphIndex();
+				return wp2;
 			}
-			else if(newLine == wp.getLine())
+			else if(newLine == wp2.getLine())
 			{
-				if(newGlyphIndex > wp.getStartGlyphIndex())
+				if(newGlyphIndex > wp2.getStartGlyphIndex())
 				{
-					newGlyphIndex = wp.getStartGlyphIndex();
+					return wp2;
 				}
 			}
 		}
-		
-		setOrigin(newLine, newGlyphIndex);
+		return wp;
 	}
 	
 	
@@ -1263,29 +1271,34 @@ public class VFlow
 			int caretWrapRow = wr.getWrapRowForCharIndex(caret.getCharIndex());
 			
 			WrapPos wp = advance(caretLine, caretWrapRow, delta);
+			wp = ensureLastPageFullView(wp);
 			int line = wp.getLine();
 			int gix = wp.getStartGlyphIndex();
 			
-			int lineCount = getModelLineCount();
-			if(line > (lineCount - screenRowCount))
-			{
-				// do not scroll past topLine - screenRowCount
-				int endLine = lineCount - 1;
-				if(endLine < 0)
-				{
-					endLine = 0;
-				}
-				wr = getWrapInfo(endLine);
-				int endRow = wr.getWrapRowCount() - 1;
-				
-				// do not go beyond this point
-				WrapPos wp2 = advance(endLine, endRow, 1 - screenRowCount);
-				if(wp.isAfter(wp2))
-				{
-					line = wp2.getLine();
-					gix = wp2.getStartGlyphIndex();
-				}
-			}
+//			int lineCount = getModelLineCount();
+//			if(line > (lineCount - screenRowCount))
+//			{
+//				// do not scroll past topLine - screenRowCount
+//				int endLine = lineCount - 1;
+//				if(endLine < 0)
+//				{
+//					endLine = 0;
+//				}
+//				wr = getWrapInfo(endLine);
+//				int endRow = wr.getWrapRowCount() - 1;
+//				
+//				// do not go beyond this point
+//				WrapPos wp2 = advance(endLine, endRow, 1 - screenRowCount);
+//				if(wp.isAfter(wp2))
+//				{
+//					line = wp2.getLine();
+//					gix = wp2.getStartGlyphIndex();
+//				}
+//				else
+//				{
+//					int zz = 0;
+//				}
+//			}
 			
 			setOrigin(line, gix);
 		}

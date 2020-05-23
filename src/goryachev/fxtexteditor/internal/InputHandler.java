@@ -1,6 +1,5 @@
 // Copyright © 2016-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
-import goryachev.common.util.D;
 import goryachev.fx.FX;
 import goryachev.fx.KeyMap;
 import goryachev.fxtexteditor.FxTextEditor;
@@ -19,7 +18,7 @@ import javafx.util.Duration;
 
 
 /**
- * FxTextEditor keyboard and mouse input handler.
+ * Keyboard and mouse input handler.
  */
 public class InputHandler
 {
