@@ -8,6 +8,7 @@ import goryachev.fxtexteditor.SelectionController;
 import goryachev.fxtexteditor.VFlow;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.event.EventType;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -35,6 +36,7 @@ public class InputHandler
 	private double scrollWheelStepSize = 0.1;
 	private int lastx = -1;
 	private int lasty = -1;
+	private boolean inTrackpadScroll;
 
 
 	public InputHandler(FxTextEditor ed, VFlow f, SelectionController sel)
@@ -77,14 +79,34 @@ public class InputHandler
 	
 	protected void handleScrollWheel(ScrollEvent ev)
 	{
-		int step;
-		if(ev.isShortcutDown())
+		EventType<ScrollEvent> t = ev.getEventType();
+		if(t == ScrollEvent.SCROLL_STARTED)
 		{
-			step = Integer.MAX_VALUE;
+			inTrackpadScroll = true;
+			return;
+		}
+		else if(t == ScrollEvent.SCROLL_FINISHED)
+		{
+			inTrackpadScroll = false;
+			return;
+		}
+		
+		int step;
+		if(inTrackpadScroll)
+		{
+			// TODO another property?
+			step = 3;
 		}
 		else
 		{
-			step = editor.getScrollWheelStepSize();
+			if(ev.isShortcutDown())
+			{
+				step = Integer.MAX_VALUE;
+			}
+			else
+			{
+				step = editor.getScrollWheelStepSize();
+			}
 		}
 		
 		boolean up = (ev.getDeltaY() >= 0);
