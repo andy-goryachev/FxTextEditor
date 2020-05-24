@@ -123,4 +123,12 @@ public class SingleRowWrapInfo
 		
 		return new TextCell(type, ix, ix, ix, ix);
 	}
+
+
+	public int getCellCountAtRow(int wrapRow)
+	{
+		checkRow(wrapRow);
+		
+		return length;
+	}
 }

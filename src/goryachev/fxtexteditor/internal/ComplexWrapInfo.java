@@ -127,6 +127,13 @@ public class ComplexWrapInfo
 		
 		return cs.length;
 	}
+	
+	
+	public int getCellCountAtRow(int wrapRow)
+	{
+		int[] cs = cells[wrapRow];
+		return cs.length;
+	}
 
 
 	public int getCharIndexForColumn(int wrapRow, int column)

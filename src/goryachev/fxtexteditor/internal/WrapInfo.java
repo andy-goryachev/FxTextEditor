@@ -27,6 +27,10 @@ public abstract class WrapInfo
 
 	/** returns the screen column for the given character */
 	public abstract int getColumnForCharIndex(int charIndex);
+	
+	/** returns the number of columns required to display the text at the specified row */
+	@Deprecated // not used
+	public abstract int getCellCountAtRow(int wrapRow);
 
 	/** returns the number of text glyphs at the specific wrap row */
 	public abstract int getGlyphCountAtRow(int wrapRow);

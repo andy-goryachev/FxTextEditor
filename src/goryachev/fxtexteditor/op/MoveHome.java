@@ -6,7 +6,7 @@ import goryachev.fxtexteditor.internal.NavigationAction;
 
 
 /**
- * Moves cursor to the beginning of row.
+ * Moves the cursor to the beginning of the current line.
  */
 public class MoveHome
 	extends NavigationAction
@@ -19,12 +19,9 @@ public class MoveHome
 
 	protected Marker move(Marker m)
 	{
-		int pos = m.getCharIndex();
 		int line = m.getLine();
-		
-		// TODO
-		// if wrapped: row start, then prev row start, then start of text line.
-		
+		int pos = 0;
+		setPhantomColumn(line, pos);
 		return editor().newMarker(line, pos);
 	}
 }
