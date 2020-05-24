@@ -777,7 +777,7 @@ public class VFlow
 		}
 	
 		TextPos pos = new TextPos(line, charIndex);
-		log.debug(pos);
+		log.debug("screenx=%f, screeny=%f, pos=%s", screenx, screeny, pos);
 		return pos;
 	}
 	
@@ -1201,7 +1201,6 @@ public class VFlow
 	/** scrolls up (deltaInPixels < 0) or down (deltaInPixels > 0) */
 	public void blockScroll(double deltaInPixels)
 	{
-		// TODO
 		log.debug("blockScroll=%f", deltaInPixels);
 
 		TextMetrics tm = textMetrics();
@@ -1566,9 +1565,9 @@ public class VFlow
 				else
 				{
 					steps -= size;
-					count -= size;
+					count += size;
 					
-					if(line >= (getModelLineCount() - 1))
+					if(line >= (getModelLineCount()))
 					{
 						break;
 					}

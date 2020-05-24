@@ -202,8 +202,8 @@ public class InputHandler
 			stopAutoScroll();
 		}
 		
-		Marker pos = getMarker(ev);
-		selector.extendLastSegment(pos);
+		Marker m = getMarker(ev);
+		selector.extendLastSegment(m);
 	}
 	
 	
