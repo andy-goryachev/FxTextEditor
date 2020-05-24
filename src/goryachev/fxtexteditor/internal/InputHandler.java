@@ -214,6 +214,7 @@ public class InputHandler
 		vflow.setSuppressBlink(false);
 		vflow.scrollCaretToView();
 		vflow.setPhantomColumnFromCursor();
+		vflow.scrollCaretToView();
 	}
 	
 	
@@ -249,9 +250,6 @@ public class InputHandler
 		{
 			p = vflow.localToScreen(0, vflow.getHeight());
 		}
-		
-		// TODO this could be done on mouse released!
-		editor.scrollToVisible(p);
 		
 		Marker pos = editor.getInsertPosition(p.getX(), p.getY());
 		selector.extendLastSegment(pos);

@@ -1203,6 +1203,21 @@ public class VFlow
 	{
 		// TODO
 		log.debug("blockScroll=%f", deltaInPixels);
+
+		TextMetrics tm = textMetrics();
+		double ch = tm.cellHeight;
+		
+		int delta;
+		if(deltaInPixels < 0)
+		{
+			delta = (int)Math.floor(deltaInPixels / ch);
+		}
+		else
+		{
+			delta = (int)Math.ceil(deltaInPixels / ch);
+		}
+		
+		shiftViewPort(delta);
 	}
 	
 
