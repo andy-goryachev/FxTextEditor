@@ -5,8 +5,8 @@ import goryachev.fxtexteditor.internal.WrapInfo;
 
 
 /**
- * Encapsulates the starting points of each wrap line:
- * line index (and its WrapInfo), and a wrap row within. 
+ * Provides information about position within the array
+ * of (possibly wrapped) text rows.
  */
 public class WrapPos
 	implements Comparable<WrapPos>
@@ -14,13 +14,15 @@ public class WrapPos
 	private final int line;
 	private final int row;
 	private final WrapInfo wrap;
+	private final int rowCount;
 	
 	
-	public WrapPos(int line, int row, WrapInfo wrap)
+	public WrapPos(int line, int row, WrapInfo wrap, int rowCount)
 	{
 		this.line = line;
 		this.row = row;
 		this.wrap = wrap;
+		this.rowCount = rowCount;
 	}
 	
 	
@@ -39,6 +41,13 @@ public class WrapPos
 	public WrapInfo getWrapInfo()
 	{
 		return wrap;
+	}
+	
+	
+	/** returns the number of rows traversed in VFlow.advance() */
+	public int getRowCount()
+	{
+		return rowCount;
 	}
 	
 	
