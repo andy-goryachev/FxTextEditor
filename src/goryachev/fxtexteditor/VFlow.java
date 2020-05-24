@@ -75,8 +75,7 @@ public class VFlow
 	private int topLine;
 	private int topGlyphIndex;
 	/** leftmost column in non-wrapped mode */
-	// TODO rename
-	private int topCellIndex;
+	private int topColumn;
 	private boolean screenBufferValid;
 	private boolean repaintRequested;
 	protected final FlowLineCache cache;
@@ -107,8 +106,6 @@ public class VFlow
 		ed.getVerticalScrollBar().valueProperty().addListener((s,p,c) -> handleVerticalScroll(c.doubleValue()));
 		ed.getHorizontalScrollBar().valueProperty().addListener((s,p,c) -> handleHorizontalScroll(c.doubleValue()));
 		ed.selector.selectionSegmentProperty().addListener((s,p,c) -> handleSelectionSegmentUpdate(p, c)); 
-		
-		// TODO clip rect
 		
 		paintCaret = new FxBooleanBinding(caretEnabledProperty, editor.displayCaretProperty, editor.focusedProperty(), editor.disabledProperty(), suppressBlink)
 		{
@@ -206,18 +203,18 @@ public class VFlow
 	/** returns the leftmost display cell index (glyph index) */
 	public int getTopCellIndex()
 	{
-		return topCellIndex;
+		return topColumn;
 	}
 	
 	
 	/** meaningful only in non-wrapped mode */
 	public void setTopCellIndex(int ix)
 	{
-		if(topCellIndex != ix)
+		if(topColumn != ix)
 		{
 			log.debug("%d", ix);
 			
-			topCellIndex = ix;
+			topColumn = ix;
 			invalidate();
 		}
 	}
@@ -407,7 +404,7 @@ public class VFlow
 	
 	protected void refreshCursor()
 	{
-		// TODO
+		// TODO repaint only the damaged area
 		repaint();
 	}
 	
@@ -542,7 +539,7 @@ public class VFlow
 			else
 			{
 				max -= screenColumnCount;
-				v = topCellIndex / (double)max;
+				v = topColumn / (double)max;
 			}
 			
 			setHandleScrollEvents(false);
@@ -665,7 +662,7 @@ public class VFlow
 	{
 		if(editor.isWrapLines())
 		{
-			topCellIndex = 0;
+			topColumn = 0;
 		}
 		else
 		{
@@ -767,7 +764,7 @@ public class VFlow
 		int topWrapRow = getTopWrapRow();
 		WrapPos wp = advance(topLine, topWrapRow, y);
 		
-		TextCell cell = wp.getWrapInfo().getCell(wp.getRow(), x + topCellIndex);
+		TextCell cell = wp.getWrapInfo().getCell(wp.getRow(), x + topColumn);
 		int charIndex = cell.getInsertCharIndex();
 		
 		int line = wp.getLine();
@@ -1011,7 +1008,7 @@ public class VFlow
 			
 			for(int x=0; x<xmax; x++)
 			{
-				cell = row.getCell(x + topCellIndex);
+				cell = row.getCell(x + topColumn);
 				GlyphType t = cell.getGlyphType();
 				switch(t)
 				{
@@ -1304,11 +1301,11 @@ public class VFlow
 		}
 		else
 		{
-			int topCell = topCellIndex;
+			int topCell = topColumn;
 			
 			FlowLine fline = getTextLine(caretLine);
 			int x = getColumnAt(caretLine, caret.getCharIndex());
-			if(x < topCellIndex)
+			if(x < topColumn)
 			{
 				x = x - HORIZONTAL_SAFETY;
 				if(x < HORIZONTAL_SAFETY)
@@ -1317,7 +1314,7 @@ public class VFlow
 				}
 				topCell = x;
 			}
-			else if(x >= (topCellIndex + screenColumnCount))
+			else if(x >= (topColumn + screenColumnCount))
 			{
 				x = x + 1 - screenColumnCount;
 				if(x < 0)
@@ -1343,7 +1340,7 @@ public class VFlow
 				top = y;
 			}
 			
-			int prevTopCell = topCellIndex;
+			int prevTopCell = topColumn;
 			int prevTopLine = topLine;
 			
 			setTopCellIndex(topCell);
@@ -1383,14 +1380,6 @@ public class VFlow
 			return false;
 		}
 		
-		// FIX fails if last line is wrapped line
-//		FlowLine fline = getTextLine(topLine);
-//		int cix = fline.getCharIndex(topGlyphIndex);
-//		if(m.isBefore(topLine, cix))
-//		{
-//			return false;
-//		}
-		
 		if(isWrapLines())
 		{
 			FlowLine fline = getTextLine(line);
@@ -1412,11 +1401,11 @@ public class VFlow
 		{
 			WrapInfo wr = getWrapInfo(m.getLine());
 			int col = wr.getColumnForCharIndex(m.getCharIndex());
-			if(col < topCellIndex)
+			if(col < topColumn)
 			{
 				return false;
 			}
-			else if(col >= (topCellIndex + screenColumnCount))
+			else if(col >= (topColumn + screenColumnCount))
 			{
 				return false;
 			}
