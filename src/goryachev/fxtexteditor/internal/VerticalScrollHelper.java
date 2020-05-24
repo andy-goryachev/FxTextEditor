@@ -12,6 +12,8 @@ import goryachev.fxtexteditor.VFlow;
  * Computes line indexes and starting points for [count] rows up and down relative
  * to the rough target scroll line [center], 
  * in order to account for text lines that take more than one screen row.
+ * 
+ * FIX use advance(); also, last line is slightly off
  */
 public class VerticalScrollHelper
 {

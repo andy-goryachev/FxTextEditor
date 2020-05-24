@@ -1,6 +1,7 @@
 # BUGS
 
 - click and drag down outside of the view
+- vertical scroll helper should use advance(), also slightly off
 
 
 

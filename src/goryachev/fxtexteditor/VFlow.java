@@ -160,6 +160,8 @@ public class VFlow
 		int newLine = wp.getLine();
 		int newGlyphIndex = wp.getStartGlyphIndex();
 		setOrigin(newLine, newGlyphIndex);
+		
+		updateVerticalScrollBarPosition();
 	}
 	
 	
@@ -568,12 +570,23 @@ public class VFlow
 	
 	protected void updateVerticalScrollBarPosition()
 	{
-		D.print(); // FIX
+		int lineCount = getModelLineCount();
+		double v;
+		if(lineCount == 0)
+		{
+			v = 1.0;
+		}
+		else
+		{
+			// TODO scan +/- screen height of lines
+			// to adjust, similarly to vertical scroll
+			v = topLine / (double)lineCount;
+		}
 		
 		setHandleScrollEvents(false);
 		try
 		{
-//			editor.getVerticalScrollBar().setValue(v);
+			editor.getVerticalScrollBar().setValue(v);
 		}
 		finally
 		{
