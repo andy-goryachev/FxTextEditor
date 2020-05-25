@@ -297,7 +297,7 @@ public class InputHandler
 //				catch(Exception e)
 //				{
 //					// TODO provide user feedback
-//					Log.ex(e);
+//					log.error(e);
 //				}
 //			}
 //		}
