@@ -1,6 +1,7 @@
 # BUGS
 
-- vertical scroll helper should use advance(), also slightly off
+- vertical scroll bar jumps when adjusting
+- vertical scroll helper is slightly off
 
 
 

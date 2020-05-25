@@ -2,7 +2,6 @@
 package goryachev.fxtexteditor;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
-import goryachev.common.util.D;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
@@ -11,6 +10,7 @@ import goryachev.fxtexteditor.internal.FlowLine;
 import goryachev.fxtexteditor.internal.FlowLineCache;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
 import goryachev.fxtexteditor.internal.ScreenRow;
+import goryachev.fxtexteditor.internal.ScrollAssist;
 import goryachev.fxtexteditor.internal.SelectionHelper;
 import goryachev.fxtexteditor.internal.TextCell;
 import goryachev.fxtexteditor.internal.VerticalScrollHelper;
@@ -157,8 +157,6 @@ public class VFlow
 		int newLine = wp.getLine();
 		int newGlyphIndex = wp.getStartGlyphIndex();
 		setOrigin(newLine, newGlyphIndex);
-		
-		updateVerticalScrollBarPosition();
 	}
 	
 	
@@ -190,6 +188,14 @@ public class VFlow
 	
 	public void setOrigin(int topLine, int glyphIndex)
 	{
+		if(topLine == this.topLine)
+		{
+			if(glyphIndex == this.topGlyphIndex)
+			{
+				return;
+			}
+		}
+		
 		log.debug("%d %s", topLine, glyphIndex);
 		
 		this.topLine = topLine;
@@ -197,6 +203,13 @@ public class VFlow
 		
 		updateLineNumbers();
 		invalidate();
+		
+		if(!isWrapLines())
+		{
+			updateHorizontalScrollBarPosition();
+		}
+		
+		updateVerticalScrollBarPosition();
 	}
 	
 	
@@ -557,10 +570,44 @@ public class VFlow
 	
 	protected void updateVerticalScrollBarSize()
 	{
+		int lineCount = getModelLineCount();
+
+		double v;
 		if(isWrapLines())
 		{
-			double val = computeVerticalScrollBarThumbSize();
-			editor.getVerticalScrollBar().setVisibleAmount(val);
+			ScrollAssist a = ScrollAssist.create(this, topLine, getTopWrapRow());
+			
+			// add the number of extra rows due to wrapping (for visible lines)
+			double total = lineCount + a.getAdditionalRows();
+			if(total < screenRowCount)
+			{
+				v = 1.0;
+			}
+			else
+			{
+				v = screenRowCount / total;
+			}
+		}
+		else
+		{
+			if(lineCount < screenRowCount)
+			{
+				v = 1.0;
+			}
+			else
+			{
+				v = screenRowCount / lineCount;
+			}
+		}
+		
+		setHandleScrollEvents(false);
+		try
+		{
+			editor.getVerticalScrollBar().setVisibleAmount(v);
+		}
+		finally
+		{
+			setHandleScrollEvents(true);
 		}
 	}
 	
@@ -568,16 +615,27 @@ public class VFlow
 	protected void updateVerticalScrollBarPosition()
 	{
 		int lineCount = getModelLineCount();
+		
 		double v;
-		if(lineCount == 0)
+		if(isWrapLines())
 		{
-			v = 1.0;
+			// adjust for additional wrapped rows  
+			// vis / (lineCount + additionaRows)
+			
+			ScrollAssist a = ScrollAssist.create(this, topLine, getTopWrapRow());
+			double max = getModelLineCount() + a.getAdditionalRows();
+			v = (topLine + a.getAdditionalTopRows()) / max;
 		}
 		else
 		{
-			// TODO scan +/- screen height of lines
-			// to adjust, similarly to vertical scroll
-			v = topLine / (double)lineCount;
+			if(lineCount < screenRowCount)
+			{
+				v = 0.0;
+			}
+			else
+			{
+				v = topLine / (double)lineCount;
+			}
 		}
 		
 		setHandleScrollEvents(false);
@@ -589,57 +647,6 @@ public class VFlow
 		{
 			setHandleScrollEvents(true);
 		}
-	}
-	
-	
-	protected double computeVerticalScrollBarThumbSize()
-	{
-		FxTextEditorModel model = editor.getModel();
-		if(model == null)
-		{
-			return 1.0;
-		}
-		
-		// add the number of additional rows created due to wrapping
-		int extraRows = 0;
-		
-		int frameSize = 10;
-		
-		int min = Math.max(0, topLine - frameSize);
-		for(int ix=topLine; ix>=min; ix--)
-		{
-			FlowLine fline = getTextLine(ix);
-			WrapInfo wr = getWrapInfo(fline);
-			int ct = wr.getWrapRowCount();
-			if(ct > 1)
-			{
-				extraRows += (ct - 1);
-			}
-		}
-		
-		// TODO when startGlyphIndex != 0
-		
-		int max = Math.min(topLine + screenRowCount + frameSize, model.getLineCount());
-		for(int ix=topLine; ix<max; ix++)
-		{
-			FlowLine fline = getTextLine(ix);
-			WrapInfo wr = getWrapInfo(fline);
-			int ct = wr.getWrapRowCount();
-			if(ct > 1)
-			{
-				extraRows += (ct - 1);
-			}
-		}
-		
-		// add the number of extra rows due to wrapping (for visible lines)
-		int total = model.getLineCount() + 2 + extraRows;
-		int visible = screenRowCount;
-		if(visible > total)
-		{
-			// TODO perhaps suppress scrollbar thumb, but keep the scroll bar itself to avoid another reflow
-			visible = total;
-		}
-		return visible / (double)total;
 	}
 	
 
@@ -702,7 +709,7 @@ public class VFlow
 	{
 		if(handleScrollEvents)
 		{
-			log.debug("val={}", val);
+			log.debug("val=%f", val);
 			
 			verticalScroll(val);
 		}
@@ -1227,6 +1234,7 @@ public class VFlow
 
 		if(isWrapLines())
 		{
+			// TODO use ScrollAssist?
 			VerticalScrollHelper h = new VerticalScrollHelper(this, lineCount, top, fraction);
 			GlyphPos p = h.process();
 
@@ -1345,16 +1353,6 @@ public class VFlow
 			
 			setTopCellIndex(topCell);
 			setOrigin(top, 0);
-			
-			if(topCell != prevTopCell)
-			{
-				updateHorizontalScrollBarPosition();
-			}
-			
-			if(top != prevTopLine)
-			{
-				updateVerticalScrollBarPosition();
-			}
 		}
 	}
 	

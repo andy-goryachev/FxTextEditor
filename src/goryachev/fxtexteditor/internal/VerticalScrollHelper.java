@@ -13,11 +13,11 @@ import goryachev.fxtexteditor.VFlow;
  * to the rough target scroll line [center], 
  * in order to account for text lines that take more than one screen row.
  * 
- * FIX use advance(); also, last line is slightly off
+ * FIX last line is slightly off
  */
+@Deprecated // TODO use ScrollAssist?
 public class VerticalScrollHelper
 {
-	protected static final int FRAME_SIZE = 100;
 	protected static final Log log = Log.get("VerticalScrollHelper");
 	private final VFlow vflow;
 	private final int modelLineCount;
@@ -40,7 +40,7 @@ public class VerticalScrollHelper
 	public GlyphPos process()
 	{
 		int screenRows = vflow.getScreenRowCount();
-		int frameSize = Math.max(FRAME_SIZE, screenRows);
+		int frameSize = Math.max(ScrollAssist.FRAME_SIZE, screenRows);
 		
 		// determine frame boundaries
 
@@ -72,8 +72,7 @@ public class VerticalScrollHelper
 		
 		for(int ix=start; ix<end; ix++)
 		{
-			FlowLine fline = vflow.getTextLine(ix);
-			WrapInfo wr = vflow.getWrapInfo(fline);
+			WrapInfo wr = vflow.getWrapInfo(ix);
 			int add = wr.getWrapRowCount();
 			if(add > 1)
 			{
