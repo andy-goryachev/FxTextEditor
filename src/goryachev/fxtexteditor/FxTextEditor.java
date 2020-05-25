@@ -41,7 +41,7 @@ import javafx.util.Duration;
 public class FxTextEditor
 	extends CPane
 {
-	protected final Log log = Log.get("FxTextEditor");
+	protected static final Log log = Log.get("FxTextEditor");
 	public final Actions actions = new Actions(this);
 	protected final FxObject<Color> backgroundColor = new FxObject(Color.WHITE);
 	protected final FxObject<Color> caretLineColor = new FxObject(FX.rgb(255, 200, 255));

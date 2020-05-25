@@ -22,7 +22,7 @@ import javafx.scene.control.ToggleButton;
 public class FxAction
     implements EventHandler<ActionEvent>
 {
-	protected final Log log = Log.get("FxAction");
+	protected static final Log log = Log.get("FxAction");
 	public static final FxAction DISABLED = new FxAction(null, false);
 	private final FxBoolean selectedProperty = new FxBoolean();
 	private final FxBoolean disabledProperty = new FxBoolean();
