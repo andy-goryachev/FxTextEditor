@@ -43,7 +43,10 @@ public class FxTextEditor
 {
 	protected final Log log = Log.get("FxTextEditor");
 	public final Actions actions = new Actions(this);
-	protected final FxObject<Color> backgroundColorProperty = new FxObject(Color.WHITE);
+	protected final FxObject<Color> backgroundColor = new FxObject(Color.WHITE);
+	protected final FxObject<Color> caretLineColor = new FxObject(FX.rgb(255, 200, 255));
+	protected final FxObject<Color> selectionBackgroundColor = new FxObject(FX.rgb(255, 255, 128));
+	protected final FxObject<Color> lineNumberColor = new FxObject(Color.GRAY);
 	protected final FxObject<Font> fontProperty = new FxObject(Font.font("Monospace", 12));
 	protected final FxBoolean editableProperty = new FxBoolean(false);
 	protected final ReadOnlyObjectWrapper<FxTextEditorModel> modelProperty = new ReadOnlyObjectWrapper<>();
@@ -455,18 +458,6 @@ public class FxTextEditor
 		vflow.invalidate();
 	}
 
-
-	protected void handleTextUpdated(int startLine, int startPos, int startCharsInserted, int linesInserted, int endLine, int endPos, int endCharsInserted)
-	{
-		log.debug("startLine={} startPos={} startCharsInserted={} linesInserted={} endLine={} endPos={} endCharsInserted={}", startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted);
-		
-		// update markers
-		markers.update(startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted);
-		
-		// update vflow
-		vflow.update(startLine, linesInserted, endLine);
-	}
-
 	
 	public void setDisplayCaret(boolean on)
 	{
@@ -507,69 +498,6 @@ public class FxTextEditor
 	public boolean isHighlightCaretLine()
 	{
 		return highlightCaretLineProperty.get();
-	}
-	
-
-	/** returns plain text on the specified line */
-	public String getPlainText(int line)
-	{
-		FxTextEditorModel m = getModel();
-		if(m == null)
-		{
-			return null;
-		}
-		return m.getPlainText(line);
-	}
-
-
-	/** returns selected plain text, concatenating multiple selection segments if necessary */
-	public String getSelectedText() throws Exception
-	{
-		StringWriter wr = new StringWriter();
-		// TODO
-//		getModel().getPlainText(getSelection(), wr);
-		return wr.toString();
-	}
-	
-	
-	/** 
-	 * outputs selected plain text, concatenating multiple selection segments if necessary.
-	 * this method should be used where allocating a single (potentially large) string is undesirable,
-	 * for example when saving to a file.
-	 * any exceptions thrown by the writer are silently ignored and the process is aborted.
-	 */
-	public void writeSelectedText(Writer wr)
-	{
-//		try
-//		{
-//			getModel().getPlainText(getSelection(), wr);
-//		}
-//		catch(Exception ignored)
-//		{
-//		}
-	}
-	
-	
-	/** copies all supported formats */
-	public void doCopy()
-	{
-		// TODO
-//		copy(null, getModel().getSupportedFormats());
-	}
-	
-	
-	/** copies specified formats to clipboard, using an error handler */
-	public void copy(Consumer<Throwable> errorHandler, DataFormat ... formats)
-	{
-		// TODO
-//		getModel().copy(getSelection(), errorHandler, formats);
-	}
-	
-
-	public void select(Marker start, Marker end)
-	{
-		selector.setSelection(start, end);
-		selector.commitSelection();
 	}
 	
 	
@@ -648,15 +576,37 @@ public class FxTextEditor
 	
 	public Color getCaretLineColor()
 	{
-		// TODO property
-		return FX.rgb(255, 200, 255);
+		return caretLineColor.get();
+	}
+	
+	
+	public void setCaretLineColor(Color c)
+	{
+		caretLineColor.set(c);
 	}
 	
 	
 	public Color getSelectionBackgroundColor()
 	{
-		// TODO property
-		return FX.rgb(255, 255, 128);
+		return selectionBackgroundColor.get();
+	}
+	
+	
+	public void setSelectionBackgroundColor(Color c)
+	{
+		selectionBackgroundColor.set(c);
+	}
+	
+	
+	public Color getLineNumberColor()
+	{
+		return lineNumberColor.get();
+	}
+	
+	
+	public void setLineNumberColor(Color c)
+	{
+		lineNumberColor.set(c);
 	}
 	
 	
@@ -702,19 +652,19 @@ public class FxTextEditor
 	
 	public void setBackgroundColor(Color c)
 	{
-		backgroundColorProperty.set(c);
+		backgroundColor.set(c);
 	}
 	
 	
 	public Color getBackgroundColor()
 	{
-		return backgroundColorProperty.get();
+		return backgroundColor.get();
 	}
 	
 	
 	public FxObject<Color> backgroundColorProperty()
 	{
-		return backgroundColorProperty;
+		return backgroundColor;
 	}
 	
 	
@@ -723,5 +673,77 @@ public class FxTextEditor
 		int line = m.getLine();
 		int pos = m.getCharIndex();
 		return vflow.getColumnAt(line, pos);
+	}
+	
+
+	/** returns plain text on the specified line */
+	public String getPlainText(int line)
+	{
+		FxTextEditorModel m = getModel();
+		if(m == null)
+		{
+			return null;
+		}
+		return m.getPlainText(line);
+	}
+
+
+	/** returns selected plain text */
+	public String getSelectedPlainText(int maxLength) throws Exception
+	{
+		StringWriter wr = new StringWriter();
+		// TODO
+//		getModel().getPlainText(getSelection(), wr);
+		return wr.toString();
+	}
+	
+	
+	/** 
+	 * outputs selected plain text, concatenating multiple selection segments if necessary.
+	 * this method should be used where allocating a single (potentially large) string is undesirable,
+	 * for example when saving to a file.
+	 * any exceptions thrown by the writer are silently ignored and the process is aborted.
+	 */
+	public void writeSelectedText(Writer wr)
+	{
+//		try
+//		{
+//			getModel().getPlainText(getSelection(), wr);
+//		}
+//		catch(Exception ignored)
+//		{
+//		}
+	}
+	
+	
+	/** copies all supported formats */
+	public void doCopy()
+	{
+		// TODO
+//		copy(null, getModel().getSupportedFormats());
+	}
+	
+	
+	/** copies specified formats to clipboard, using an error handler */
+	public void copy(Consumer<Throwable> errorHandler, DataFormat ... formats)
+	{
+		// TODO
+//		getModel().copy(getSelection(), errorHandler, formats);
+	}
+	
+
+	public void select(Marker start, Marker end)
+	{
+		selector.setSelection(start, end);
+		selector.commitSelection();
+	}
+	
+
+	protected void handleTextUpdated(int startLine, int startPos, int startCharsInserted, int linesInserted, int endLine, int endPos, int endCharsInserted)
+	{
+		log.debug("startLine=%d startPos=%d startCharsInserted=%d linesInserted=%d endLine=%d endPos=%d endCharsInserted=%d", startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted);
+		
+		markers.update(startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted);
+		vflow.update(startLine, linesInserted, endLine);
 	}
 }

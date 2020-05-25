@@ -969,7 +969,7 @@ public class VFlow
 		{
 			return false;
 		}
-		else if(startLine > (topLine + screenRowCount))
+		else if(startLine > (topLine + screenRowCount + 1))
 		{
 			return false;
 		}
@@ -1069,10 +1069,9 @@ public class VFlow
 		
 		Color bg = lineNumberBackgroundColor(caretLine);
 		gx.setFill(bg);
-		
-		Color fg = Color.GRAY; // FIX
-		
 		gx.fillRect(0, cy, cw * lineNumbersCellCount + lineNumbersGap + lineNumbersGap, ch);
+		
+		Color fg = editor.getLineNumberColor();
 		
 		if((y == 0) || row.isBOL())
 		{
