@@ -5,6 +5,7 @@ import java.util.function.BiConsumer;
 
 /**
  * Simple Word Selector uses whitespace and punctuation to delimit words.
+ * Does not handle surrogate pairs.
  * 
  * FIX use break iterator, glyphs
  */
@@ -72,13 +73,16 @@ public class SimpleWordSelector
 	
 	protected int skipNonWordCharsBackward(String text, int start)
 	{
-		for(int i=start; i>=0; i--)
+		if(start < text.length())
 		{
-			// TODO surrogate
-			char c = text.charAt(i);
-			if(isWordChar(c))
+			for(int i=start; i>=0; i--)
 			{
-				return i;
+				// TODO surrogate
+				char c = text.charAt(i);
+				if(isWordChar(c))
+				{
+					return i;
+				}
 			}
 		}
 		// this is legitimate offset
@@ -108,7 +112,7 @@ public class SimpleWordSelector
 		if(pos < text.length() && isWordChar(text.charAt(pos)))
 		{
 			start = skipWordCharsBackward(text, pos) + 1;
-			end = skipWordCharsForward(text, pos) - 1;
+			end = skipWordCharsForward(text, pos);
 		}
 		else
 		{
