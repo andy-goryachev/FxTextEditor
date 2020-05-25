@@ -569,8 +569,17 @@ public class FxTextEditor
 	
 	public int getTextLength(int line)
 	{
-		String s = getModel().getPlainText(line);
-		return s == null ? 0 : s.length();
+		FxTextEditorModel m = getModel();
+		if(m == null)
+		{
+			return 0;
+		}
+		String s = m.getPlainText(line);
+		if(s == null)
+		{
+			return 0;
+		}
+		return s.length();
 	}
 
 	

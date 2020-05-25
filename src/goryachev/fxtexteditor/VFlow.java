@@ -1389,6 +1389,10 @@ public class VFlow
 			}
 			
 			r = buffer().getScreenRow(screenRowCount - 1);
+			if(r.getLineNumber() < 0)
+			{
+				return true; // null model
+			}
 			if(compare(line, gix, r.getLineNumber(), r.getStartGlyphIndex() + r.getGlyphCount()) > 0)
 			{
 				return false;
