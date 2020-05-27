@@ -1164,6 +1164,13 @@ public class VFlow
 			}
 		}
 		
+		if(style.isUnderscore())
+		{
+			// TODO special property, mix with background
+			gx.setFill(textColor);
+			gx.fillRect(cx, cy + ch - 1, cw, 1);
+		}
+		
 		// text
 		String text = row.getCellText(cell);
 		if(text != null)
@@ -1179,7 +1186,12 @@ public class VFlow
 			gx.setFill(fg);
 			gx.fillText(text, cx, cy - tm.baseline, cw);
 		
-			// TODO underline, strikethrough
+			if(style.isStrikeThrough())
+			{
+				// TODO special property, mix with background
+				gx.setFill(textColor);
+				gx.fillRect(cx, cy + ch/2, cw, 1);
+			}
 		}
 	}
 	
