@@ -5,7 +5,6 @@ import goryachev.fxtexteditor.CellStyle;
 import goryachev.fxtexteditor.Edit;
 import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.ITextLine;
-import goryachev.fxtexteditor.LoadInfo;
 import goryachev.fxtexteditor.PlainTextLine;
 
 
@@ -33,12 +32,6 @@ public class DemoTextEditorModel
 	{
 		lines = CKit.split(text, '\n');
 		this.lineCount = lines.length;
-	}
-	
-	
-	public LoadInfo getLoadInfo()
-	{
-		return null;
 	}
 	
 	

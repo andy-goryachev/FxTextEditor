@@ -12,12 +12,6 @@ import java.util.function.Consumer;
 public abstract class FxTextEditorModel
 {
 	/** 
-	 * returns information about the loading process status and an estimate of line count/file size. 
-	 * returns null if the data has been already loaded.
-	 */ 
-	public abstract LoadInfo getLoadInfo();
-	
-	/** 
 	 * Returns the number of lines available.  
 	 * This number is expected to be changed only as a result of loading progress
 	 * (see getLoadInfo()) or an edit().
@@ -113,6 +107,18 @@ public abstract class FxTextEditorModel
 			throw new NullPointerException("load status");
 		}
 		loadStatus.set(s);
+	}
+	
+	
+	public void setLoadComplete()
+	{
+		setLoadStatus(LoadStatus.COMPLETE);
+	}
+	
+	
+	public LoadStatus getLoadStatus()
+	{
+		return loadStatus.get();
 	}
 	
 	

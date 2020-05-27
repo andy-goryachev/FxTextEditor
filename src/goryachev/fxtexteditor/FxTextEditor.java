@@ -262,9 +262,10 @@ public class FxTextEditor
 		{
 			m.addListener(modelListener);
 			m.loadStatus().addListener(loadStatusListener);
+			updateLoadStatus(m.getLoadStatus());
 		}
 		
-		handleAllLinesChanged();
+		handleAllLinesChanged();		
 	}
 	
 	

@@ -8,7 +8,7 @@ import goryachev.fxtexteditor.Edit;
 import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.InMemoryPlainTextEditorModel;
-import goryachev.fxtexteditor.LoadInfo;
+import goryachev.fxtexteditor.LoadStatus;
 import goryachev.fxtexteditor.PlainTextLine;
 import goryachev.fxtexteditor.SimpleStyledTextEditorModel;
 import java.text.DecimalFormat;
@@ -150,12 +150,8 @@ public class DemoModels
 	{
 		return new FxTextEditorModel()
 		{
-			long start = System.currentTimeMillis();
-			
-			
-			public LoadInfo getLoadInfo()
 			{
-				return new LoadInfo(0.5, 5_000, start, System.currentTimeMillis());
+				setLoadStatus(new LoadStatus(0.5, true, true));
 			}
 
 

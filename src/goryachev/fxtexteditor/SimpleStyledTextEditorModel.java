@@ -28,12 +28,6 @@ public class SimpleStyledTextEditorModel
 	}
 
 
-	public LoadInfo getLoadInfo()
-	{
-		return null;
-	}
-
-
 	public int getLineCount()
 	{
 		return lines.size();

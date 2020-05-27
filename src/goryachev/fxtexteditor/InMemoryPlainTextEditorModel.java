@@ -18,12 +18,6 @@ public class InMemoryPlainTextEditorModel
 	}
 	
 	
-	public LoadInfo getLoadInfo()
-	{
-		return null;
-	}
-	
-	
 	public Edit edit(Edit ed) throws Exception
 	{
 		throw new Exception("not supported");
