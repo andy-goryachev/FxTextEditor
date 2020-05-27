@@ -5,6 +5,7 @@ import goryachev.common.util.GlobalSettings;
 import goryachev.common.util.SStream;
 import goryachev.fx.Converters;
 import goryachev.fx.FxAction;
+import goryachev.fx.FxDouble;
 import goryachev.fx.HasSettings;
 import goryachev.fx.SSConverter;
 import javafx.beans.property.BooleanProperty;
@@ -153,6 +154,35 @@ public class LocalSettings
 			{
 				String v = GlobalSettings.getString(prefix + "." + subKey);
 				p.setValue(v);
+			}
+		});
+		return this;
+	}
+	
+	
+	public LocalSettings add(String subKey, FxDouble p)
+	{
+		entries.put(subKey, new Entry()
+		{
+			public void saveValue(String prefix)
+			{
+				double v = p.getValue();
+				GlobalSettings.setString(prefix + "." + subKey, String.valueOf(v));
+			}
+
+			public void loadValue(String prefix)
+			{
+				String s = GlobalSettings.getString(prefix + "." + subKey);
+				if(s != null)
+				{
+					try
+					{
+						double v = Double.parseDouble(s);
+						p.setValue(v);
+					}
+					catch(Exception ignore)
+					{ }
+				}
 			}
 		});
 		return this;

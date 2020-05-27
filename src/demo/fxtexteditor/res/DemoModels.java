@@ -3,8 +3,13 @@ package demo.fxtexteditor.res;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
 import goryachev.common.util.SB;
+import goryachev.fx.Formatters;
+import goryachev.fxtexteditor.Edit;
 import goryachev.fxtexteditor.FxTextEditorModel;
+import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.InMemoryPlainTextEditorModel;
+import goryachev.fxtexteditor.LoadInfo;
+import goryachev.fxtexteditor.PlainTextLine;
 import goryachev.fxtexteditor.SimpleStyledTextEditorModel;
 import java.text.DecimalFormat;
 import demo.fxtexteditor.AnItem;
@@ -24,6 +29,7 @@ public class DemoModels
 	public static final AnItem LONG_LINES = new AnItem("LONG_LINES", "Long lines (1M characters)");
 	public static final AnItem BILLION_LINES = new AnItem("BILLION_LINES", "One billion lines");
 	public static final AnItem SIMPLE_STYLED = new AnItem("SimpleStyledTextEditorModel", "SimpleStyledTextEditorModel");
+	public static final AnItem LOADING = new AnItem("LOADING", "Loading...");
 	public static final AnItem NULL = new AnItem("null", "null");
 	
 	
@@ -35,6 +41,7 @@ public class DemoModels
 			NO_TABS_NO_UNICODE,
 			TABS_NO_UNICODE,
 			JAVA_LARGE,
+			LOADING,
 			LONG_LINES,
 			BILLION_LINES,
 			SIMPLE_STYLED,
@@ -88,9 +95,13 @@ public class DemoModels
 		{
 			return makeSimpleStyled();
 		}
-		else if(x == BILLION_LINES)
+		else if(x == NULL)
 		{
 			return null;
+		}
+		else if(x == LOADING)
+		{
+			return makeLoadingModel();
 		}
 		return null;
 	}
@@ -132,6 +143,40 @@ public class DemoModels
 			a.add(longLines);
 		}
 		return new InMemoryPlainTextEditorModel(CKit.toArray(a));
+	}
+	
+	
+	protected static FxTextEditorModel makeLoadingModel()
+	{
+		return new FxTextEditorModel()
+		{
+			long start = System.currentTimeMillis();
+			
+			
+			public LoadInfo getLoadInfo()
+			{
+				return new LoadInfo(0.5, 5_000, start, System.currentTimeMillis());
+			}
+
+
+			public int getLineCount()
+			{
+				return 10_000;
+			}
+
+
+			public ITextLine getTextLine(int line)
+			{
+				String text = Formatters.getIntegerFormatter().format(line + 1);
+				return new PlainTextLine(line, text);
+			}
+
+
+			public Edit edit(Edit ed) throws Exception
+			{
+				throw new Error();
+			}
+		};
 	}
 	
 	

@@ -59,6 +59,17 @@ public class CellStyle
 	}
 	
 	
+	public void init(CellStyle x)
+	{
+		this.backgroundColor = x.backgroundColor;
+		this.textColor = x.textColor;
+		this.bold = x.bold;
+		this.italic = x.italic;
+		this.strikeThrough = x.strikeThrough;
+		this.underscore = x.underscore;
+	}
+	
+	
 	public boolean equals(Object x)
 	{
 		if(x == this)

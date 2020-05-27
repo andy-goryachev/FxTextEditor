@@ -115,6 +115,13 @@ public class SimpleStyledTextEditorModel
 	}
 	
 	
+	public SimpleStyledTextEditorModel append(CellStyle st, String text)
+	{
+		style.init(st);
+		return append(text);
+	}
+	
+	
 	public SimpleStyledTextEditorModel nl()
 	{
 		lines.add(data.size());

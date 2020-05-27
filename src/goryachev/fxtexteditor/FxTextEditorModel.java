@@ -18,8 +18,9 @@ public abstract class FxTextEditorModel
 	public abstract LoadInfo getLoadInfo();
 	
 	/** 
-	 * returns a known line count.  
-	 * if the model is still loading, returns the best estimate of the number of lines. 
+	 * Returns the number of lines available.  
+	 * This number is expected to be changed only as a result of loading progress
+	 * (see getLoadInfo()) or an edit().
 	 */
 	public abstract int getLineCount();
 	
