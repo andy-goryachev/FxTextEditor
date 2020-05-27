@@ -166,7 +166,7 @@ public class VFlow
 		int newGlyphIndex = wp.getStartGlyphIndex();
 		
 		// avoid going beyond (lastRow - screenRowCount)
-		int lineCount = getModelLineCount();
+		int lineCount = getModelLineCount() + 1;
 		if(newLine > (lineCount - screenRowCount))
 		{
 			WrapPos wp2 = advance(lineCount, 0, -screenRowCount);
