@@ -1,5 +1,7 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
+import goryachev.common.util.CKit;
+import goryachev.common.util.FH;
 import javafx.scene.paint.Color;
 
 
@@ -7,6 +9,7 @@ import javafx.scene.paint.Color;
  * Captures text cell style.
  */
 public class CellStyle
+	implements Cloneable
 {
 	private Color backgroundColor;
 	private Color textColor;
@@ -32,6 +35,64 @@ public class CellStyle
 	}
 	
 	
+	public CellStyle copy()
+	{
+		return (CellStyle)clone();
+	}
+	
+	
+	public Object clone()
+	{
+		return new CellStyle(textColor, backgroundColor, bold, italic, strikeThrough, underscore);
+	}
+	
+	
+	public boolean isEmpty()
+	{
+		return
+			!bold &&
+			!italic &&
+			!strikeThrough &&
+			!underscore &&
+			(backgroundColor == null) &&
+			(textColor == null);
+	}
+	
+	
+	public boolean equals(Object x)
+	{
+		if(x == this)
+		{
+			return true;
+		}
+		else if(x instanceof CellStyle)
+		{
+			CellStyle c = (CellStyle)x;
+			return
+				(bold == c.bold) &&
+				(italic == c.italic) &&
+				(strikeThrough == c.strikeThrough) &&
+				(underscore == c.underscore) &&
+				CKit.equals(textColor, c.textColor) &&
+				CKit.equals(backgroundColor, c.backgroundColor);
+		}
+		return false;
+	}
+	
+	
+	public int hashCode()
+	{
+		int h = FH.hash(CellStyle.class);
+		h = FH.hash(h, backgroundColor);
+		h = FH.hash(h, textColor);
+		h = FH.hash(h, bold);
+		h = FH.hash(h, italic);
+		h = FH.hash(h, strikeThrough);
+		h = FH.hash(h, underscore);
+		return h;
+	}
+	
+	
 	public void clear()
 	{
 		this.backgroundColor = null;
@@ -49,10 +110,10 @@ public class CellStyle
 	}
 	
 	
-//	public void setBackgroundColor(Color c)
-//	{
-//		backgroundColor = c;
-//	}
+	public void setBackgroundColor(Color c)
+	{
+		backgroundColor = c;
+	}
 	
 	
 	public Color getTextColor()
@@ -61,10 +122,10 @@ public class CellStyle
 	}
 	
 	
-//	public void setTextColor(Color c)
-//	{
-//		textColor = c;
-//	}
+	public void setTextColor(Color c)
+	{
+		textColor = c;
+	}
 
 
 	public boolean isBold()
@@ -73,10 +134,10 @@ public class CellStyle
 	}
 	
 	
-//	public void setBold(boolean on)
-//	{
-//		bold = on;
-//	}
+	public void setBold(boolean on)
+	{
+		bold = on;
+	}
 
 
 	public boolean isItalic()
@@ -85,10 +146,10 @@ public class CellStyle
 	}
 	
 	
-//	public void setItalic(boolean on)
-//	{
-//		italic = on;
-//	}
+	public void setItalic(boolean on)
+	{
+		italic = on;
+	}
 	
 	
 	public boolean isStrikeThrough()
@@ -97,10 +158,10 @@ public class CellStyle
 	}
 	
 	
-//	public void setStrikeThrough(boolean on)
-//	{
-//		strikeThrough = on;
-//	}
+	public void setStrikeThrough(boolean on)
+	{
+		strikeThrough = on;
+	}
 	
 	
 	public boolean isUnderscore()
@@ -109,8 +170,8 @@ public class CellStyle
 	}
 	
 	
-//	public void setUnderscore(boolean on)
-//	{
-//		underscore = on;
-//	}
+	public void setUnderscore(boolean on)
+	{
+		underscore = on;
+	}
 }

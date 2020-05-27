@@ -5,9 +5,11 @@ import goryachev.common.util.CList;
 import goryachev.common.util.SB;
 import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.InMemoryPlainTextEditorModel;
+import goryachev.fxtexteditor.SimpleStyledTextEditorModel;
 import java.text.DecimalFormat;
 import demo.fxtexteditor.AnItem;
 import demo.fxtexteditor.DemoTextEditorModel;
+import javafx.scene.paint.Color;
 
 
 /**
@@ -21,6 +23,7 @@ public class DemoModels
 	public static final AnItem JAVA_SMALL = new AnItem("JAVA_SMALL", "A small java file");
 	public static final AnItem LONG_LINES = new AnItem("LONG_LINES", "Long lines (1M characters)");
 	public static final AnItem BILLION_LINES = new AnItem("BILLION_LINES", "One billion lines");
+	public static final AnItem SIMPLE_STYLED = new AnItem("SimpleStyledTextEditorModel", "SimpleStyledTextEditorModel");
 	public static final AnItem NULL = new AnItem("null", "null");
 	
 	
@@ -34,6 +37,7 @@ public class DemoModels
 			JAVA_LARGE,
 			LONG_LINES,
 			BILLION_LINES,
+			SIMPLE_STYLED,
 			NULL
 //			full
 //			also large
@@ -80,6 +84,10 @@ public class DemoModels
 			String text = loadResource("demo.txt");
 			return new DemoTextEditorModel(text, 1_000_000_000);
 		}
+		else if(x == SIMPLE_STYLED)
+		{
+			return makeSimpleStyled();
+		}
 		else if(x == BILLION_LINES)
 		{
 			return null;
@@ -124,5 +132,35 @@ public class DemoModels
 			a.add(longLines);
 		}
 		return new InMemoryPlainTextEditorModel(CKit.toArray(a));
+	}
+	
+	
+	protected static FxTextEditorModel makeSimpleStyled()
+	{
+		SimpleStyledTextEditorModel m = new SimpleStyledTextEditorModel();
+		m.setBold(true);
+		m.append("SimpleStyledTextEditorModel");
+		m.setBold(false);
+		m.nl();
+		m.nl();
+		m.append("This is a ");
+		m.setItalic(true);
+		m.append("simple");
+		m.setItalic(false);
+		m.append(", ");
+		m.setUnderscore(true);
+		m.append("styled");
+		m.setUnderscore(false);
+		m.append(", read-only model.");
+		m.nl();
+		m.setTextColor(Color.GRAY);
+		m.append("This model is designed mostly for presenting an ");
+		m.setBackgroundColor(Color.YELLOW);
+		m.append("immutable");
+		m.setBackgroundColor(null);
+		m.append(" styled text.");
+		m.setTextColor(null);
+		m.nl();
+		return m;
 	}
 }
