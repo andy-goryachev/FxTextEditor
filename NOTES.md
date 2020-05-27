@@ -1,11 +1,10 @@
 # BUGS
 
 - vertical scroll bar jumps when adjusting
-- vertical scroll helper is slightly off
 
 
 
 # TODO
 
-- VFlow.updateVerticalScrollBarPosition
+- loading, scroll bar
 - handle model mutation events
