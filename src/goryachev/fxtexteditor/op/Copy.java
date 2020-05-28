@@ -18,6 +18,6 @@ public class Copy
 
 	protected void action()
 	{
-		editor().doCopy();
+		editor().copy();
 	}
 }

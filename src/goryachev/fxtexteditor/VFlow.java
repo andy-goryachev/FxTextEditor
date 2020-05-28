@@ -1005,23 +1005,29 @@ public class VFlow
 	
 	
 	/** returns true if update resulted in a visual change */
-	public boolean update(int startLine, int linesInserted, int endLine)
+	public void update(int startLine, int linesInserted, int endLine)
 	{
 		int max = Math.max(endLine, startLine + linesInserted);
 		if(max < topLine)
 		{
-			return false;
 		}
 		else if(startLine > (topLine + screenRowCount + 1))
 		{
-			return false;
+		}
+		else
+		{
+			// TODO repaint only damaged area, unless lines are inserted/removed
+			invalidate();
+			requestLayout();
+			return;
 		}
 		
-		// TODO optimize, but for now simply
-		invalidate();
-		requestLayout();
-		
-		return true;
+		// update scroll bars
+		if((endLine - startLine - linesInserted) != 0)
+		{
+			updateVerticalScrollBarPosition();
+			updateVerticalScrollBarSize();
+		}
 	}
 	
 	

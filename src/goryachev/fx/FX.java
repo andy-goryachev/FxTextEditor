@@ -666,6 +666,18 @@ public final class FX
 		{
 			return base;
 		}
+		
+		if(base == null)
+		{
+			if(over == null)
+			{
+				return null;
+			}
+			else
+			{
+				return new Color(over.getRed(), over.getGreen(), over.getBlue(), over.getOpacity() * fraction);
+			}
+		}
 
 		if(base.isOpaque())
 		{

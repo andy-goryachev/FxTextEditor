@@ -727,7 +727,7 @@ public class FxTextEditor
 	
 	
 	/** copies all supported formats */
-	public void doCopy()
+	public void copy()
 	{
 		// TODO
 //		copy(null, getModel().getSupportedFormats());
