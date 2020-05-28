@@ -7,7 +7,7 @@ package goryachev.fxtexteditor;
  */
 public class LoadStatus
 {
-	public static final LoadStatus UNKNOWN = new LoadStatus(0.0, true, false);
+	public static final LoadStatus UNKNOWN = new LoadStatus(1.0, true, false);
 	public static final LoadStatus COMPLETE = new LoadStatus(1.0, false, true);
 	
 	private final double progress;

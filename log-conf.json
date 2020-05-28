@@ -7,7 +7,7 @@
 		PageUp: all,
 		ScreenBuffer: all,
 		VerticalScrollHelper: debug,
-		VFlow: off,
+		VFlow: debug,
 		WrapAssist: debug,
 		WrappingReflowHelper: debug
 	},

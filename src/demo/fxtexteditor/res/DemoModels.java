@@ -157,7 +157,7 @@ public class DemoModels
 
 			public int getLineCount()
 			{
-				return 10_000;
+				return 5_000;
 			}
 
 

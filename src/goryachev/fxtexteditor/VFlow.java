@@ -638,6 +638,12 @@ public class VFlow
 			}
 		}
 		
+		double loaded = getLoadedRatio();
+		if(loaded < 1.0)
+		{
+			v *= loaded;
+		}
+		
 		setHandleScrollEvents(false);
 		try
 		{
@@ -647,6 +653,25 @@ public class VFlow
 		{
 			setHandleScrollEvents(true);
 		}
+	}
+	
+	
+	protected double getLoadedRatio()
+	{
+		FxTextEditorModel m = editor.getModel();
+		if(m == null)
+		{
+			return 1.0;
+		}
+		
+		double v = m.getLoadStatus().getProgress();
+		
+		double min = 0.01; // avoid div by 0
+		if(v < min)
+		{
+			return min;
+		}
+		return v;
 	}
 	
 
@@ -710,6 +735,24 @@ public class VFlow
 		if(handleScrollEvents)
 		{
 			log.debug("val=%f", val);
+			
+			double loaded = getLoadedRatio();
+			if(loaded < 1.0)
+			{
+				if(val > loaded)
+				{
+					// this causes flicker
+					// TODO perhaps we could simply disable the thumb,
+					// or we have to implement our own scroll bar, as the stock javafx
+					// scroll bar does not allow for limiting the thumb travel.
+					FX.later(() -> 
+					{
+						editor.getVerticalScrollBar().setValue(loaded);
+					});
+				}
+				
+				val /= loaded;
+			}
 			
 			verticalScroll(val);
 		}
