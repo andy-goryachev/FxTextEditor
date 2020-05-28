@@ -1,11 +1,15 @@
 # BUGS
 
-- vertical scroll bar jumps when adjusting
 
 
 
 # TODO
 
-- right click: sets caret on mouse down, unless selection exists
-- loading, scroll bar
 - handle model mutation events
+
+
+
+# KNOWN ISSUES
+
+- vertical scroll bar jerks when scrolling in wrapped mode
+- flicker when scrolling beyond loaded portion of the file

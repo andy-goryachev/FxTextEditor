@@ -145,32 +145,36 @@ public class InputHandler
 	
 	public void handleMousePressed(MouseEvent ev)
 	{
-		// not sure - perhaps only ignore if the mouse press is within a selection
-		// and reset selection if outside?
+		Marker m = getMarker(ev);
+
 		if(FX.isPopupTrigger(ev))
 		{
+			if(!selector.isSelected(m))
+			{
+				selector.setAnchor(m);
+				selector.setSelection(m);
+			}
 			return;
 		}
 
-		Marker pos = getMarker(ev);
 		vflow.setSuppressBlink(true);
 		
 		if(ev.isShiftDown())
 		{
 			// expand selection from the anchor point to the current position
 			// clearing existing (possibly multiple) selection
-			selector.clearAndExtendLastSegment(pos);
+			selector.clearAndExtendLastSegment(m);
 		}
 		else if(ev.isShortcutDown())
 		{
-			selector.setAnchor(pos);
-			selector.setSelection(pos);
+			selector.setAnchor(m);
+			selector.setSelection(m);
 		}
 		else
 		{
 			editor.clearSelection();
-			selector.addSelectionSegment(pos, pos);
-			selector.setAnchor(pos);
+			selector.addSelectionSegment(m, m);
+			selector.setAnchor(m);
 		}
 		
 		editor.requestFocus();
