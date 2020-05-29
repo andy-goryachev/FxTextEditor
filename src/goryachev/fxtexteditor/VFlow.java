@@ -890,6 +890,11 @@ public class VFlow
 	
 	public FlowLine getTextLine(int lineIndex)
 	{
+		if(lineIndex < 0)
+		{
+			throw new Error("lineIndex=" + lineIndex);
+		}
+		
 		FxTextEditorModel m = editor.getModel();
 		if(m != null)
 		{
@@ -1007,6 +1012,10 @@ public class VFlow
 	/** returns true if update resulted in a visual change */
 	public void update(int startLine, int linesInserted, int endLine)
 	{
+		log.debug("start=%d end=%d inserted=%d", startLine, endLine, linesInserted);
+		
+		cache.invalidate(startLine);
+		
 		int max = Math.max(endLine, startLine + linesInserted);
 		if(max < topLine)
 		{

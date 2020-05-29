@@ -90,4 +90,19 @@ public class FlowLineCache
 		// else get iterator (from model?)
 		return null;
 	}
+
+
+	// TODO O(N) operation
+	public void invalidate(int startIndex)
+	{
+		Iterator<FlowLine> it = cache.values().iterator();
+		while(it.hasNext())
+		{
+			FlowLine fline = it.next();
+			if(fline.getModelIndex() >= startIndex)
+			{
+				it.remove();
+			}
+		}
+	}
 }

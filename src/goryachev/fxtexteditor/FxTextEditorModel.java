@@ -125,6 +125,15 @@ public abstract class FxTextEditorModel
 	/** returns plain text at the specified line, or null if not loaded */
 	public final String getPlainText(int line)
 	{
+		if(line < 0)
+		{
+			throw new Error("line=" + line);
+		}
+		else if(line >= getLineCount())
+		{
+			throw new Error("overrun line=" + line);
+		}
+		
 		ITextLine t = getTextLine(line);
 		if(t == null)
 		{
