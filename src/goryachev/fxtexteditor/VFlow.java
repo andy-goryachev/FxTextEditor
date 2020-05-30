@@ -807,7 +807,7 @@ public class VFlow
 	public TextPos getInsertPosition(double screenx, double screeny)
 	{
 		Point2D p = canvas.screenToLocal(screenx, screeny);
-		TextMetrics m = textMetrics();
+		TextMetrics tm = textMetrics();
 		
 		double sx = p.getX() - lineNumbersBarWidth;
 		if(sx < 0)
@@ -817,7 +817,7 @@ public class VFlow
 
 		double sy = p.getY();
 		
-		int x = CKit.round(sx / m.cellWidth);
+		int x = CKit.round(sx / tm.cellWidth);
 		if(isWrapLines())
 		{
 			if(x >= screenColumnCount)
@@ -826,7 +826,7 @@ public class VFlow
 			}
 		}
 		
-		int y = CKit.floor(sy / m.cellHeight);
+		int y = CKit.floor(sy / tm.cellHeight);
 		
 		int topWrapRow = getTopWrapRow();
 		WrapPos wp = advance(topLine, topWrapRow, y);
