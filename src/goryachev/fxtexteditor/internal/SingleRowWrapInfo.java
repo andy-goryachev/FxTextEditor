@@ -98,7 +98,7 @@ public class SingleRowWrapInfo
 	}
 
 
-	public TextCell getCell(int wrapRow, int column)
+	public TextCell getCell(TextCell cell, int wrapRow, int column)
 	{
 		checkRow(wrapRow);
 		
@@ -121,7 +121,8 @@ public class SingleRowWrapInfo
 			ix = -1;
 		}
 		
-		return new TextCell(type, ix, ix, ix, ix);
+		cell.set(type, ix, ix, ix, ix);
+		return cell;
 	}
 
 

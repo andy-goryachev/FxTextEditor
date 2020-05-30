@@ -131,7 +131,8 @@ public abstract class FxTextEditorModel
 		}
 		else if(line >= getLineCount())
 		{
-			throw new Error("overrun line=" + line);
+//			throw new Error("overrun line=" + line);
+			return null;
 		}
 		
 		ITextLine t = getTextLine(line);

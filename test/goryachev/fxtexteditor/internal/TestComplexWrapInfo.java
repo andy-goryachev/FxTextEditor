@@ -27,8 +27,12 @@ public class TestComplexWrapInfo
 		ITabPolicy tp = TabPolicy.create(4);
 		FlowLine fline = new FlowLine(tline, AGlyphInfo.create(tline.getPlainText(), null));
 		ComplexWrapInfo wr = ComplexWrapInfo.createComplexWrapInfo(fline, tp, 100, true);
-		TextCell c1 = wr.getCell(0, 4);
-		TextCell c2 = wr.getCell(0, 8); // FIX wrong caretCharIndex
+		
+		TextCell c1 = new TextCell();
+		c1.set(wr.getCell(TextCell.globalInstance(), 0, 4));
+		
+		TextCell c2 = new TextCell();
+		c2.set(wr.getCell(TextCell.globalInstance(), 0, 8)); // FIX wrong caretCharIndex
 		
 		D.print(c1, c2);
 	}

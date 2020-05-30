@@ -11,6 +11,7 @@ import goryachev.fxtexteditor.GlyphType;
  */
 public class TextCell
 {
+	private static final TextCell globalInstance = new TextCell();
 	private GlyphType type;
 	private int caretCharIndex;
 	private int leadingCharIndex;
@@ -25,6 +26,51 @@ public class TextCell
 		this.leadingCharIndex = leadingCharIndex;
 		this.insertCharIndex = insertCharIndex;
 		this.glyphIndex = glyphIndex;
+	}
+	
+	
+	public TextCell()
+	{
+	}
+	
+	
+	public String toString()
+	{
+		return
+			"TextCell[" +
+			"type=" + type +
+			", caret=" + caretCharIndex +
+			", leading=" + leadingCharIndex +
+			", insert=" + insertCharIndex +
+			", glyph=" + glyphIndex +
+			"]";
+	}
+	
+	
+	public void set(GlyphType type, int caretCharIndex, int leadingCharIndex, int insertCharIndex, int glyphIndex)
+	{
+		this.type = type;
+		this.caretCharIndex = caretCharIndex;
+		this.leadingCharIndex = leadingCharIndex;
+		this.insertCharIndex = insertCharIndex;
+		this.glyphIndex = glyphIndex;
+	}
+	
+	
+	/** method for testing */
+	protected void set(TextCell c)
+	{
+		this.type = c.type;
+		this.caretCharIndex = c.caretCharIndex;
+		this.leadingCharIndex = c.leadingCharIndex;
+		this.insertCharIndex = c.insertCharIndex;
+		this.glyphIndex = c.glyphIndex;
+	}
+	
+	
+	public static TextCell globalInstance()
+	{
+		return globalInstance;
 	}
 	
 	

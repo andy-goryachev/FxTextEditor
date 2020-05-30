@@ -417,8 +417,13 @@ public class VFlow
 	
 	protected void refreshCursor()
 	{
-		// TODO repaint only the damaged area
-		repaint();
+		EditorSelection sel = editor.getSelection();
+		Marker caret = sel.getCaret();
+		if(isVisible(caret))
+		{
+			// TODO repaint only the damaged area
+			repaint();
+		}
 	}
 	
 	
@@ -596,7 +601,7 @@ public class VFlow
 			}
 			else
 			{
-				v = screenRowCount / lineCount;
+				v = screenRowCount / (double)lineCount;
 			}
 		}
 		
@@ -634,7 +639,7 @@ public class VFlow
 			}
 			else
 			{
-				v = topLine / (double)lineCount;
+				v = topLine / (double)(lineCount - screenRowCount);
 			}
 		}
 		
@@ -683,8 +688,20 @@ public class VFlow
 			repaintRequested = true;
 			FX.later(() ->
 			{
-				paintAll();
-				repaintRequested = false;
+				long start = System.currentTimeMillis();
+				try
+				{
+					paintAll();
+				}
+				finally
+				{
+					long elapsed = System.currentTimeMillis() - start;
+					if(elapsed > 100)
+					{
+						log.warn("paintAll: %d", elapsed);
+					}
+					repaintRequested = false;
+				}
 			});
 		}
 	}
@@ -814,7 +831,7 @@ public class VFlow
 		int topWrapRow = getTopWrapRow();
 		WrapPos wp = advance(topLine, topWrapRow, y);
 		
-		TextCell cell = wp.getWrapInfo().getCell(wp.getRow(), x + topColumn);
+		TextCell cell = wp.getWrapInfo().getCell(TextCell.globalInstance(), wp.getRow(), x + topColumn);
 		int charIndex = cell.getInsertCharIndex();
 		
 		int line = wp.getLine();
@@ -1040,6 +1057,7 @@ public class VFlow
 	}
 	
 	
+	// TODO move all paint code to a separate class, complete with properties and text metrics
 	protected void paintAll()
 	{
 		log.trace();
@@ -1059,16 +1077,24 @@ public class VFlow
 			xmax++;
 		}
 
+		TextMetrics tm = textMetrics();
 		TextCell cell = null;
 		int ymax = screenRowCount + 1;
 		
 		for(int y=0; y<ymax; y++)
 		{
+			// attempt to limit the canvas queue
+			// https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8092801
+			// https://github.com/kasemir/org.csstudio.display.builder/issues/174
+			// https://stackoverflow.com/questions/18097404/how-can-i-free-canvas-memory
+			// https://bugs.openjdk.java.net/browse/JDK-8103438
+			gx.clearRect(0, y * tm.cellHeight, getWidth(), tm.cellHeight);
+			
 			ScreenRow row = b.getScreenRow(y);
 
 			if(showLineNumbers)
 			{
-				paintLineNumber(row, y);
+				paintLineNumber(tm, row, y);
 			}
 			
 			for(int x=0; x<xmax; x++)
@@ -1078,19 +1104,19 @@ public class VFlow
 				switch(t)
 				{
 				case EOF:
-					paintBlank(row, cell, x, y, xmax - x);
+					paintBlank(tm, row, cell, x, y, xmax - x);
 					break;
 				case EOL:
-					paintBlank(row, cell, x, y, xmax - x);
+					paintBlank(tm, row, cell, x, y, xmax - x);
 					x = xmax;
 					break;
 				case TAB:
 					int w = cell.getTabSpan();
-					paintBlank(row, cell, x, y, w);
+					paintBlank(tm, row, cell, x, y, w);
 					x += (w - 1);
 					break;
 				case REG:
-					paintCell(row, cell, x, y);
+					paintCell(tm, row, cell, x, y);
 					break;
 				default:
 					throw new Error("?" + t);
@@ -1099,7 +1125,7 @@ public class VFlow
 			
 			if(wrap)
 			{
-				paintBlank(row, cell, xmax, y, 1);
+				paintBlank(tm, row, cell, xmax, y, 1);
 			}
 		}
 	}
@@ -1116,9 +1142,8 @@ public class VFlow
 	}
 	
 	
-	protected void paintLineNumber(ScreenRow row, int y)
+	protected void paintLineNumber(TextMetrics tm, ScreenRow row, int y)
 	{
-		TextMetrics tm = textMetrics();
 		double ch = tm.cellHeight;
 		double cw = tm.cellWidth;
 		double cy = y * ch;
@@ -1155,9 +1180,8 @@ public class VFlow
 	}
 	
 	
-	protected void paintBlank(ScreenRow row, TextCell cell, int x, int y, int count)
+	protected void paintBlank(TextMetrics tm, ScreenRow row, TextCell cell, int x, int y, int count)
 	{
-		TextMetrics tm = textMetrics();
 		double ch = tm.cellHeight;
 		double cw = tm.cellWidth;
 		double cx = x * cw + lineNumbersBarWidth;
@@ -1185,9 +1209,8 @@ public class VFlow
 	}
 	
 
-	protected void paintCell(ScreenRow row, TextCell cell, int x, int y)
+	protected void paintCell(TextMetrics tm, ScreenRow row, TextCell cell, int x, int y)
 	{
-		TextMetrics tm = textMetrics();
 		double ch = tm.cellHeight;
 		double cw = tm.cellWidth;
 		double cx = x * cw + lineNumbersBarWidth;
@@ -1427,14 +1450,6 @@ public class VFlow
 	
 	
 	protected boolean isVisible(Marker m)
-	{
-		boolean rv = isVisiblePrivate(m);
-		log.debug("%s %s", m, rv);
-		return rv;
-	}
-	
-	
-	protected boolean isVisiblePrivate(Marker m)
 	{
 		// some quick checks
 		int line = m.getLine();

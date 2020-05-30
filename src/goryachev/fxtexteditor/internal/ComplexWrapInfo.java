@@ -155,7 +155,7 @@ public class ComplexWrapInfo
 	}
 	
 	
-	public TextCell getCell(int wrapRow, int column)
+	public TextCell getCell(TextCell cell, int wrapRow, int column)
 	{
 		if(wrapRow >= cells.length)
 		{
@@ -245,7 +245,8 @@ public class ComplexWrapInfo
 			glyphIndex = -1;
 		}
 		
-		return new TextCell(type, caretIndex, leadingCharIndex, insertCharIndex, glyphIndex);
+		cell.set(type, caretIndex, leadingCharIndex, insertCharIndex, glyphIndex);
+		return cell;
 	}
 	
 	

@@ -49,9 +49,11 @@ public abstract class WrapInfo
 	 * returns all information about screen cell at the given wrap row and column.
 	 * this method should be sufficient for paintCell and getInsertPosition.
 	 * 
-	 * TODO for performance reasons, we may pass a pointer to a statically allocated TextCell instance.
+	 * A pointer to a global TextCell instance is passed to this method.  
+	 * The method is free to modify that reference for performance, 
+	 * or return a newly created object and suffer performance impact. 
 	 */
-	public abstract TextCell getCell(int wrapRow, int column);
+	public abstract TextCell getCell(TextCell cell, int wrapRow, int column);
 	
 	//
 	

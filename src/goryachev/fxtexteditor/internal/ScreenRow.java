@@ -81,7 +81,7 @@ public class ScreenRow
 	/** returns the text cell at the specified column */
 	public TextCell getCell(int column)
 	{
-		return wrap.getCell(wrapRow, column);
+		return wrap.getCell(TextCell.globalInstance(), wrapRow, column);
 	}
 	
 	
