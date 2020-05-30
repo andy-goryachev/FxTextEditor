@@ -390,8 +390,8 @@ public class VFlow
 			proto.setFont(font);
 			
 			Bounds b = proto.getBoundsInLocal();
-			int w = CKit.round(b.getWidth());
-			int h = CKit.round(b.getHeight());
+			int w = CKit.ceil(b.getWidth());
+			int h = CKit.ceil(b.getHeight());
 			
 			metrics = new TextMetrics(font, b.getMinY(), w, h);
 		}
