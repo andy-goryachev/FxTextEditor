@@ -390,8 +390,8 @@ public class VFlow
 			proto.setFont(font);
 			
 			Bounds b = proto.getBoundsInLocal();
-			int w = CKit.ceil(b.getWidth());
-			int h = CKit.ceil(b.getHeight());
+			int w = CKit.round(b.getWidth());
+			int h = CKit.round(b.getHeight());
 			
 			metrics = new TextMetrics(font, b.getMinY(), w, h);
 		}
@@ -1144,15 +1144,13 @@ public class VFlow
 	
 	protected void paintLineNumber(TextMetrics tm, ScreenRow row, int y)
 	{
-		double ch = tm.cellHeight;
-		double cw = tm.cellWidth;
-		double cy = y * ch;
+		double cy = y * tm.cellHeight;
 		
 		boolean caretLine = SelectionHelper.isCaretLine(editor.selector.getSelectedSegment(), row);
 		
 		Color bg = lineNumberBackgroundColor(caretLine);
 		gx.setFill(bg);
-		gx.fillRect(0, cy, cw * lineNumbersCellCount + lineNumbersGap + lineNumbersGap, ch);
+		gx.fillRect(0, cy, tm.cellWidth * lineNumbersCellCount + lineNumbersGap + lineNumbersGap, tm.cellHeight);
 		
 		Color fg = editor.getLineNumberColor();
 		
@@ -1168,11 +1166,11 @@ public class VFlow
 					String s = charAt(text, i, lineNumbersCellCount);
 					if(s != null)
 					{
-						double cx = i * cw + lineNumbersGap;
+						double cx = i * tm.cellWidth + lineNumbersGap;
 						
 						gx.setFont(font);
 						gx.setFill(fg);
-						gx.fillText(s, cx, cy - tm.baseline, cw);
+						gx.fillText(s, cx, cy - tm.baseline, tm.cellWidth);
 					}
 				}
 			}
@@ -1182,12 +1180,8 @@ public class VFlow
 	
 	protected void paintBlank(TextMetrics tm, ScreenRow row, TextCell cell, int x, int y, int count)
 	{
-		double ch = tm.cellHeight;
-		double cw = tm.cellWidth;
-		double cx = x * cw + lineNumbersBarWidth;
-		double cy = y * ch;
-		
-		cw *= count;
+		double cx = x * tm.cellWidth + lineNumbersBarWidth;
+		double cy = y * tm.cellHeight;
 		
 		int line = row.getLineNumber();
 		int flags = SelectionHelper.getFlags(this, editor.selector.getSelectedSegment(), line, cell, x);
@@ -1197,24 +1191,22 @@ public class VFlow
 		
 		Color bg = backgroundColor(caretLine, selected, null);
 		gx.setFill(bg);
-		gx.fillRect(cx, cy, cw, ch);
+		gx.fillRect(cx, cy, tm.cellWidth * count, tm.cellHeight);
 		
 		// caret
 		if(caret)
 		{
 			// TODO insert mode
 			gx.setFill(caretColor);
-			gx.fillRect(cx, cy, 2, ch);
+			gx.fillRect(cx, cy, 2, tm.cellHeight);
 		}
 	}
 	
 
 	protected void paintCell(TextMetrics tm, ScreenRow row, TextCell cell, int x, int y)
 	{
-		double ch = tm.cellHeight;
-		double cw = tm.cellWidth;
-		double cx = x * cw + lineNumbersBarWidth;
-		double cy = y * ch;
+		double cx = x * tm.cellWidth + lineNumbersBarWidth;
+		double cy = y * tm.cellHeight;
 		
 		int line = row.getLineNumber();
 		int flags = SelectionHelper.getFlags(this, editor.selector.getSelectedSegment(), line, cell, x);
@@ -1232,7 +1224,7 @@ public class VFlow
 		// background
 		Color bg = backgroundColor(caretLine, selected, style.getBackgroundColor());
 		gx.setFill(bg);
-		gx.fillRect(cx, cy, cw, ch);
+		gx.fillRect(cx, cy, tm.cellWidth, tm.cellHeight);
 		
 		// caret
 		if(paintCaret.get())
@@ -1241,7 +1233,7 @@ public class VFlow
 			{
 				// TODO insert mode
 				gx.setFill(caretColor);
-				gx.fillRect(cx, cy, 2, ch);
+				gx.fillRect(cx, cy, 2, tm.cellHeight);
 			}
 		}
 		
@@ -1249,7 +1241,7 @@ public class VFlow
 		{
 			// TODO special property, mix with background
 			gx.setFill(textColor);
-			gx.fillRect(cx, cy + ch - 1, cw, 1);
+			gx.fillRect(cx, cy + tm.cellHeight - 1, tm.cellWidth, 1);
 		}
 		
 		// text
@@ -1265,13 +1257,13 @@ public class VFlow
 			Font f = getFont(style);
 			gx.setFont(f);
 			gx.setFill(fg);
-			gx.fillText(text, cx, cy - tm.baseline, cw);
+			gx.fillText(text, cx, cy - tm.baseline, tm.cellWidth);
 		
 			if(style.isStrikeThrough())
 			{
 				// TODO special property, mix with background
 				gx.setFill(textColor);
-				gx.fillRect(cx, cy + ch/2, cw, 1);
+				gx.fillRect(cx, cy + tm.cellHeight/2, tm.cellWidth, 1);
 			}
 		}
 	}
