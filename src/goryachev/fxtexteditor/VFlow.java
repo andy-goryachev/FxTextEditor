@@ -1057,7 +1057,6 @@ public class VFlow
 	}
 	
 	
-	// TODO move all paint code to a separate class, complete with properties and text metrics
 	protected void paintAll()
 	{
 		log.trace();
@@ -1088,7 +1087,7 @@ public class VFlow
 			// https://github.com/kasemir/org.csstudio.display.builder/issues/174
 			// https://stackoverflow.com/questions/18097404/how-can-i-free-canvas-memory
 			// https://bugs.openjdk.java.net/browse/JDK-8103438
-			gx.clearRect(0, y * tm.cellHeight, getWidth(), tm.cellHeight);
+			gx.clearRect(0, y * tm.cellHeight + 0.5, getWidth(), tm.cellHeight);
 			
 			ScreenRow row = b.getScreenRow(y);
 
