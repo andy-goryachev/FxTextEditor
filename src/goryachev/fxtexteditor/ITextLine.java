@@ -5,7 +5,7 @@ package goryachev.fxtexteditor;
 /**
  * Text Row in the model.
  * 
- * valid until the row is modified in any wa (such as modification of the text, 
+ * valid until the row is modified in any way (such as modification of the text, 
  * changing of any attributes, or a line number.
  */
 public interface ITextLine

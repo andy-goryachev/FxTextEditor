@@ -1,6 +1,7 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.CList;
+import goryachev.common.util.text.IBreakIterator;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxObject;
 import java.util.function.Consumer;
@@ -30,6 +31,13 @@ public abstract class FxTextEditorModel
 	 * Throws an exception if this model is read-only.
 	 */
 	public abstract Edit edit(Edit ed) throws Exception;
+	
+	
+	/** 
+	 * returns the break iterator for mapping characters to glyphs, 
+	 * or null when 1:1 correspondence is desired (i.e. for performance reasons)
+	 */
+	protected abstract IBreakIterator getBreakIterator();
 	
 	//
 	

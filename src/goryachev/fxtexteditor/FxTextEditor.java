@@ -256,10 +256,12 @@ public class FxTextEditor
 		
 		modelProperty.set(m);
 		vflow.reset();
-		vflow.clearTextCellsCache();
+		vflow.clearFlowLineCache();
 		
 		if(m != null)
 		{
+			vflow.setBreakIterator(m.getBreakIterator());
+			
 			m.addListener(modelListener);
 			m.loadStatus().addListener(loadStatusListener);
 			updateLoadStatus(m.getLoadStatus());
@@ -289,7 +291,7 @@ public class FxTextEditor
 			XScrollBar vs = (XScrollBar)vscroll;
 			if(s.isValid())
 			{
-				vs.setPainer((canvas) ->
+				vs.setPainter((canvas) ->
 				{
 					double w = canvas.getWidth();
 					double h = canvas.getHeight();
@@ -301,7 +303,7 @@ public class FxTextEditor
 			}
 			else
 			{
-				vs.setPainer(null);
+				vs.setPainter(null);
 			}
 		}
 	}

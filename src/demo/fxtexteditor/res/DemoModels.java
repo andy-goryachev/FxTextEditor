@@ -3,6 +3,7 @@ package demo.fxtexteditor.res;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
 import goryachev.common.util.SB;
+import goryachev.common.util.text.IBreakIterator;
 import goryachev.fx.Formatters;
 import goryachev.fxtexteditor.Edit;
 import goryachev.fxtexteditor.FxTextEditorModel;
@@ -152,6 +153,12 @@ public class DemoModels
 		{
 			{
 				setLoadStatus(new LoadStatus(0.5, true, true));
+			}
+			
+			
+			protected IBreakIterator getBreakIterator()
+			{
+				return null;
 			}
 
 

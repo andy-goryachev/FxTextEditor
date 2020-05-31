@@ -2,6 +2,7 @@
 package goryachev.fxtexteditor;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
+import goryachev.common.util.text.IBreakIterator;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
@@ -936,9 +937,15 @@ public class VFlow
 	}
 	
 	
-	public void clearTextCellsCache()
+	public void clearFlowLineCache()
 	{
 		cache.clear();
+	}
+	
+	
+	public void setBreakIterator(IBreakIterator b)
+	{
+		cache.setBreakIterator(b);
 	}
 	
 	
@@ -1031,7 +1038,7 @@ public class VFlow
 	{
 		log.debug("start=%d end=%d inserted=%d", startLine, endLine, linesInserted);
 		
-		cache.invalidate(startLine);
+		cache.invalidate(startLine, endLine, linesInserted);
 		
 		int max = Math.max(endLine, startLine + linesInserted);
 		if(max < topLine)

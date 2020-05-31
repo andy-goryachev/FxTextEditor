@@ -1,6 +1,7 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
 import goryachev.common.util.CKit;
+import goryachev.common.util.text.IBreakIterator;
 import goryachev.fxtexteditor.CellStyle;
 import goryachev.fxtexteditor.Edit;
 import goryachev.fxtexteditor.FxTextEditorModel;
@@ -32,6 +33,12 @@ public class DemoTextEditorModel
 	{
 		lines = CKit.split(text, '\n');
 		this.lineCount = lines.length;
+	}
+	
+	
+	protected IBreakIterator getBreakIterator()
+	{
+		return null;
 	}
 	
 	

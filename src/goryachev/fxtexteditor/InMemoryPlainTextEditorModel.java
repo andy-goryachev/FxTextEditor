@@ -1,6 +1,7 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.CKit;
+import goryachev.common.util.text.IBreakIterator;
 
 
 /**
@@ -15,6 +16,12 @@ public class InMemoryPlainTextEditorModel
 	public InMemoryPlainTextEditorModel(String[] lines)
 	{
 		this.lines = lines;
+	}
+	
+	
+	protected IBreakIterator getBreakIterator()
+	{
+		return null;
 	}
 	
 	

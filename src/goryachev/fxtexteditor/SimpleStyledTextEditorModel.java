@@ -5,6 +5,8 @@ import goryachev.common.util.CList;
 import goryachev.common.util.CMap;
 import goryachev.common.util.ElasticIntArray;
 import goryachev.common.util.SB;
+import goryachev.common.util.text.IBreakIterator;
+import java.text.BreakIterator;
 import javafx.scene.paint.Color;
 
 
@@ -20,11 +22,26 @@ public class SimpleStyledTextEditorModel
 	private final CList<Object> data = new CList();
 	private final CMap<CellStyle,CellStyle> styles = new CMap();
 	private final CellStyle style = new CellStyle();
+	private final IBreakIterator breakIterator; 
 	private CellStyle prevStyle;
+	
+	
+	public SimpleStyledTextEditorModel(IBreakIterator bi)
+	{
+		this.breakIterator = bi;
+	}
 	
 	
 	public SimpleStyledTextEditorModel()
 	{
+		// WARNING: this break iterator fails with emoji and flags
+		this.breakIterator = IBreakIterator.wrap(BreakIterator.getCharacterInstance());
+	}
+	
+	
+	protected IBreakIterator getBreakIterator()
+	{
+		return breakIterator;
 	}
 
 
