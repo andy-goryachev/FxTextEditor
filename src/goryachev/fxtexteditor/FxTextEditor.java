@@ -44,6 +44,7 @@ public class FxTextEditor
 	protected static final Log log = Log.get("FxTextEditor");
 	public final Actions actions = new Actions(this);
 	protected final FxObject<Color> backgroundColor = new FxObject(Color.WHITE);
+	protected final FxObject<Color> loadingIndicatorColor = new FxObject(FX.gray(32));
 	protected final FxObject<Color> caretLineColor = new FxObject(FX.rgb(255, 200, 255));
 	protected final FxObject<Color> selectionBackgroundColor = new FxObject(FX.rgb(255, 255, 128));
 	protected final FxObject<Color> lineNumberColor = new FxObject(Color.GRAY);
@@ -288,8 +289,9 @@ public class FxTextEditor
 	{
 		if(vscroll instanceof XScrollBar)
 		{
+			Color c = getLoadingIndicatorColor();
 			XScrollBar vs = (XScrollBar)vscroll;
-			if(s.isValid())
+			if(s.isValid() && (c != null))
 			{
 				vs.setPainter((canvas) ->
 				{
@@ -297,7 +299,7 @@ public class FxTextEditor
 					double h = canvas.getHeight();
 					double y = s.getProgress() * h;
 					GraphicsContext g = canvas.getGraphicsContext2D();
-					g.setFill(Color.LIGHTGRAY);
+					g.setFill(c);
 					g.fillRect(0, y, w, h - y);
 				});
 			}
@@ -306,6 +308,18 @@ public class FxTextEditor
 				vs.setPainter(null);
 			}
 		}
+	}
+	
+	
+	public void setLoadingIndicatorColor(Color c)
+	{
+		loadingIndicatorColor.set(c);
+	}
+	
+	
+	public Color getLoadingIndicatorColor()
+	{
+		return loadingIndicatorColor.get();
 	}
 	
 	
