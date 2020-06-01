@@ -156,7 +156,7 @@ public class DemoModels
 			}
 			
 			
-			protected IBreakIterator getBreakIterator()
+			public IBreakIterator getBreakIterator()
 			{
 				return null;
 			}

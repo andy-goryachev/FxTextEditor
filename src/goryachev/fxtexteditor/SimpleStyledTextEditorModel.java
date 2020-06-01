@@ -39,7 +39,7 @@ public class SimpleStyledTextEditorModel
 	}
 	
 	
-	protected IBreakIterator getBreakIterator()
+	public IBreakIterator getBreakIterator()
 	{
 		return breakIterator;
 	}

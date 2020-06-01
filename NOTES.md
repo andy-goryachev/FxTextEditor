@@ -5,11 +5,11 @@
 
 # TODO
 
-- handle model mutation events
+- content padding
 
 
 
 # KNOWN ISSUES
 
-- vertical scroll bar jerks when scrolling in wrapped mode
-- flicker when scrolling beyond loaded portion of the file
+- vertical scroll bar jerks when moved in wrapped mode
+- vertical scroll bar flickers when dragged beyond loaded portion of the file

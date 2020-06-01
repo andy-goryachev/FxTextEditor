@@ -36,7 +36,7 @@ public class DemoTextEditorModel
 	}
 	
 	
-	protected IBreakIterator getBreakIterator()
+	public IBreakIterator getBreakIterator()
 	{
 		return null;
 	}

@@ -145,6 +145,9 @@ public class InputHandler
 	
 	public void handleMousePressed(MouseEvent ev)
 	{
+		ev.consume();
+		editor.requestFocus();
+		
 		Marker m = getMarker(ev);
 
 		if(FX.isPopupTrigger(ev))
@@ -176,8 +179,6 @@ public class InputHandler
 			selector.addSelectionSegment(m, m);
 			selector.setAnchor(m);
 		}
-		
-		editor.requestFocus();
 	}
 	
 

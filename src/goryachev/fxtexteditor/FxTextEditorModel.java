@@ -37,7 +37,7 @@ public abstract class FxTextEditorModel
 	 * returns the break iterator for mapping characters to glyphs, 
 	 * or null when 1:1 correspondence is desired (i.e. for performance reasons)
 	 */
-	protected abstract IBreakIterator getBreakIterator();
+	public abstract IBreakIterator getBreakIterator();
 	
 	//
 	

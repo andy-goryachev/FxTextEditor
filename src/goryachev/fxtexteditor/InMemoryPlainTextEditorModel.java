@@ -19,7 +19,7 @@ public class InMemoryPlainTextEditorModel
 	}
 	
 	
-	protected IBreakIterator getBreakIterator()
+	public IBreakIterator getBreakIterator()
 	{
 		return null;
 	}

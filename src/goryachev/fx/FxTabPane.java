@@ -50,4 +50,21 @@ public class FxTabPane
 		}
 		return false;
 	}
+
+
+	public Tab getSelectedItem()
+	{
+		return getSelectionModel().getSelectedItem();
+	}
+	
+	
+	public Node getSelectedNode()
+	{
+		Tab t = getSelectionModel().getSelectedItem();
+		if(t == null)
+		{
+			return null;
+		}
+		return t.getContent();
+	}
 }
