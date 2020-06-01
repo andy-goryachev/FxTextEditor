@@ -6,6 +6,7 @@
 # TODO
 
 - content padding
+- copy
 
 
 

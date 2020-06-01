@@ -4,6 +4,7 @@ import goryachev.fx.CInsets;
 import goryachev.fx.CPane;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
+import goryachev.fx.FxPopupMenu;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.internal.TabPolicy;
@@ -33,6 +34,18 @@ public class MainPane
 		setCenter(editor);
 		
 		showFindPane();
+		
+		FX.setPopupMenu(editor, this::createPopupMenu);
+	}
+	
+	
+	protected FxPopupMenu createPopupMenu()
+	{
+		FxPopupMenu m = new FxPopupMenu();
+		m.item("Copy");
+		m.separator();
+		m.item("Select All", editor.actions.selectAll);
+		return m;
 	}
 	
 	
