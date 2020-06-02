@@ -221,10 +221,7 @@ public class ComplexWrapInfo
 		else if(column == cs.length)
 		{
 			type = GlyphType.EOL;
-			
-			// last+1
-			int last = GlyphIndex.fixGlypIndex(cs[cs.length - 1]) + 1;
-			int ix = fline.getCharIndex(last);
+			int ix = fline.getTextLength();
 			
 			caretIndex = ix;
 			leadingCharIndex = ix;
@@ -234,10 +231,7 @@ public class ComplexWrapInfo
 		else
 		{
 			type = GlyphType.EOL;
-			
-			// last+1
-			int last = GlyphIndex.fixGlypIndex(cs[cs.length - 1]) + 1;
-			int ix = fline.getCharIndex(last);
+			int ix = fline.getTextLength();
 			
 			caretIndex = -1;
 			leadingCharIndex = -1;
