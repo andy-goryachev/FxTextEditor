@@ -22,6 +22,7 @@ import javafx.beans.binding.BooleanExpression;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -30,6 +31,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Window;
 import javafx.util.Duration;
 
 
@@ -40,6 +42,7 @@ public class VFlow
 	extends CPane
 {
 	protected static final Log log = Log.get("VFlow");
+	
 	protected static final int LINE_CACHE_SIZE = 1024;
 	protected static final double LINE_NUMBERS_BG_OPACITY = 0.1;
 	protected static final double CARET_LINE_OPACITY = 0.3;
@@ -93,8 +96,6 @@ public class VFlow
 		setMinWidth(0);
 		setMinHeight(0);
 		
-		cursorAnimation = createCursorAnimation();
-		
 		setFocusTraversable(true);
 		
 		FX.onChange(this::repaint, ed.backgroundColorProperty());
@@ -116,6 +117,8 @@ public class VFlow
 			}
 		};
 		paintCaret.addListener((s,p,c) -> refreshCursor());
+		
+		FX.parentWindowProperty(this).addListener((s,p,c) -> updateCursorAnimation(c));
 	}
 	
 	
@@ -409,6 +412,28 @@ public class VFlow
 	}
 	
 	
+	protected void updateCursorAnimation(Window w)
+	{
+		if(w == null)
+		{
+			if(cursorAnimation != null)
+			{
+				log.trace("stopping cursor animation");
+				cursorAnimation.stop();
+				cursorAnimation = null;
+			}
+		}
+		else
+		{
+			if(cursorAnimation == null)
+			{
+				log.trace("starting cursor animation");
+				cursorAnimation = createCursorAnimation();
+			}
+		}
+	}
+	
+	
 	protected void blinkCursor()
 	{
 		cursorOn = !cursorOn;
@@ -687,21 +712,25 @@ public class VFlow
 		if(!repaintRequested)
 		{
 			repaintRequested = true;
+			
 			FX.later(() ->
 			{
-				long start = System.currentTimeMillis();
-				try
+				if(FX.isParentWindowVisible(this))
 				{
-					paintAll();
-				}
-				finally
-				{
-					long elapsed = System.currentTimeMillis() - start;
-					if(elapsed > 100)
+					long start = System.currentTimeMillis();
+					try
 					{
-						log.warn("paintAll: %d", elapsed);
+						paintAll();
 					}
-					repaintRequested = false;
+					finally
+					{
+						long elapsed = System.currentTimeMillis() - start;
+						if(elapsed > 100)
+						{
+							log.warn("paintAll: %d", elapsed);
+						}
+						repaintRequested = false;
+					}
 				}
 			});
 		}
@@ -1066,8 +1095,6 @@ public class VFlow
 	
 	protected void paintAll()
 	{
-		log.trace();
-		
 		if((screenColumnCount == 0) || (screenRowCount == 0))
 		{
 			return;
@@ -1277,7 +1304,7 @@ public class VFlow
 	
 	public void scroll(int scrollSizeInLines, boolean up)
 	{
-		log.trace("scroll=%f %s", scrollSizeInLines, up);
+		log.trace("scroll=%d %s", scrollSizeInLines, up);
 
 		if(scrollSizeInLines < 1)
 		{

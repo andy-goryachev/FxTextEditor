@@ -98,7 +98,7 @@ public abstract class AGlyphInfo
 //		case Character.LOWERCASE_LETTER:
 //		case Character.MATH_SYMBOL:
 		case Character.MODIFIER_LETTER:
-		case Character.MODIFIER_SYMBOL:
+//		case Character.MODIFIER_SYMBOL:
 		case Character.NON_SPACING_MARK:
 //		case Character.OTHER_LETTER:
 //		case Character.OTHER_NUMBER:

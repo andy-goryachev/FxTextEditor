@@ -6,6 +6,7 @@ import goryachev.common.util.GlobalSettings;
 import goryachev.fx.hacks.FxHacks;
 import goryachev.fx.internal.CssTools;
 import goryachev.fx.internal.FxSchema;
+import goryachev.fx.internal.ParentWindow;
 import goryachev.fx.internal.WindowsFx;
 import goryachev.fx.table.FxTable;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.property.Property;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -1237,5 +1239,35 @@ public final class FX
         int b = CKit.round(c.getBlue() * 255.0);
         int a = CKit.round(c.getOpacity() * 255.0);
 		return String.format("#%02X%02X%02X%02X", r, g, b, a);
+	}
+
+
+	public static boolean isParentWindowVisible(Node n)
+	{
+		if(n == null)
+		{
+			return false;
+		}
+		
+		Scene s = n.getScene();
+		if(s == null)
+		{
+			return false;
+		}
+		
+		Window w = s.windowProperty().get();
+		if(w == null)
+		{
+			return false;
+		}
+		
+		return w.isShowing();
+	}
+	
+	
+	/** returns a read-only property that tracks parent window of a Node */
+	public static  ReadOnlyObjectProperty<Window> parentWindowProperty(Node n)
+	{
+		return new ParentWindow(n).windowProperty();
 	}
 }

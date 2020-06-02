@@ -48,20 +48,30 @@ public class GlyphInfoComplex
 
 	public String getGlyphText(int ix)
 	{
-		if(ix > charOffsets.length)
+		try
 		{
-			return null;
+			if(ix >= charOffsets.length)
+			{
+				return null;
+			}
+			else
+			{
+				int start = charOffsets[ix];
+				ix++;
+				if(ix == charOffsets.length)
+				{
+					return text.substring(start);
+				}
+				else
+				{
+					int end = charOffsets[ix];
+					return text.substring(start, end);
+				}
+			}
 		}
-
-		int start = charOffsets[ix];
-		if(ix == charOffsets.length)
+		catch(Exception e)
 		{
-			return text.substring(start);
-		}
-		else
-		{
-			int end = charOffsets[ix + 1];
-			return text.substring(start);
+			throw e; // FIX
 		}
 	}
 

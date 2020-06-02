@@ -8,6 +8,8 @@ import javafx.scene.layout.BorderPane;
 
 /**
  * Fx Window.
+ * 
+ * It is highly recommended not to show a Window again after it has been closed.
  */
 public class FxWindow
 	extends BaseFxWindow
