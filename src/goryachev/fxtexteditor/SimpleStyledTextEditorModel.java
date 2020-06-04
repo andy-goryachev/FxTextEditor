@@ -90,7 +90,7 @@ public class SimpleStyledTextEditorModel
 		
 		String text = sb.toString();
 		CellStyle[] cs = ss.toArray(new CellStyle[ss.size()]);
-		return new TextLine(line, text, cs);
+		return new TextLine(line, text, null, cs);
 	}
 
 
@@ -189,13 +189,15 @@ public class SimpleStyledTextEditorModel
 	{
 		private final int lineNumber;
 		private final String text;
+		private final Color lineColor;
 		private final CellStyle[] styles;
 		
 		
-		public TextLine(int lineNumber, String text, CellStyle[] styles)
+		public TextLine(int lineNumber, String text, Color lineColor, CellStyle[] styles)
 		{
 			this.lineNumber = lineNumber;
 			this.text = text;
+			this.lineColor = lineColor;
 			this.styles = styles;
 		}
 
@@ -227,6 +229,12 @@ public class SimpleStyledTextEditorModel
 		public CellStyle getCellStyle(int charOffset)
 		{
 			return styles[charOffset];
+		}
+
+
+		public Color getLineColor()
+		{
+			return lineColor;
 		}
 	}
 }

@@ -1,5 +1,6 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
+import javafx.scene.paint.Color;
 
 
 /**
@@ -32,4 +33,8 @@ public interface ITextLine
 
 	/** returns cell styles at the given char index, or null */
 	public CellStyle getCellStyle(int charOffset);
+	
+	
+	/** returns a line color or null */
+	public Color getLineColor();
 }

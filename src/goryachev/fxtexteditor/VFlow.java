@@ -22,7 +22,6 @@ import javafx.beans.binding.BooleanExpression;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -46,6 +45,7 @@ public class VFlow
 	protected static final int LINE_CACHE_SIZE = 1024;
 	protected static final double LINE_NUMBERS_BG_OPACITY = 0.1;
 	protected static final double CARET_LINE_OPACITY = 0.3;
+	protected static final double LINE_COLOR_OPACITY = 0.3;
 	protected static final double SELECTION_BACKGROUND_OPACITY = 0.4;
 	protected static final double CELL_BACKGROUND_OPACITY = 0.8;
 	protected static final int HORIZONTAL_SAFETY = 8;
@@ -883,9 +883,14 @@ public class VFlow
 	}
 	
 	
-	protected Color backgroundColor(boolean caretLine, boolean selected, Color cellBG)
+	protected Color backgroundColor(boolean caretLine, boolean selected, Color lineColor, Color cellBG)
 	{
 		Color c = editor.getBackgroundColor();
+		
+		if(lineColor !=  null)
+		{
+			c = mixColor(c, lineColor, LINE_COLOR_OPACITY);
+		}
 		
 		if(caretLine)
 		{
@@ -1222,7 +1227,7 @@ public class VFlow
 		boolean caret = paintCaret.get() ? SelectionHelper.isCaret(flags) : false;
 		boolean selected = SelectionHelper.isSelected(flags);
 		
-		Color bg = backgroundColor(caretLine, selected, null);
+		Color bg = backgroundColor(caretLine, selected, row.getLineColor(), null);
 		gx.setFill(bg);
 		gx.fillRect(cx, cy, tm.cellWidth * count, tm.cellHeight);
 		
@@ -1255,7 +1260,7 @@ public class VFlow
 		}
 		
 		// background
-		Color bg = backgroundColor(caretLine, selected, style.getBackgroundColor());
+		Color bg = backgroundColor(caretLine, selected, row.getLineColor(), style.getBackgroundColor());
 		gx.setFill(bg);
 		gx.fillRect(cx, cy, tm.cellWidth, tm.cellHeight);
 		

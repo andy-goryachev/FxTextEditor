@@ -3,6 +3,7 @@ package goryachev.fxtexteditor.internal;
 import goryachev.common.util.SB;
 import goryachev.fxtexteditor.CellStyle;
 import goryachev.fxtexteditor.ITextLine;
+import javafx.scene.paint.Color;
 
 
 /**
@@ -38,6 +39,13 @@ public class ScreenRow
 	public ITextLine getTextLine()
 	{
 		return fline.getTextLine();
+	}
+	
+	
+	public Color getLineColor()
+	{
+		ITextLine t = getTextLine();
+		return t == null ? null : t.getLineColor();
 	}
 	
 

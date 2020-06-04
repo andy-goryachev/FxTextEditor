@@ -2,6 +2,7 @@
 package goryachev.fxtexteditor.internal;
 import goryachev.fxtexteditor.CellStyle;
 import goryachev.fxtexteditor.ITextLine;
+import javafx.scene.paint.Color;
 
 
 /**
@@ -44,6 +45,12 @@ public class MockTextLine
 
 
 	public CellStyle getCellStyle(int charOffset)
+	{
+		return null;
+	}
+
+
+	public Color getLineColor()
 	{
 		return null;
 	}

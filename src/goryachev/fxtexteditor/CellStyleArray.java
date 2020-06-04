@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 public class CellStyleArray
 {
 	private final CellStyle[] cells;
+	private Color lineColor;
 
 	
 	public CellStyleArray(int size)
@@ -32,11 +33,17 @@ public class CellStyleArray
 			cells[i] = style;
 		}
 	}
-
-
-	public void setLineBackground(Color lineBg)
+	
+	
+	public void setLineColor(Color c)
 	{
-		// TODO
+		lineColor = c;
+	}
+	
+	
+	public Color getLineColor()
+	{
+		return lineColor;
 	}
 
 
