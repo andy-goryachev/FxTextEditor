@@ -715,22 +715,19 @@ public class VFlow
 			
 			FX.later(() ->
 			{
-				if(FX.isParentWindowVisible(this))
+				long start = System.currentTimeMillis();
+				try
 				{
-					long start = System.currentTimeMillis();
-					try
+					paintAll();
+				}
+				finally
+				{
+					long elapsed = System.currentTimeMillis() - start;
+					if(elapsed > 100)
 					{
-						paintAll();
+						log.warn("paintAll: %d", elapsed);
 					}
-					finally
-					{
-						long elapsed = System.currentTimeMillis() - start;
-						if(elapsed > 100)
-						{
-							log.warn("paintAll: %d", elapsed);
-						}
-						repaintRequested = false;
-					}
+					repaintRequested = false;
 				}
 			});
 		}
@@ -987,6 +984,8 @@ public class VFlow
 	{
 		log.trace();
 		
+		repaintRequested = false;
+		
 		int bufferWidth = screenColumnCount + 1;
 		int bufferHeight = screenRowCount + 1;
 		buffer.setSize(bufferWidth, bufferHeight);
@@ -1100,6 +1099,8 @@ public class VFlow
 	
 	protected void paintAll()
 	{
+//		log.trace(this);
+		
 		if((screenColumnCount == 0) || (screenRowCount == 0))
 		{
 			return;
