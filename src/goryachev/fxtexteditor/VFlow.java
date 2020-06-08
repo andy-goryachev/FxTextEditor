@@ -1089,7 +1089,8 @@ public class VFlow
 		}
 		
 		// update scroll bars
-		if((endLine - startLine - linesInserted) != 0)
+		// TODO something is wrong, please document the update() in the file source
+		//if((endLine - startLine - linesInserted) != 0)
 		{
 			updateVerticalScrollBarPosition();
 			updateVerticalScrollBarSize();
