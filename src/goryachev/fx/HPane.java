@@ -201,6 +201,12 @@ public class HPane
 	}
 	
 	
+	public void clear()
+	{
+		getChildren().clear();
+	}
+	
+	
 	//
 	
 	
