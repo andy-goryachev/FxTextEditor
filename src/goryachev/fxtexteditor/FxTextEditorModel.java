@@ -93,6 +93,22 @@ public abstract class FxTextEditorModel
 	}
 	
 	
+	/**
+	 * Informs the listeners about the model change.
+	 * 
+	 * A model mutation must be performed in the FX application thread, 
+	 * involve a single contiguous block, and be followed by calling this method.
+	 * 
+	 * @param startLine - line index where the change begins
+	 * @param startPos - character index where the change begins
+	 * @param startCharsInserted - the number of characters inserted at (startLine,startPos)
+	 * @param linesInserted - the number of lines inserted between startLine and endLine
+	 * @param endLine - line index where the change ends
+	 * @param endPos - character index where the change ends
+	 * @param endCharsInserted - the number of characters inserted at (endLine,endPos)
+	 * 
+	 * These arguments deal with indexes in order to avoid passing any text strings. 
+	 */
 	public void fireTextUpdated(int startLine, int startPos, int startCharsInserted, int linesInserted, int endLine, int endPos, int endCharsInserted)
 	{
 		fireEvent((li) -> li.eventTextUpdated(startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted));
