@@ -715,11 +715,10 @@ public class FxTextEditor
 
 
 	/** returns selected plain text */
-	public String getSelectedPlainText(int maxLength) throws Exception
+	public String getSelectedPlainText() throws Exception
 	{
 		StringWriter wr = new StringWriter();
-		// TODO
-//		getModel().getPlainText(getSelection(), wr);
+		writeSelectedText(wr);
 		return wr.toString();
 	}
 	
@@ -728,33 +727,60 @@ public class FxTextEditor
 	 * outputs selected plain text, concatenating multiple selection segments if necessary.
 	 * this method should be used where allocating a single (potentially large) string is undesirable,
 	 * for example when saving to a file.
-	 * any exceptions thrown by the writer are silently ignored and the process is aborted.
 	 */
-	public void writeSelectedText(Writer wr)
+	public void writeSelectedText(Writer wr) throws Exception
 	{
-//		try
-//		{
-//			getModel().getPlainText(getSelection(), wr);
-//		}
-//		catch(Exception ignored)
-//		{
-//		}
+		EditorSelection sel = getSelection();
+		if(sel == null)
+		{
+			return;
+		}
+		
+		SelectionSegment seg = sel.getSegment();
+		if(seg == null)
+		{
+			return;
+		}
+		
+		int startLine = seg.getMin().getLine();
+		int startPos = seg.getMin().getCharIndex();
+		
+		int endLine = seg.getMax().getLine();
+		int endPos = seg.getMax().getCharIndex();
+		
+		getModel().getPlainText(startLine, startPos, endLine, endPos, wr);
 	}
 	
 	
 	/** copies all supported formats */
 	public void copy()
 	{
-		// TODO
-//		copy(null, getModel().getSupportedFormats());
+		copy(null, getModel().getSupportedFormats(true));
 	}
 	
 	
 	/** copies specified formats to clipboard, using an error handler */
-	public void copy(Consumer<Throwable> errorHandler, DataFormat ... formats)
+	public void copy(Consumer<Throwable> errorHandler, DataFormat[] formats)
 	{
-		// TODO
-//		getModel().copy(getSelection(), errorHandler, formats);
+		EditorSelection sel = getSelection();
+		if(sel == null)
+		{
+			return;
+		}
+		
+		SelectionSegment seg = sel.getSegment();
+		if(seg == null)
+		{
+			return;
+		}
+		
+		int startLine = seg.getMin().getLine();
+		int startPos = seg.getMin().getCharIndex();
+		
+		int endLine = seg.getMax().getLine();
+		int endPos = seg.getMax().getCharIndex();
+		
+		getModel().copy(startLine, startPos, endLine, endPos, errorHandler, formats);
 	}
 	
 

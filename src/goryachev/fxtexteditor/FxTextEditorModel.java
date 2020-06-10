@@ -1,10 +1,17 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
+import goryachev.common.log.Log;
 import goryachev.common.util.CList;
+import goryachev.common.util.CMap;
 import goryachev.common.util.text.IBreakIterator;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxObject;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.Set;
 import java.util.function.Consumer;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.DataFormat;
 
 
 /**
@@ -19,11 +26,13 @@ public abstract class FxTextEditorModel
 	 */
 	public abstract int getLineCount();
 	
+	
 	/**
 	 * Returns the representaion of text on the specified line, 
 	 * or null if lineIndex is outside of 0...getLineCount()-1
 	 */
 	public abstract ITextLine getTextLine(int line);
+	
 	
 	/**
 	 * Applies modification to the model.  The model makes necessary changes to its internal state, 
@@ -41,13 +50,17 @@ public abstract class FxTextEditorModel
 	
 	//
 	
+	protected static final Log log = Log.get("FxTextEditorModel");
 	protected final FxBoolean editableProperty = new FxBoolean(false);
 	protected final FxObject<LoadStatus> loadStatus = new FxObject(LoadStatus.UNKNOWN);
 	protected final CList<FxTextEditorModelListener> listeners = new CList<>();
+	protected final CMap<DataFormat,IClipboardCopyHandler> copyHandlers = new CMap(1);
+	protected final CMap<DataFormat,IClipboardPasteHandler> pasteHandlers = new CMap(0);
 	
 	
 	public FxTextEditorModel()
 	{
+		setCopyHandler(DataFormat.PLAIN_TEXT, (m,sL,sC,eL,eC) -> copyPlainTextToClipboard(sL, sC, eL, eC));
 	}
 	
 	
@@ -146,6 +159,27 @@ public abstract class FxTextEditorModel
 	}
 	
 	
+	/** 
+	 * returns an array of supported formats for copy or paste operation, 
+	 * or null if an operation is not supported
+	 */
+	protected DataFormat[] getSupportedFormats(boolean forCopy) 
+	{
+		Set<DataFormat> fs =
+			forCopy ?
+			copyHandlers.keySet() :
+			pasteHandlers.keySet();
+		return fs.toArray(new DataFormat[fs.size()]);
+	}
+	
+	
+	/** to be used by subclasses for additional format support */
+	protected void setCopyHandler(DataFormat f, IClipboardCopyHandler h)
+	{
+		copyHandlers.put(f, h);
+	}
+	
+	
 	/** returns plain text at the specified line, or null if not loaded */
 	public final String getPlainText(int line)
 	{
@@ -165,5 +199,100 @@ public abstract class FxTextEditorModel
 			return null;
 		}
 		return t.getPlainText();
+	}
+	
+	
+	/** copies text in the specified format(s) to the clipboard */
+	public void copy(int startLine, int startPos, int endLine, int endPos, Consumer<Throwable> errorHandler, DataFormat[] formats)
+	{
+		try
+		{
+			CMap<DataFormat,Object> m = null;
+			
+			for(DataFormat f: formats)
+			{
+				try
+				{
+					IClipboardCopyHandler h = copyHandlers.get(f);
+					if(h != null)
+					{
+						Object v = h.copy(this, startLine, startPos, endLine, endPos);
+						if(v != null)
+						{
+							if(m == null)
+							{
+								m = new CMap();
+							}
+							m.put(f, v);
+						}						
+					}
+				}
+				catch(Throwable e)
+				{
+					if(errorHandler == null)
+					{
+						log.error("copy " + f, e);
+					}
+					else
+					{
+						errorHandler.accept(e);
+					}
+				}
+			}
+			
+			if(m != null)
+			{
+				Clipboard c = Clipboard.getSystemClipboard();
+				c.setContent(m);
+			}
+		}
+		catch(Throwable e)
+		{
+			if(errorHandler == null)
+			{
+				log.error("copy", e);
+			}
+			else
+			{
+				errorHandler.accept(e);
+			}
+		}
+	}
+	
+	
+	protected Object copyPlainTextToClipboard(int startLine, int startPos, int endLine, int endPos) throws Exception
+	{		
+		StringWriter wr = new StringWriter();
+		getPlainText(startLine, startPos, endLine, endPos, wr);
+		return wr.toString();
+	}
+	
+	
+	public void getPlainText(int startLine, int startPos, int endLine, int endPos, Writer wr) throws Exception
+	{
+		if(startLine == endLine)
+		{
+			String text = getPlainText(startLine);
+			String s = text.substring(startPos, endPos);
+			wr.write(s);
+		}
+		else
+		{
+			String text = getPlainText(startLine);
+			String s = text.substring(startPos);
+			wr.write(s);
+			wr.write("\n");
+			
+			for(int i=startLine+1; i<endLine; i++)
+			{
+				text = getPlainText(i);
+				wr.write(text);
+				wr.write("\n");
+			}
+			
+			text = getPlainText(endLine);
+			s = text.substring(0, endPos);
+			wr.write(s);
+		}
 	}
 }

@@ -6,7 +6,7 @@
 # TODO
 
 - content padding
-- copy
+- copy rtf
 
 
 
