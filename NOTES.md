@@ -5,6 +5,7 @@
 
 # TODO
 
+- change to use style sheet
 - content padding
 - copy rtf
 
