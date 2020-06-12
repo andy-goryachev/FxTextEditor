@@ -9,9 +9,10 @@ Nearly all Java text editors, Swing and JavaFX alike, suffer from one deficiency
 data models such as logs or query results.
 
 The goal of this project is to provide a professional FX text component capable of handling billions of 
-lines of styled unicode text, possibly with long lines, while providing syntax highlighting, multiple carets and multiple selection segments.
+lines of styled unicode text, possibly with very long lines, by using monospaced font and rendering model - 
+unlike its sibling, [FxEditor](https://github.com/andy-goryachev/FxEditor).
 
-This is achieved using monospaced font and rendering model, unlike its sibling, [FxEditor](https://github.com/andy-goryachev/FxEditor).
+This component is being developed for the [AccessPanel Project](https://github.com/andy-goryachev/AccessPanelPublic).
 
 
 ## Features
@@ -21,6 +22,11 @@ This is achieved using monospaced font and rendering model, unlike its sibling, 
 * supports syntax highlight
 * basic text attributes: bold, italic, underline, strikethrough
 * variable tab width
+
+
+## How
+
+Refer to a simple demo application [FxTextEditorDemoApp.java](https://github.com/andy-goryachev/FxTextEditor/blob/master/src/demo/fxtexteditor/FxTextEditorDemoApp.java).
 
 
 ## Warning
