@@ -11,8 +11,8 @@ import javafx.scene.paint.Color;
 public class CellStyle
 	implements Cloneable
 {
-	private Color backgroundColor;
 	private Color textColor;
+	private Color backgroundColor;
 	private boolean bold;
 	private boolean italic;
 	private boolean strikeThrough;
@@ -21,12 +21,18 @@ public class CellStyle
 	
 	public CellStyle(Color fg, Color bg, boolean bold, boolean italic, boolean strikeThrough, boolean underscore)
 	{
-		this.backgroundColor = bg;
 		this.textColor = fg;
+		this.backgroundColor = bg;
 		this.bold = bold;
 		this.italic = italic;
 		this.strikeThrough = strikeThrough;
 		this.underscore = underscore;
+	}
+	
+	
+	public CellStyle(Color fg)
+	{
+		this.textColor = fg;
 	}
 	
 	

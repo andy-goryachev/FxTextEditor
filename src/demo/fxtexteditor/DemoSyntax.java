@@ -28,18 +28,6 @@ public class DemoSyntax
 	}
 	
 	
-	public static CellStyle[] getStyleSheet()
-	{
-		return new CellStyle[]
-		{
-			STYLE_TEXT,
-			STYLE_ENCLOSED,
-			STYLE_NUMBER,
-			STYLE_RTF
-		};
-	}
-	
-	
 	public List<TSegment> generateSegments()
 	{
 		for(int i=0; i<text.length(); i++)

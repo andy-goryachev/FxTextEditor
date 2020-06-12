@@ -31,11 +31,9 @@ public abstract class FxTextEditorModel
 	public abstract int getLineCount();
 	
 	
-	/** 
-	 * returns the cell styles used by the model, or null.
-	 * returning null will result in no colors in RTF output
-	 */ 
-	public abstract CellStyle[] getStyles();
+	// FIX remove
+	@Deprecated
+	public final void getStyles() { }
 	
 	
 	/**

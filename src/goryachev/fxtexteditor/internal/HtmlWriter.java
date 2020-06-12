@@ -85,8 +85,14 @@ public class HtmlWriter
 	
 	protected void writeLine(ITextLine t, int startPos, int endPos) throws Exception
 	{
+		if(t == null)
+		{
+			return;
+		}
+		
 		CellStyle prevStyle = null;
 		Color color = null;
+		Color background = null;
 		boolean bold = false;
 		boolean italic = false;
 		boolean under = false;
@@ -99,6 +105,7 @@ public class HtmlWriter
 			if(prevStyle != st)
 			{
 				Color col;
+				Color bg;
 				boolean bld;
 				boolean ita;
 				boolean und;
@@ -107,6 +114,7 @@ public class HtmlWriter
 				if(st == null)
 				{
 					col = null;
+					bg = null;
 					bld = false;
 					ita = false;
 					und = false;
@@ -115,6 +123,7 @@ public class HtmlWriter
 				else
 				{
 					col = st.getTextColor();
+					bg = st.getBackgroundColor();
 					bld = st.isBold();
 					ita = st.isItalic();
 					und = st.isUnderscore();
@@ -124,6 +133,7 @@ public class HtmlWriter
 				prevStyle = st;
 				
 				// emit changes
+				
 				if(CKit.notEquals(col, color))
 				{
 					if(col == null)
@@ -138,6 +148,22 @@ public class HtmlWriter
 					}
 					
 					color = col;
+				}
+				
+				if(CKit.notEquals(bg, background))
+				{
+					if(bg == null)
+					{
+						out.write("</span>");
+					}
+					else
+					{
+						out.write("<span style='background-color:");
+						out.write(FX.toFormattedColorRGB(bg));
+						out.write(";'>");
+					}
+					
+					background = bg;
 				}
 				
 				if(bld != bold)
@@ -215,6 +241,11 @@ public class HtmlWriter
 		if(bold)
 		{
 			out.write("</b>");
+		}
+		
+		if(background != null)
+		{
+			out.write("</span>");
 		}
 		
 		if(color != null)

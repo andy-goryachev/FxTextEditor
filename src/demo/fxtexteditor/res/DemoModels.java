@@ -5,7 +5,6 @@ import goryachev.common.util.CList;
 import goryachev.common.util.SB;
 import goryachev.common.util.text.IBreakIterator;
 import goryachev.fx.Formatters;
-import goryachev.fxtexteditor.CellStyle;
 import goryachev.fxtexteditor.Edit;
 import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.ITextLine;
@@ -179,12 +178,6 @@ public class DemoModels
 			public Edit edit(Edit ed) throws Exception
 			{
 				throw new Error();
-			}
-
-
-			public CellStyle[] getStyles()
-			{
-				return null;
 			}
 		};
 	}

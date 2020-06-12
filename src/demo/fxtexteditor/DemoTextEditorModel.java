@@ -151,10 +151,4 @@ public class DemoTextEditorModel
 		}
 		return null;
 	}
-
-
-	public CellStyle[] getStyles()
-	{
-		return DemoSyntax.getStyleSheet();
-	}
 }

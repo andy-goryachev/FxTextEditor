@@ -1,5 +1,6 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
 import goryachev.common.util.CMap;
@@ -18,6 +19,7 @@ import javafx.scene.paint.Color;
  */
 public class RtfWriter
 {
+	protected static final Log log = Log.get("RtfWriter");
 	private final FxTextEditorModel model;
 	private final OutputStream out;
 	private final int startLine;
@@ -26,8 +28,7 @@ public class RtfWriter
 	private final int endPos;
 	private String fontName = "Courier New";
 	private String fontSize = "18"; // double the actual size
-	private CList<Color> colors;
-	private CMap<Color,Integer> colorTable; 
+	private ColorTable colorTable; 
 	
 	
 	public RtfWriter(FxTextEditorModel m, OutputStream out, int startLine, int startPos, int endLine, int endPos)
@@ -50,7 +51,7 @@ public class RtfWriter
 	
 	public void write() throws Exception
 	{
-		prepareColorTable();
+		colorTable = prepareColorTable();
 		
 		writeBeginning();
 		
@@ -91,24 +92,19 @@ public class RtfWriter
 		write(fontName);
 		write(";}}\r\n");
 		
-		// color table from the model style sheet
-		if(colors != null)
+		// color table
+		write("{\\colortbl ;");
+		for(Color c: colorTable.colors)
 		{
-			write("{\\colortbl");
-			
-			for(Color c: colors)
-			{
-				write("\\red");
-				write(toInt255(c.getRed()));
-				write("\\green");
-				write(toInt255(c.getGreen()));
-				write("\\blue");
-				write(toInt255(c.getBlue()));
-				write(";");
-			}
-			
-			write("}\r\n");
+			write("\\red");
+			write(toInt255(c.getRed()));
+			write("\\green");
+			write(toInt255(c.getGreen()));
+			write("\\blue");
+			write(toInt255(c.getBlue()));
+			write(";");
 		}
+		write("}\r\n");
 		
 		write("{\\f0\\fs");
 		write(fontSize);
@@ -118,10 +114,16 @@ public class RtfWriter
 	
 	protected void writeLine(ITextLine t, int startPos, int endPos) throws Exception
 	{
+		if(t == null)
+		{
+			return;
+		}
+		
 		write("\\fi0\\ql ");
 		
 		CellStyle prevStyle = null;
 		Color color = null;
+		Color background = null;
 		boolean bold = false;
 		boolean italic = false;
 		boolean under = false;
@@ -134,6 +136,7 @@ public class RtfWriter
 			if(prevStyle != st)
 			{
 				Color col;
+				Color bg;
 				boolean bld;
 				boolean ita;
 				boolean und;
@@ -142,6 +145,7 @@ public class RtfWriter
 				if(st == null)
 				{
 					col = null;
+					bg = null;
 					bld = false;
 					ita = false;
 					und = false;
@@ -150,6 +154,7 @@ public class RtfWriter
 				else
 				{
 					col = st.getTextColor();
+					bg = st.getBackgroundColor();
 					bld = st.isBold();
 					ita = st.isItalic();
 					und = st.isUnderscore();
@@ -159,6 +164,7 @@ public class RtfWriter
 				prevStyle = st;
 				
 				// emit changes
+				
 				if(CKit.notEquals(col, color))
 				{
 					if(col == null)
@@ -167,17 +173,32 @@ public class RtfWriter
 					}
 					else
 					{
-						Integer ix = colorTable.get(col);
-						if(ix == null)
-						{
-							ix = 0; // should not happen
-						}
+						String s = colorTable.getIndexFor(col);
+
 						write("\\cf");
-						write(String.valueOf(ix));
+						write(s);
 						write(" ");
 					}
 					
 					color = col;
+				}
+				
+				if(CKit.notEquals(bg, background))
+				{
+					if(bg == null)
+					{
+						write("\\highlight0 ");
+					}
+					else
+					{
+						String s = colorTable.getIndexFor(bg);
+						
+						write("\\highlight");
+						write(s);
+						write(" ");
+					}
+					
+					background = bg;
 				}
 				
 				if(bld != bold)
@@ -218,6 +239,10 @@ public class RtfWriter
 					break;
 				}
 			}
+			else if(ch == '\\')
+			{
+				write("\\\\");
+			}
 			else if(ch < 0x80)
 			{
 				out.write(ch);
@@ -233,6 +258,11 @@ public class RtfWriter
 		if(color != null)
 		{
 			write("\\cf0 ");
+		}
+		
+		if(background != null)
+		{
+			write("\\highlight0 ");
 		}
 		
 		if(bold)
@@ -291,34 +321,98 @@ public class RtfWriter
 	}
 	
 	
-	private void prepareColorTable()
+	private ColorTable prepareColorTable()
 	{
-		CellStyle[] styles = model.getStyles();
-		if(styles != null)
+		ColorTable ctab = new ColorTable();
+		
+		if(startLine == endLine)
 		{
-			CList<Color> cs = new CList();
-			CMap<Color,Integer> m = new  CMap(styles.length);
+			ITextLine t = model.getTextLine(startLine);
+			scanColors(ctab, t, startPos, endPos);
+		}
+		else
+		{
+			ITextLine t = model.getTextLine(startLine);
+			scanColors(ctab, t, startPos, t.getTextLength());
 			
-			// TODO entry at 0 index is background color
-			Color c = Color.BLACK;
-			cs.add(c);
-			m.put(c, 0);
-
-			for(int i=0; i<styles.length; i++)
+			for(int i=startLine+1; i<endLine; i++)
 			{
-				c = styles[i].getTextColor();
-				if(c != null)
-				{
-					if(!m.containsKey(c))
-					{
-						cs.add(c);
-						m.put(c, Integer.valueOf(m.size()));
-					}
-				}
+				CKit.checkCancelled();
+				
+				t = model.getTextLine(i);
+				scanColors(ctab, t, 0, t.getTextLength());
 			}
 			
-			colors = cs;
-			colorTable = m;
+			t = model.getTextLine(endLine);
+			scanColors(ctab, t, 0, endPos);
+		}
+		
+		return ctab;
+	}
+	
+	
+	protected void scanColors(ColorTable ctab, ITextLine t, int start, int end)
+	{
+		CellStyle prevStyle = null;
+		
+		for(int i=start; i<end; i++)
+		{
+			CellStyle st = t.getCellStyle(i);
+			if(prevStyle != st)
+			{
+				if(st != null)
+				{
+					Color c = st.getTextColor();
+					if(c != null)
+					{
+						ctab.add(c);
+					}
+					
+					c = st.getBackgroundColor();
+					if(c != null)
+					{
+						ctab.add(c);
+					}
+				}
+				prevStyle = st;
+			}
+		}
+	}
+
+	
+	//
+	
+	
+	protected static class ColorTable
+	{
+		public final CList<Color> colors = new CList();
+		private final CMap<Color,String> indexes = new CMap();
+		
+		
+		public ColorTable()
+		{
+		}
+		
+		
+		public void add(Color c)
+		{
+			if(!indexes.containsKey(c))
+			{
+				colors.add(c);
+				indexes.put(c, String.valueOf(colors.size()));
+			}
+		}
+
+
+		public String getIndexFor(Color c)
+		{
+			String s = indexes.get(c);
+			if(s == null)
+			{
+				log.warn("no entry for " + c);
+				s = "0";
+			}
+			return s;
 		}
 	}
 }

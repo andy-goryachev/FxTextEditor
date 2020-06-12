@@ -26,7 +26,7 @@ public class SelectAll
 			
 			String s = model().getPlainText(ix);
 			Marker beg = markers().newMarker(0, 0);
-			Marker end = markers().newMarker(ix, Math.max(0, s.length()));
+			Marker end = markers().newMarker(ix, Math.max(0, (s == null ? 0 : s.length())));
 			
 			selector().setSelection(beg, end);
 			selector().commitSelection();
