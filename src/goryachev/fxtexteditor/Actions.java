@@ -4,6 +4,9 @@ import goryachev.fx.FxAction;
 import goryachev.fxtexteditor.internal.Markers;
 import goryachev.fxtexteditor.op.Backspace;
 import goryachev.fxtexteditor.op.Copy;
+import goryachev.fxtexteditor.op.CopyHTML;
+import goryachev.fxtexteditor.op.CopyPlainText;
+import goryachev.fxtexteditor.op.CopyRTF;
 import goryachev.fxtexteditor.op.Delete;
 import goryachev.fxtexteditor.op.MoveDocumentEnd;
 import goryachev.fxtexteditor.op.MoveDocumentStart;
@@ -25,6 +28,9 @@ public class Actions
 {
 	public FxAction backspace = new Backspace(this);
 	public FxAction copy = new Copy(this);
+	public FxAction copyHTML = new CopyHTML(this);
+	public FxAction copyPlainText = new CopyPlainText(this);
+	public FxAction copyRTF = new CopyRTF(this);
 	public FxAction delete = new Delete(this);
 	public FxAction moveDocumentEnd = new MoveDocumentEnd(this);
 	public FxAction moveDocumentStart = new MoveDocumentStart(this);

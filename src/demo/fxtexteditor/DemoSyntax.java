@@ -11,10 +11,10 @@ import javafx.scene.paint.Color;
  */
 public class DemoSyntax
 {
-	private CellStyle STYLE_TEXT = new CellStyle();
-	private CellStyle STYLE_ENCLOSED = new CellStyle(null, Color.YELLOW, false, false, false, false);
-	private CellStyle STYLE_NUMBER = new CellStyle(Color.RED, null, true, false, false, false);
-	private CellStyle STYLE_RTF = new CellStyle(Color.OLIVEDRAB, null, true, false, false, false);
+	private static final CellStyle STYLE_TEXT = new CellStyle();
+	private static final CellStyle STYLE_ENCLOSED = new CellStyle(null, Color.YELLOW, false, false, false, false);
+	private static final CellStyle STYLE_NUMBER = new CellStyle(Color.RED, null, true, false, false, false);
+	private static final CellStyle STYLE_RTF = new CellStyle(Color.OLIVEDRAB, null, true, false, false, false);
 
 	private final String text;
 	private final CList<TSegment> segments = new CList();
@@ -25,6 +25,18 @@ public class DemoSyntax
 	public DemoSyntax(String text)
 	{
 		this.text = text;
+	}
+	
+	
+	public static CellStyle[] getStyleSheet()
+	{
+		return new CellStyle[]
+		{
+			STYLE_TEXT,
+			STYLE_ENCLOSED,
+			STYLE_NUMBER,
+			STYLE_RTF
+		};
 	}
 	
 	

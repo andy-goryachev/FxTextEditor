@@ -26,6 +26,8 @@ public class DemoTextEditorModel
 	{
 		lines = CKit.split(text, '\n');
 		this.lineCount = lineCount;
+		
+		setDefaultRtfCopyHandler();
 	}
 	
 	
@@ -33,6 +35,8 @@ public class DemoTextEditorModel
 	{
 		lines = CKit.split(text, '\n');
 		this.lineCount = lines.length;
+		
+		setDefaultRtfCopyHandler();
 	}
 	
 	
@@ -148,5 +152,11 @@ public class DemoTextEditorModel
 			};
 		}
 		return null;
+	}
+
+
+	public CellStyle[] getStyles()
+	{
+		return DemoSyntax.getStyleSheet();
 	}
 }

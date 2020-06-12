@@ -52,4 +52,10 @@ public class InMemoryPlainTextEditorModel
 		}
 		return null;
 	}
+
+
+	public CellStyle[] getStyles()
+	{
+		return null;
+	}
 }

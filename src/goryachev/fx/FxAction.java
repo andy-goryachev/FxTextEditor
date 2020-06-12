@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
@@ -239,6 +240,20 @@ public class FxAction
 			}
 			
 			execute();
+			
+			// close popup menu, if applicable
+			if(ev != null)
+			{
+				Object src = ev.getSource();
+				if(src instanceof Menu)
+				{
+					ContextMenu p = ((Menu)src).getParentPopup();
+					if(p != null)
+					{
+						p.hide();
+					}
+				}
+			}
 		}
 	}
 }

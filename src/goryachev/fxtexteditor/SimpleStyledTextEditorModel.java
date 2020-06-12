@@ -7,6 +7,7 @@ import goryachev.common.util.ElasticIntArray;
 import goryachev.common.util.SB;
 import goryachev.common.util.text.IBreakIterator;
 import java.text.BreakIterator;
+import java.util.Set;
 import javafx.scene.paint.Color;
 
 
@@ -29,13 +30,15 @@ public class SimpleStyledTextEditorModel
 	public SimpleStyledTextEditorModel(IBreakIterator bi)
 	{
 		this.breakIterator = bi;
+		
+		setDefaultRtfCopyHandler();
 	}
 	
 	
 	public SimpleStyledTextEditorModel()
 	{
 		// WARNING: this break iterator fails with emoji and flags
-		this.breakIterator = IBreakIterator.wrap(BreakIterator.getCharacterInstance());
+		this(IBreakIterator.wrap(BreakIterator.getCharacterInstance()));
 	}
 	
 	
@@ -109,6 +112,13 @@ public class SimpleStyledTextEditorModel
 			styles.put(s, s);
 		}
 		return s;
+	}
+	
+	
+	public CellStyle[] getStyles()
+	{
+		Set<CellStyle> ss = styles.keySet();
+		return ss.toArray(new CellStyle[ss.size()]);
 	}
 	
 	

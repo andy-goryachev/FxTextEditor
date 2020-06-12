@@ -1,6 +1,7 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.log.Log;
+import goryachev.common.util.CKit;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.Formatters;
@@ -748,7 +749,7 @@ public class FxTextEditor
 		int endLine = seg.getMax().getLine();
 		int endPos = seg.getMax().getCharIndex();
 		
-		getModel().getPlainText(startLine, startPos, endLine, endPos, wr);
+		getModel().writePlainText(startLine, startPos, endLine, endPos, wr);
 	}
 	
 	
@@ -759,8 +760,37 @@ public class FxTextEditor
 	}
 	
 	
+	/** copies plain text */
+	public void copyPlainText()
+	{
+		copy(null, DataFormat.PLAIN_TEXT);
+	}
+	
+	
+	/** copies RTF */
+	public void copyRTF()
+	{
+		DataFormat[] formats = getModel().getSupportedFormats(true);
+		if(CKit.contains(formats, DataFormat.RTF))
+		{
+			copy(null, DataFormat.RTF);
+		}
+	}
+	
+	
+	/** copies HTML */
+	public void copyHTML()
+	{
+		DataFormat[] formats = getModel().getSupportedFormats(true);
+		if(CKit.contains(formats, DataFormat.HTML))
+		{
+			copy(null, DataFormat.HTML);
+		}
+	}
+	
+	
 	/** copies specified formats to clipboard, using an error handler */
-	public void copy(Consumer<Throwable> errorHandler, DataFormat[] formats)
+	public void copy(Consumer<Throwable> errorHandler, DataFormat ... formats)
 	{
 		EditorSelection sel = getSelection();
 		if(sel == null)
@@ -774,6 +804,11 @@ public class FxTextEditor
 			return;
 		}
 		
+		if(seg.isEmpty())
+		{
+			return;
+		}
+			
 		int startLine = seg.getMin().getLine();
 		int startPos = seg.getMin().getCharIndex();
 		

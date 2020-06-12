@@ -4,6 +4,7 @@ import goryachev.fx.CInsets;
 import goryachev.fx.CPane;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
+import goryachev.fx.FxMenu;
 import goryachev.fx.FxPopupMenu;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.FxTextEditorModel;
@@ -41,11 +42,16 @@ public class MainPane
 	
 	protected FxPopupMenu createPopupMenu()
 	{
-		FxPopupMenu m = new FxPopupMenu();
-		m.item("Copy");
-		m.separator();
-		m.item("Select All", editor.actions.selectAll);
-		return m;
+		FxPopupMenu p = new FxPopupMenu();
+		FxMenu m = p.menu("Copy", editor.actions.copy);
+		{
+			m.item("Copy Plain Text", editor.actions.copyPlainText);
+			m.item("Copy RTF", editor.actions.copyRTF);
+			m.item("Copy HTML", editor.actions.copyHTML);
+		}
+		p.separator();
+		p.item("Select All", editor.actions.selectAll);
+		return p;
 	}
 	
 	

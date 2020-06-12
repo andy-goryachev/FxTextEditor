@@ -1,11 +1,14 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.log.Log;
+import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
 import goryachev.common.util.CMap;
 import goryachev.common.util.text.IBreakIterator;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxObject;
+import goryachev.fxtexteditor.internal.RtfWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Set;
@@ -25,6 +28,13 @@ public abstract class FxTextEditorModel
 	 * (see getLoadInfo()) or an edit().
 	 */
 	public abstract int getLineCount();
+	
+	
+	/** 
+	 * returns the cell styles used by the model, or null.
+	 * returning null will result in no colors in RTF output
+	 */ 
+	public abstract CellStyle[] getStyles();
 	
 	
 	/**
@@ -179,6 +189,13 @@ public abstract class FxTextEditorModel
 		copyHandlers.put(f, h);
 	}
 	
+
+	/** to be used by subclasses for default RTF copy support */
+	protected void setDefaultRtfCopyHandler()
+	{
+		setCopyHandler(DataFormat.RTF, (m,sL,sC,eL,eC) -> copyRtfTextToClipboard(sL, sC, eL, eC));
+	}
+	
 	
 	/** returns plain text at the specified line, or null if not loaded */
 	public final String getPlainText(int line)
@@ -189,7 +206,6 @@ public abstract class FxTextEditorModel
 		}
 		else if(line >= getLineCount())
 		{
-//			throw new Error("overrun line=" + line);
 			return null;
 		}
 		
@@ -211,6 +227,8 @@ public abstract class FxTextEditorModel
 			
 			for(DataFormat f: formats)
 			{
+				CKit.checkCancelled();
+				
 				try
 				{
 					IClipboardCopyHandler h = copyHandlers.get(f);
@@ -260,15 +278,25 @@ public abstract class FxTextEditorModel
 	}
 	
 	
-	protected Object copyPlainTextToClipboard(int startLine, int startPos, int endLine, int endPos) throws Exception
+	public String copyPlainTextToClipboard(int startLine, int startPos, int endLine, int endPos) throws Exception
 	{		
 		StringWriter wr = new StringWriter();
-		getPlainText(startLine, startPos, endLine, endPos, wr);
+		writePlainText(startLine, startPos, endLine, endPos, wr);
 		return wr.toString();
 	}
 	
 	
-	public void getPlainText(int startLine, int startPos, int endLine, int endPos, Writer wr) throws Exception
+	public String copyRtfTextToClipboard(int startLine, int startPos, int endLine, int endPos) throws Exception
+	{
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		RtfWriter wr = new RtfWriter(this, out, startLine, startPos, endLine, endPos);
+		wr.write();
+		byte[] b = out.toByteArray();
+		return new String(b, CKit.CHARSET_ASCII);
+	}
+	
+	
+	public void writePlainText(int startLine, int startPos, int endLine, int endPos, Writer wr) throws Exception
 	{
 		if(startLine == endLine)
 		{
@@ -285,14 +313,20 @@ public abstract class FxTextEditorModel
 			
 			for(int i=startLine+1; i<endLine; i++)
 			{
+				CKit.checkCancelled();
+				
 				text = getPlainText(i);
 				wr.write(text);
 				wr.write("\n");
 			}
 			
 			text = getPlainText(endLine);
-			s = text.substring(0, endPos);
-			wr.write(s);
+			// TODO null should not happen
+			if(text != null)
+			{
+				s = text.substring(0, endPos);
+				wr.write(s);
+			}
 		}
 	}
 }

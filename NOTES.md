@@ -5,9 +5,7 @@
 
 # TODO
 
-- change to use style sheet
 - content padding
-- copy rtf
 
 
 
@@ -15,3 +13,4 @@
 
 - vertical scroll bar jerks when moved in wrapped mode
 - vertical scroll bar flickers when dragged beyond loaded portion of the file
+- should not render lastLine+1

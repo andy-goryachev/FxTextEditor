@@ -31,7 +31,10 @@ public interface ITextLine
 	public int getTextLength();
 
 
-	/** returns cell styles at the given char index, or null */
+	/** 
+	 * returns cell styles at the given char index, or null if no styling exists.
+	 * The styles should not include view-specific styles such as current line or cursor.
+	 */
 	public CellStyle getCellStyle(int charOffset);
 	
 	
