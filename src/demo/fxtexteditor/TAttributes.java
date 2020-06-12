@@ -36,25 +36,28 @@ public class TAttributes
 	/** binary search */
 	public TSegment getSegmentAt(int pos)
 	{
-		int low = 0;
-		int high = segments.size() - 1;
-		
-		while(low <= high)
+		if(segments != null)
 		{
-			int mid = (low + high) >>> 1;
-			TSegment seg = segments.get(mid);
+			int low = 0;
+			int high = segments.size() - 1;
 			
-			if(seg.end <= pos)
-			{		
-				low = mid + 1;
-			}
-			else if(seg.start > pos)
+			while(low <= high)
 			{
-				high = mid - 1;
-			}
-			else
-			{
-				return seg;
+				int mid = (low + high) >>> 1;
+				TSegment seg = segments.get(mid);
+				
+				if(seg.end <= pos)
+				{		
+					low = mid + 1;
+				}
+				else if(seg.start > pos)
+				{
+					high = mid - 1;
+				}
+				else
+				{
+					return seg;
+				}
 			}
 		}
 		

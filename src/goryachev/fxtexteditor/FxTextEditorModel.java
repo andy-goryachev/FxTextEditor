@@ -7,6 +7,7 @@ import goryachev.common.util.CMap;
 import goryachev.common.util.text.IBreakIterator;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxObject;
+import goryachev.fxtexteditor.internal.HtmlWriter;
 import goryachev.fxtexteditor.internal.RtfWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
@@ -70,7 +71,7 @@ public abstract class FxTextEditorModel
 	
 	public FxTextEditorModel()
 	{
-		setCopyHandler(DataFormat.PLAIN_TEXT, (m,sL,sC,eL,eC) -> copyPlainTextToClipboard(sL, sC, eL, eC));
+		setCopyHandler(DataFormat.PLAIN_TEXT, (m,sL,sC,eL,eC) -> copyPlainText(sL, sC, eL, eC));
 	}
 	
 	
@@ -193,7 +194,14 @@ public abstract class FxTextEditorModel
 	/** to be used by subclasses for default RTF copy support */
 	protected void setDefaultRtfCopyHandler()
 	{
-		setCopyHandler(DataFormat.RTF, (m,sL,sC,eL,eC) -> copyRtfTextToClipboard(sL, sC, eL, eC));
+		setCopyHandler(DataFormat.RTF, (m,sL,sC,eL,eC) -> copyRTF(sL, sC, eL, eC));
+	}
+	
+	
+	/** to be used by subclasses for default HTML copy support */
+	protected void setDefaultHtmlCopyHandler()
+	{
+		setCopyHandler(DataFormat.HTML, (m,sL,sC,eL,eC) -> copyHTML(sL, sC, eL, eC));
 	}
 	
 	
@@ -219,7 +227,7 @@ public abstract class FxTextEditorModel
 	
 	
 	/** copies text in the specified format(s) to the clipboard */
-	public void copy(int startLine, int startPos, int endLine, int endPos, Consumer<Throwable> errorHandler, DataFormat[] formats)
+	public void copyToClipboard(int startLine, int startPos, int endLine, int endPos, Consumer<Throwable> errorHandler, DataFormat[] formats)
 	{
 		try
 		{
@@ -278,7 +286,7 @@ public abstract class FxTextEditorModel
 	}
 	
 	
-	public String copyPlainTextToClipboard(int startLine, int startPos, int endLine, int endPos) throws Exception
+	public String copyPlainText(int startLine, int startPos, int endLine, int endPos) throws Exception
 	{		
 		StringWriter wr = new StringWriter();
 		writePlainText(startLine, startPos, endLine, endPos, wr);
@@ -286,13 +294,22 @@ public abstract class FxTextEditorModel
 	}
 	
 	
-	public String copyRtfTextToClipboard(int startLine, int startPos, int endLine, int endPos) throws Exception
+	public String copyRTF(int startLine, int startPos, int endLine, int endPos) throws Exception
 	{
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		RtfWriter wr = new RtfWriter(this, out, startLine, startPos, endLine, endPos);
 		wr.write();
 		byte[] b = out.toByteArray();
 		return new String(b, CKit.CHARSET_ASCII);
+	}
+	
+	
+	public String copyHTML(int startLine, int startPos, int endLine, int endPos) throws Exception
+	{
+		StringWriter out = new StringWriter();
+		HtmlWriter wr = new HtmlWriter(this, out, startLine, startPos, endLine, endPos);
+		wr.write();
+		return out.toString();
 	}
 	
 	

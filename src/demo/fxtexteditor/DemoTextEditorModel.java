@@ -25,18 +25,16 @@ public class DemoTextEditorModel
 	public DemoTextEditorModel(String text, int lineCount)
 	{
 		lines = CKit.split(text, '\n');
-		this.lineCount = lineCount;
+		this.lineCount = (lineCount <= 0 ? lines.length : lineCount);
 		
 		setDefaultRtfCopyHandler();
+		setDefaultHtmlCopyHandler();
 	}
 	
 	
 	public DemoTextEditorModel(String text)
 	{
-		lines = CKit.split(text, '\n');
-		this.lineCount = lines.length;
-		
-		setDefaultRtfCopyHandler();
+		this(text, -1);
 	}
 	
 	

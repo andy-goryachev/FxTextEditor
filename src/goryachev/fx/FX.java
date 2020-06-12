@@ -1240,6 +1240,16 @@ public final class FX
         int a = CKit.round(c.getOpacity() * 255.0);
 		return String.format("#%02X%02X%02X%02X", r, g, b, a);
 	}
+	
+	
+	/** converts non-null Color to #RRGGBB */
+	public static String toFormattedColorRGB(Color c)
+	{
+        int r = CKit.round(c.getRed() * 255.0);
+        int g = CKit.round(c.getGreen() * 255.0);
+        int b = CKit.round(c.getBlue() * 255.0);
+		return String.format("#%02X%02X%02X", r, g, b);
+	}
 
 
 	public static boolean isParentWindowVisible(Node n)

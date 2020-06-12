@@ -32,6 +32,7 @@ public class SimpleStyledTextEditorModel
 		this.breakIterator = bi;
 		
 		setDefaultRtfCopyHandler();
+		setDefaultHtmlCopyHandler();
 	}
 	
 	

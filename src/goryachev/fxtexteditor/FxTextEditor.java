@@ -815,7 +815,7 @@ public class FxTextEditor
 		int endLine = seg.getMax().getLine();
 		int endPos = seg.getMax().getCharIndex();
 		
-		getModel().copy(startLine, startPos, endLine, endPos, errorHandler, formats);
+		getModel().copyToClipboard(startLine, startPos, endLine, endPos, errorHandler, formats);
 	}
 	
 
