@@ -12,21 +12,21 @@ The goal of this project is to provide a professional FX text component capable 
 lines of styled unicode text, possibly with very long lines, by using monospaced font and rendering model - 
 unlike its sibling, [FxEditor](https://github.com/andy-goryachev/FxEditor).
 
-This component is being developed for the [AccessPanel Project](https://github.com/andy-goryachev/AccessPanelPublic).
+This component is being developed for the [AccessPanel](https://github.com/andy-goryachev/AccessPanelPublic) project.
 
 
-## Features
+## How
+
+Please refer to a simple demo application: [FxTextEditorDemoApp.java](https://github.com/andy-goryachev/FxTextEditor/blob/master/src/demo/fxtexteditor/FxTextEditorDemoApp.java).
+
+
+## Main Features
 
 * supports up to 2^31 lines of text
 * efficiently handles very long lines
 * supports syntax highlight
 * basic text attributes: bold, italic, underline, strikethrough
 * variable tab width
-
-
-## How
-
-Refer to a simple demo application [FxTextEditorDemoApp.java](https://github.com/andy-goryachev/FxTextEditor/blob/master/src/demo/fxtexteditor/FxTextEditorDemoApp.java).
 
 
 ## Warning
