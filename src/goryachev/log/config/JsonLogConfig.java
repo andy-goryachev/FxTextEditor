@@ -48,26 +48,39 @@ public class JsonLogConfig
 			monitor = null;
 		}
 		
-		configure(file);
+		configure(file, false);
 		
 		if(pollingPeriod > 0)
 		{
-			monitor = new FileMonitor(file, pollingPeriod, JsonLogConfig::configure);
+			monitor = new FileMonitor(file, pollingPeriod, (f) -> configure(f, true));
 			monitor.start();
 		}
 	}
 	
 	
-	protected static void configure(File file)
+	protected static void configure(File file, boolean stderr)
 	{
 		try
 		{
 			String spec = CKit.readString(file);
 			configure(spec);
+			
+			if(stderr)
+			{
+				System.err.println("Log config reloaded: " + file); 
+			}
 		}
 		catch(Throwable e)
 		{
-			LogUtil.internalError(e);
+			if(stderr)
+			{
+				System.err.print("Failed to reload log config: " + file);
+				e.printStackTrace();
+			}
+			else
+			{
+				LogUtil.internalError(e);
+			}
 		}
 	}
 	

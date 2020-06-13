@@ -19,7 +19,7 @@ import javafx.scene.input.DataFormat;
 
 
 /**
- * FxTextEditor Model.
+ * FxTextEditor Model base class.
  */
 public abstract class FxTextEditorModel
 {
@@ -31,14 +31,13 @@ public abstract class FxTextEditorModel
 	public abstract int getLineCount();
 	
 	
-	// FIX remove
-	@Deprecated
-	public final void getStyles() { }
-	
-	
 	/**
 	 * Returns the representaion of text on the specified line, 
 	 * or null if lineIndex is outside of 0...getLineCount()-1
+	 * 
+	 * TODO should not return null
+	 * TODO ensure that will not get called with lineIndex 
+	 * outside of 0...getLineCount()-1 range
 	 */
 	public abstract ITextLine getTextLine(int line);
 	
