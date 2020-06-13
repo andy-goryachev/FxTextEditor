@@ -316,14 +316,20 @@ public abstract class FxTextEditorModel
 		if(startLine == endLine)
 		{
 			String text = getPlainText(startLine);
-			String s = text.substring(startPos, endPos);
-			wr.write(s);
+			if(text != null)
+			{
+				String s = text.substring(startPos, endPos);
+				wr.write(s);
+			}
 		}
 		else
 		{
 			String text = getPlainText(startLine);
-			String s = text.substring(startPos);
-			wr.write(s);
+			if(text != null)
+			{
+				String s = text.substring(startPos);
+				wr.write(s);
+			}
 			wr.write("\n");
 			
 			for(int i=startLine+1; i<endLine; i++)
@@ -331,15 +337,17 @@ public abstract class FxTextEditorModel
 				CKit.checkCancelled();
 				
 				text = getPlainText(i);
-				wr.write(text);
+				if(text != null)
+				{
+					wr.write(text);
+				}
 				wr.write("\n");
 			}
 			
 			text = getPlainText(endLine);
-			// TODO null should not happen
 			if(text != null)
 			{
-				s = text.substring(0, endPos);
+				String s = text.substring(0, endPos);
 				wr.write(s);
 			}
 		}
