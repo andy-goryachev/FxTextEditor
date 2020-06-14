@@ -68,7 +68,7 @@ public class FxTextEditor
 	protected final ScrollBar vscroll;
 	protected final ScrollBar hscroll;
 	protected final ChangeListener<LoadStatus> loadStatusListener;
-	protected BiConsumer<FxTextEditor,Marker> wordSelector = new SimpleWordSelector();
+	private InputHandler inputHandler;
 
 	
 	// TODO perhaps pass final Capabilities object that defines basic parameters
@@ -120,7 +120,7 @@ public class FxTextEditor
 		// TODO
 //		FX.onChange(vflow::updateBlinkRate, true, blinkRateProperty());
 		
-		createInputHandler();
+		inputHandler = createInputHandler();
 		setFocusTraversable(true);
 		
 		setTabPolicy(TabPolicy.create(4));
@@ -142,9 +142,9 @@ public class FxTextEditor
 	
 	
 	/** override to provide your own implementation.  warning: this method is called from the constructor */
-	protected void createInputHandler()
+	protected InputHandler createInputHandler()
 	{
-		new InputHandler(this, vflow, selector);
+		return new InputHandler(this, vflow, selector);
 	}
 	
 	
@@ -542,47 +542,28 @@ public class FxTextEditor
 		select(m, m);
 	}
 
-
-	public void selectLine(Marker m)
+	
+	public void setDoubleClickHandler(BiConsumer<FxTextEditor,Marker> h)
 	{
-		if(m != null)
-		{
-			int line = m.getLine();
-			Marker start = markers.newMarker(line, 0);
-			
-			int endLine = line + 1;
-			
-			Marker end;
-			if(endLine >= getLineCount())
-			{
-				int len = getTextLength(line);
-				end = markers.newMarker(line, len);
-			}
-			else
-			{
-				end = markers.newMarker(endLine, 0);
-			}
-			
-			selector.setSelection(start, end);
-		}
+		inputHandler.setDoubleClickHandler(h);
 	}
 	
 	
-	public void selectWord(Marker m)
+	public BiConsumer<FxTextEditor,Marker> getDoubleClickHandler()
 	{
-		if(m != null)
-		{
-			if(wordSelector != null)
-			{
-				wordSelector.accept(this, m);
-			}
-		}
+		return inputHandler.getDoubleClickHandler();
 	}
 	
 	
-	public void setWordSelector(BiConsumer<FxTextEditor,Marker> s)
+	public void setTripleClickHandler(BiConsumer<FxTextEditor,Marker> h)
 	{
-		wordSelector = s;
+		inputHandler.setTripleClickHandler(h);
+	}
+	
+	
+	public BiConsumer<FxTextEditor,Marker> getTripleClickHandler()
+	{
+		return inputHandler.getTripleClickHandler();
 	}
 	
 	
@@ -824,6 +805,14 @@ public class FxTextEditor
 	{
 		selector.setSelection(start, end);
 		selector.commitSelection();
+	}
+	
+	
+	public void select(int startLine, int startPos, int endLine, int endPos)
+	{
+		Marker start = markers.newMarker(startLine, startPos);
+		Marker end = markers.newMarker(endLine, endPos);
+		select(start, end);
 	}
 	
 

@@ -6,6 +6,7 @@ import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.Marker;
 import goryachev.fxtexteditor.SelectionController;
 import goryachev.fxtexteditor.VFlow;
+import java.util.function.BiConsumer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.EventType;
@@ -37,6 +38,8 @@ public class InputHandler
 	private int lastx = -1;
 	private int lasty = -1;
 	private boolean inTrackpadScroll;
+	protected BiConsumer<FxTextEditor,Marker> doubleClickHandler = new SimpleWordSelector();
+	protected BiConsumer<FxTextEditor,Marker> tripleClickHandler = new LineSelector();
 
 
 	public InputHandler(FxTextEditor ed, VFlow f, SelectionController sel)
@@ -133,14 +136,38 @@ public class InputHandler
 		switch(clicks)
 		{
 		case 2:
-			// TODO rename doubleClickHandler
-			editor.selectWord(getMarker(ev));
+			handleDoubleClick(ev);
 			break;
 		case 3:
-			// TODO rename tripleClickHandler
-			editor.selectLine(getMarker(ev));
+			handleTripleClick(ev);
 			ev.consume();
 			break;
+		}
+	}
+	
+	
+	public void handleDoubleClick(MouseEvent ev)
+	{
+		if(doubleClickHandler != null)
+		{
+			Marker m = getMarker(ev);
+			if(m != null)
+			{
+				doubleClickHandler.accept(editor, m);
+			}
+		}
+	}
+	
+	
+	public void handleTripleClick(MouseEvent ev)
+	{
+		if(tripleClickHandler != null)
+		{
+			Marker m = getMarker(ev);
+			if(m != null)
+			{
+				tripleClickHandler.accept(editor, m);
+			}
 		}
 	}
 	
@@ -342,5 +369,29 @@ public class InputHandler
 		default:
 			return true;
 		}
+	}
+	
+	
+	public void setDoubleClickHandler(BiConsumer<FxTextEditor,Marker> h)
+	{
+		doubleClickHandler = h;
+	}
+	
+	
+	public BiConsumer<FxTextEditor,Marker> getDoubleClickHandler()
+	{
+		return doubleClickHandler;
+	}
+	
+	
+	public void setTripleClickHandler(BiConsumer<FxTextEditor,Marker> h)
+	{
+		tripleClickHandler = h;
+	}
+	
+	
+	public BiConsumer<FxTextEditor,Marker> getTripleClickHandler()
+	{
+		return tripleClickHandler;
 	}
 }

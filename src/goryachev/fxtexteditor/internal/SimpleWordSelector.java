@@ -1,5 +1,7 @@
 // Copyright © 2017-2020 Andy Goryachev <andy@goryachev.com>
-package goryachev.fxtexteditor;
+package goryachev.fxtexteditor.internal;
+import goryachev.fxtexteditor.FxTextEditor;
+import goryachev.fxtexteditor.Marker;
 import java.util.function.BiConsumer;
 
 
