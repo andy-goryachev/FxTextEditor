@@ -60,6 +60,7 @@ public class FxTextEditor
 	protected final ReadOnlyObjectWrapper<Duration> caretBlinkRateProperty = new ReadOnlyObjectWrapper(Duration.millis(500));
 	protected final FxObject<FxFormatter> lineNumberFormatterProperty = new FxObject<>();
 	protected final FxObject<ITabPolicy> tabPolicy = new FxObject();
+	// TODO lineCount r/o property
 	protected final FxTextEditorModelListener modelListener;
 	protected final SelectionController selector;
 	protected final Markers markers = new Markers(32);
@@ -181,7 +182,7 @@ public class FxTextEditor
 	
 	public void setContentPadding(Insets m)
 	{
-//		vflow.setPadding(m);
+		vflow.setPadding(m);
 	}
 	
 	

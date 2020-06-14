@@ -133,9 +133,11 @@ public class InputHandler
 		switch(clicks)
 		{
 		case 2:
+			// TODO rename doubleClickHandler
 			editor.selectWord(getMarker(ev));
 			break;
 		case 3:
+			// TODO rename tripleClickHandler
 			editor.selectLine(getMarker(ev));
 			ev.consume();
 			break;

@@ -18,12 +18,15 @@ import goryachev.fxtexteditor.internal.VerticalScrollHelper;
 import goryachev.fxtexteditor.internal.WrapInfo;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanExpression;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -91,6 +94,15 @@ public class VFlow
 	public VFlow(FxTextEditor ed)
 	{
 		this.editor = ed;
+		
+		// TODO bind vflow background color to editor background color
+		
+		backgroundProperty().bind(Bindings.createObjectBinding(() ->
+		{
+			Color c = ed.getBackgroundColor();
+			return new Background(new BackgroundFill(c, null, null));
+		}, ed.backgroundColorProperty()));
+		
 		cache = new FlowLineCache(ed, LINE_CACHE_SIZE);
 		
 		setMinWidth(0);
@@ -606,17 +618,24 @@ public class VFlow
 		double v;
 		if(isWrapLines())
 		{
-			ScrollAssist a = ScrollAssist.create(this, topLine, getTopWrapRow());
-			
-			// add the number of extra rows due to wrapping (for visible lines)
-			double total = lineCount + a.getAdditionalRows();
-			if(total < screenRowCount)
+			if(lineCount == 0)
 			{
 				v = 1.0;
 			}
 			else
 			{
-				v = screenRowCount / total;
+				ScrollAssist a = ScrollAssist.create(this, topLine, getTopWrapRow());
+				
+				// add the number of extra rows due to wrapping (for visible lines)
+				double total = lineCount + a.getAdditionalRows();
+				if(total < screenRowCount)
+				{
+					v = 1.0;
+				}
+				else
+				{
+					v = screenRowCount / total;
+				}
 			}
 		}
 		else
