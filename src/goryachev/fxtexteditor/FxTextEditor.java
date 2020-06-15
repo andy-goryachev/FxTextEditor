@@ -805,6 +805,7 @@ public class FxTextEditor
 	{
 		selector.setSelection(start, end);
 		selector.commitSelection();
+		vflow.scrollCaretToView();
 	}
 	
 	

@@ -48,8 +48,8 @@ public class VFlow
 	protected static final int LINE_CACHE_SIZE = 1024;
 	protected static final double LINE_NUMBERS_BG_OPACITY = 0.1;
 	protected static final double CARET_LINE_OPACITY = 0.3;
-	protected static final double LINE_COLOR_OPACITY = 0.3;
-	protected static final double SELECTION_BACKGROUND_OPACITY = 0.4;
+	protected static final double LINE_COLOR_OPACITY = 0.9;
+	protected static final double SELECTION_BACKGROUND_OPACITY = 0.9;
 	protected static final double CELL_BACKGROUND_OPACITY = 0.8;
 	protected static final int HORIZONTAL_SAFETY = 8;
 	protected static final int VERTICAL_SAFETY = 1;
