@@ -115,6 +115,13 @@ public class SimpleStyledTextEditorModel
 	}
 	
 	
+	public SimpleStyledTextEditorModel setStyle(CellStyle st)
+	{
+		style.init(st);
+		return this;
+	}
+	
+	
 	public SimpleStyledTextEditorModel append(String text)
 	{
 		CellStyle s = style();
@@ -131,7 +138,7 @@ public class SimpleStyledTextEditorModel
 	
 	public SimpleStyledTextEditorModel append(CellStyle st, String text)
 	{
-		style.init(st);
+		setStyle(st);
 		return append(text);
 	}
 	
