@@ -1086,13 +1086,13 @@ public class VFlow
 	
 	
 	/** returns true if update resulted in a visual change */
-	public void update(int startLine, int linesInserted, int endLine)
+	public void update(int startLine, int linesAdded, int endLine)
 	{
-		log.debug("start=%d end=%d inserted=%d", startLine, endLine, linesInserted);
+		log.debug("start=%d end=%d inserted=%d", startLine, endLine, linesAdded);
 		
-		cache.invalidate(startLine, endLine, linesInserted);
+		cache.invalidate(startLine, endLine, linesAdded);
 		
-		int max = Math.max(endLine, startLine + linesInserted);
+		int max = Math.max(endLine, startLine + linesAdded);
 		if(max < topLine)
 		{
 		}
@@ -1108,8 +1108,7 @@ public class VFlow
 		}
 		
 		// update scroll bars
-		// TODO something is wrong, please document the update() in the file source
-		//if((endLine - startLine - linesInserted) != 0)
+		if(linesAdded != 0)
 		{
 			updateVerticalScrollBarPosition();
 			updateVerticalScrollBarSize();

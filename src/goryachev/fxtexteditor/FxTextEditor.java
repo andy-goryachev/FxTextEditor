@@ -82,9 +82,9 @@ public class FxTextEditor
 				handleAllLinesChanged();
 			}
 
-			public void eventTextUpdated(int startLine, int startPos, int startCharsInserted, int linesInserted, int endLine, int endPos, int endCharsInserted)
+			public void eventTextUpdated(int startLine, int startPos, int startCharsAdded, int linesAdded, int endLine, int endPos, int endCharsAdded)
 			{
-				handleTextUpdated(startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted);
+				handleTextUpdated(startLine, startPos, startCharsAdded, linesAdded, endLine, endPos, endCharsAdded);
 			}
 		};
 		
@@ -817,11 +817,11 @@ public class FxTextEditor
 	}
 	
 
-	protected void handleTextUpdated(int startLine, int startPos, int startCharsInserted, int linesInserted, int endLine, int endPos, int endCharsInserted)
+	protected void handleTextUpdated(int startLine, int startPos, int startCharsAdded, int linesAdded, int endLine, int endPos, int endCharsAdded)
 	{
-		log.debug("startLine=%d startPos=%d startCharsInserted=%d linesInserted=%d endLine=%d endPos=%d endCharsInserted=%d", startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted);
+		log.debug("startLine=%d startPos=%d startCharsAdded=%d linesAdded=%d endLine=%d endPos=%d endCharsAdded=%d", startLine, startPos, startCharsAdded, linesAdded, endLine, endPos, endCharsAdded);
 		
-		markers.update(startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted);
-		vflow.update(startLine, linesInserted, endLine);
+		markers.update(startLine, startPos, startCharsAdded, linesAdded, endLine, endPos, endCharsAdded);
+		vflow.update(startLine, linesAdded, endLine);
 	}
 }
