@@ -28,6 +28,11 @@ public class GlyphInfoComplex
 
 	public int getCharIndex(int glyphIndex)
 	{
+		if(glyphIndex >= charOffsets.length)
+		{
+			// FIX emoji
+			return -1;
+		}
 		return charOffsets[glyphIndex];
 	}
 	

@@ -1,6 +1,7 @@
 // Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.common.util.text.IBreakIterator;
+import java.util.Arrays;
 
 
 /**
@@ -121,6 +122,7 @@ public abstract class AGlyphInfo
 
 	private static GlyphInfoComplex createComplex(String text, boolean hasTabs, IBreakIterator bi)
 	{
+		// FIX may not be correct!  if surrogate pairs or emoji
 		int len = text.length();
 		int[] offsets = new int[len];
 		int gi = 0;
@@ -142,6 +144,11 @@ public abstract class AGlyphInfo
 			
 			offsets[gi++] = off;
 			off += s.length();
+		}
+		
+		if(gi != len)
+		{
+			offsets = Arrays.copyOf(offsets, gi); 
 		}
 		
 		return new GlyphInfoComplex(text, hasTabs, offsets);

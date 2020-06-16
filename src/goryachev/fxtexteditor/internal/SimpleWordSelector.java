@@ -115,45 +115,8 @@ public class SimpleWordSelector
 		{
 			start = skipWordCharsBackward(text, pos) + 1;
 			end = skipWordCharsForward(text, pos);
+			
+			ed.select(line, start, line, end);
 		}
-		else
-		{
-			// hit whitespace.  let's try going forward first
-			// TODO we might try selecting the closest word instead
-			start = skipNonWordCharsForward(text, pos);
-			if(start == len)
-			{
-				// nothing to the right.  let's go backwards
-				end = skipNonWordCharsBackward(text, pos);
-				if(end < 0)
-				{
-					// nothing to select
-					return;
-				}
-				else
-				{
-					start = skipWordCharsBackward(text, end);
-					if(start == end)
-					{
-						return;
-					}
-					start++;
-				}
-			}
-			else
-			{
-				end = skipWordCharsForward(text, start);
-				if(end == start)
-				{
-					return;
-				}
-				
-				end--;
-			}
-		}
-		
-		Marker m0 = ed.newMarker(line, start);
-		Marker m1 = ed.newMarker(line, end);
-		ed.select(m0, m1);
 	}
 }
