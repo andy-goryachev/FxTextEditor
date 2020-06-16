@@ -5,6 +5,7 @@ import goryachev.common.log.Log;
 import goryachev.common.log.LogUtil;
 import goryachev.common.util.CKit;
 import java.io.File;
+import java.io.FileNotFoundException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -68,6 +69,13 @@ public class JsonLogConfig
 			if(stderr)
 			{
 				System.err.println("Log config reloaded: " + file); 
+			}
+		}
+		catch(FileNotFoundException e)
+		{
+			if(stderr)
+			{
+				System.err.println("Log config not found: " + file);
 			}
 		}
 		catch(Throwable e)
