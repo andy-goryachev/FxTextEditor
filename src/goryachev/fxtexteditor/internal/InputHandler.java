@@ -326,20 +326,30 @@ public class InputHandler
 			EditorSelection sel = editor.getSelection();
 			if(sel != null)
 			{
-				String ch = ev.getCharacter();
-				if(isTypedCharacter(ch))
+				vflow.setSuppressBlink(true);
+				try
 				{
-					Edit ed = new Edit(sel.getSegment(), ch);
-					try
+					String ch = ev.getCharacter();
+					if(isTypedCharacter(ch))
 					{
-						Edit undo = m.edit(ed);
-						// TODO add to undo manager
+						Edit ed = new Edit(sel.getSegment(), ch);
+						try
+						{
+							Edit undo = m.edit(ed);
+							// TODO add to undo manager
+						}
+						catch(Exception e)
+						{
+							// TODO provide user feedback
+							log.error(e);
+						}
 					}
-					catch(Exception e)
-					{
-						// TODO provide user feedback
-						log.error(e);
-					}
+				}
+				finally
+				{
+					vflow.setSuppressBlink(false);
+					
+					// TODO update editor selection (selection and segment property)
 				}
 			}
 		}

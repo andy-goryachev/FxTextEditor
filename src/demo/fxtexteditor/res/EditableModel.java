@@ -90,7 +90,7 @@ public class EditableModel
 				}
 				cut = old.substring(p0, p1);
 			}
-			
+
 			if(line0 < getLineCount())
 			{
 				lines.set(line0, text);
@@ -106,7 +106,7 @@ public class EditableModel
 			
 			fireTextUpdated(line0, p0, add.length(), 0, line0, p1, 0);
 			return null;
-			
+
 			// FIX problem: markers are a part of the editor, not the model!  use TextPos?
 //			TextPos m0 = new TextPos();
 //			TextPos m1 = new TextPos();
