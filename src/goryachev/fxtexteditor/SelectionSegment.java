@@ -141,6 +141,18 @@ public class SelectionSegment
 	}
 	
 	
+	public int getMinCharIndex()
+	{
+		return min.getCharIndex();
+	}
+	
+	
+	public int getMaxCharIndex()
+	{
+		return max.getCharIndex();
+	}
+	
+	
 	public int getCaretLine()
 	{
 		return getCaret().getLine();
@@ -193,6 +205,12 @@ public class SelectionSegment
 	public boolean isEmpty()
 	{
 		return min.equals(max);
+	}
+	
+	
+	public boolean isSameLine()
+	{
+		return min.getLine() == max.getLine();
 	}
 
 

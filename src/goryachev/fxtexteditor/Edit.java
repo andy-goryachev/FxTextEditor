@@ -7,18 +7,21 @@ package goryachev.fxtexteditor;
  */
 public class Edit
 {
-	private final EditorSelection selection;
+	private final SelectionSegment selection;
 	private final CharSequence replaceText;
 	
 	
-	public Edit(EditorSelection sel, CharSequence replaceText)
+	// TODO multiple lines
+	
+	
+	public Edit(SelectionSegment sel, CharSequence replaceText)
 	{
 		this.selection = sel;
 		this.replaceText = replaceText;
 	}
 	
 	
-	public EditorSelection getSelection()
+	public SelectionSegment getSelection()
 	{
 		return selection;
 	}

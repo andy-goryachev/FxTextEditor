@@ -562,6 +562,11 @@ public class VFlow
 		{
 			w = 0.0;
 		}
+		
+		if(h < 0.0)
+		{
+			h = 0;
+		}
 
 		screenColumnCount = CKit.floor(w / tm.cellWidth);
 		screenRowCount = CKit.floor(h / tm.cellHeight);

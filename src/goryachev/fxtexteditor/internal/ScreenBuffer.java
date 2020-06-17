@@ -19,7 +19,7 @@ public class ScreenBuffer
 	protected final VFlow vflow;
 	private int height;
 	private int width;
-	private ScreenRow[] rows = new ScreenRow[0];
+	private ScreenRow[] rows;
 	
 	
 	public ScreenBuffer(VFlow vf)

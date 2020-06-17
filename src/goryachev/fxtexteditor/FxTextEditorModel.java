@@ -23,6 +23,12 @@ import javafx.scene.input.DataFormat;
  */
 public abstract class FxTextEditorModel
 {
+	// TODO thread-safe getPlainText() and getLineCount() ?
+	// perhaps we should not allow access to the model outside of the FX thread
+	// TODO temporary setMutable(false) to block edits/updates during long I/O access 
+	// such as saving or exporting.
+
+	
 	/** 
 	 * Returns the number of lines available.  
 	 * This number is expected to be changed only as a result of loading progress
@@ -46,6 +52,8 @@ public abstract class FxTextEditorModel
 	 * Applies modification to the model.  The model makes necessary changes to its internal state, 
 	 * calls FxTextEditor's event* callbacks, and returns a corresponding undo Edit object.
 	 * Throws an exception if this model is read-only.
+	 * 
+	 * TODO perhaps returning null means no undo, and all prior undoable edits must be cleared. 
 	 */
 	public abstract Edit edit(Edit ed) throws Exception;
 	

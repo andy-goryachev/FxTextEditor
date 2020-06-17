@@ -25,6 +25,7 @@ public class DemoModels
 {
 	public static final AnItem NO_TABS_NO_UNICODE = new AnItem("NO_TABS_NO_UNICODE", "No Tabs, No Unicode");
 	public static final AnItem TABS_NO_UNICODE = new AnItem("TABS_NO_UNICODE", "Tabs, No Unicode");
+	public static final AnItem EDITABLE = new AnItem("EDITABLE", "Editable Model");
 	public static final AnItem JAVA_LARGE = new AnItem("JAVA", "CKit.java");
 	public static final AnItem JAVA_SMALL = new AnItem("JAVA_SMALL", "A small java file");
 	public static final AnItem LONG_LINES = new AnItem("LONG_LINES", "Long lines (1M characters)");
@@ -40,6 +41,7 @@ public class DemoModels
 		{
 			JAVA_SMALL,
 			NO_TABS_NO_UNICODE,
+			EDITABLE,
 			TABS_NO_UNICODE,
 			JAVA_LARGE,
 			LOADING,
@@ -103,6 +105,10 @@ public class DemoModels
 		else if(x == LOADING)
 		{
 			return makeLoadingModel();
+		}
+		else if(x == EDITABLE)
+		{
+			return new EditableModel();
 		}
 		return null;
 	}

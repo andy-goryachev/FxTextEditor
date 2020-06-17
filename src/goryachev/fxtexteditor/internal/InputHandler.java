@@ -1,8 +1,12 @@
 // Copyright © 2016-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.common.log.Log;
 import goryachev.fx.FX;
 import goryachev.fx.KeyMap;
+import goryachev.fxtexteditor.Edit;
+import goryachev.fxtexteditor.EditorSelection;
 import goryachev.fxtexteditor.FxTextEditor;
+import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.Marker;
 import goryachev.fxtexteditor.SelectionController;
 import goryachev.fxtexteditor.VFlow;
@@ -24,6 +28,7 @@ import javafx.util.Duration;
  */
 public class InputHandler
 {
+	protected static final Log log = Log.get("InputHandler");
 	protected final FxTextEditor editor;
 	protected final VFlow vflow;
 	protected final SelectionController selector;
@@ -314,27 +319,30 @@ public class InputHandler
 		{
 			return; // is this needed?
 		}
-		
-		// TODO
-//		FxEditorModel m = getModel();
-//		if(m.isEditable())
-//		{
-//			String ch = ev.getCharacter();
-//			if(isTypedCharacter(ch))
-//			{
-//				Edit ed = new Edit(getSelection(), ch);
-//				try
-//				{
-//					Edit undo = m.edit(ed);
-//					// TODO add to undo manager
-//				}
-//				catch(Exception e)
-//				{
-//					// TODO provide user feedback
-//					log.error(e);
-//				}
-//			}
-//		}
+
+		FxTextEditorModel m = editor.getModel();
+		if(m.isEditable())
+		{
+			EditorSelection sel = editor.getSelection();
+			if(sel != null)
+			{
+				String ch = ev.getCharacter();
+				if(isTypedCharacter(ch))
+				{
+					Edit ed = new Edit(sel.getSegment(), ch);
+					try
+					{
+						Edit undo = m.edit(ed);
+						// TODO add to undo manager
+					}
+					catch(Exception e)
+					{
+						// TODO provide user feedback
+						log.error(e);
+					}
+				}
+			}
+		}
 	}
 
 
