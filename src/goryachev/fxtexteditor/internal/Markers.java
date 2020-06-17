@@ -44,7 +44,7 @@ public class Markers
 	}
 	
 	
-	public void update(int startLine, int startPos, int startCharsInserted, int linesInserted, int endLine, int endPos, int endCharsInserted)
+	public void update(int startLine, int startPos, int startCharsAdded, int linesAdded, int endLine, int endPos, int endCharsAdded)
 	{
 		for(int i=markers.size()-1; i>=0; --i)
 		{
@@ -65,17 +65,24 @@ public class Markers
 					if(endLine == m.getLine())
 					{
 						// marker on the end line 
-						int charDelta = endCharsInserted - (endPos - startPos);
+						int charDelta = endCharsAdded - (endPos - startPos);
 						m.movePosition(charDelta);
 					}
 
-					int lineDelta = linesInserted - (endLine - startLine);
+					int lineDelta = linesAdded - (endLine - startLine);
 					m.moveLine(lineDelta);
 				}
 				else
 				{
-					// reset to start
-					m.reset(startLine, startPos);
+					// move to end of inserted text
+					if(startLine == endLine)
+					{
+						m.reset(endLine + linesAdded, startPos + startCharsAdded + endCharsAdded);
+					}
+					else
+					{
+						m.reset(endLine + linesAdded, endCharsAdded);
+					}
 				}
 			}
 		}

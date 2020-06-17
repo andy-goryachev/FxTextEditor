@@ -57,6 +57,11 @@ public class EditableModel
 			int p1 = seg.getMaxCharIndex();
 			
 			String old = getPlainText(line0);
+			if(old == null)
+			{
+				old = "";
+			}
+			
 			String text;
 			String cut;
 
@@ -84,6 +89,19 @@ public class EditableModel
 					text = old.substring(0, p0) + add;
 				}
 				cut = old.substring(p0, p1);
+			}
+			
+			if(line0 < getLineCount())
+			{
+				lines.set(line0, text);
+			}
+			else if(line0 == getLineCount())
+			{
+				lines.add(text);
+			}
+			else
+			{
+				throw new Error("line=" + line0 + " lineCount=" + getLineCount());
 			}
 			
 			fireTextUpdated(line0, p0, add.length(), 0, line0, p1, 0);
