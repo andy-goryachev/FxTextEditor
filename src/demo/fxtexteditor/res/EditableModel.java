@@ -100,8 +100,8 @@ public class EditableModel
 			String s = head + added + tail;
 			setText(line0, s);
 			
-			int mx = line0;
-			for(int i=line2; i>mx; i--)
+			int mx = Math.min(line2, getLineCount()-1);
+			for(int i=mx; i>line0; i--)
 			{
 				lines.remove(i);
 			}

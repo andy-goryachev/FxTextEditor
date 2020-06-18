@@ -198,4 +198,13 @@ public class SelectionController
 		EditorSelection es = new EditorSelection(segment.get());
 		selectionProperty.set(es);
 	}
+
+
+	/** when markers change, so should the selection */
+	public void refresh()
+	{
+		SelectionSegment seg = getSelectedSegment().copy();
+		segment.set(seg);
+		selectionProperty.set(new EditorSelection(seg));
+	}
 }

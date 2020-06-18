@@ -822,6 +822,8 @@ public class FxTextEditor
 		log.debug("startLine=%d startPos=%d startCharsAdded=%d linesAdded=%d endLine=%d endPos=%d endCharsAdded=%d", startLine, startPos, startCharsAdded, linesAdded, endLine, endPos, endCharsAdded);
 		
 		markers.update(startLine, startPos, startCharsAdded, linesAdded, endLine, endPos, endCharsAdded);
+		selector.refresh();
+
 		vflow.update(startLine, linesAdded, endLine);
 	}
 }

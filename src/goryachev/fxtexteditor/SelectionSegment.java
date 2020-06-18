@@ -8,7 +8,6 @@ import goryachev.common.util.FH;
  * A single Selection Segment.
  */
 public class SelectionSegment
-	implements Cloneable
 {
 	protected final Marker min;
 	protected final Marker max;
@@ -44,6 +43,12 @@ public class SelectionSegment
 			this.max = anchor;
 			this.caretAtMin = true;	
 		}
+	}
+	
+	
+	public SelectionSegment copy()
+	{
+		return new SelectionSegment(min, max, caretAtMin);
 	}
 	
 	

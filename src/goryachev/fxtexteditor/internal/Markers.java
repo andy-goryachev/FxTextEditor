@@ -80,7 +80,7 @@ public class Markers
 				else
 				{
 					// move to end of inserted text
-					if(startLine == endLine)
+					if(linesAdded == 0)
 					{
 						m.reset(endLine + linesAdded, startPos + startCharsAdded + endCharsAdded);
 					}
