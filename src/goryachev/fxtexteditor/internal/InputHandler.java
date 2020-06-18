@@ -84,7 +84,7 @@ public class InputHandler
 		ed.addEventFilter(KeyEvent.KEY_TYPED, (ev) -> handleKeyTyped(ev));
 	}
 	
-	
+
 	protected void handleScrollWheel(ScrollEvent ev)
 	{
 		EventType<ScrollEvent> t = ev.getEventType();
@@ -301,9 +301,21 @@ public class InputHandler
 		{
 			return; // is this needed?
 		}
+		
+		switch(ev.getCode())
+		{
+		case ENTER:
+		case TAB:
+			handleKeyTyped(ev.getCode(), ev.isControlDown(), ev.isShiftDown(), ev.isShortcutDown());
+			break;
+		default:
+			return;
+		}
+		
+		ev.consume();
 	}
 	
-	
+
 	public void handleKeyReleased(KeyEvent ev)
 	{
 		if(ev.isConsumed())
@@ -311,7 +323,57 @@ public class InputHandler
 			return; // is this needed?
 		}
 	}
-	
+
+		
+	protected void handleKeyTyped(KeyCode code, boolean ctrl, boolean shift, boolean shortcut)
+	{
+		FxTextEditorModel m = editor.getModel();
+		if(m.isEditable())
+		{
+			EditorSelection sel = editor.getSelection();
+			if(sel != null)
+			{
+				vflow.setSuppressBlink(true);
+				try
+				{
+					Object typed;
+
+					switch(code)
+					{
+					case ENTER:
+						typed = new String[] { "", "" };
+						break;
+					case TAB:
+						typed = "\n";
+						break;
+					default:
+						throw new Error("?" + code);
+					}
+					
+					try
+					{
+						Edit ed = Edit.create(sel.getSegment(), typed);
+						Edit undo = m.edit(ed);
+						// TODO add to undo manager
+						
+						updateSelection(ed);
+					}
+					catch(Exception e)
+					{
+						// TODO provide user feedback
+						log.error(e);
+					}
+				}
+				finally
+				{
+					vflow.setSuppressBlink(false);
+					
+					// TODO update editor selection (selection and segment property)
+				}
+			}
+		}
+	}
+
 	
 	public void handleKeyTyped(KeyEvent ev)
 	{
@@ -332,11 +394,13 @@ public class InputHandler
 					String ch = ev.getCharacter();
 					if(isTypedCharacter(ch))
 					{
-						Edit ed = new Edit(sel.getSegment(), ch);
 						try
 						{
+							Edit ed = Edit.create(sel.getSegment(), ch);
 							Edit undo = m.edit(ed);
 							// TODO add to undo manager
+							updateSelection(ed);
+							ev.consume();
 						}
 						catch(Exception e)
 						{
@@ -348,11 +412,15 @@ public class InputHandler
 				finally
 				{
 					vflow.setSuppressBlink(false);
-					
-					// TODO update editor selection (selection and segment property)
 				}
 			}
 		}
+	}
+
+
+	protected void updateSelection(Edit ed)
+	{
+		// TODO
 	}
 
 
@@ -377,6 +445,11 @@ public class InputHandler
 		char c = ch.charAt(0);
 		if(c < ' ')
 		{
+			switch(c)
+			{
+			case '\t':
+				return true;
+			}
 			return false;
 		}
 		
