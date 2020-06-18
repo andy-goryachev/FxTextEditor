@@ -20,13 +20,6 @@ import javafx.scene.layout.BorderPane;
 
 /**
  * FxTable.
- * 
- * empty rows: http://stackoverflow.com/questions/26298337/tableview-adjust-number-of-visible-rows
-	.table-row-cell:empty 
-	{
-		-fx-background-color: white;
-		-fx-border-color: white;
-	} 
  */
 public class FxTable<T>
 	extends BorderPane
@@ -63,13 +56,13 @@ public class FxTable<T>
 	}
 	
 	
+	/** use FxTableColumn.setRealPrefWidth() to set the preferred width with CONSTRAINED_RESIZE_POLICY */  
 	public void setAutoResizeMode(boolean on)
 	{
 		autoResizeMode.set(on);
 
 		if(on)
 		{
-			// TODO implement a better resizing policy that uses preferred column width
 			table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		}
 		else

@@ -625,7 +625,12 @@ public class CommonStyles
 			selector(".table-row-cell:empty").defines
 			(
 				backgroundColor(TRANSPARENT),
-				borderColor(TRANSPARENT)
+				borderWidth(0)
+			),
+			selector(".table-row-cell:empty:odd, .table-row-cell:empty:even, .indexed-cell:odd:empty, .indexed-cell:even:empty").defines
+			(
+				backgroundColor(TRANSPARENT),
+				borderWidth(0)
 			),
 			
 			selector(".table-view > .virtual-flow > .clipped-container > .sheet > .table-row-cell .table-cell:selected").defines

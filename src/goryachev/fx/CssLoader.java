@@ -58,7 +58,7 @@ public class CssLoader
 				}
 			});
 			
-			if(FxConfig.continuousCssRefresh())
+			if(FxConfig.cssRefreshEnabled())
 			{
 				Thread t = new Thread("reloading css")
 				{
@@ -158,11 +158,7 @@ public class CssLoader
 					Platform.runLater(() -> update(old, url));
 				}
 				
-				if(FxConfig.dumpCSS())
-				{
-					// stdout is ok here
-					System.out.println(css);
-				}
+				log.trace(css);
 			}
 		}
 		catch(Error e)
@@ -180,5 +176,14 @@ public class CssLoader
 	protected void update(String old, String cur)
 	{
 		FxHacks.get().applyStyleSheet(old, cur);
+		
+		if(old == null)
+		{
+			log.debug("css loaded");
+		}
+		else
+		{
+			log.debug("css reloaded");
+		}
 	}
 }

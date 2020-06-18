@@ -99,6 +99,8 @@ public class InputHandler
 			return;
 		}
 		
+		// TODO use double property.  if (0.0 ... 1.0 (or negative to support 1.0 on both) - fraction of screen height, >= 1.0 number of lines)
+		
 		int step;
 		if(inTrackpadScroll)
 		{

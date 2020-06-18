@@ -172,6 +172,7 @@ public class MainWindow
 	protected void newWindow()
 	{
 		MainWindow w = new MainWindow();
+		w.mainPane.setModel(mainPane.getModel());
 		w.open();
 	}
 	

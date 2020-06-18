@@ -47,6 +47,13 @@ public class FxTableColumn<T>
 	{
 		this(null, null, sortable);
 	}
+	
+
+	/** javafx does not honor pref width */
+	public void setRealPrefWidth(double width)
+	{
+		setMaxWidth(width * 100);
+	}
 
 
 	protected ObservableValue getCellValueProperty(T item)

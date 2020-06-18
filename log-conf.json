@@ -1,7 +1,9 @@
 {
-	defaultLevel: off,
+	defaultLevel: warn,
 	channels:
 	{
+		FxTextEditor: all,
+		Markers: all,
 		MoveUp: all,
 		PageDown: all,
 		PageUp: all,
@@ -16,7 +18,6 @@
 	],
 	all:
 	[
-		FxTextEditor,
 	],
 	appenders:
 	[

@@ -85,7 +85,7 @@ public class Marker
 	}
 	
 	
-	/** char index */
+	/** returns the character index */
 	public int getCharIndex()
 	{
 		return charIndex;

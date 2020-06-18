@@ -61,6 +61,12 @@ public class MainPane
 	}
 	
 	
+	public FxTextEditorModel getModel()
+	{
+		return editor.getModel();
+	}
+	
+
 	public void showFindPane()
 	{
 //		FindPane p = new FindPane();

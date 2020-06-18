@@ -45,6 +45,23 @@ public class EditableModel
 	}
 	
 	
+	protected void setText(int ix, String text)
+	{
+		if(ix < lines.size())
+		{
+			lines.set(ix, text);
+		}
+		else if(ix == lines.size())
+		{
+			lines.add(text);
+		}
+		else
+		{
+			throw new Error("line=" + ix + " lineCount=" + getLineCount());
+		}
+	}
+	
+	
 	// new version
 	public Edit edit(Edit edit) throws Exception
 	{
@@ -81,18 +98,7 @@ public class EditableModel
 		{
 			String added = edit.getText();
 			String s = head + added + tail;
-			if(line0 < lines.size())
-			{
-				lines.set(line0, s);
-			}
-			else if(line0 == lines.size())
-			{
-				lines.add(s);
-			}
-			else
-			{
-				throw new Error("line=" + line0 + " lineCount=" + getLineCount());
-			}
+			setText(line0, s);
 			
 			int mx = line0;
 			for(int i=line2; i>mx; i--)
@@ -106,7 +112,47 @@ public class EditableModel
 		}
 		else
 		{
-			throw new Error("todo");
+			String[] added = edit.getTextLines();
+			int last = added.length - 1;
+			int ix = line0;
+			
+			for(int i=0; i<=last; i++)
+			{
+				String text;
+				if(i == 0)
+				{
+					text = head + added[i];
+				}
+				else if(i == last)
+				{
+					text = added[i] + tail;
+				}
+				else
+				{
+					text = added[i];
+				}
+				
+				if(ix <= line2)
+				{
+					setText(ix, text);
+				}
+				else
+				{
+					lines.add(ix, text);
+				}
+				
+				ix++;
+			}
+			
+			int mx = ix;
+			for(int i=line2; i>mx; i--)
+			{
+				lines.remove(i);
+			}
+			
+			fireTextUpdated(line0, pos0, added[0].length(), line0-line2+added.length-1, line2, pos2, added[last].length());
+			// TODO reverse Edit
+			return null;
 		}
 	}
 

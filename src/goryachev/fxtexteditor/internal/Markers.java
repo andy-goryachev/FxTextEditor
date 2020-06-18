@@ -1,5 +1,6 @@
 // Copyright © 2017-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.common.log.Log;
 import goryachev.common.util.WeakList;
 import goryachev.fxtexteditor.Marker;
 
@@ -10,6 +11,7 @@ import goryachev.fxtexteditor.Marker;
  */
 public class Markers
 {
+	protected static final Log log = Log.get("Markers");
 	private final WeakList<Marker> markers;
 	
 	
@@ -46,6 +48,9 @@ public class Markers
 	
 	public void update(int startLine, int startPos, int startCharsAdded, int linesAdded, int endLine, int endPos, int endCharsAdded)
 	{
+		log.debug("startLine=%d, startPos=%d, startCharsAdded=%d, linesAdded=%d, endLine=%d, endPos=%d, endCharsAdded=%d", startLine, startPos, startCharsAdded, linesAdded, endLine, endPos, endCharsAdded);
+		log.trace("before:%s", markers);
+		
 		for(int i=markers.size()-1; i>=0; --i)
 		{
 			Marker m = markers.get(i);
@@ -86,5 +91,7 @@ public class Markers
 				}
 			}
 		}
+		
+		log.trace("after:%s", markers);
 	}
 }
