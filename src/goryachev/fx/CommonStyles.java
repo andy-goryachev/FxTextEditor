@@ -65,8 +65,9 @@ public class CommonStyles
 			scrollBar(theme),
 			scrollPane(theme),
 			table(theme),
-			treeTable(theme),
 			text(theme),
+			treeTable(theme),
+			toolbar(theme),
 			// FIX
 			//radioButton(theme),
 			buttonPane(theme),
@@ -692,6 +693,19 @@ public class CommonStyles
 					//effect("dropshadow(two-pass-box, rgba(0, 0, 0, 0.4), 12, 0, 2, 2)")
 					shadow()
 				)
+			)
+		};
+	}
+	
+	
+	protected Object toolbar(Theme theme)
+	{
+		return new Object[]
+		{
+			// text smoothing
+			selector(FxToolBar.STYLE).defines
+			(
+				padding(2, 2, 2, 2)
 			)
 		};
 	}
