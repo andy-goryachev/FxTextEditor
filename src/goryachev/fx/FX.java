@@ -50,7 +50,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -758,23 +757,6 @@ public final class FX
 		return new Image(c.getResourceAsStream(resource));
 	}
 
-
-	/** permanently hides the table header */
-	public static void hideHeader(TableView<?> t)
-	{
-		t.skinProperty().addListener((s, p, v) ->
-		{
-			Pane h = (Pane)t.lookup("TableHeaderRow");
-			if(h.isVisible())
-			{
-				h.setMaxHeight(0);
-				h.setMinHeight(0);
-				h.setPrefHeight(0);
-				h.setVisible(false);
-			}
-		});
-	}
-	
 	
 	/** sets a tool tip on the control. */
 	public static void setTooltip(Control n, Object tooltip)
@@ -993,12 +975,12 @@ public final class FX
 		{
 			if(generator != null)
 			{
-				FX.later(() ->
+				FxPopupMenu m = generator.get();
+				if(m != null)
 				{
-					FxPopupMenu m = generator.get();
-					if(m != null)
+					if(m.getItems().size() > 0)
 					{
-						if(m.getItems().size() > 0)
+						FX.later(() ->
 						{
 							// javafx does not dismiss the popup when the user
 							// clicks on the owner node
@@ -1008,14 +990,16 @@ public final class FX
 								{
 									m.hide();
 									owner.removeEventFilter(MouseEvent.MOUSE_PRESSED, this);
+									event.consume();
 								}
 							};
 							
 							owner.addEventFilter(MouseEvent.MOUSE_PRESSED, li);
 							m.show(owner, ev.getScreenX(), ev.getScreenY());
-						}
+						});
+						ev.consume();
 					}
-				});
+				}
 			}
 			ev.consume();
 		});

@@ -94,7 +94,7 @@ public class Log
 		
 		try
 		{
-			addAppenders(as);
+			setAppenders(as);
 		}
 		catch(Throwable e)
 		{
@@ -104,16 +104,18 @@ public class Log
 	}
 	
 	
-	protected static void addAppenders(List<AppenderBase> as)
+	protected static void setAppenders(List<AppenderBase> as)
 	{
 		if(as != null)
 		{
 			for(AppenderBase a: as)
 			{
+				Log.allAppenders.clear();
 				Log.allAppenders.add(a);
 				
 				if(a.getChannels().size() == 0)
 				{
+					Log.root.clearAppenders();
 					Log.root.addAppender(a);
 				}
 				else
@@ -121,6 +123,7 @@ public class Log
 					for(String name: a.getChannels())
 					{
 						Log ch = Log.get(name);
+						ch.clearAppenders();
 						ch.addAppender(a);
 					}
 				}
@@ -249,6 +252,12 @@ public class Log
 	{
 		appenders.remove(a);
 		setNeedsCallerRecursively(false);
+	}
+	
+	
+	protected void clearAppenders()
+	{
+		appenders.clear();
 	}
 	
 	

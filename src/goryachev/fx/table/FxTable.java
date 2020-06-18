@@ -3,7 +3,9 @@ package goryachev.fx.table;
 import goryachev.fx.CommonStyles;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
+import goryachev.fx.FxPopupMenu;
 import java.util.Collection;
+import java.util.function.Supplier;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.ObservableList;
@@ -16,6 +18,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 
 
 /**
@@ -216,12 +219,6 @@ public class FxTable<T>
 	}
 	
 	
-	public void hideHeader()
-	{
-		FX.hideHeader(table);
-	}
-	
-	
 	public T getSelectedItem()
 	{
 		return table.getSelectionModel().getSelectedItem();
@@ -319,5 +316,53 @@ public class FxTable<T>
 	{
 		// https://stackoverflow.com/questions/38680711/javafx-tableview-remove-default-alternate-row-color
 		FX.setStyle(table, CommonStyles.DISABLE_ALTERNATIVE_ROW_COLOR, !on);
+	}
+	
+	
+	/** this may not work if skin is not yet initialized */
+	public Pane getHeader()
+	{
+		return (Pane)table.lookup("TableHeaderRow");
+	}
+	
+	
+	public void setPopupMenu(Supplier<FxPopupMenu> generator)
+	{
+		FX.setPopupMenu(this, generator);
+	}
+	
+	
+
+	/** permanently hides the table header */
+	public void hideHeader()
+	{
+		table.skinProperty().addListener((s, p, v) ->
+		{
+			Pane h = (Pane)table.lookup("TableHeaderRow");
+			if(h != null)
+			{
+				if(h.isVisible())
+				{
+					h.setMaxHeight(0);
+					h.setMinHeight(0);
+					h.setPrefHeight(0);
+					h.setVisible(false);
+				}
+			}
+		});
+	}
+	
+	
+	public void setHeaderPopupMenu(Supplier<FxPopupMenu> generator)
+	{
+		// this is idiocy
+		table.skinProperty().addListener((s, p, v) ->
+		{
+			Pane h = (Pane)table.lookup("TableHeaderRow");
+			if(h != null)
+			{
+				FX.setPopupMenu(h, generator);
+			}
+		});
 	}
 }
