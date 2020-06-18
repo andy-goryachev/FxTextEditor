@@ -43,9 +43,77 @@ public class EditableModel
 	{
 		return null;
 	}
-
-
+	
+	
+	// new version
 	public Edit edit(Edit edit) throws Exception
+	{
+		int line0 = edit.getMinLine();
+		int pos0 = edit.getMinCharIndex();
+		String text0 = getPlainText(line0);
+		if(text0 == null)
+		{
+			text0 = "";
+		}
+		
+		String head = text0.substring(0, pos0);
+		
+		int line2 = edit.getMaxLine();
+		int pos2 = edit.getMaxCharIndex();
+		
+		String tail;
+		if(line0 == line2)
+		{
+			tail = text0.substring(pos2); 
+		}
+		else
+		{
+			String text2 = getPlainText(line2);
+			if(text2 == null)
+			{
+				text2 = "";
+			}
+			
+			tail = text2.substring(pos2);
+		}
+		
+		if(edit.isText())
+		{
+			String added = edit.getText();
+			String s = head + added + tail;
+			if(line0 < lines.size())
+			{
+				lines.set(line0, s);
+			}
+			else if(line0 == lines.size())
+			{
+				lines.add(s);
+			}
+			else
+			{
+				throw new Error("line=" + line0 + " lineCount=" + getLineCount());
+			}
+			
+			int mx = line0;
+			for(int i=line2; i>mx; i--)
+			{
+				lines.remove(i);
+			}
+			
+			fireTextUpdated(line0, pos0, added.length(), line0-line2, line2, pos2, 0);
+			// TODO reverse Edit
+			return null;
+		}
+		else
+		{
+			throw new Error("todo");
+		}
+	}
+
+
+	// FIX remove
+	@Deprecated
+	public Edit edit_old(Edit edit) throws Exception
 	{
 		int line0 = edit.getMinLine();
 		
@@ -108,12 +176,6 @@ public class EditableModel
 				
 				fireTextUpdated(line0, p0, add.length(), 0, line0, p1, 0);
 				return null;
-	
-				// FIX problem: markers are a part of the editor, not the model!  use TextPos?
-	//			TextPos m0 = new TextPos();
-	//			TextPos m1 = new TextPos();
-	//			SelectionSegment newSeg = new SelectionSegment(m0, m1, seg.isCaretAtMin());
-	//			return new Edit(newSeg, old);
 			}
 			else
 			{

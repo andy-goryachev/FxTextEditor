@@ -344,6 +344,7 @@ public class InputHandler
 						typed = new String[] { "", "" };
 						break;
 					case TAB:
+						// TODO shift (+selection), ctrl?
 						typed = "\n";
 						break;
 					default:
