@@ -1270,4 +1270,57 @@ public class TextTools
 			list.add(x.toString());
 		}
 	}
+	
+	
+	public static int indexOf(CharSequence text, CharSequence pattern)
+	{
+		return indexOf(text, pattern, 0);
+	}
+	
+	
+	public static int indexOf(CharSequence text, CharSequence pattern, int start)
+	{
+		int len = pattern.length();
+		if(start >= text.length())
+		{
+			return (len == 0 ? text.length() : -1);
+		}
+		else if(start < 0)
+		{
+			start = 0;
+		}
+		
+		if(len == 0)
+		{
+			return start;
+		}
+
+		int mx = text.length() - len;
+		char ch0 = pattern.charAt(0);
+
+		for(int i=start; i<=mx; i++)
+		{
+			if(text.charAt(i) != ch0)
+			{
+				while((++i <= mx) && (text.charAt(i) != ch0))
+				{ 
+				}
+			}
+
+			if(i <= mx)
+			{
+				int j = i + 1;
+				int end = j + len - 1;
+				for(int k=1; (j<end) && (text.charAt(j) == pattern.charAt(k)); j++,k++)
+				{
+				}
+
+				if(j == end)
+				{
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
 }
