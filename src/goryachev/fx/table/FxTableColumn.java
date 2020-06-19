@@ -12,6 +12,14 @@ import javafx.scene.control.TableColumn;
 
 /**
  * FxTable Column.
+ * 
+ * TODO
+ * <T> -> ObjectProperty or value (to be wrapped into ObjectProperty)
+ * either:
+ *  Object (from property) -> Node
+ * or
+ *  Object (from property) -> formatter -> String
+ *  String -> setText()
  */
 public class FxTableColumn<T>
 	extends TableColumn<T,Object>

@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -44,6 +45,15 @@ public class FxTable<T>
 		table = new TableView<T>(items);
 		setCenter(table);
 		init();
+	}
+	
+	
+	/** allow for sorting of items separately from the source list */
+	public void wrapSortedList(ObservableList<T> src)
+	{
+		SortedList<T> s = new SortedList<>(src);
+		s.comparatorProperty().bind(table.comparatorProperty());
+		setItems(s);
 	}
 	
 	
