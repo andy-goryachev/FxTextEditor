@@ -2,7 +2,6 @@
 package goryachev.fxtexteditor;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
-import goryachev.common.util.D;
 import goryachev.common.util.text.IBreakIterator;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
@@ -1224,7 +1223,7 @@ public class VFlow
 		if((y == 0) || row.isBOL())
 		{
 			int ix = row.getLineNumber();
-			if((ix >= 0) && (ix <= (editor.getLineCount() + 1)))
+			if((ix >= 0) && (ix < editor.getLineCount()))
 			{
 				String text = editor.getLineNumberFormatter().format(ix + 1);
 	
@@ -1537,6 +1536,7 @@ public class VFlow
 			{
 				return true; // null model
 			}
+			
 			if(compare(line, gix, r.getLineNumber(), r.getStartGlyphIndex() + r.getGlyphCount()) > 0)
 			{
 				return false;
