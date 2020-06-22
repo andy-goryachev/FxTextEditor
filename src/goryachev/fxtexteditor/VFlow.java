@@ -2,6 +2,7 @@
 package goryachev.fxtexteditor;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
+import goryachev.common.util.D;
 import goryachev.common.util.text.IBreakIterator;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
@@ -882,15 +883,18 @@ public class VFlow
 		int topWrapRow = getTopWrapRow();
 		WrapPos wp = advance(topLine, topWrapRow, y);
 		
-		TextCell cell = wp.getWrapInfo().getCell(TextCell.globalInstance(), wp.getRow(), x + topColumn);
-		int charIndex = cell.getInsertCharIndex();
-		
+		int charIndex;
 		int line = wp.getLine();
-		if(line > getModelLineCount())
+		if(line < (y + topLine))
 		{
-			line = getModelLineCount();
+			charIndex = -1;
 		}
-	
+		else
+		{
+			TextCell cell = wp.getWrapInfo().getCell(TextCell.globalInstance(), wp.getRow(), x + topColumn);
+			charIndex = cell.getInsertCharIndex();
+		}
+
 		TextPos pos = new TextPos(line, charIndex);
 		log.debug("screenx=%f, screeny=%f, pos=%s", screenx, screeny, pos);
 		return pos;
@@ -1697,7 +1701,7 @@ public class VFlow
 					steps -= size;
 					count += size;
 					
-					if(line >= (getModelLineCount()))
+					if(line >= (getModelLineCount() - 1))
 					{
 						break;
 					}

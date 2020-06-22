@@ -33,15 +33,15 @@ public class MoveRight
 		}
 		else
 		{
-			if(line < vflow().getModelLineCount())
+			if(line < (vflow().getModelLineCount() - 1))
 			{
 				line++;
 				gix = 0;
 			}
 			else
 			{
-				line = vflow().getModelLineCount();
-				gix = 0;
+				line = vflow().getModelLineCount() - 1;
+				gix = fline.getGlyphCount();
 			}
 		}
 		
