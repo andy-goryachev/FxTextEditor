@@ -14,15 +14,13 @@ public class WrapPos
 	private final int line;
 	private final int row;
 	private final WrapInfo wrap;
-	private final int rowCount;
 	
 	
-	public WrapPos(int line, int row, WrapInfo wrap, int rowCount)
+	public WrapPos(int line, int row, WrapInfo wrap)
 	{
 		this.line = line;
 		this.row = row;
 		this.wrap = wrap;
-		this.rowCount = rowCount;
 	}
 	
 	
@@ -41,13 +39,6 @@ public class WrapPos
 	public WrapInfo getWrapInfo()
 	{
 		return wrap;
-	}
-	
-	
-	/** returns the number of rows traversed in VFlow.advance() */
-	public int getRowCount()
-	{
-		return rowCount;
 	}
 	
 	

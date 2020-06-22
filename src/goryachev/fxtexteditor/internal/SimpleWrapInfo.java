@@ -39,12 +39,6 @@ public class SimpleWrapInfo
 	}
 	
 
-	public int findRowForGlyphIndex(int glyphIndex)
-	{
-		return glyphIndex / width;
-	}
-
-
 	public boolean isCompatible(ITabPolicy tabPolicy, int width, boolean wrapLines)
 	{
 		return
@@ -90,24 +84,6 @@ public class SimpleWrapInfo
 		return charIndex % width;
 	}
 	
-	
-	public int getCellCountAtRow(int wrapRow)
-	{
-		int ct = getWrapRowCount() - 1;
-		if(wrapRow < ct)
-		{
-			return width;
-		}
-		else if(wrapRow == ct)
-		{
-			return length % width;
-		}
-		else
-		{
-			throw new Error("wrapRow=" + wrapRow);
-		}
-	}
-
 
 	public int getCharIndexForColumn(int wrapRow, int column)
 	{

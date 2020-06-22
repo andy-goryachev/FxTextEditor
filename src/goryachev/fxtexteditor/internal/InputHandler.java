@@ -386,6 +386,11 @@ public class InputHandler
 		}
 
 		FxTextEditorModel m = editor.getModel();
+		if(m == null)
+		{
+			return;
+		}
+		
 		if(m.isEditable())
 		{
 			EditorSelection sel = editor.getSelection();

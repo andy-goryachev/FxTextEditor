@@ -33,12 +33,6 @@ public class SingleRowWrapInfo
 	}
 	
 
-	public int findRowForGlyphIndex(int glyphIndex)
-	{
-		return 0;
-	}
-
-
 	public boolean isCompatible(ITabPolicy tabPolicy, int width, boolean wrapLines)
 	{
 		return (wrapLines == false);
@@ -123,13 +117,5 @@ public class SingleRowWrapInfo
 		
 		cell.set(type, ix, ix, ix, ix);
 		return cell;
-	}
-
-
-	public int getCellCountAtRow(int wrapRow)
-	{
-		checkRow(wrapRow);
-		
-		return length;
 	}
 }

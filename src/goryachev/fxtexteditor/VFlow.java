@@ -1658,7 +1658,6 @@ public class VFlow
 		int line = startLine;
 		int row = startWrapRow;
 		int steps = Math.abs(delta);
-		int count = 0;
 		
 		if(delta < 0)
 		{
@@ -1667,7 +1666,6 @@ public class VFlow
 				if(steps <= row)
 				{
 					row -= steps;
-					count += steps;
 					break;
 				}
 				else if(line == 0)
@@ -1677,7 +1675,6 @@ public class VFlow
 				else
 				{
 					steps -= (row + 1);
-					count += (row + 1);
 					line--;
 					wr = getWrapInfo(line);
 					row = wr.getWrapRowCount() - 1;
@@ -1687,21 +1684,20 @@ public class VFlow
 		else if(delta > 0)
 		{
 			int size = wr.getWrapRowCount() - row;
+			int last = getModelLineCount() - 1;
 
 			while(steps > 0)
 			{
 				if(steps < size)
 				{
 					row += steps;
-					count += steps;
 					break;
 				}
 				else
 				{
 					steps -= size;
-					count += size;
 					
-					if(line >= (getModelLineCount() - 1))
+					if(line >= last)
 					{
 						break;
 					}
@@ -1714,7 +1710,7 @@ public class VFlow
 			}
 		}
 		
-		WrapPos p = new WrapPos(line, row, wr, count);
+		WrapPos p = new WrapPos(line, row, wr);
 		log.trace(p);
 		return p;
 	}

@@ -15,10 +15,6 @@ public abstract class WrapInfo
 	/** returns the number of screen rows occupied by the flow line */
 	public abstract int getWrapRowCount();
 	
-	/** finds wrapped row for the given glyph index */
-	@Deprecated // not used
-	public abstract int findRowForGlyphIndex(int glyphIndex);
-	
 	/** returns the wrapped row index for the given glyph index */
 	public abstract int getWrapRowForGlyphIndex(int glyphIndex);
 	
@@ -28,10 +24,6 @@ public abstract class WrapInfo
 	/** returns the screen column for the given character */
 	public abstract int getColumnForCharIndex(int charIndex);
 	
-	/** returns the number of columns required to display the text at the specified row */
-	@Deprecated // not used
-	public abstract int getCellCountAtRow(int wrapRow);
-
 	/** returns the number of text glyphs at the specific wrap row */
 	public abstract int getGlyphCountAtRow(int wrapRow);
 	

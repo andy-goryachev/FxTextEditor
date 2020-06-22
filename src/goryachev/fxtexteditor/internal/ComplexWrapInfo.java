@@ -1,8 +1,6 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
-import goryachev.common.log.Log;
 import goryachev.common.util.CList;
-import goryachev.common.util.D;
 import goryachev.common.util.ElasticIntArray;
 import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITabPolicy;
@@ -48,22 +46,6 @@ public class ComplexWrapInfo
 	{
 		int[] cs = cells[row];
 		return GlyphIndex.fixGlypIndex(cs[0]);
-	}
-	
-	
-	public int findRowForGlyphIndex(int glyphIndex)
-	{
-		// TODO binary search would be better
-		int sz = getWrapRowCount();
-		for(int i=0; i<sz; i++)
-		{
-			int ix = getGlyphIndexForRow(i);
-			if(ix > glyphIndex)
-			{
-				return i - 1;
-			}
-		}
-		return sz - 1;
 	}
 	
 	
@@ -128,13 +110,6 @@ public class ComplexWrapInfo
 		return cs.length;
 	}
 	
-	
-	public int getCellCountAtRow(int wrapRow)
-	{
-		int[] cs = cells[wrapRow];
-		return cs.length;
-	}
-
 
 	public int getCharIndexForColumn(int wrapRow, int column)
 	{
