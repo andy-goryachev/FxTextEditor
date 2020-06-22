@@ -45,6 +45,13 @@ public class FxButtonPane
 	}
 	
 	
+	public FxButton addButton(String text, CssStyle style)
+	{
+		FxButton b = new FxButton(text, FxAction.DISABLED, style);  
+		return addButton(b);
+	}
+	
+	
 	public FxButton addButton(String text, Runnable r)
 	{
 		FxButton b = new FxButton(text, new FxAction(r));  

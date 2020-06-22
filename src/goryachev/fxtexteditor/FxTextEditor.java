@@ -474,6 +474,8 @@ public class FxTextEditor
 			hscroll.setValue(0);
 		}
 		
+		vflow.reset();
+		vflow.clearFlowLineCache();
 		vflow.invalidate();
 	}
 
