@@ -717,8 +717,7 @@ public class CommonStyles
 		{
 			selector(FxButtonPane.PANE).defines
 			(
-				borderColor(TRANSPARENT),
-				borderWidth(10)
+				borderWidth(0)
 			)
 		};
 	}
