@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.function.Supplier;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.geometry.Orientation;
@@ -244,6 +245,22 @@ public class FxTable<T>
 	public void setPlaceholder(String s)
 	{
 		table.setPlaceholder(new Label(s));
+	}
+	
+	
+	public final StringProperty placeholderLabelTextProperty()
+	{
+		Node n = table.getPlaceholder();
+		if(n instanceof Label)
+		{
+			return ((Label)n).textProperty();
+		}
+		else
+		{
+			Label t = new Label();
+			table.setPlaceholder(t);
+			return t.textProperty();
+		}
 	}
 	
 	

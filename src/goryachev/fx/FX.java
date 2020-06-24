@@ -559,6 +559,20 @@ public final class FX
 	}
 	
 	
+	/** execute in FX application thread directly if called from it, or in runLater() */
+	public static void inFX(Runnable r)
+	{
+		if(Platform.isFxApplicationThread())
+		{
+			r.run();
+		}
+		else
+		{
+			FX.later(r);
+		}
+	}
+	
+	
 	/** swing invokeAndWait() analog.  if called from an FX application thread, simply invokes the producer. */
 	public static <T> T invokeAndWait(Callable<T> producer) throws Exception
 	{
