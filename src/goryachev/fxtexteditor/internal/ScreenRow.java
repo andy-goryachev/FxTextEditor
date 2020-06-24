@@ -49,7 +49,7 @@ public class ScreenRow
 	}
 	
 
-	public String dump()
+	public String toString()
 	{
 		SB sb = new SB();
 		

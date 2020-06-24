@@ -412,7 +412,8 @@ public class WindowsFx
 	{
 		try
 		{
-			FxHacks.get().applyStyleSheet(w, null, CssLoader.getCurrentStyleSheet());
+			String style = CssLoader.getCurrentStyleSheet();
+			FxHacks.get().applyStyleSheet(w, null, style);
 		}
 		catch(Throwable e)
 		{

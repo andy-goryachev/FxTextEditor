@@ -37,7 +37,10 @@ public class SelectionHelper
 		
 		if(seg.isCaretLine(line))
 		{
-			flags |= CARET_LINE;
+			if(vflow.getEditor().isHighlightCaretLine())
+			{
+				flags |= CARET_LINE;
+			}
 			
 			if(off >= 0)
 			{

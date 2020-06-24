@@ -182,7 +182,7 @@ public class VFlow
 		int newGlyphIndex = wp.getStartGlyphIndex();
 		
 		// avoid going beyond (lastRow - screenRowCount)
-		int lineCount = getModelLineCount() + 1;
+		int lineCount = getModelLineCount();
 		if(newLine > (lineCount - screenRowCount))
 		{
 			WrapPos wp2 = advance(lineCount, 0, -screenRowCount);
@@ -884,7 +884,7 @@ public class VFlow
 		
 		int charIndex;
 		int line = wp.getLine();
-		if(line < (y + topLine))
+		if(isBeyondEOF(wp, y))
 		{
 			charIndex = -1;
 		}
@@ -897,6 +897,32 @@ public class VFlow
 		TextPos pos = new TextPos(line, charIndex);
 		log.debug("screenx=%f, screeny=%f, pos=%s", screenx, screeny, pos);
 		return pos;
+	}
+	
+	
+	protected boolean isBeyondEOF(WrapPos wp, int y)
+	{
+		int max = getModelLineCount();
+		if(wp.getLine() >= (max - 1))
+		{
+			try
+			{
+				ScreenRow r = buffer.getRow(y);
+				if(r.getLineNumber() < 0)
+				{
+					return true;
+				}
+				else if(r.getLineNumber() >= max)
+				{
+					return true;
+				}
+			}
+			catch(Exception e)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	
