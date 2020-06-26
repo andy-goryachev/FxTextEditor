@@ -57,9 +57,21 @@ public class FxWindow
 	}
 	
 	
+	public Node getTop()
+	{
+		return pane.getTop();
+	}
+	
+	
 	public void setBottom(Node n)
 	{
 		pane.setBottom(n);
+	}
+	
+	
+	public Node getBottom()
+	{
+		return pane.getBottom();
 	}
 	
 	
@@ -69,9 +81,21 @@ public class FxWindow
 	}
 	
 	
+	public Node getLeft()
+	{
+		return pane.getLeft();
+	}
+	
+	
 	public void setRight(Node n)
 	{
 		pane.setRight(n);
+	}
+	
+	
+	public Node getRight()
+	{
+		return pane.getRight();
 	}
 	
 	
