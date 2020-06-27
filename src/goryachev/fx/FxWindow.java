@@ -26,7 +26,7 @@ public class FxWindow
 	
 	public final FxAction closeWindowAction = new FxAction(this::closeWithConfirmation);
 	private final String name;
-	private final BorderPane pane;
+	protected final BorderPane pane;
 	
 	
 	public FxWindow(String name)

@@ -18,6 +18,7 @@ public class FxDialog
 	extends FxWindow
 {
 	public final FxAction closeDialogAction = new FxAction(this::close);
+	public static final CssStyle PANE = new CssStyle("FxDialog_PANE");
 	
 	
 	public FxDialog(Object owner, String name)
@@ -25,6 +26,7 @@ public class FxDialog
 		super(name);
 		
 		initModality(Modality.APPLICATION_MODAL);
+		FX.style(pane, PANE);
 
 		Window win = FX.getParentWindow(owner);
 		initOwner(win);

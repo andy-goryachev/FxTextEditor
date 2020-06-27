@@ -718,6 +718,10 @@ public class CommonStyles
 			selector(FxButtonPane.PANE).defines
 			(
 				borderWidth(0)
+			),
+			selector(FxDialog.PANE, FxButtonPane.PANE).defines
+			(
+				padding(10)
 			)
 		};
 	}
