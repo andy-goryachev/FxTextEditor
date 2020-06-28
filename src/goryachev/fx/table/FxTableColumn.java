@@ -101,6 +101,12 @@ public class FxTableColumn<T>
 	}
 	
 	
+	// TODO renderer(item), value->renderer(value), value->formatter
+	// get value (object or property)
+	// sorting value
+	// display text
+	// display icon
+	// full cell
 	private TableCell<T,Object> getCellFactory(TableColumn<T,Object> f)
 	{
 		return new TableCell<T,Object>()

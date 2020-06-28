@@ -6,6 +6,8 @@ import goryachev.fx.FxBoolean;
 import goryachev.fx.FxPopupMenu;
 import java.util.Collection;
 import java.util.function.Supplier;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.StringProperty;
@@ -24,13 +26,14 @@ import javafx.scene.layout.Pane;
 
 
 /**
- * FxTable.
+ * Convenient FxTable.
  */
 public class FxTable<T>
 	extends BorderPane
 {
 	public final TableView<T> table;
 	public final FxBoolean autoResizeMode = new FxBoolean();
+	private BooleanBinding singleSelectionProperty;
 	
 	
 	public FxTable()
@@ -391,5 +394,19 @@ public class FxTable<T>
 				FX.setPopupMenu(h, generator);
 			}
 		});
+	}
+	
+	
+	public BooleanBinding singleSelectionProperty()
+	{
+		if(singleSelectionProperty == null)
+		{
+			singleSelectionProperty = Bindings.createBooleanBinding
+			(
+				() -> (table.getSelectionModel().getSelectedIndices().size() == 1),
+				table.getSelectionModel().getSelectedIndices()
+			);
+		}
+		return singleSelectionProperty;
 	}
 }
