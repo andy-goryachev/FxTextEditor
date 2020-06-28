@@ -1,5 +1,6 @@
 // Copyright © 2017-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.log;
+import goryachev.common.log.internal.ConsoleAppender;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
 import goryachev.common.util.CMap;
@@ -55,6 +56,15 @@ public class Log
 		}
 		
 		return log;
+	}
+	
+	
+	public static void initForDebug()
+	{
+		SimpleLogConfig c = new SimpleLogConfig();
+		c.setDefaultLogLevel(LogLevel.INFO);
+		c.addAppender(new ConsoleAppender(System.out));
+		setConfig(c);
 	}
 	
 	
