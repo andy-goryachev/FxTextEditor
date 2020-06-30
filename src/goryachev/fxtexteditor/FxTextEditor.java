@@ -6,8 +6,8 @@ import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.Formatters;
 import goryachev.fx.FxBoolean;
+import goryachev.fx.FxDouble;
 import goryachev.fx.FxFormatter;
-import goryachev.fx.FxInt;
 import goryachev.fx.FxObject;
 import goryachev.fx.XScrollBar;
 import goryachev.fxtexteditor.internal.InputHandler;
@@ -56,7 +56,7 @@ public class FxTextEditor
 	protected final FxBoolean displayCaretProperty = new FxBoolean(true);
 	protected final FxBoolean showLineNumbersProperty = new FxBoolean(false);
 	protected final FxBoolean highlightCaretLineProperty = new FxBoolean(true);
-	protected final FxInt scrollWheelStepSize = new FxInt(Integer.MAX_VALUE);
+	protected final FxDouble scrollWheelStepSize = new FxDouble(-0.25);
 	protected final ReadOnlyObjectWrapper<Duration> caretBlinkRateProperty = new ReadOnlyObjectWrapper(Duration.millis(500));
 	protected final FxObject<FxFormatter> lineNumberFormatterProperty = new FxObject<>();
 	protected final FxObject<ITabPolicy> tabPolicy = new FxObject();
@@ -447,14 +447,18 @@ public class FxTextEditor
 	}
 	
 	
-	/** sets the scroll wheel step size (in lines).  the actual value will be clipped to the range [1..screenRowCount] */
-	public void setScrollWheelStepSize(int n)
+	/** 
+	 * sets the scroll wheel step size: in lines (val >= 1.0),
+	 * or a fraction of screen height (val in the range [-1.0 ... 0[.
+	 * the actual step size will be limited to [1..screenRowCount] 
+	 */
+	public void setScrollWheelStepSize(double val)
 	{
-		scrollWheelStepSize.set(n);
+		scrollWheelStepSize.set(val);
 	}
 	
 	
-	public int getScrollWheelStepSize()
+	public double getScrollWheelStepSize()
 	{
 		return scrollWheelStepSize.get();
 	}

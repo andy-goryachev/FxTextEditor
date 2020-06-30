@@ -1,6 +1,7 @@
 // Copyright © 2016-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.common.log.Log;
+import goryachev.common.util.CKit;
 import goryachev.fx.FX;
 import goryachev.fx.KeyMap;
 import goryachev.fxtexteditor.Edit;
@@ -99,8 +100,6 @@ public class InputHandler
 			return;
 		}
 		
-		// TODO use double property.  if (0.0 ... 1.0 (or negative to support 1.0 on both) - fraction of screen height, >= 1.0 number of lines)
-		
 		int step;
 		if(inTrackpadScroll)
 		{
@@ -111,16 +110,42 @@ public class InputHandler
 		{
 			if(ev.isShortcutDown())
 			{
+				// full page
 				step = Integer.MAX_VALUE;
 			}
 			else
 			{
-				step = editor.getScrollWheelStepSize();
+				step = getScrollStepSize();
 			}
 		}
 		
 		boolean up = (ev.getDeltaY() >= 0);
 		vflow.scroll(step, up); 
+	}
+	
+	
+	protected int getScrollStepSize()
+	{
+		double v = editor.getScrollWheelStepSize();
+		
+		int step;
+		if(v < 0)
+		{
+			step = CKit.round((-v) * vflow.getScreenRowCount());
+		}
+		else
+		{
+			step = (int)v;
+		}
+		
+		if(step < 1)
+		{
+			return 1;
+		}
+		else
+		{
+			return step;
+		}
 	}
 	
 	
