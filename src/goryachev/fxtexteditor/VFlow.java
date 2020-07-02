@@ -108,7 +108,7 @@ public class VFlow
 		setMinWidth(0);
 		setMinHeight(0);
 		
-		setFocusTraversable(true);
+		setFocusTraversable(false);
 		
 		FX.onChange(this::repaint, ed.backgroundColorProperty());
 		FX.onChange(this::handleSizeChange,  widthProperty(), heightProperty());

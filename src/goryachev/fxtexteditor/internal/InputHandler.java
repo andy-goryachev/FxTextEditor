@@ -159,6 +159,8 @@ public class InputHandler
 	
 	public void handleMouseClicked(MouseEvent ev)
 	{
+		editor.requestFocus();
+		
 		if(ev.getButton() != MouseButton.PRIMARY)
 		{
 			return;

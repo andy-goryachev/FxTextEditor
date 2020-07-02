@@ -974,7 +974,7 @@ public class TextTools
 	}
 
 
-	public static int indexOfIgnoreCase(String text, String pattern, int fromIndex)
+	public static int indexOfIgnoreCase(CharSequence text, String pattern, int fromIndex)
 	{
 		int textLen = text.length();
 		int patternLen = pattern.length();
