@@ -23,6 +23,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
@@ -1277,5 +1278,18 @@ public final class FX
 	public static  ReadOnlyObjectProperty<Window> parentWindowProperty(Node n)
 	{
 		return new ParentWindow(n).windowProperty();
+	}
+	
+	
+	/** avoid ambiguous signature warning when using addListener */
+	public static <T> void addChangeListener(ObservableList<T> list, ListChangeListener<? super T> li)
+	{
+		list.addListener(li);
+	}
+	
+
+	public static <T> void addChangeListener(ObservableValue<T> prop, ChangeListener<? super T> li)
+	{
+		prop.addListener(li);
 	}
 }

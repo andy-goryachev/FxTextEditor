@@ -184,6 +184,12 @@ public class VPane
 	}
 	
 	
+	public void clear()
+	{
+		getChildren().clear();
+	}
+	
+	
 	//
 	
 	
