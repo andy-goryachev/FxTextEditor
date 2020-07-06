@@ -415,6 +415,10 @@ public final class FX
 	/** Creates a simple color background. */
 	public static Background background(Paint c)
 	{
+		if(c == null)
+		{
+			return null;
+		}
 		return new Background(new BackgroundFill(c, null, null));
 	}
 	
