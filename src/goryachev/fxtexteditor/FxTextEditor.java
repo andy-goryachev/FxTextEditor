@@ -468,15 +468,21 @@ public class FxTextEditor
 	{
 		clearSelection();
 		
-		if(vscroll != null)
-		{
-			vscroll.setValue(0);
-		}
+//		if(vscroll != null)
+//		{
+//			vscroll.setValue(0);
+//		}
+//		
+//		if(hscroll != null)
+//		{
+//			hscroll.setValue(0);
+//		}
 		
-		if(hscroll != null)
-		{
-			hscroll.setValue(0);
-		}
+		vflow.updateVerticalScrollBarPosition();
+		vflow.updateVerticalScrollBarSize();
+		
+		vflow.updateHorizontalScrollBarPosition();
+		vflow.updateHorizontalScrollBarSize();
 		
 		vflow.reset();
 		vflow.clearFlowLineCache();

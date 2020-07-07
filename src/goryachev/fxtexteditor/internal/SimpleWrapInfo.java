@@ -53,6 +53,10 @@ public class SimpleWrapInfo
 		{
 			return 0;
 		}
+		else if(width == 0)
+		{
+			return 0;
+		}
 		
 		if(charIndex > length)
 		{
