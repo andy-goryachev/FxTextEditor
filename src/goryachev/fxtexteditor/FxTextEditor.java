@@ -249,6 +249,7 @@ public class FxTextEditor
 	public void setModel(FxTextEditorModel m)
 	{
 		markers.clear();
+		clearSelection();
 		
 		FxTextEditorModel old = getModel();
 		if(old != null)
@@ -258,8 +259,6 @@ public class FxTextEditor
 		}
 		
 		modelProperty.set(m);
-		vflow.reset();
-		vflow.clearFlowLineCache();
 		
 		if(m != null)
 		{
@@ -467,26 +466,7 @@ public class FxTextEditor
 	protected void handleAllLinesChanged()
 	{
 		clearSelection();
-		
-//		if(vscroll != null)
-//		{
-//			vscroll.setValue(0);
-//		}
-//		
-//		if(hscroll != null)
-//		{
-//			hscroll.setValue(0);
-//		}
-		
-		vflow.updateVerticalScrollBarPosition();
-		vflow.updateVerticalScrollBarSize();
-		
-		vflow.updateHorizontalScrollBarPosition();
-		vflow.updateHorizontalScrollBarSize();
-		
 		vflow.reset();
-		vflow.clearFlowLineCache();
-		vflow.invalidate();
 	}
 
 	

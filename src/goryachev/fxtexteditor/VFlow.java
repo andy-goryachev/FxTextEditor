@@ -672,31 +672,38 @@ public class VFlow
 		int lineCount = getModelLineCount();
 		
 		double v;
-		if(isWrapLines())
+		if(lineCount == 0)
 		{
-			// adjust for additional wrapped rows  
-			// vis / (lineCount + additionaRows)
-			
-			ScrollAssist a = ScrollAssist.create(this, topLine, getTopWrapRow());
-			double max = getModelLineCount() + a.getAdditionalRows();
-			v = (topLine + a.getAdditionalTopRows()) / max;
+			v = 0.0;
 		}
 		else
 		{
-			if(lineCount < screenRowCount)
+			if(isWrapLines())
 			{
-				v = 0.0;
+				// adjust for additional wrapped rows  
+				// vis / (lineCount + additionaRows)
+				
+				ScrollAssist a = ScrollAssist.create(this, topLine, getTopWrapRow());
+				double max = getModelLineCount() + a.getAdditionalRows();
+				v = (topLine + a.getAdditionalTopRows()) / max;
 			}
 			else
 			{
-				v = topLine / (double)(lineCount - screenRowCount);
+				if(lineCount < screenRowCount)
+				{
+					v = 0.0;
+				}
+				else
+				{
+					v = topLine / (double)(lineCount - screenRowCount);
+				}
 			}
-		}
-		
-		double loaded = getLoadedRatio();
-		if(loaded < 1.0)
-		{
-			v *= loaded;
+			
+			double loaded = getLoadedRatio();
+			if(loaded < 1.0)
+			{
+				v *= loaded;
+			}
 		}
 		
 		setHandleScrollEvents(false);
@@ -1018,6 +1025,16 @@ public class VFlow
 	public void reset()
 	{
 		buffer.reset();
+		
+		updateVerticalScrollBarPosition();
+		updateVerticalScrollBarSize();
+		
+		updateHorizontalScrollBarPosition();
+		updateHorizontalScrollBarSize();
+		
+		clearFlowLineCache();
+		
+		invalidate();
 	}
 	
 	
