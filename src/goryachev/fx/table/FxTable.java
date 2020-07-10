@@ -349,18 +349,10 @@ public class FxTable<T>
 	}
 	
 	
-	/** this may not work if skin is not yet initialized */
-	public Pane getHeader()
-	{
-		return (Pane)table.lookup("TableHeaderRow");
-	}
-	
-	
 	public void setPopupMenu(Supplier<FxPopupMenu> generator)
 	{
 		FX.setPopupMenu(this, generator);
 	}
-	
 	
 
 	/** permanently hides the table header */
@@ -383,17 +375,32 @@ public class FxTable<T>
 	}
 	
 	
+	/** this may not work if skin is not yet initialized */
+	public Pane getHeader()
+	{
+		return (Pane)table.lookup("TableHeaderRow");
+	}
+	
+	
 	public void setHeaderPopupMenu(Supplier<FxPopupMenu> generator)
 	{
-		// this is idiocy
-		table.skinProperty().addListener((s, p, v) ->
+		Pane h = getHeader();
+		if(h != null)
 		{
-			Pane h = (Pane)table.lookup("TableHeaderRow");
-			if(h != null)
+			FX.setPopupMenu(h, generator);
+		}
+		else
+		{
+			// this is idiocy
+			table.skinProperty().addListener((s, p, v) ->
 			{
-				FX.setPopupMenu(h, generator);
-			}
-		});
+				Pane hd = getHeader();
+				if(hd != null)
+				{
+					FX.setPopupMenu(hd, generator);
+				}
+			});
+		}
 	}
 	
 	

@@ -1552,6 +1552,11 @@ public class VFlow
 	
 	protected boolean isVisible(Marker m)
 	{
+		if(m == null)
+		{
+			return false; // TODO double click after search??
+		}
+		
 		// some quick checks
 		int line = m.getLine();
 		if(line < topLine)
@@ -1680,6 +1685,11 @@ public class VFlow
 	public void setPhantomColumnFromCursor()
 	{
 		Marker m = editor.getSelection().getCaret();
+		if(m == null)
+		{
+			return;
+		}
+		
 		int line = m.getLine();
 		int charIndex = m.getCharIndex();
 		int col = getColumnAt(line, charIndex);

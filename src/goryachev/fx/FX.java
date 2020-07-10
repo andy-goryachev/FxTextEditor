@@ -62,7 +62,7 @@ import javafx.stage.Window;
 
 
 /**
- * Making FX-ing easier.
+ * Making JavaFX "easier".
  */
 public final class FX
 {
@@ -987,9 +987,20 @@ public final class FX
 	}
 	
 	
-	/** attach a popup menu to the node */
+	/** 
+	 * attach a popup menu to a node.
+	 * WARNING: sometimes, as the case is with TableView/FxTable header, 
+	 * the requested node gets created by the skin at some later time.
+	 * In this case, additional dance must be performed, see for example
+	 * FxTable.setHeaderPopupMenu()   
+	 */
 	public static void setPopupMenu(Node owner, Supplier<FxPopupMenu> generator)
 	{
+		if(owner == null)
+		{
+			throw new NullPointerException("cannot attach popup menu to null");
+		}
+		
 		owner.setOnContextMenuRequested((ev) ->
 		{
 			if(generator != null)
