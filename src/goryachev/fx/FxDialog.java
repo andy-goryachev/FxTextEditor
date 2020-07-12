@@ -1,6 +1,7 @@
 // Copyright © 2016-2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import javafx.scene.Node;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Window;
 
@@ -90,5 +91,11 @@ public class FxDialog
 		// TODO center over parent, but not to go outside of the screen
 		
 		super.open();
+	}
+	
+	
+	public void closeOnEscape()
+	{
+		KeyMap.onKeyPressed(pane, KeyCode.ESCAPE, closeDialogAction);
 	}
 }

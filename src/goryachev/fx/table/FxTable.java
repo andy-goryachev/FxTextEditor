@@ -117,6 +117,12 @@ public class FxTable<T>
 	}
 	
 	
+	public ObservableList<TableColumn<T,?>> columns()
+	{
+		return table.getColumns();
+	}
+	
+	
 	public FxTableColumn<T> addColumn(FxTableColumn<T> tc)
 	{
 		table.getColumns().add(tc);
@@ -415,5 +421,17 @@ public class FxTable<T>
 			);
 		}
 		return singleSelectionProperty;
+	}
+	
+	
+	public void setEditable(boolean on)
+	{
+		table.setEditable(on);
+	}
+	
+	
+	public boolean isEditable()
+	{
+		return table.isEditable();
 	}
 }

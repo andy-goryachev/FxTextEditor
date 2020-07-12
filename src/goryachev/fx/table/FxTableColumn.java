@@ -60,9 +60,10 @@ public class FxTableColumn<T>
 	
 
 	/** javafx does not honor pref width */
-	public void setRealPrefWidth(double width)
+	public FxTableColumn<T> setRealPrefWidth(double width)
 	{
 		setMaxWidth(width * 100);
+		return this;
 	}
 
 

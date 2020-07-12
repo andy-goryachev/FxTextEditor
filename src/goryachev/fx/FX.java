@@ -24,6 +24,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
@@ -1193,6 +1194,25 @@ public final class FX
 			// weak listener gets collected... but why??
 			p.addListener((src,prev,cur) -> handler.run());
 		}
+		
+		if(fireImmediately)
+		{
+			handler.run();
+		}
+	}
+	
+	
+	/** adds a ListChangeListener to the specified ObservableValue(s) */
+	public static void onChange(Runnable handler,ObservableList<?> list)
+	{
+		onChange(handler, false, list);
+	}
+	
+	
+	/** adds a ListChangeListener to the specified ObservableValue(s) */
+	public static void onChange(Runnable handler, boolean fireImmediately, ObservableList list)
+	{
+		list.addListener((Change ch) -> handler.run());
 		
 		if(fireImmediately)
 		{
