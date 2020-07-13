@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.layout.BorderPane;
@@ -180,6 +181,22 @@ public class FxTable<T>
 	public ObservableList<T> getItems()
 	{
 		return table.getItems();
+	}
+	
+	
+	public T getItem(int row)
+	{
+		if(row < 0)
+		{
+			return null;
+		}
+		
+		ObservableList<T> items = table.getItems();
+		if(row >= items.size())
+		{
+			return null;
+		}
+		return items.get(row);
 	}
 	
 	
@@ -433,5 +450,11 @@ public class FxTable<T>
 	public boolean isEditable()
 	{
 		return table.isEditable();
+	}
+
+
+	public ObservableList<TablePosition> getSelectedCells()
+	{
+		return getSelectionModel().getSelectedCells();
 	}
 }

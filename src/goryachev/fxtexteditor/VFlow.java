@@ -245,6 +245,11 @@ public class VFlow
 			
 			topColumn = ix;
 			invalidate();
+			
+			if(!isWrapLines())
+			{
+				updateHorizontalScrollBarPosition();
+			}
 		}
 	}
 	
@@ -317,7 +322,10 @@ public class VFlow
 		if(!on)
 		{
 			// restart animation cycle
-			updateBlinkRate();
+			if(cursorAnimation != null)
+			{
+				updateBlinkRate();
+			}
 		}
 	}
 	
