@@ -34,12 +34,17 @@ public class StandardFxProperties
 	public static final String TRANSPARENT = "transparent";
 	public static final String TABLE = ".table";
 	
+	// alignment
+	public static final String CENTER_LEFT = "CENTER_LEFT";
+	
 	// these colors are for debugging
 	protected static final Color R = Color.RED;
 	protected static final Color G = Color.GREEN;
 	protected static final Color B = Color.BLUE;
 	protected static final Color M = Color.MAGENTA;
 
+	// A
+	public static FxCssProp alignment(Object x) { return new FxCssProp("-fx-alignment", x); }
 	// B
 	public static FxCssProp backgroundColor(Object x) { return new FxCssProp("-fx-background-color", CssTools.toColor(x)); }
 	public static FxCssProp backgroundImage(Object x) { return new FxCssProp("-fx-background-image", CssTools.toValue(x)); }

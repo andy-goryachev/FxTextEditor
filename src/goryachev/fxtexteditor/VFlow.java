@@ -1032,17 +1032,16 @@ public class VFlow
 	
 	public void reset()
 	{
-		buffer.reset();
+		buffer.reset();		
+		clearFlowLineCache();
+		
+		invalidate();
 		
 		updateVerticalScrollBarPosition();
 		updateVerticalScrollBarSize();
 		
 		updateHorizontalScrollBarPosition();
 		updateHorizontalScrollBarSize();
-		
-		clearFlowLineCache();
-		
-		invalidate();
 	}
 	
 	

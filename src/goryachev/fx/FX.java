@@ -34,6 +34,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
@@ -995,7 +996,7 @@ public final class FX
 	 * In this case, additional dance must be performed, see for example
 	 * FxTable.setHeaderPopupMenu()   
 	 */
-	public static void setPopupMenu(Node owner, Supplier<FxPopupMenu> generator)
+	public static void setPopupMenu(Node owner, Supplier<ContextMenu> generator)
 	{
 		if(owner == null)
 		{
@@ -1006,7 +1007,7 @@ public final class FX
 		{
 			if(generator != null)
 			{
-				FxPopupMenu m = generator.get();
+				ContextMenu m = generator.get();
 				if(m != null)
 				{
 					if(m.getItems().size() > 0)
@@ -1326,5 +1327,16 @@ public final class FX
 	public static <T> void addChangeListener(ObservableValue<T> prop, ChangeListener<? super T> li)
 	{
 		prop.addListener(li);
+	}
+
+
+	/** converts java fx Color to a 32 bit RGBA integer */
+	public static Integer toRGBA(Color c)
+	{
+        int r = (int)Math.round(c.getRed() * 255.0);
+        int g = (int)Math.round(c.getGreen() * 255.0);
+        int b = (int)Math.round(c.getBlue() * 255.0);
+        int a = (int)Math.round(c.getOpacity() * 255.0);
+		return r | (g << 8) | (b << 16) | (a << 24);
 	}
 }

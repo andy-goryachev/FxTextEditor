@@ -3,7 +3,6 @@ package goryachev.fx.table;
 import goryachev.fx.CommonStyles;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
-import goryachev.fx.FxPopupMenu;
 import java.util.Collection;
 import java.util.function.Supplier;
 import javafx.beans.binding.Bindings;
@@ -15,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.SelectionMode;
@@ -372,7 +372,7 @@ public class FxTable<T>
 	}
 	
 	
-	public void setPopupMenu(Supplier<FxPopupMenu> generator)
+	public void setPopupMenu(Supplier<ContextMenu> generator)
 	{
 		FX.setPopupMenu(this, generator);
 	}
@@ -405,7 +405,7 @@ public class FxTable<T>
 	}
 	
 	
-	public void setHeaderPopupMenu(Supplier<FxPopupMenu> generator)
+	public void setHeaderPopupMenu(Supplier<ContextMenu> generator)
 	{
 		Pane h = getHeader();
 		if(h != null)
