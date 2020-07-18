@@ -961,23 +961,38 @@ public final class FX
 	/** returns a parent of the specified type, or null.  if comp is an instance of the specified class, returns comp */
 	public static <T> T getAncestorOfClass(Class<T> c, Node comp)
 	{
-		while(comp != null)
+		if(Window.class.isAssignableFrom(c))
 		{
-			if(c.isInstance(comp))
+			Scene sc = comp.getScene();
+			if(sc != null)
 			{
-				return (T)comp;
+				Window w = sc.getWindow();
+				if(w.getClass().isAssignableFrom(c))
+				{
+					return (T)w;
+				}
 			}
-			
-//			if(comp instanceof JPopupMenu)
-//			{
-//				if(comp.getParent() == null)
-//				{
-//					comp = ((JPopupMenu)comp).getInvoker();
-//					continue;
-//				}
-//			}
-			
-			comp = comp.getParent();
+		}
+		else
+		{
+			while(comp != null)
+			{
+				if(c.isInstance(comp))
+				{
+					return (T)comp;
+				}
+				
+	//			if(comp instanceof JPopupMenu)
+	//			{
+	//				if(comp.getParent() == null)
+	//				{
+	//					comp = ((JPopupMenu)comp).getInvoker();
+	//					continue;
+	//				}
+	//			}
+				
+				comp = comp.getParent();
+			}
 		}
 		return null;
 	}

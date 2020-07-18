@@ -465,7 +465,7 @@ public class FxTextEditor
 	
 	protected void handleAllLinesChanged()
 	{
-		clearSelection();
+//		clearSelection();
 		vflow.reset();
 	}
 

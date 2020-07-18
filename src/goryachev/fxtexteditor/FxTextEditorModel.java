@@ -118,7 +118,10 @@ public abstract class FxTextEditorModel
 	
 	public void fireAllChanged()
 	{
-		fireEvent((li) -> li.eventAllLinesChanged());
+		fireEvent((li) -> 
+		{
+			li.eventAllLinesChanged();
+		});
 	}
 	
 	
