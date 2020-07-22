@@ -51,6 +51,13 @@ public class FxToolBar
 	}
 	
 	
+	public void fill(Node n)
+	{
+		HBox.setHgrow(n, Priority.SOMETIMES);
+		add(n);
+	}
+	
+	
 	public void space()
 	{
 		space(10);

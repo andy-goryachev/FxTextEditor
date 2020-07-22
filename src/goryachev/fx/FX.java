@@ -26,6 +26,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
+import javafx.css.Styleable;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
@@ -47,6 +48,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -294,6 +297,13 @@ public final class FX
 		}
 		
 		return n;
+	}
+	
+	
+	/** apply styles to a Styleable */
+	public static void style(Styleable n, CssStyle style)
+	{
+		n.getStyleClass().add(style.getName());
 	}
 	
 	
@@ -1343,6 +1353,13 @@ public final class FX
 	{
 		prop.addListener(li);
 	}
+	
+	
+	/** simplified version of addChangeListener that only accepts the current value */
+	public static <T> void addChangeListener(ObservableValue<T> prop, Consumer<? super T> li)
+	{
+		prop.addListener((s,p,current) -> li.accept(current));
+	}
 
 
 	/** converts java fx Color to a 32 bit RGBA integer */
@@ -1353,5 +1370,17 @@ public final class FX
         int b = (int)Math.round(c.getBlue() * 255.0);
         int a = (int)Math.round(c.getOpacity() * 255.0);
 		return r | (g << 8) | (b << 16) | (a << 24);
+	}
+	
+	
+	/** copies text to clipboard.  does nothing if text is null */
+	public static void copy(String text)
+	{
+		if(text != null)
+		{
+			ClipboardContent cc = new ClipboardContent();
+            cc.putString(text);
+            Clipboard.getSystemClipboard().setContent(cc);
+		}
 	}
 }

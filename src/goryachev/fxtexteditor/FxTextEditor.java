@@ -818,4 +818,22 @@ public class FxTextEditor
 
 		vflow.update(startLine, linesAdded, endLine);
 	}
+
+
+	/** navigates to the line if row is between [0...lineCount-1], otherwise does nothing */
+	public void goToLine(int row)
+	{
+		if((row >= 0) && (row < getLineCount()))
+		{
+			setOrigin(Math.max(0, row - 3));
+			setCaret(row, 0);
+		}
+	}
+
+
+	public int getCaretLine()
+	{
+		SelectionSegment seg = selector.getSelectedSegment();
+		return seg == null ? 0 : seg.getCaretLine();
+	}
 }

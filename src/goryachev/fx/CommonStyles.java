@@ -62,6 +62,7 @@ public class CommonStyles
 //			checkbox(theme),						
 			comboBox(theme),
 			menuBar(theme),
+			popupMenu(theme),
 			scrollBar(theme),
 			scrollPane(theme),
 			table(theme),
@@ -403,6 +404,18 @@ public class CommonStyles
 			selector(".menu-item:focused").defines
 			(
 				backgroundColor(bg)
+			)
+		};
+	}
+	
+	
+	protected Object popupMenu(Theme theme)
+	{
+		return new Object[]
+		{
+			selector(FxPopupMenu.MENU).defines
+			(
+				fontWeight("normal")
 			)
 		};
 	}
