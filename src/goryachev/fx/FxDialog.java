@@ -62,6 +62,14 @@ public class FxDialog
 	}
 	
 	
+	public FxButton addButton(String text, Runnable r, CssStyle style)
+	{
+		FxButton b = new FxButton(text, r, style);
+		buttonPane().add(b);
+		return b;
+	}
+	
+	
 	public FxButton addButton(String text, FxAction a)
 	{
 		FxButton b = new FxButton(text, a);
