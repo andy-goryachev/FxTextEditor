@@ -67,4 +67,24 @@ public class FxTabPane
 		}
 		return t.getContent();
 	}
+	
+	
+	public int indexOf(Node n)
+	{
+		for(int i=0, sz=getTabs().size(); i<sz; i++)
+		{
+			Tab t = getTabs().get(i);
+			if(t.getContent() == n)
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	
+	public Tab tabAt(int ix)
+	{
+		return getTabs().get(ix);
+	}
 }
