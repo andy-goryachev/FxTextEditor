@@ -41,6 +41,14 @@ public class FxMenuBar
 	}
 	
 	
+	public FxCheckMenuItem checkItem(String text, FxAction a)
+	{
+		FxCheckMenuItem m = new FxCheckMenuItem(text, a);
+		add(m);
+		return m;
+	}
+	
+	
 	public void addFill()
 	{
 		// TODO

@@ -476,12 +476,15 @@ public class VFlow
 	protected void updateModel()
 	{
 		log.trace();
+		
 		invalidate();
 	}
 	
 	
 	protected void handleSizeChange()
 	{
+		log.trace(() -> String.format("width=%.1f, height=%.1f", getWidth(), getHeight()));
+		
 		invalidate();
 		
 		canvas = createCanvas();
@@ -499,9 +502,12 @@ public class VFlow
 	protected Canvas createCanvas()
 	{
 		Insets m = getInsets();
-		double w = getWidth() - m.getLeft() - m.getRight();
-		double h = getHeight() - m.getTop() - m.getBottom();
-		return new Canvas(w + 1, h + 1);
+		double w = getWidth() - m.getLeft() - m.getRight() + 1;
+		double h = getHeight() - m.getTop() - m.getBottom() + 1;
+		
+		log.trace("w=%.1f, h=%.1f", w, h);
+		
+		return new Canvas(w, h);
 	}
 	
 	
@@ -556,6 +562,13 @@ public class VFlow
 	
 	protected void updateDimensions()
 	{
+		log.trace();
+		
+		if((getWidth() == 0) || (getHeight() == 0))
+		{
+			return;
+		}
+		
 		Insets m = getInsets();
 		double w = getWidth() - m.getLeft() - m.getRight();
 		double h = getHeight() - m.getTop() - m.getBottom();
@@ -573,7 +586,7 @@ public class VFlow
 		
 		if(h < 0.0)
 		{
-			h = 0;
+			h = 0.0;
 		}
 
 		screenColumnCount = CKit.floor(w / tm.cellWidth);
@@ -1037,6 +1050,11 @@ public class VFlow
 		
 		invalidate();
 		
+		if((screenColumnCount == 0) || (screenRowCount == 0))
+		{
+			return;
+		}
+		
 		updateVerticalScrollBarPosition();
 		updateVerticalScrollBarSize();
 		
@@ -1176,10 +1194,9 @@ public class VFlow
 	
 	protected void paintAll()
 	{
-//		log.trace(this);
-		
 		if((screenColumnCount == 0) || (screenRowCount == 0))
 		{
+			log.trace("screenColumnCount=%d, screenRowCount=%d", screenColumnCount, screenRowCount);
 			return;
 		}
 		

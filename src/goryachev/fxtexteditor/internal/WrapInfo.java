@@ -59,6 +59,11 @@ public abstract class WrapInfo
 	
 	public static WrapInfo create(FlowLine fline, ITabPolicy tabPolicy, int width, boolean wrapLines)
 	{
+		if(width == 0)
+		{
+			throw new Error("should not attempt to create WrapInfo with 0 width");
+		}
+		
 		int lineIndex = fline.getModelIndex();
 		if(lineIndex < 0)
 		{

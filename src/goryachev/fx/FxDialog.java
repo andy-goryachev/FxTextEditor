@@ -96,9 +96,37 @@ public class FxDialog
 	{
 		double w = getWidth();
 		double h = getHeight();
+		
+		// FIX what's goin on here?
+		if(isInvalid(w))
+		{
+			w = 400;
+			setWidth(w);
+		}
+		
+		if(isInvalid(h))
+		{
+			h = 300;
+			setHeight(h);
+		}
+		
 		// TODO center over parent, but not to go outside of the screen
 		
 		super.open();
+	}
+	
+	
+	protected static boolean isInvalid(double x)
+	{
+		if(Double.isNaN(x))
+		{
+			return true;
+		}
+		else if(x <= 1)
+		{
+			return true;
+		}
+		return false;
 	}
 	
 	

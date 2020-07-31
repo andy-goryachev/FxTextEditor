@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.beans.Observable;
@@ -125,6 +126,12 @@ public final class FX
 	{
 		windowsFx.restoreWindow(w);
 		GlobalSettings.save();
+	}
+	
+	
+	public static void openWindows(Function<String,FxWindow> generator)
+	{
+		windowsFx.openWindows(generator);
 	}
 	
 	
@@ -1359,6 +1366,18 @@ public final class FX
 	public static <T> void addChangeListener(ObservableValue<T> prop, Consumer<? super T> li)
 	{
 		prop.addListener((s,p,current) -> li.accept(current));
+	}
+	
+	
+	/** simplified version of addChangeListener that only accepts the current value */
+	public static <T> void addChangeListener(ObservableValue<T> prop, boolean fireImmediately, Consumer<? super T> li)
+	{
+		prop.addListener((s,p,current) -> li.accept(current));
+		
+		if(fireImmediately)
+		{
+			li.accept(prop.getValue());
+		}
 	}
 
 
