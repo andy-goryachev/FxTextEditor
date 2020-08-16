@@ -412,6 +412,15 @@ public class Log
 	}
 	
 	
+	public void error()
+	{
+		if(isEnabled(LogLevel.ERROR))
+		{
+			logEvent(LogLevel.ERROR, null, "");
+		}
+	}
+	
+	
 	public void error(Object message)
 	{
 		if(isEnabled(LogLevel.ERROR))
@@ -458,6 +467,15 @@ public class Log
 		if(isEnabled(LogLevel.WARN))
 		{
 			logEvent(LogLevel.WARN, err, message);
+		}
+	}
+	
+	
+	public void warn()
+	{
+		if(isEnabled(LogLevel.WARN))
+		{
+			logEvent(LogLevel.WARN, null, "");
 		}
 	}
 	
@@ -512,6 +530,15 @@ public class Log
 	}
 	
 	
+	public void info()
+	{
+		if(isEnabled(LogLevel.INFO))
+		{
+			logEvent(LogLevel.INFO, null, "");
+		}
+	}
+	
+	
 	public void info(Object message)
 	{
 		if(isEnabled(LogLevel.INFO))
@@ -558,6 +585,15 @@ public class Log
 		if(isEnabled(LogLevel.DEBUG))
 		{
 			logEvent(LogLevel.DEBUG, err, message);
+		}
+	}
+	
+	
+	public void debug()
+	{
+		if(isEnabled(LogLevel.DEBUG))
+		{
+			logEvent(LogLevel.DEBUG, null, "");
 		}
 	}
 	

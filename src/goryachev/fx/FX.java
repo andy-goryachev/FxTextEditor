@@ -3,6 +3,7 @@ package goryachev.fx;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CPlatform;
 import goryachev.common.util.GlobalSettings;
+import goryachev.common.util.SystemTask;
 import goryachev.fx.hacks.FxHacks;
 import goryachev.fx.internal.CssTools;
 import goryachev.fx.internal.FxSchema;
@@ -448,6 +449,12 @@ public final class FX
 	}
 	
 	
+	public static Color gray(int col, double alpha)
+	{
+		return Color.rgb(col, col, col, alpha);
+	}
+	
+	
 	/** Creates Color from an RGB value. */
 	public static Color rgb(int rgb)
 	{
@@ -580,6 +587,16 @@ public final class FX
 	public static void later(Runnable r)
 	{
 		Platform.runLater(r);
+	}
+	
+	
+	/** invokes Platform.runLater() after the specified delay */
+	public static void later(int delay, Runnable r)
+	{
+		SystemTask.schedule(delay, () ->
+		{
+			Platform.runLater(r);
+		});
 	}
 	
 	
@@ -909,13 +926,6 @@ public final class FX
 	public static void removeWindowMonitor(Consumer<FxWindow> monitor)
 	{
 		windowsFx.removeWindowMonitor(monitor);
-	}
-	
-	
-	/** creates an instance of Insets(horizontal,vertical).  why there is not such a constructor you might ask? */
-	public static Insets insets(double vertical, double horizontal)
-	{
-		return new Insets(vertical, horizontal, vertical, horizontal);
 	}
 	
 
@@ -1401,5 +1411,23 @@ public final class FX
             cc.putString(text);
             Clipboard.getSystemClipboard().setContent(cc);
 		}
+	}
+	
+	
+	public static Insets insets(double top, double right, double bottom, double left)
+	{
+		return new Insets(top, right, bottom, left);
+	}
+	
+	
+	public static Insets insets(double vert, double hor)
+	{
+		return new Insets(vert, hor, vert, hor);
+	}
+	
+	
+	public static Insets insets(double gap)
+	{
+		return new Insets(gap);
 	}
 }
