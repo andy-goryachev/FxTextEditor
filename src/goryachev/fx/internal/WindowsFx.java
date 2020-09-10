@@ -257,19 +257,29 @@ public class WindowsFx
 	}
 	
 	
-	public int openWindows(Function<String,FxWindow> generator)
+	public int openWindows(Function<String,FxWindow> generator, Class<? extends FxWindow> defaultWindowType)
 	{
 		SStream st = GlobalSettings.getStream(FxSchema.WINDOWS);
 
+		boolean createDefault = true;
+		
 		// in proper z-order
 		for(int i=st.size()-1; i>=0; i--)
 		{
 			String id = st.getValue(i);
 			FxWindow w = generator.apply(id);
 			w.open();
+			
+			if(defaultWindowType != null)
+			{
+				if(w.getClass() == defaultWindowType)
+				{
+					createDefault = false;
+				}
+			}
 		}
 		
-		if(st.size() == 0)
+		if(createDefault)
 		{
 			FxWindow w = generator.apply(null);
 			w.open();
@@ -284,7 +294,7 @@ public class WindowsFx
 		if(w.isShowing())
 		{
 			// design error: you should use open() instead of show()
-			throw new Error();
+			log.warn("use open() instead of show(): " + w.getClass());
 		}
 		
 		w.setOnCloseRequest((ev) -> handleClose(w, ev));

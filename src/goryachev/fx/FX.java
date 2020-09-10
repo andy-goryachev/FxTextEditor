@@ -130,9 +130,14 @@ public final class FX
 	}
 	
 	
-	public static void openWindows(Function<String,FxWindow> generator)
+	/** 
+	 * loads application windows stored in the global settings.  
+	 * A window of specified defaultWindowType is created when the layout does not contain any windows saved,
+	 * or when no window of the defaultWindowType was created
+	 */ 
+	public static void openWindows(Function<String,FxWindow> generator, Class<? extends FxWindow> defaultWindowType)
 	{
-		windowsFx.openWindows(generator);
+		windowsFx.openWindows(generator, defaultWindowType);
 	}
 	
 	
@@ -1376,6 +1381,13 @@ public final class FX
 	public static <T> void addChangeListener(ObservableValue<T> prop, Consumer<? super T> li)
 	{
 		prop.addListener((s,p,current) -> li.accept(current));
+	}
+	
+	
+	/** simplified version of addChangeListener that only invokes the callback on change */
+	public static <T> void addChangeListener(ObservableValue<T> prop, Runnable callback)
+	{
+		prop.addListener((s,p,current) -> callback.run());
 	}
 	
 	

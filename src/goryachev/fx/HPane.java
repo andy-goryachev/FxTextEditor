@@ -8,7 +8,6 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
@@ -55,8 +54,15 @@ public class HPane
 	
 	public void space()
 	{
-		// TODO add a rectangle instead
-		add(new Label("  "));
+		space(10);
+	}
+	
+	
+	public void space(int width)
+	{
+		Pane p = new Pane();
+		p.setPrefWidth(width);
+		add(p);
 	}
 	
 	

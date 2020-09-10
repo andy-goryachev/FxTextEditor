@@ -36,10 +36,10 @@ public class MainWindow
 	{
 		super("MainWindow");
 		
-		modelSelector.setValues((Object[])DemoModels.getAll());
+		modelSelector.setItems((Object[])DemoModels.getAll());
 		modelSelector.valueProperty().addListener((s,p,c) -> onModelSelectionChange(c));
 		
-		fontSelector.setValues
+		fontSelector.setItems
 		(
 			"9",
 			"12",

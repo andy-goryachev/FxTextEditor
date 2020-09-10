@@ -32,6 +32,22 @@ public class JsonDump
 	}
 	
 	
+	public static String print(Object x)
+	{
+		SB sb = new SB();
+		new JsonDump(sb, null, false, x).print();
+		return sb.toString();
+	}
+	
+	
+	public static String prettyPrint(Object x)
+	{
+		SB sb = new SB();
+		new JsonDump(sb, "  ", true, x).print();
+		return sb.toString();
+	}
+	
+	
 	private static Comparator<Item> createComparator()
 	{
 		return new CComparator<Item>()
@@ -48,17 +64,22 @@ public class JsonDump
 	{
 		print(0, value);
 	}
-
 	
-	protected void print(int level, Object x)
+	
+	protected boolean checkDup(Object x)
 	{
 		if(all.contains(x))
 		{
 			sb.append(CIRCULAR_REFERENCE);
-			return;
+			return true;
 		}
-		all.add(x);
-		
+		all.add(x); // TODO only for objects, or Object[]
+		return false;
+	}
+
+	
+	protected void print(int level, Object x)
+	{
 		CKit.checkCancelled();
 		
 		if(x == null)
@@ -83,14 +104,26 @@ public class JsonDump
 			}
 			else if(c.isArray())
 			{
+				if(checkDup(x))
+				{
+					return;
+				}
 				printArray(level, x);
 			}
 			else if(x instanceof Collection)
 			{
+				if(checkDup(x))
+				{
+					return;
+				}
 				printCollection(level, (Collection)x);
 			}
 			else if(x instanceof Map)
 			{
+				if(checkDup(x))
+				{
+					return;
+				}
 				printMap(level, (Map)x);
 			}
 			else if(isForbidden(c))
@@ -101,6 +134,10 @@ public class JsonDump
 			}
 			else
 			{
+				if(checkDup(x))
+				{
+					return;
+				}
 				printObject(level, x);
 			}
 		}

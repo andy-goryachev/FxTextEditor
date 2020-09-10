@@ -24,10 +24,16 @@ public class FxChangeListener<T>
 
 	public void attach(ObservableValue<T> prop)
 	{
-		if(property != null)
+		if(prop == property)
+		{
+			// already attached
+			return;
+		}
+		else if(property != null)
 		{
 			throw new Error("attached twice: " + property);
 		}
+		
 		property = prop;
 		
 		prop.addListener(this);

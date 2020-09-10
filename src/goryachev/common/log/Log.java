@@ -391,6 +391,19 @@ public class Log
 	}
 	
 	
+	protected static String format(String fmt, Object[] args)
+	{
+		try
+		{
+			return String.format(fmt, args);
+		}
+		catch(Throwable e)
+		{
+			return "Error in logging statement [" + fmt + "]: " + CKit.stackTrace(e) + "]";
+		}
+	}
+	
+	
 	// LogLevel.ERROR level
 	
 	
@@ -434,7 +447,7 @@ public class Log
 	{
 		if(isEnabled(LogLevel.ERROR))
 		{
-			String msg = String.format(format, args);
+			String msg = format(format, args);
 			logEvent(LogLevel.ERROR, null, msg);
 		}
 	}
@@ -493,7 +506,7 @@ public class Log
 	{
 		if(isEnabled(LogLevel.WARN))
 		{
-			String msg = String.format(format, args);
+			String msg = format(format, args);
 			logEvent(LogLevel.WARN, null, msg);
 		}
 	}
@@ -552,7 +565,7 @@ public class Log
 	{
 		if(isEnabled(LogLevel.INFO))
 		{
-			String msg = String.format(format, args);
+			String msg = format(format, args);
 			logEvent(LogLevel.INFO, null, msg);
 		}
 	}
@@ -611,7 +624,7 @@ public class Log
 	{
 		if(isEnabled(LogLevel.DEBUG))
 		{
-			String msg = String.format(format, args);
+			String msg = format(format, args);
 			logEvent(LogLevel.DEBUG, null, msg);
 		}
 	}
@@ -670,7 +683,7 @@ public class Log
 	{
 		if(isEnabled(LogLevel.TRACE))
 		{
-			String msg = String.format(format, args);
+			String msg = format(format, args);
 			logEvent(LogLevel.TRACE, null, msg);
 		}
 	}

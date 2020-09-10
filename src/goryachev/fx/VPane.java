@@ -43,6 +43,20 @@ public class VPane
 	}
 	
 	
+	public void space(int height)
+	{
+		Pane r = new Pane();
+		r.setPrefHeight(height);
+		add(r);
+	}
+	
+	
+	public void space()
+	{
+		space(10);
+	}
+	
+	
 	/** adds a node with preferred height constraint */
 	public void add(Node n)
 	{

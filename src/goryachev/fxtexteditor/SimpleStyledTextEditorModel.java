@@ -93,7 +93,7 @@ public class SimpleStyledTextEditorModel
 		
 		String text = sb.toString();
 		CellStyle[] cs = ss.toArray(new CellStyle[ss.size()]);
-		return new TextLine(line, text, null, cs);
+		return new SimpleStyledTextLine(line, text, null, cs);
 	}
 
 
@@ -189,62 +189,5 @@ public class SimpleStyledTextEditorModel
 	{
 		style.setTextColor(c);
 		return this;
-	}
-	
-	
-	//
-	
-	
-	protected static class TextLine implements ITextLine
-	{
-		private final int lineNumber;
-		private final String text;
-		private final Color lineColor;
-		private final CellStyle[] styles;
-		
-		
-		public TextLine(int lineNumber, String text, Color lineColor, CellStyle[] styles)
-		{
-			this.lineNumber = lineNumber;
-			this.text = text;
-			this.lineColor = lineColor;
-			this.styles = styles;
-		}
-
-
-		public int getTextLength()
-		{
-			return text.length();
-		}
-		
-		
-		public String getPlainText()
-		{
-			return text;
-		}
-		
-		
-		public int getModelIndex()
-		{
-			return lineNumber;
-		}
-		
-		
-		public int getLineNumber()
-		{
-			return lineNumber;
-		}
-		
-		
-		public CellStyle getCellStyle(int charOffset)
-		{
-			return styles[charOffset];
-		}
-
-
-		public Color getLineColor()
-		{
-			return lineColor;
-		}
 	}
 }
