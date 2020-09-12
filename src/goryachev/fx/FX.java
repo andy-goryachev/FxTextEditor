@@ -10,6 +10,7 @@ import goryachev.fx.internal.FxSchema;
 import goryachev.fx.internal.ParentWindow;
 import goryachev.fx.internal.WindowsFx;
 import goryachev.fx.table.FxTable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
@@ -28,6 +29,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.TransformationList;
 import javafx.css.Styleable;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
@@ -1441,5 +1443,120 @@ public final class FX
 	public static Insets insets(double gap)
 	{
 		return new Insets(gap);
+	}
+	
+	
+	/** returns an instance of TransformationList wrapped around the source ObservableList */
+	public static <S,T> ObservableList<T> transform(ObservableList<S> source, Function<S,T> converter)
+	{
+		return new TransformationList<T,S>(source)
+		{
+			public int getSourceIndex(int index)
+			{
+				return index;
+			}
+			
+			
+			public int getViewIndex(int index)
+			{
+				return index;
+			}
+
+
+			public T get(int index)
+			{
+				S src = getSource().get(index);
+				return converter.apply(src);
+			}
+
+
+			public int size()
+			{
+				return getSource().size();
+			}
+			
+			
+			protected void sourceChanged(Change<? extends S> c)
+			{
+				fireChange(new Change<T>(this)
+				{
+					public List<T> getRemoved()
+					{
+						ArrayList<T> rv = new ArrayList<>(c.getRemovedSize());
+						for(S item: c.getRemoved())
+						{
+							rv.add(converter.apply(item));
+						}
+						return rv;
+					}
+					
+
+					public boolean wasAdded()
+					{
+						return c.wasAdded();
+					}
+
+
+					public boolean wasRemoved()
+					{
+						return c.wasRemoved();
+					}
+
+
+					public boolean wasReplaced()
+					{
+						return c.wasReplaced();
+					}
+
+
+					public boolean wasUpdated()
+					{
+						return c.wasUpdated();
+					}
+
+
+					public boolean wasPermutated()
+					{
+						return c.wasPermutated();
+					}
+
+
+					public int getPermutation(int ix)
+					{
+						return c.getPermutation(ix);
+					}
+
+
+					protected int[] getPermutation()
+					{
+						return new int[0];
+					}
+
+
+					public int getFrom()
+					{
+						return c.getFrom();
+					}
+
+
+					public int getTo()
+					{
+						return c.getTo();
+					}
+
+
+					public boolean next()
+					{
+						return c.next();
+					}
+
+
+					public void reset()
+					{
+						c.reset();
+					}
+				});
+			}
+		};
 	}
 }
