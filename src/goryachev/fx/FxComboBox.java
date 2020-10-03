@@ -102,4 +102,11 @@ public class FxComboBox<T>
 	{
 		return getItems().indexOf(item);
 	}
+
+
+	public String getSelectedItemAsString()
+	{
+		T x = getSelectedItem();
+		return x == null ? null : x.toString();
+	}
 }

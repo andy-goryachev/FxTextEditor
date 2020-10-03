@@ -621,6 +621,13 @@ public final class FX
 	}
 	
 	
+	/** alias for Platform.isFxApplicationThread() */
+	public static boolean isFX()
+	{
+		return Platform.isFxApplicationThread();
+	}
+	
+	
 	/** swing invokeAndWait() analog.  if called from an FX application thread, simply invokes the producer. */
 	public static <T> T invokeAndWait(Callable<T> producer) throws Exception
 	{

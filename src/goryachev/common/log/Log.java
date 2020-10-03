@@ -16,6 +16,7 @@ import java.util.function.Supplier;
  */
 public class Log
 {
+	private final String fullName;
 	private final String name;
 	private Log parent;
 	private LogLevel level;
@@ -25,20 +26,21 @@ public class Log
 	protected static AbstractLogConfig config = LogUtil.createDisabledLogConfig();
 	protected static final CSet<String> ignore = LogUtil.initIgnoreClassNames();
 	protected static final CList<AppenderBase> allAppenders = new CList();
-	protected static final Log root = new Log(null, null);
+	protected static final Log root = new Log(null, null, null);
 
 
-	protected Log(Log parent, String name)
+	protected Log(Log parent, String name, String fullName)
 	{
 		this.parent = parent;
+		this.fullName = fullName;
 		this.name = name;
 	}
 	
 	
 	/** returns a channel instance for the specified name */
-	public static synchronized Log get(String name)
+	public static synchronized Log get(String fullName)
 	{
-		String[] ss = CKit.split(name, '.');
+		String[] ss = CKit.split(fullName, '.');
 		Log log = root;
 		
 		for(String s: ss)
@@ -46,7 +48,7 @@ public class Log
 			Log ch = log.children.get(s);
 			if(ch == null)
 			{
-				ch = new Log(log, s);
+				ch = new Log(log, s, fullName);
 				ch.needsCaller = log.needsCaller;
 				log.children.put(s, ch);				
 
@@ -150,10 +152,9 @@ public class Log
 		}
 		else
 		{
-			LogLevel lv = cf.getLogLevel(name);
+			LogLevel lv = cf.getLogLevel(fullName);
 			if(lv == null)
 			{
-				cf.getLogLevel(name); // FIX
 				if(parent == null)
 				{
 					level = cf.getDefaultLogLevel();

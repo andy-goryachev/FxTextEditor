@@ -2526,4 +2526,15 @@ public final class CKit
 		}
 		return s;
 	}
+	
+	
+	/** creates a new array instance, copying the contents */
+	public static <T> T[] shallowCopy(T[] src)
+	{
+		if(src == null)
+		{
+			return null;
+		}
+		return Arrays.copyOf(src, src.length);
+	}
 }
