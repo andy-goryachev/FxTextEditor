@@ -46,7 +46,7 @@ public class StatusBar
 					return null;
 				}
 				
-				FxFormatter fmt = Formatters.getIntegerFormatter();
+				FxFormatter fmt = Formatters.integerFormatter();
 				
 				Marker m = seg.getCaret();
 				

@@ -197,7 +197,7 @@ public class FxTextEditor
 		FxFormatter f = lineNumberFormatterProperty.get();
 		if(f == null)
 		{
-			f = Formatters.getIntegerFormatter();
+			f = Formatters.integerFormatter();
 		}
 		return f;
 	}
@@ -823,6 +823,7 @@ public class FxTextEditor
 	/** navigates to the line if row is between [0...lineCount-1], otherwise does nothing */
 	public void goToLine(int row)
 	{
+		// TODO smarter algorithm near the end of file
 		if((row >= 0) && (row < getLineCount()))
 		{
 			setOrigin(Math.max(0, row - 3));

@@ -176,7 +176,7 @@ public class DemoModels
 
 			public ITextLine getTextLine(int line)
 			{
-				String text = Formatters.getIntegerFormatter().format(line + 1);
+				String text = Formatters.integerFormatter().format(line + 1);
 				return new PlainTextLine(line, text);
 			}
 

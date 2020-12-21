@@ -28,6 +28,13 @@ public class SimpleListTextEditorModel
 		
 		// TODO send update events
 	}
+	
+	
+	public void add(String text)
+	{
+		int line = lines.size();
+		lines.add(new PlainTextLine(line, text));
+	}
 
 
 	public int getLineCount()

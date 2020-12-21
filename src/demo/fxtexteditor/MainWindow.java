@@ -158,8 +158,8 @@ public class MainWindow
 	protected Node createToolbar()
 	{
 		FxToolBar t = new FxToolBar();
-		t.toggleButton("wrap", editor().wrapLinesProperty());
-		t.toggleButton("num", editor().showLineNumbersProperty());
+		t.addToggleButton("wrap", editor().wrapLinesProperty());
+		t.addToggleButton("num", editor().showLineNumbersProperty());
 		t.fill();
 		t.add(new Label("Font:"));
 		t.add(fontSelector);
