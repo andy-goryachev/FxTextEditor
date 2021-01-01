@@ -718,6 +718,7 @@ public class CommonStyles
 			// text smoothing
 			selector(FxToolBar.STYLE).defines
 			(
+				prop("-fx-spacing", 1),
 				padding(2, 2, 2, 2)
 			)
 		};

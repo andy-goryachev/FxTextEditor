@@ -5,7 +5,7 @@ import java.util.Date;
 
 
 /**
- * FxDateFormatter.
+ * Fx DateFormatter.
  */
 public class FxDateFormatter
 	extends FxFormatter
@@ -17,6 +17,12 @@ public class FxDateFormatter
 	{
 		format = new SimpleDateFormat(pattern);
 	}
+	
+	
+    public String format(long t)
+    {
+    	return format.format(t);
+    }
 
 	
 	public String toString(Object x)

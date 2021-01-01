@@ -262,7 +262,7 @@ public class CList<T>
 	}
 
 
-	public static <V> List<V> of(V[] a)
+	public static <V> List<V> of(V ... a)
 	{
 		return new CList(a);
 	}

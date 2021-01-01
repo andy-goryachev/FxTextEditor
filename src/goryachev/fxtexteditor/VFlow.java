@@ -531,8 +531,16 @@ public class VFlow
 		if(editor.isShowLineNumbers())
 		{
 			int lastLine = getTopLine() + screenRowCount;
-			String s = editor.getLineNumberFormatter().format(lastLine);
-			count = Math.max(minLineNumberCellCount, s.length());
+			ILineNumberFormatter fmt = editor.getLineNumberFormatter();
+			if(fmt == null)
+			{
+				count = 0;
+			}
+			else
+			{
+				Object x = fmt.formatLineNumber(lastLine);
+				count = Math.max(minLineNumberCellCount, x.toString().length());
+			}
 		}
 		else
 		{
@@ -1292,7 +1300,7 @@ public class VFlow
 			int ix = row.getLineNumber();
 			if((ix >= 0) && (ix < editor.getLineCount()))
 			{
-				String text = editor.getLineNumberFormatter().format(ix + 1);
+				String text = editor.getLineNumberFormatter().formatLineNumber(ix + 1);
 	
 				for(int i=0; i<lineNumbersCellCount; i++)
 				{

@@ -90,6 +90,14 @@ public class FxPopupMenu
 	}
 	
 	
+	public FxMenu menu(String text)
+	{
+		FxMenu m = new FxMenu(text);
+		add(m);
+		return m;
+	}
+	
+	
 	public FxMenu menu(String text, FxAction a)
 	{
 		FxMenu m = new FxMenu(text, a);

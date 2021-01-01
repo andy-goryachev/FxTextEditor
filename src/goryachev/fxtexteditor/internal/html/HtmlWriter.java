@@ -1,11 +1,12 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
-package goryachev.fxtexteditor.internal;
+package goryachev.fxtexteditor.internal.html;
 import goryachev.common.util.CKit;
 import goryachev.fx.FX;
 import goryachev.fxtexteditor.CellStyle;
-import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.ITextLine;
+import goryachev.fxtexteditor.ITextSource;
 import java.io.StringWriter;
+import java.io.Writer;
 import javafx.scene.paint.Color;
 
 
@@ -14,23 +15,24 @@ import javafx.scene.paint.Color;
  */
 public class HtmlWriter
 {
-	private final FxTextEditorModel model;
-	private final StringWriter out;
-	private final int startLine;
-	private final int startPos;
-	private final int endLine;
-	private final int endPos;
+	private final ITextSource src;
+	private final Writer out;
 	private String fontName = "Courier New";
 	
 	
-	public HtmlWriter(FxTextEditorModel m, StringWriter out, int startLine, int startPos, int endLine, int endPos)
+	public HtmlWriter(ITextSource src, Writer out)
 	{
-		this.model = m;
+		this.src = src;
 		this.out = out;
-		this.startLine = startLine;
-		this.startPos = startPos;
-		this.endLine = endLine;
-		this.endPos = endPos;
+	}
+	
+	
+	public static String writeString(ITextSource src) throws Exception
+	{
+		StringWriter out = new StringWriter();
+		HtmlWriter wr = new HtmlWriter(src, out);
+		wr.write();
+		return out.toString();
 	}
 	
 	
@@ -44,28 +46,22 @@ public class HtmlWriter
 	{
 		writeBeginning();
 		
-		if(startLine == endLine)
+		ITextLine t;
+		boolean nl = false;
+		while((t = src.nextLine()) != null)
 		{
-			ITextLine t = model.getTextLine(startLine);
-			writeLine(t, startPos, endPos);
-		}
-		else
-		{
-			ITextLine t = model.getTextLine(startLine);
-			writeLine(t, startPos, t.getTextLength());
-			writeNL();
-			
-			for(int i=startLine+1; i<endLine; i++)
+			if(nl)
 			{
-				CKit.checkCancelled();
-				
-				t = model.getTextLine(i);
-				writeLine(t, 0, t.getTextLength());
 				writeNL();
 			}
+			else
+			{
+				nl = true;
+			}
 			
-			t = model.getTextLine(endLine);
-			writeLine(t, 0, endPos);
+			int start = src.getStart();
+			int end = src.getEnd();
+			writeLine(t, start, end);
 		}
 		
 		writeEnd();
@@ -85,6 +81,8 @@ public class HtmlWriter
 	
 	protected void writeLine(ITextLine t, int startPos, int endPos) throws Exception
 	{
+		CKit.checkCancelled();
+		
 		if(t == null)
 		{
 			return;
@@ -158,7 +156,8 @@ public class HtmlWriter
 					}
 					else
 					{
-						out.write("<span style='background-color:");
+						out.write("</span><span style='background-color:");
+						// TODO alpha
 						out.write(FX.toFormattedColorRGB(bg));
 						out.write(";'>");
 					}

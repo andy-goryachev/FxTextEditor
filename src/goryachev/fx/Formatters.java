@@ -10,7 +10,7 @@ public class Formatters
 	private static FxDecimalFormatter integerFormatter;
 	
 	
-	public static FxFormatter integerFormatter()
+	public static FxDecimalFormatter integerFormatter()
 	{
 		if(integerFormatter == null)
 		{

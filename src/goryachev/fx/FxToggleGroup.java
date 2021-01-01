@@ -5,7 +5,7 @@ import javafx.scene.control.ToggleGroup;
 
 
 /**
- * FxToggleGroup.
+ * Slightly more convenient ToggleGroup.
  */
 public class FxToggleGroup
 	extends ToggleGroup

@@ -1,6 +1,7 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 
+
 /**
  * FxToggleButton that behaves like RadioButton.
  */

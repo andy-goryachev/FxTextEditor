@@ -7,9 +7,10 @@ import goryachev.common.util.CMap;
 import goryachev.common.util.text.IBreakIterator;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxObject;
-import goryachev.fxtexteditor.internal.HtmlWriter;
-import goryachev.fxtexteditor.internal.RtfWriter;
-import java.io.ByteArrayOutputStream;
+import goryachev.fxtexteditor.internal.SelectedTextSource;
+import goryachev.fxtexteditor.internal.html.HtmlWriter;
+import goryachev.fxtexteditor.internal.plain.PlainTextWriter;
+import goryachev.fxtexteditor.internal.rtf.RtfWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Set;
@@ -304,62 +305,20 @@ public abstract class FxTextEditorModel
 	
 	public String copyRTF(int startLine, int startPos, int endLine, int endPos) throws Exception
 	{
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		RtfWriter wr = new RtfWriter(this, out, startLine, startPos, endLine, endPos);
-		wr.write();
-		byte[] b = out.toByteArray();
-		return new String(b, CKit.CHARSET_ASCII);
+		return RtfWriter.writeString(() -> new SelectedTextSource(this, startLine, startPos, endLine, endPos));
 	}
 	
 	
 	public String copyHTML(int startLine, int startPos, int endLine, int endPos) throws Exception
 	{
-		StringWriter out = new StringWriter();
-		HtmlWriter wr = new HtmlWriter(this, out, startLine, startPos, endLine, endPos);
-		wr.write();
-		return out.toString();
+		SelectedTextSource src = new SelectedTextSource(this, startLine, startPos, endLine, endPos);
+		return HtmlWriter.writeString(src);
 	}
 	
 	
 	public void writePlainText(int startLine, int startPos, int endLine, int endPos, Writer wr) throws Exception
 	{
-		if(startLine == endLine)
-		{
-			String text = getPlainText(startLine);
-			if(text != null)
-			{
-				String s = text.substring(startPos, endPos);
-				wr.write(s);
-			}
-		}
-		else
-		{
-			String text = getPlainText(startLine);
-			if(text != null)
-			{
-				String s = text.substring(startPos);
-				wr.write(s);
-			}
-			wr.write("\n");
-			
-			for(int i=startLine+1; i<endLine; i++)
-			{
-				CKit.checkCancelled();
-				
-				text = getPlainText(i);
-				if(text != null)
-				{
-					wr.write(text);
-				}
-				wr.write("\n");
-			}
-			
-			text = getPlainText(endLine);
-			if(text != null)
-			{
-				String s = text.substring(0, endPos);
-				wr.write(s);
-			}
-		}
+		SelectedTextSource src = new SelectedTextSource(this, startLine, startPos, endLine, endPos);
+		new PlainTextWriter(src, wr).write();
 	}
 }

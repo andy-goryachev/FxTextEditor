@@ -1,13 +1,14 @@
 // Copyright © 2020 Andy Goryachev <andy@goryachev.com>
-package goryachev.fxtexteditor.internal;
+package goryachev.fxtexteditor.internal.rtf;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
-import goryachev.common.util.CList;
-import goryachev.common.util.CMap;
+import goryachev.fx.FX;
 import goryachev.fxtexteditor.CellStyle;
-import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.ITextLine;
+import goryachev.fxtexteditor.ITextSource;
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import java.util.function.Supplier;
 import javafx.scene.paint.Color;
 
 
@@ -20,25 +21,27 @@ import javafx.scene.paint.Color;
 public class RtfWriter
 {
 	protected static final Log log = Log.get("RtfWriter");
-	private final FxTextEditorModel model;
+	private final Supplier<ITextSource> source;
 	private final OutputStream out;
-	private final int startLine;
-	private final int startPos;
-	private final int endLine;
-	private final int endPos;
 	private String fontName = "Courier New";
 	private String fontSize = "18"; // double the actual size
 	private ColorTable colorTable; 
 	
 	
-	public RtfWriter(FxTextEditorModel m, OutputStream out, int startLine, int startPos, int endLine, int endPos)
+	public RtfWriter(Supplier<ITextSource> source, OutputStream out)
 	{
-		this.model = m;
+		this.source = source;
 		this.out = out;
-		this.startLine = startLine;
-		this.startPos = startPos;
-		this.endLine = endLine;
-		this.endPos = endPos;
+	}
+	
+	
+	public static String writeString(Supplier<ITextSource> src) throws Exception
+	{
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		RtfWriter wr = new RtfWriter(src, out);
+		wr.write();
+		byte[] b = out.toByteArray();
+		return new String(b, CKit.CHARSET_ASCII);
 	}
 	
 	
@@ -48,40 +51,86 @@ public class RtfWriter
 		this.fontSize = String.valueOf(2 * fontSize);
 	}
 	
-	
+
 	public void write() throws Exception
 	{
-		colorTable = prepareColorTable();
+		// pass 1: enumerate colors
+		ITextSource src = source.get();
+		ITextLine t;
+		
+		colorTable = new ColorTable();
+		
+		while((t = src.nextLine()) != null)
+		{
+			int start = src.getStart();
+			int end = src.getEnd();
+			collectColors(t, start, end);
+		}
+		
+		// pass 2: generate rtf
+		
+		src = source.get();
 		
 		writeBeginning();
 		
-		if(startLine == endLine)
+		boolean nl = false;
+		while((t = src.nextLine()) != null)
 		{
-			ITextLine t = model.getTextLine(startLine);
-			writeLine(t, startPos, endPos);
-		}
-		else
-		{
-			ITextLine t = model.getTextLine(startLine);
-			writeLine(t, startPos, t.getTextLength());
-			writeNL();
-			
-			for(int i=startLine+1; i<endLine; i++)
+			if(nl)
 			{
-				CKit.checkCancelled();
-				
-				t = model.getTextLine(i);
-				writeLine(t, 0, t.getTextLength());
 				writeNL();
 			}
+			else
+			{
+				nl = true;
+			}
 			
-			t = model.getTextLine(endLine);
-			writeLine(t, 0, endPos);
+			int start = src.getStart();
+			int end = src.getEnd();
+			writeLine(t, start, end);
 		}
 		
 		writeEnd();
 		
 		out.flush();
+	}
+	
+	
+	protected void collectColors(ITextLine t, int start, int end)
+	{
+		CKit.checkCancelled();
+		
+		CellStyle prevStyle = null;
+		
+		for(int i=start; i<end; i++)
+		{
+			CellStyle st = t.getCellStyle(i);
+			if(prevStyle != st)
+			{
+				if(st != null)
+				{
+					Color c = st.getTextColor();
+					if(c != null)
+					{
+						colorTable.add(c);
+					}
+					
+					c = mixBackground(st.getBackgroundColor());
+					if(c != null)
+					{
+						colorTable.add(c);
+					}
+				}
+				prevStyle = st;
+			}
+		}
+	}
+	
+	
+	// FIX https://github.com/andy-goryachev/AccessPanelPublic/issues/2
+	protected Color mixBackground(Color c)
+	{
+		return FX.mix(c, Color.WHITE, 0.85);
 	}
 	
 
@@ -94,7 +143,7 @@ public class RtfWriter
 		
 		// color table
 		write("{\\colortbl ;");
-		for(Color c: colorTable.colors)
+		for(Color c: colorTable.getColors())
 		{
 			write("\\red");
 			write(toInt255(c.getRed()));
@@ -114,6 +163,8 @@ public class RtfWriter
 	
 	protected void writeLine(ITextLine t, int startPos, int endPos) throws Exception
 	{
+		CKit.checkCancelled();
+		
 		if(t == null)
 		{
 			return;
@@ -154,7 +205,7 @@ public class RtfWriter
 				else
 				{
 					col = st.getTextColor();
-					bg = st.getBackgroundColor();
+					bg = mixBackground(st.getBackgroundColor());
 					bld = st.isBold();
 					ita = st.isItalic();
 					und = st.isUnderscore();
@@ -174,6 +225,11 @@ public class RtfWriter
 					else
 					{
 						String s = colorTable.getIndexFor(col);
+						if(s == null)
+						{
+							s = "0";
+							log.warn("no entry for " + col);
+						}
 
 						write("\\cf");
 						write(s);
@@ -318,101 +374,5 @@ public class RtfWriter
 			v = 255;
 		}
 		return String.valueOf(v);
-	}
-	
-	
-	private ColorTable prepareColorTable()
-	{
-		ColorTable ctab = new ColorTable();
-		
-		if(startLine == endLine)
-		{
-			ITextLine t = model.getTextLine(startLine);
-			scanColors(ctab, t, startPos, endPos);
-		}
-		else
-		{
-			ITextLine t = model.getTextLine(startLine);
-			scanColors(ctab, t, startPos, t.getTextLength());
-			
-			for(int i=startLine+1; i<endLine; i++)
-			{
-				CKit.checkCancelled();
-				
-				t = model.getTextLine(i);
-				scanColors(ctab, t, 0, t.getTextLength());
-			}
-			
-			t = model.getTextLine(endLine);
-			scanColors(ctab, t, 0, endPos);
-		}
-		
-		return ctab;
-	}
-	
-	
-	protected void scanColors(ColorTable ctab, ITextLine t, int start, int end)
-	{
-		CellStyle prevStyle = null;
-		
-		for(int i=start; i<end; i++)
-		{
-			CellStyle st = t.getCellStyle(i);
-			if(prevStyle != st)
-			{
-				if(st != null)
-				{
-					Color c = st.getTextColor();
-					if(c != null)
-					{
-						ctab.add(c);
-					}
-					
-					c = st.getBackgroundColor();
-					if(c != null)
-					{
-						ctab.add(c);
-					}
-				}
-				prevStyle = st;
-			}
-		}
-	}
-
-	
-	//
-	
-	
-	protected static class ColorTable
-	{
-		public final CList<Color> colors = new CList();
-		private final CMap<Color,String> indexes = new CMap();
-		
-		
-		public ColorTable()
-		{
-		}
-		
-		
-		public void add(Color c)
-		{
-			if(!indexes.containsKey(c))
-			{
-				colors.add(c);
-				indexes.put(c, String.valueOf(colors.size()));
-			}
-		}
-
-
-		public String getIndexFor(Color c)
-		{
-			String s = indexes.get(c);
-			if(s == null)
-			{
-				log.warn("no entry for " + c);
-				s = "0";
-			}
-			return s;
-		}
 	}
 }

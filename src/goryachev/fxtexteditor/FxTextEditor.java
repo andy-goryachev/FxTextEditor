@@ -4,10 +4,8 @@ import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
-import goryachev.fx.Formatters;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxDouble;
-import goryachev.fx.FxFormatter;
 import goryachev.fx.FxObject;
 import goryachev.fx.XScrollBar;
 import goryachev.fxtexteditor.internal.InputHandler;
@@ -58,7 +56,7 @@ public class FxTextEditor
 	protected final FxBoolean highlightCaretLineProperty = new FxBoolean(true);
 	protected final FxDouble scrollWheelStepSize = new FxDouble(-0.25);
 	protected final ReadOnlyObjectWrapper<Duration> caretBlinkRateProperty = new ReadOnlyObjectWrapper(Duration.millis(500));
-	protected final FxObject<FxFormatter> lineNumberFormatterProperty = new FxObject<>();
+	protected final FxObject<ILineNumberFormatter> lineNumberFormatterProperty = new FxObject<>(ILineNumberFormatter.getDefault());
 	protected final FxObject<ITabPolicy> tabPolicy = new FxObject();
 	// TODO lineCount r/o property
 	protected final FxTextEditorModelListener modelListener;
@@ -186,25 +184,24 @@ public class FxTextEditor
 	}
 	
 	
-	public FxObject<FxFormatter> lineNumberFormatterProperty()
+	public FxObject<ILineNumberFormatter> lineNumberFormatterProperty()
 	{
 		return lineNumberFormatterProperty;
 	}
 	
 	
-	public FxFormatter getLineNumberFormatter()
+	public ILineNumberFormatter getLineNumberFormatter()
 	{
-		FxFormatter f = lineNumberFormatterProperty.get();
-		if(f == null)
-		{
-			f = Formatters.integerFormatter();
-		}
-		return f;
+		return lineNumberFormatterProperty.get();
 	}
 	
 	
-	public void setLineNumberFormatter(FxFormatter f)
+	public void setLineNumberFormatter(ILineNumberFormatter f)
 	{
+		if(f == null)
+		{
+			f = ILineNumberFormatter.getDefault();
+		}
 		lineNumberFormatterProperty.set(f);
 	}
 	
@@ -699,7 +696,7 @@ public class FxTextEditor
 	
 	
 	/** 
-	 * outputs selected plain text, concatenating multiple selection segments if necessary.
+	 * outputs selected plain texty.
 	 * this method should be used where allocating a single (potentially large) string is undesirable,
 	 * for example when saving to a file.
 	 */
