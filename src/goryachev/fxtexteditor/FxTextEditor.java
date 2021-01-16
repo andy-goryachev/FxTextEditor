@@ -41,7 +41,7 @@ public class FxTextEditor
 	extends CPane
 {
 	protected static final Log log = Log.get("FxTextEditor");
-	public final Actions actions = new Actions(this);
+	public final Actions actions;
 	protected final FxObject<Color> backgroundColor = new FxObject(Color.WHITE);
 	protected final FxObject<Color> loadingIndicatorColor = new FxObject(FX.gray(32));
 	protected final FxObject<Color> caretLineColor = new FxObject(FX.rgb(255, 200, 255));
@@ -117,6 +117,8 @@ public class FxTextEditor
 				
 		// TODO
 //		FX.onChange(vflow::updateBlinkRate, true, blinkRateProperty());
+		
+		actions = new Actions(this);
 		
 		inputHandler = createInputHandler();
 		setFocusTraversable(true);

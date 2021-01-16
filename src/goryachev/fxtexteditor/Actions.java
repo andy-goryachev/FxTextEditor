@@ -1,5 +1,6 @@
 // Copyright © 2020-2021 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
+import goryachev.fx.FX;
 import goryachev.fx.FxAction;
 import goryachev.fxtexteditor.op.Backspace;
 import goryachev.fxtexteditor.op.Copy;
@@ -72,6 +73,31 @@ public class Actions
 		pageDown = new PageDown(ed);
 		pageUp = new PageUp(ed);
 		selectAll = new SelectAll(ed);
+		
+		FX.addChangeListener(this::handleSelectionChange, true, ed.selectionProperty());
+	}
+	
+	
+	protected void handleSelectionChange()
+	{
+		boolean on = (editor.getNonEmptySelection() != null);
+		
+		copy.setEnabled(on);
+		
+		if(copyHtml != null)
+		{
+			copyHtml.setEnabled(on);
+		}
+		
+		if(copyPlainText != null)
+		{
+			copyPlainText.setEnabled(on);
+		}
+		
+		if(copyRtf != null)
+		{
+			copyRtf.setEnabled(on);
+		}
 	}
 	
 

@@ -7,7 +7,6 @@ import goryachev.fx.FxAction;
 import goryachev.fx.FxComboBox;
 import goryachev.fx.FxDump;
 import goryachev.fx.FxMenuBar;
-import goryachev.fx.FxPopupMenu;
 import goryachev.fx.FxToolBar;
 import goryachev.fx.FxWindow;
 import goryachev.fx.internal.LocalSettings;
@@ -25,7 +24,6 @@ import javafx.scene.control.Label;
 public class MainWindow
 	extends FxWindow
 {
-	public final FxAction prefsAction = new FxAction(this::preferences);
 	public final MainPane mainPane;
 	public final CPane content;
 	public final StatusBar statusBar;
@@ -96,7 +94,7 @@ public class MainWindow
 //		m.item("Growing Model", tailMode);
 		m.item("New Window, Same Model", new FxAction(this::newWindow));
 		m.separator();
-		m.item("Preferences", prefsAction);
+		m.item("Preferences");
 		m.separator();
 		m.item("Exit", FX.exitAction());
 		
