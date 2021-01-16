@@ -1,7 +1,7 @@
 // Copyright © 2020-2021 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.op;
 import goryachev.common.log.Log;
-import goryachev.fxtexteditor.Actions;
+import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.Marker;
 import goryachev.fxtexteditor.WrapPos;
 import goryachev.fxtexteditor.internal.NavigationAction;
@@ -17,9 +17,9 @@ public class MoveUp
 	protected static final Log log = Log.get("MoveUp");
 
 	
-	public MoveUp(Actions a)
+	public MoveUp(FxTextEditor ed)
 	{
-		super(a);
+		super(ed);
 	}
 	
 

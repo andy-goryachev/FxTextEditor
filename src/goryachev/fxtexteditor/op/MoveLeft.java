@@ -1,9 +1,8 @@
 // Copyright © 2020-2021 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.op;
-import goryachev.fxtexteditor.Actions;
+import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.Marker;
 import goryachev.fxtexteditor.internal.FlowLine;
-import goryachev.fxtexteditor.internal.GlyphIndex;
 import goryachev.fxtexteditor.internal.NavigationAction;
 
 
@@ -13,9 +12,9 @@ import goryachev.fxtexteditor.internal.NavigationAction;
 public class MoveLeft
 	extends NavigationAction
 {
-	public MoveLeft(Actions a)
+	public MoveLeft(FxTextEditor ed)
 	{
-		super(a);
+		super(ed);
 	}
 	
 

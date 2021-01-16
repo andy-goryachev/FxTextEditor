@@ -1,10 +1,10 @@
 // Copyright © 2020-2021 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
-import goryachev.fxtexteditor.Actions;
+import goryachev.fxtexteditor.EditorAction;
 import goryachev.fxtexteditor.EditorSelection;
+import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.Marker;
 import goryachev.fxtexteditor.SelectionSegment;
-import goryachev.fxtexteditor.WrapPos;
 
 
 /**
@@ -18,9 +18,9 @@ public abstract class NavigationAction
 	
 	//
 	
-	public NavigationAction(Actions a)
+	public NavigationAction(FxTextEditor ed)
 	{
-		super(a);
+		super(ed);
 	}
 	
 	

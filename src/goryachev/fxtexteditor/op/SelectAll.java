@@ -1,8 +1,8 @@
 // Copyright © 2020-2021 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.op;
-import goryachev.fxtexteditor.Actions;
+import goryachev.fxtexteditor.EditorAction;
+import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.Marker;
-import goryachev.fxtexteditor.internal.EditorAction;
 
 
 /**
@@ -11,9 +11,9 @@ import goryachev.fxtexteditor.internal.EditorAction;
 public class SelectAll
 	extends EditorAction
 {
-	public SelectAll(Actions a)
+	public SelectAll(FxTextEditor ed)
 	{
-		super(a);
+		super(ed);
 	}
 
 

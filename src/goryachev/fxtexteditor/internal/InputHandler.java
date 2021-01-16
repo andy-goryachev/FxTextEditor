@@ -66,8 +66,8 @@ public class InputHandler
 		// key map
 		KeyMap.onKeyPressed(ed, KeyCode.A, KeyMap.SHORTCUT, ed.actions.selectAll);
 		KeyMap.onKeyPressed(ed, KeyCode.C, KeyMap.SHORTCUT, ed.actions.copy());
-		KeyMap.onKeyPressed(ed, KeyCode.BACK_SPACE, ed.actions.backspace);
-		KeyMap.onKeyPressed(ed, KeyCode.DELETE, ed.actions.delete);
+		KeyMap.onKeyPressed(ed, KeyCode.BACK_SPACE, ed.actions.backspace());
+		KeyMap.onKeyPressed(ed, KeyCode.DELETE, ed.actions.delete());
 		KeyMap.onKeyPressed(ed, KeyCode.DOWN, ed.actions.moveDown);
 		KeyMap.onKeyPressed(ed, KeyCode.END, ed.actions.moveEnd);
 		KeyMap.onKeyPressed(ed, KeyCode.END, KeyMap.SHORTCUT, ed.actions.moveDocumentEnd);

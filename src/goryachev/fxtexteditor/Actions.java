@@ -1,7 +1,6 @@
 // Copyright © 2020-2021 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.fx.FxAction;
-import goryachev.fxtexteditor.internal.Markers;
 import goryachev.fxtexteditor.op.Backspace;
 import goryachev.fxtexteditor.op.Copy;
 import goryachev.fxtexteditor.op.CopyHTML;
@@ -30,23 +29,24 @@ import goryachev.fxtexteditor.op.SmartCopyRTF;
  */
 public class Actions
 {
-	public FxAction backspace = new Backspace(this);
-	private final FxAction copy = new Copy(this);
+	// TODO all private
+	private final FxAction backspace;
+	private final FxAction copy;
 	private FxAction copyHtml;
 	private FxAction copyPlainText;
 	private FxAction copyRtf;
-	public FxAction delete = new Delete(this);
-	public FxAction moveDocumentEnd = new MoveDocumentEnd(this);
-	public FxAction moveDocumentStart = new MoveDocumentStart(this);
-	public FxAction moveDown = new MoveDown(this);
-	public FxAction moveEnd = new MoveEnd(this);
-	public FxAction moveHome = new MoveHome(this);
-	public FxAction moveLeft = new MoveLeft(this);
-	public FxAction moveRight = new MoveRight(this);
-	public FxAction moveUp = new MoveUp(this);
-	public FxAction pageDown = new PageDown(this);
-	public FxAction pageUp = new PageUp(this);
-	public FxAction selectAll = new SelectAll(this);
+	private FxAction delete;
+	public FxAction moveDocumentEnd;
+	public FxAction moveDocumentStart;
+	public FxAction moveDown;
+	public FxAction moveEnd;
+	public FxAction moveHome;
+	public FxAction moveLeft;
+	public FxAction moveRight;
+	public FxAction moveUp;
+	public FxAction pageDown;
+	public FxAction pageUp;
+	public FxAction selectAll;
 	private FxAction smartCopy;
 	private FxAction smartCopyHtml;
 	private FxAction smartCopyPlainText;
@@ -58,37 +58,27 @@ public class Actions
 	public Actions(FxTextEditor ed)
 	{
 		this.editor = ed;
+		
+		backspace = new Backspace(ed);
+		copy = new Copy(ed);
+		delete = new Delete(ed);
+		moveDocumentEnd = new MoveDocumentEnd(ed);
+		moveDocumentStart = new MoveDocumentStart(ed);
+		moveDown = new MoveDown(ed);
+		moveEnd = new MoveEnd(ed);
+		moveHome = new MoveHome(ed);
+		moveLeft = new MoveLeft(ed);
+		moveRight = new MoveRight(ed);
+		moveUp = new MoveUp(ed);
+		pageDown = new PageDown(ed);
+		pageUp = new PageUp(ed);
+		selectAll = new SelectAll(ed);
 	}
 	
-	
-	public FxTextEditor editor()
+
+	public FxAction backspace()
 	{
-		return editor;
-	}
-	
-	
-	public VFlow vflow()
-	{
-		return editor.vflow;
-	}
-	
-	
-	public SelectionController selector()
-	{
-		return editor.selector;
-	}
-	
-	
-	public FxTextEditorModel model()
-	{
-		return editor.getModel();
-	}
-	
-	
-	// TODO private or move elsewhere
-	public Markers markers()
-	{
-		return editor.markers;
+		return backspace;
 	}
 	
 	
@@ -107,7 +97,7 @@ public class Actions
 	{
 		if(smartCopy == null)
 		{
-			smartCopy = new SmartCopy(this);
+			smartCopy = new SmartCopy(editor);
 		}
 		return smartCopy;
 	}
@@ -118,7 +108,7 @@ public class Actions
 	{
 		if(copyHtml == null)
 		{
-			copyHtml = new CopyHTML(this);
+			copyHtml = new CopyHTML(editor);
 		}
 		return copyHtml;
 	}
@@ -132,7 +122,7 @@ public class Actions
 	{
 		if(smartCopyHtml == null)
 		{
-			smartCopyHtml = new SmartCopyHTML(this);
+			smartCopyHtml = new SmartCopyHTML(editor);
 		}
 		return smartCopyHtml;
 	}
@@ -143,7 +133,7 @@ public class Actions
 	{
 		if(copyPlainText == null)
 		{
-			copyPlainText = new CopyPlainText(this);
+			copyPlainText = new CopyPlainText(editor);
 		}
 		return copyPlainText;
 	}
@@ -157,7 +147,7 @@ public class Actions
 	{
 		if(smartCopyPlainText == null)
 		{
-			smartCopyPlainText = new SmartCopyPlainText(this);
+			smartCopyPlainText = new SmartCopyPlainText(editor);
 		}
 		return smartCopyPlainText;
 	}
@@ -168,7 +158,7 @@ public class Actions
 	{
 		if(copyRtf == null)
 		{
-			copyRtf = new CopyRTF(this);
+			copyRtf = new CopyRTF(editor);
 		}
 		return copyRtf;
 	}
@@ -182,8 +172,14 @@ public class Actions
 	{
 		if(smartCopyRtf == null)
 		{
-			smartCopyRtf = new SmartCopyRTF(this);
+			smartCopyRtf = new SmartCopyRTF(editor);
 		}
 		return smartCopyRtf;
+	}
+	
+	
+	public FxAction delete()
+	{
+		return delete;
 	}
 }

@@ -1,6 +1,6 @@
 // Copyright © 2020-2021 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.op;
-import goryachev.fxtexteditor.Actions;
+import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.Marker;
 import goryachev.fxtexteditor.internal.FlowLine;
 import goryachev.fxtexteditor.internal.NavigationAction;
@@ -12,9 +12,9 @@ import goryachev.fxtexteditor.internal.NavigationAction;
 public class MoveDocumentEnd
 	extends NavigationAction
 {
-	public MoveDocumentEnd(Actions a)
+	public MoveDocumentEnd(FxTextEditor ed)
 	{
-		super(a);
+		super(ed);
 	}
 	
 

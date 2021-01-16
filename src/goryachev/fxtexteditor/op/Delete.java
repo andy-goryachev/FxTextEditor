@@ -1,7 +1,7 @@
 // Copyright © 2020-2021 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.op;
-import goryachev.fxtexteditor.Actions;
-import goryachev.fxtexteditor.internal.EditorAction;
+import goryachev.fxtexteditor.EditorAction;
+import goryachev.fxtexteditor.FxTextEditor;
 
 
 /**
@@ -10,9 +10,9 @@ import goryachev.fxtexteditor.internal.EditorAction;
 public class Delete
 	extends EditorAction
 {
-	public Delete(Actions a)
+	public Delete(FxTextEditor ed)
 	{
-		super(a);
+		super(ed);
 	}
 	
 
