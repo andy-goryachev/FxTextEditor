@@ -116,7 +116,7 @@ public class MainWindow
 		m.item("Redo");
 		m.separator();
 		m.item("Cut");
-		m.item("Copy", a.copy);
+		m.item("Copy", a.copy());
 		m.item("Paste");
 		m.separator();
 		m.item("Select All", a.selectAll);

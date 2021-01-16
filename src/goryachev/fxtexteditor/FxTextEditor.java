@@ -1,4 +1,4 @@
-// Copyright © 2019-2020 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2019-2021 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
@@ -727,66 +727,148 @@ public class FxTextEditor
 	/** copies all supported formats */
 	public void copy()
 	{
-		copy(null, getModel().getSupportedFormats(true));
+		copy(null, false, getModel().getSupportedFormats(true));
 	}
 	
 	
-	/** copies plain text */
+	/** copies all supported formats */
+	public void smartCopy()
+	{
+		copy(null, true, getModel().getSupportedFormats(true));
+	}
+	
+	
+	/** copies plain text selection to clipboard */
 	public void copyPlainText()
 	{
-		copy(null, DataFormat.PLAIN_TEXT);
+		copy(null, false, DataFormat.PLAIN_TEXT);
 	}
 	
 	
-	/** copies RTF */
+	/** copies plain text selection to clipboard, or all if selection is empty */
+	public void smartCopyPlainText()
+	{
+		copy(null, true, DataFormat.PLAIN_TEXT);
+	}
+	
+	
+	/** copies selection to clipboard in RTF format.  does nothing if RTF is not supported */
 	public void copyRTF()
 	{
 		DataFormat[] formats = getModel().getSupportedFormats(true);
 		if(CKit.contains(formats, DataFormat.RTF))
 		{
-			copy(null, DataFormat.RTF);
+			copy(null, false, DataFormat.RTF);
 		}
 	}
 	
 	
-	/** copies HTML */
+	/** copies selection to clipboard in RTF format, or all if no selection.  does nothing if RTF is not supported. */
+	public void smartCopyRTF()
+	{
+		DataFormat[] formats = getModel().getSupportedFormats(true);
+		if(CKit.contains(formats, DataFormat.RTF))
+		{
+			copy(null, true, DataFormat.RTF);
+		}
+	}
+	
+	
+	/** copies selection to clipboard in HTML format.  does nothing if HTML is not supported. */
 	public void copyHTML()
 	{
 		DataFormat[] formats = getModel().getSupportedFormats(true);
 		if(CKit.contains(formats, DataFormat.HTML))
 		{
-			copy(null, DataFormat.HTML);
+			copy(null, false, DataFormat.HTML);
 		}
 	}
 	
 	
-	/** copies specified formats to clipboard, using an error handler */
-	public void copy(Consumer<Throwable> errorHandler, DataFormat ... formats)
+	/** copies selection to clipboard in HTML format, or all if no selection.  does nothing if HTML is not supported. */
+	public void smartCopyHTML()
 	{
-		EditorSelection sel = getSelection();
-		if(sel == null)
+		DataFormat[] formats = getModel().getSupportedFormats(true);
+		if(CKit.contains(formats, DataFormat.HTML))
 		{
-			return;
+			copy(null, true, DataFormat.HTML);
 		}
+	}
+	
+	
+	/** copies specified formats to clipboard, using an error handler.  when smart=true, empty selection means all */
+	public void copy(Consumer<Throwable> errorHandler, boolean smart, DataFormat ... formats)
+	{
+		int startLine;
+		int startPos;
+		int endLine;
+		int endPos;
 		
-		SelectionSegment seg = sel.getSegment();
+		SelectionSegment seg = getNonEmptySelection();
 		if(seg == null)
 		{
-			return;
+			if(smart)
+			{
+				startLine = 0;
+				startPos = 0;
+				
+				endLine = getLineCount() - 1;
+				endPos = getTextLength(endLine);
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			startLine = seg.getMin().getLine();
+			startPos = seg.getMin().getCharIndex();
+			
+			endLine = seg.getMax().getLine();
+			endPos = seg.getMax().getCharIndex();
 		}
 		
-		if(seg.isEmpty())
+		if((startLine == endLine) && (startPos == endPos))
 		{
 			return;
 		}
-			
-		int startLine = seg.getMin().getLine();
-		int startPos = seg.getMin().getCharIndex();
 		
-		int endLine = seg.getMax().getLine();
-		int endPos = seg.getMax().getCharIndex();
-		
+		copy(startLine, startPos, endLine, endPos, errorHandler, formats);
+	}
+	
+	
+	protected SelectionSegment getNonEmptySelection()
+	{
+		EditorSelection sel = getSelection();
+		if(sel != null)
+		{
+			SelectionSegment seg = sel.getSegment();
+			if(seg != null)
+			{
+				if(!seg.isEmpty())
+				{
+					return seg;
+				}
+			}
+		}	
+		return null;
+	}
+
+
+	public void copy(int startLine, int startPos, int endLine, int endPos, Consumer<Throwable> errorHandler, DataFormat ... formats)
+	{
 		getModel().copyToClipboard(startLine, startPos, endLine, endPos, errorHandler, formats);
+	}
+	
+	
+	/** copies complete text in all supported formats */
+	public void copyAll()
+	{
+		FxTextEditorModel m = getModel();
+		int endLine = m.getLineCount() - 1;
+		int endPos = m.getTextLine(endLine).getTextLength();
+		copy(0, 0, endLine, endPos, null, m.getSupportedFormats(true));
 	}
 	
 

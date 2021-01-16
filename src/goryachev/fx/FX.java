@@ -1,4 +1,4 @@
-// Copyright © 2016-2020 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2016-2021 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
@@ -1786,5 +1786,14 @@ public final class FX
 		}
 
 		return showing.getReadOnlyProperty();
+	}
+	
+	
+	public static void onMousePressed(Node n, Runnable action)
+	{
+		n.addEventHandler(MouseEvent.MOUSE_PRESSED, (ev) ->
+		{
+			action.run();
+		});
 	}
 }

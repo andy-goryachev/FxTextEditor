@@ -1,4 +1,4 @@
-// Copyright © 2016-2020 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2016-2021 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
@@ -65,7 +65,7 @@ public class InputHandler
 		
 		// key map
 		KeyMap.onKeyPressed(ed, KeyCode.A, KeyMap.SHORTCUT, ed.actions.selectAll);
-		KeyMap.onKeyPressed(ed, KeyCode.C, KeyMap.SHORTCUT, ed.actions.copy);
+		KeyMap.onKeyPressed(ed, KeyCode.C, KeyMap.SHORTCUT, ed.actions.copy());
 		KeyMap.onKeyPressed(ed, KeyCode.BACK_SPACE, ed.actions.backspace);
 		KeyMap.onKeyPressed(ed, KeyCode.DELETE, ed.actions.delete);
 		KeyMap.onKeyPressed(ed, KeyCode.DOWN, ed.actions.moveDown);

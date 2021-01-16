@@ -42,11 +42,11 @@ public class MainPane
 	protected FxPopupMenu createPopupMenu()
 	{
 		FxPopupMenu p = new FxPopupMenu();
-		FxMenu m = p.menu("Copy", editor.actions.copy);
+		FxMenu m = p.menu("Copy", editor.actions.copy());
 		{
-			m.item("Copy Plain Text", editor.actions.copyPlainText);
-			m.item("Copy RTF", editor.actions.copyRTF);
-			m.item("Copy HTML", editor.actions.copyHTML);
+			m.item("Copy Plain Text", editor.actions.copyPlainText());
+			m.item("Copy RTF", editor.actions.copyRtf());
+			m.item("Copy HTML", editor.actions.copyHtml());
 		}
 		p.separator();
 		p.item("Select All", editor.actions.selectAll);
