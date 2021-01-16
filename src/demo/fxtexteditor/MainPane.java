@@ -55,7 +55,7 @@ public class MainPane
 			m.item("HTML", editor.actions.smartCopyHtml());
 		}
 		p.separator();
-		p.item("Select All", editor.actions.selectAll);
+		p.item("Select All", editor.actions.selectAll());
 		return p;
 	}
 	

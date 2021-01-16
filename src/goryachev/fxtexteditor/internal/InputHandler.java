@@ -64,20 +64,20 @@ public class InputHandler
 		vflow.addEventFilter(ScrollEvent.ANY, (ev) -> handleScrollWheel(ev));
 		
 		// key map
-		KeyMap.onKeyPressed(ed, KeyCode.A, KeyMap.SHORTCUT, ed.actions.selectAll);
+		KeyMap.onKeyPressed(ed, KeyCode.A, KeyMap.SHORTCUT, ed.actions.selectAll());
 		KeyMap.onKeyPressed(ed, KeyCode.C, KeyMap.SHORTCUT, ed.actions.copy());
 		KeyMap.onKeyPressed(ed, KeyCode.BACK_SPACE, ed.actions.backspace());
 		KeyMap.onKeyPressed(ed, KeyCode.DELETE, ed.actions.delete());
-		KeyMap.onKeyPressed(ed, KeyCode.DOWN, ed.actions.moveDown);
-		KeyMap.onKeyPressed(ed, KeyCode.END, ed.actions.moveEnd);
-		KeyMap.onKeyPressed(ed, KeyCode.END, KeyMap.SHORTCUT, ed.actions.moveDocumentEnd);
-		KeyMap.onKeyPressed(ed, KeyCode.HOME, ed.actions.moveHome);
-		KeyMap.onKeyPressed(ed, KeyCode.HOME, KeyMap.SHORTCUT, ed.actions.moveDocumentStart);
-		KeyMap.onKeyPressed(ed, KeyCode.LEFT, ed.actions.moveLeft);
-		KeyMap.onKeyPressed(ed, KeyCode.PAGE_DOWN, ed.actions.pageDown);
-		KeyMap.onKeyPressed(ed, KeyCode.PAGE_UP, ed.actions.pageUp);
-		KeyMap.onKeyPressed(ed, KeyCode.RIGHT, ed.actions.moveRight);
-		KeyMap.onKeyPressed(ed, KeyCode.UP, ed.actions.moveUp);
+		KeyMap.onKeyPressed(ed, KeyCode.DOWN, ed.actions.moveDown());
+		KeyMap.onKeyPressed(ed, KeyCode.END, ed.actions.moveEnd());
+		KeyMap.onKeyPressed(ed, KeyCode.END, KeyMap.SHORTCUT, ed.actions.moveDocumentEnd());
+		KeyMap.onKeyPressed(ed, KeyCode.HOME, ed.actions.moveHome());
+		KeyMap.onKeyPressed(ed, KeyCode.HOME, KeyMap.SHORTCUT, ed.actions.moveDocumentStart());
+		KeyMap.onKeyPressed(ed, KeyCode.LEFT, ed.actions.moveLeft());
+		KeyMap.onKeyPressed(ed, KeyCode.PAGE_DOWN, ed.actions.pageDown());
+		KeyMap.onKeyPressed(ed, KeyCode.PAGE_UP, ed.actions.pageUp());
+		KeyMap.onKeyPressed(ed, KeyCode.RIGHT, ed.actions.moveRight());
+		KeyMap.onKeyPressed(ed, KeyCode.UP, ed.actions.moveUp());
 		
 		// TODO remove?
 		ed.addEventFilter(KeyEvent.KEY_PRESSED, (ev) -> handleKeyPressed(ev));

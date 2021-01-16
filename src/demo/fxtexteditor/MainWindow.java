@@ -109,7 +109,7 @@ public class MainWindow
 		m.item("Copy", a.copy());
 		m.item("Paste");
 		m.separator();
-		m.item("Select All", a.selectAll);
+		m.item("Select All", a.selectAll());
 		m.item("Select Line");
 		m.item("Split Selection into Lines");
 		m.separator();

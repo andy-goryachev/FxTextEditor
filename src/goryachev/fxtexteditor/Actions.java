@@ -29,24 +29,23 @@ import goryachev.fxtexteditor.op.SmartCopyRTF;
  */
 public class Actions
 {
-	// TODO all private
 	private final FxAction backspace;
 	private final FxAction copy;
 	private FxAction copyHtml;
 	private FxAction copyPlainText;
 	private FxAction copyRtf;
-	private FxAction delete;
-	public FxAction moveDocumentEnd;
-	public FxAction moveDocumentStart;
-	public FxAction moveDown;
-	public FxAction moveEnd;
-	public FxAction moveHome;
-	public FxAction moveLeft;
-	public FxAction moveRight;
-	public FxAction moveUp;
-	public FxAction pageDown;
-	public FxAction pageUp;
-	public FxAction selectAll;
+	private final FxAction delete;
+	private final FxAction moveDocumentEnd;
+	private final FxAction moveDocumentStart;
+	private final FxAction moveDown;
+	private final FxAction moveEnd;
+	private final FxAction moveHome;
+	private final FxAction moveLeft;
+	private final FxAction moveRight;
+	private final FxAction moveUp;
+	private final FxAction pageDown;
+	private final FxAction pageUp;
+	private final FxAction selectAll;
 	private FxAction smartCopy;
 	private FxAction smartCopyHtml;
 	private FxAction smartCopyPlainText;
@@ -181,5 +180,71 @@ public class Actions
 	public FxAction delete()
 	{
 		return delete;
+	}
+	
+	
+	public FxAction moveDocumentEnd()
+	{
+		return moveDocumentEnd;
+	}
+	
+	
+	public FxAction moveDocumentStart()
+	{
+		return moveDocumentStart;
+	}
+	
+	
+	public FxAction moveDown()
+	{
+		return moveDown;
+	}
+	
+	
+	public FxAction moveEnd()
+	{
+		return moveEnd;
+	}
+	
+	
+	public FxAction moveHome()
+	{
+		return moveHome;
+	}
+	
+	
+	public FxAction moveLeft()
+	{
+		return moveLeft;
+	}
+	
+	
+	public FxAction moveRight()
+	{
+		return moveRight;
+	}
+	
+	
+	public FxAction moveUp()
+	{
+		return moveUp;
+	}
+	
+	
+	public FxAction pageDown()
+	{
+		return pageDown;
+	}
+	
+	
+	public FxAction pageUp()
+	{
+		return pageUp;
+	}
+	
+	
+	public FxAction selectAll()
+	{
+		return selectAll;
 	}
 }
