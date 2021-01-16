@@ -1,5 +1,6 @@
 // Copyright © 2020-2021 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal.plain;
+import goryachev.common.util.CKit;
 import goryachev.fxtexteditor.ITextSource;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -36,6 +37,8 @@ public class PlainTextWriter
 		boolean nl = false;
 		while((t = src.nextPlainTextLine()) != null)
 		{
+			CKit.checkCancelled();
+			
 			if(nl)
 			{
 				// TODO system line separator?

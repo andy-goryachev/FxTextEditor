@@ -50,6 +50,8 @@ public class HtmlWriter
 		boolean nl = false;
 		while((t = src.nextLine()) != null)
 		{
+			CKit.checkCancelled();
+			
 			if(nl)
 			{
 				writeNL();

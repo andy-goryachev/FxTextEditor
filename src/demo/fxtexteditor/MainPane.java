@@ -45,8 +45,14 @@ public class MainPane
 		FxMenu m = p.menu("Copy", editor.actions.copy());
 		{
 			m.item("Copy Plain Text", editor.actions.copyPlainText());
-			m.item("Copy RTF", editor.actions.copyRtf());
-			m.item("Copy HTML", editor.actions.copyHtml());
+			m.item("RTF", editor.actions.copyRtf());
+			m.item("HTML", editor.actions.copyHtml());
+		}
+		m = p.menu("Smart Copy", editor.actions.smartCopy());
+		{
+			m.item("Plain Text", editor.actions.smartCopyPlainText());
+			m.item("RTF", editor.actions.smartCopyRtf());
+			m.item("HTML", editor.actions.smartCopyHtml());
 		}
 		p.separator();
 		p.item("Select All", editor.actions.selectAll);

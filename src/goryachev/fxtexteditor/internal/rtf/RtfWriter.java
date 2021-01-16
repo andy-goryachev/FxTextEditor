@@ -62,6 +62,8 @@ public class RtfWriter
 		
 		while((t = src.nextLine()) != null)
 		{
+			CKit.checkCancelled();
+			
 			int start = src.getStart();
 			int end = src.getEnd();
 			collectColors(t, start, end);
@@ -76,6 +78,8 @@ public class RtfWriter
 		boolean nl = false;
 		while((t = src.nextLine()) != null)
 		{
+			CKit.checkCancelled();
+			
 			if(nl)
 			{
 				writeNL();

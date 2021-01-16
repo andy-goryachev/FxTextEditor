@@ -86,16 +86,6 @@ public class MainWindow
 	}
 	
 	
-	protected FxPopupMenu createPopupMenu()
-	{
-		FxPopupMenu m = new FxPopupMenu();
-		m.item("Cut");
-		m.item("Copy");
-		m.item("Paste");
-		return m;
-	}
-	
-	
 	protected Node createMenu()
 	{
 		FxMenuBar m = new FxMenuBar();
@@ -163,7 +153,9 @@ public class MainWindow
 		t.fill();
 		t.add(new Label("Font:"));
 		t.add(fontSelector);
+		t.space();
 		t.add(new Label("Model:"));
+		t.space(2);
 		t.add(modelSelector);
 		return t;
 	}
