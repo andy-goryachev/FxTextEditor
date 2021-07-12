@@ -8,6 +8,7 @@ import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.text.FontSmoothingType;
 
 
 /**
@@ -137,6 +138,19 @@ public class CssTools
 		else
 		{
 			return x.toString();
+		}
+	}
+	
+	
+	public static String toValue(FontSmoothingType t)
+	{
+		switch(t)
+		{
+		case LCD:
+			return "lcd";
+		case GRAY:
+		default:
+			return "gray";
 		}
 	}
 	

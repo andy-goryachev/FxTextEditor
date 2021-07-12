@@ -157,6 +157,22 @@ public class SB
 	}
 	
 	
+	/** appends json-escaped value */
+	public SB safeJson(Object x)
+	{
+		if(x == null)
+		{
+			sb.append("null");
+		}
+		else
+		{
+			String s = JsonDump.toJsonString(x);
+			sb.append(s);
+		}
+		return this;
+	}
+	
+	
 	// StringBuilder methods
 
 
@@ -526,6 +542,23 @@ public class SB
 	{
 		sb.getChars(srcBegin, srcEnd, dst, dstBegin);
 	}
+	
+	
+	public char[] getChars()
+	{
+		int sz = sb.length();
+		char[] rv = new char[sz];
+		sb.getChars(0, sz, rv, 0);
+		return rv;
+	}
+	
+	
+	public char[] getCharsAndClear()
+	{
+		char[] rv = getChars();
+		sb.setLength(0);
+		return rv;
+	}
 
 
 	public String getAndClear()
@@ -616,6 +649,19 @@ public class SB
 			sb.replace(ix, ix + 1, newText);
 			
 			start = ix + newText.length();
+		}
+	}
+	
+	
+	public void replace(char old, char newChar)
+	{
+		for(int i=sb.length()-1; i>=0; i--)
+		{
+			char c = sb.charAt(i);
+			if(c == old)
+			{
+				sb.setCharAt(i, newChar);
+			}
 		}
 	}
 	

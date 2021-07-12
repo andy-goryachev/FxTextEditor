@@ -2,7 +2,9 @@
 package goryachev.fx;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
+import goryachev.common.util.CList;
 import goryachev.common.util.CPlatform;
+import goryachev.common.util.Disconnectable;
 import goryachev.common.util.GlobalSettings;
 import goryachev.common.util.SystemTask;
 import goryachev.fx.hacks.FxHacks;
@@ -11,6 +13,8 @@ import goryachev.fx.internal.FxSchema;
 import goryachev.fx.internal.ParentWindow;
 import goryachev.fx.internal.WindowsFx;
 import goryachev.fx.table.FxTable;
+import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -20,6 +24,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.beans.Observable;
+import javafx.beans.WeakListener;
 import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
@@ -67,6 +72,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
@@ -87,6 +93,7 @@ public final class FX
 	public static final double ONE_OVER_GAMMA = 1.0 / GAMMA;
 	private static WindowsFx windowsFx = new WindowsFx();
 	private static Text helper;
+	private static final Object PROP_TOOLTIP = new Object();
 
 	
 	public static FxWindow getWindow(Node n)
@@ -134,6 +141,19 @@ public final class FX
 	{
 		windowsFx.restoreWindow(w);
 		GlobalSettings.save();
+	}
+	
+	
+	/** 
+	 * disables persisting of settings for this node only.  
+	 * the LocalSettings, and the settings for its children will still be persisted.
+	 */
+	public static void setSkipSettings(Node n)
+	{
+		if(n != null)
+		{
+			FxSchema.setSkipSettings(n);
+		}
 	}
 	
 	
@@ -323,10 +343,38 @@ public final class FX
 	}
 	
 	
-	/** apply styles to a Styleable */
+	/** adds a style to a Styleable */
 	public static void style(Styleable n, CssStyle style)
 	{
 		n.getStyleClass().add(style.getName());
+	}
+	
+	
+	/** adds or removes the specified style, depending on the condition */
+	public static void style(Styleable n, boolean condition, CssStyle st)
+	{
+		if(n == null)
+		{
+			return;
+		}
+		else if(st == null)
+		{
+			return;
+		}
+		
+		String name = st.getName();
+		ObservableList<String> ss = n.getStyleClass();
+		if(condition)
+		{
+			if(!ss.contains(name))
+			{
+				ss.add(st.getName());
+			}
+		}
+		else
+		{
+			ss.remove(name);
+		}
 	}
 	
 	
@@ -660,6 +708,26 @@ public final class FX
 			return t.get();
 		}
 	}
+	
+	
+	/** swing invokeAndWait() analog.  if called from an FX application thread, simply invokes the producer. */
+	public static void invokeAndWait(Runnable action) throws Exception
+	{
+		if(Platform.isFxApplicationThread())
+		{
+			action.run();
+		}
+		else
+		{
+			FutureTask<Boolean> t = new FutureTask<>(() ->
+			{
+				action.run();
+				return Boolean.TRUE;
+			});
+			FX.later(t);
+			t.get();
+		}
+	}
 
 
 	/** returns window decoration insets */
@@ -815,8 +883,46 @@ public final class FX
 		v = Math.pow(v, ONE_OVER_GAMMA);
 		return clip(v);
 	}
+	
+	
+	public static Color averageColors(List<Color> colors, double gamma)
+	{
+		int sz = colors.size();
+		
+		double red = 0.0;
+		double green = 0.0;
+		double blue = 0.0;
+		
+		for(int i=0; i<sz; i++)
+		{
+			Color c = colors.get(i);
+			double op = c.getOpacity();
+			
+			double r = c.getRed();
+			red += (Math.pow(r, gamma) * op);
+			
+			double g = c.getGreen();
+			green += (Math.pow(g, gamma) * op);
+			
+			double b = c.getBlue();
+			blue += (Math.pow(b, gamma) * op);
+		}
+		
+		double oneOverGamma = 1.0 / gamma;
+		red = clip(Math.pow(red / sz, oneOverGamma));
+		green = clip(Math.pow(green / sz, oneOverGamma));
+		blue = clip(Math.pow(blue / sz, oneOverGamma));
+
+		return Color.color(red, green, blue);
+	}
 
 	
+	public static Color averageColors(List<Color> colors)
+	{
+		return averageColors(colors, GAMMA);
+	}
+	
+
 	private static double clip(double c)
 	{
 		if(c < 0)
@@ -850,20 +956,52 @@ public final class FX
 
 	
 	/** sets a tool tip on the control. */
-	public static void setTooltip(Control n, Object tooltip)
+//	@Deprecated
+//	public static void setTooltip(Control n, Object tooltip)
+//	{
+//		if(tooltip == null)
+//		{
+//			n.setTooltip(null);
+//		}
+//		else if(tooltip instanceof Tooltip)
+//		{
+//			n.setTooltip((Tooltip)tooltip);
+//		}
+//		else
+//		{
+//			n.setTooltip(new Tooltip(tooltip.toString()));
+//		}
+//	}
+	
+	
+	/** attaches or removes (text=null) the Node's tooltip */
+	public static void setTooltip(Node n, String text)
 	{
-		if(tooltip == null)
+		if(n != null)
 		{
-			n.setTooltip(null);
+			if(text == null)
+			{
+				Tooltip t = getTooltip(n);
+				Tooltip.uninstall(n, t);
+				n.getProperties().remove(PROP_TOOLTIP);
+			}
+			else
+			{
+				Tooltip t = new Tooltip(text);
+				Tooltip.install(n, t);
+				n.getProperties().put(PROP_TOOLTIP, t);
+			}
 		}
-		else if(tooltip instanceof Tooltip)
+	}
+	
+	
+	private static Tooltip getTooltip(Node n)
+	{
+		if(n != null)
 		{
-			n.setTooltip((Tooltip)tooltip);
+			return (Tooltip)n.getProperties().get(PROP_TOOLTIP);
 		}
-		else
-		{
-			n.setTooltip(new Tooltip(tooltip.toString()));
-		}
+		return null;
 	}
 	
 	
@@ -903,34 +1041,6 @@ public final class FX
 		else
 		{
 			return val;
-		}
-	}
-	
-
-	/** adds or removes the specified style */
-	public static void setStyle(Node n, CssStyle st, boolean on)
-	{
-		if(n == null)
-		{
-			return;
-		}
-		else if(st == null)
-		{
-			return;
-		}
-		
-		String name = st.getName();
-		ObservableList<String> ss = n.getStyleClass();
-		if(on)
-		{
-			if(!ss.contains(name))
-			{
-				ss.add(st.getName());
-			}
-		}
-		else
-		{
-			ss.remove(name);
 		}
 	}
 	
@@ -989,15 +1099,36 @@ public final class FX
 	
 	
 	// from http://stackoverflow.com/questions/15593287/binding-textarea-height-to-its-content/19717901#19717901
-	public static FxSize getTextBounds(TextArea t, double width)
+	public static FxSize getTextBounds(TextArea textArea, double targetWidth)
+	{
+		String text = textArea.getText();
+		Font f = textArea.getFont();
+
+		Bounds r = computeTextBounds(text, f, targetWidth);
+		
+		Insets m = textArea.getInsets();
+		Insets p = textArea.getPadding();
+		double w = Math.ceil(r.getWidth() + m.getLeft() + m.getRight());
+		double h = Math.ceil(r.getHeight() + m.getTop() + m.getBottom());
+		
+		return new FxSize(w, h);
+	}
+	
+	
+	public static Bounds computeTextBounds(String text, Font f)
+	{
+		return computeTextBounds(text, f, -1);
+	}
+	
+	
+	public static Bounds computeTextBounds(String text, Font f, double targetWidth)
 	{
 		if(helper == null)
 		{
 			helper = new Text();
 		}
-		
-		String text = t.getText();
-		if(width < 0)
+
+		if(targetWidth < 0)
 		{
 			// Note that the wrapping width needs to be set to zero before
 			// getting the text's real preferred width.
@@ -1005,19 +1136,15 @@ public final class FX
 		}
 		else
 		{
-			helper.setWrappingWidth(width);
+			helper.setWrappingWidth(targetWidth);
 		}
+		
 		helper.setText(text);
-		helper.setFont(t.getFont());
-		Bounds r = helper.getLayoutBounds();
-		
-		Insets m = t.getInsets();
-		Insets p = t.getPadding();
-		double w = Math.ceil(r.getWidth() + m.getLeft() + m.getRight());
-		double h = Math.ceil(r.getHeight() + m.getTop() + m.getBottom());
-		
-		return new FxSize(w, h);
+		helper.setFont(f);
+
+		return helper.getLayoutBounds();
 	}
+
 	
 
 	/** requests focus in Platform.runLater() */
@@ -1070,6 +1197,29 @@ public final class FX
 	public static List<Window> getWindows()
 	{
 		return FxHacks.get().getWindows();
+	}
+	
+	
+	/** 
+	 * attaches a double click handler to a node.
+	 */
+	public static void onDoubleClick(Node owner, Runnable handler)
+	{
+		if(owner == null)
+		{
+			throw new NullPointerException("cannot attach a double click handler to null");
+		}
+		
+		owner.addEventHandler(MouseEvent.MOUSE_CLICKED, (ev) ->
+		{
+			if(ev.getClickCount() == 2)
+			{
+				if(ev.getButton() == MouseButton.PRIMARY)
+				{
+					handler.run();
+				}
+			}
+		});
 	}
 	
 	
@@ -1472,17 +1622,41 @@ public final class FX
 	
 	
 	/** simplified version of addChangeListener that only invokes the callback on change */
-	public static void addChangeListener(Runnable callback, boolean fireImmediately, ObservableValue<?> ... props)
+	public static Disconnectable addChangeListener(Runnable callback, boolean fireImmediately, ObservableValue<?> ... props)
 	{
+		FxChangeListener li = new FxChangeListener(callback);
 		for(ObservableValue<?> p: props)
 		{
-			p.addListener((s,pr,current) -> callback.run());
+			li.listen(p);
 		}
 		
 		if(fireImmediately)
 		{
-			callback.run();
+			li.fire();
 		}
+		
+		return li;
+	}
+	
+	
+	/** 
+	 * A simplified version of addChangeListener that only invokes the callback on change, 
+	 * uses FxDisconnector to allow for easy removal of the listener.
+	 */
+	public static void addChangeListener(FxDisconnector d, Runnable callback, boolean fireImmediately, ObservableValue<?> ... props)
+	{
+		FxChangeListener li = new FxChangeListener(callback);
+		for(ObservableValue<?> p: props)
+		{
+			li.listen(p);
+		}
+		
+		if(fireImmediately)
+		{
+			li.fire();
+		}
+		
+		d.addDisconnectable(li);
 	}
 
 
@@ -1524,6 +1698,133 @@ public final class FX
 	public static Insets insets(double gap)
 	{
 		return new Insets(gap);
+	}
+	
+	
+	// FIX own file
+	public static <S,T> void bindContentWithTransform(ObservableList<? extends S> source, ObservableList<T> target, Function<S,T> converter)
+	{
+		ListContentBinding.bind(source, target, converter);
+	}
+	
+	
+	private static class ListContentBinding<S,T>
+		implements ListChangeListener<S>, WeakListener
+	{
+		private final Function<S,T> converter;
+		private final WeakReference<List<T>> ref;
+		
+
+		public ListContentBinding(List<T> target, Function<S,T> converter)
+		{
+			this.ref = new WeakReference<List<T>>(target);
+			this.converter = converter;
+		}
+		
+		
+		public static <S,T> void bind(ObservableList<? extends S> source, ObservableList<T> target, Function<S,T> converter)
+		{
+			ListContentBinding<S,T> li = new ListContentBinding<S,T>(target, converter);
+			target.setAll(transform(source, converter));
+			source.removeListener(li);
+			source.addListener(li);
+		}
+		
+		
+		protected T transform(S item)
+		{
+			return converter.apply(item);
+		}
+		
+		
+		protected static <S,T> List<T> transform(List<? extends S> items, Function<S,T> converter)
+		{
+			int sz = items.size();
+			CList<T> rv = new CList<T>(sz);
+			for(int i=0; i<sz; i++)
+			{
+				S item = items.get(i);
+				T val = converter.apply(item);
+				rv.add(val);
+			}
+			return rv;
+		}
+
+
+		@Override
+		public void onChanged(Change<? extends S> ch)
+		{
+			List<T> target = ref.get();
+			if(target == null)
+			{
+				ch.getList().removeListener(this);
+				return;
+			}
+			
+			while(ch.next())
+			{
+				if(ch.wasPermutated())
+				{
+					target.subList(ch.getFrom(), ch.getTo()).clear();
+					target.addAll(ch.getFrom(), transform(ch.getList().subList(ch.getFrom(), ch.getTo()), converter));
+				}
+				else
+				{
+					if(ch.wasRemoved())
+					{
+						target.subList(ch.getFrom(), ch.getFrom() + ch.getRemovedSize()).clear();
+					}
+					
+					if(ch.wasAdded())
+					{
+						target.addAll(ch.getFrom(), transform(ch.getAddedSubList(), converter));
+					}
+				}
+			}
+		}
+
+
+		@Override
+		public boolean wasGarbageCollected()
+		{
+			return ref.get() == null;
+		}
+
+
+		@Override
+		public int hashCode()
+		{
+			Object me = ref.get();
+			if(me == null)
+			{
+				return 0;
+			}
+			return me.hashCode();
+		}
+
+
+		@Override
+		public boolean equals(Object x)
+		{
+			if(this == x)
+			{
+				return true;
+			}
+
+			Object me = ref.get();
+			if(me == null)
+			{
+				return false;
+			}
+			else if(x instanceof ListContentBinding)
+			{
+				return me == ((ListContentBinding)x).ref.get();
+			}
+			else
+			{
+				return false;
+			}
+		}
 	}
 	
 	
@@ -1795,5 +2096,12 @@ public final class FX
 		{
 			action.run();
 		});
+	}
+
+
+	public static void openFile(File file)
+	{
+		String uri = file.toURI().toString();
+		FxApplication.getInstance().getHostServices().showDocument(uri);
 	}
 }

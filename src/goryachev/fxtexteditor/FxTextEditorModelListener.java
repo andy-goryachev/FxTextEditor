@@ -27,7 +27,7 @@ public interface FxTextEditorModelListener
 	 * @param startLine - first marker line
 	 * @param startPos - first marker position (0 ... length)
 	 * @param startCharsAdded - number of characters inserted after startPos on the startLine
-	 * @param linesAdded - number of lines inserted between (and not counting) startLine and endLine
+	 * @param linesAdded - number of lines inserted between (and not counting) startLine and endLine (FIX unnecessary)
 	 * @param endLine - second marker line
 	 * @param endPos - second marker position
 	 * @param endCharsAdded - number of characters inserted before endPos on the endLine

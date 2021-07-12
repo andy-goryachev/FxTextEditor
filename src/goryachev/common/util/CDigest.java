@@ -60,6 +60,18 @@ public class CDigest
 	}
 	
 	
+	public void updateByte(byte b)
+	{
+		md.update(b);
+	}
+	
+	
+	public void updateByte(int b)
+	{
+		md.update((byte)b);
+	}
+	
+	
 	public void update(byte[] b)
 	{
 		md.update(b);

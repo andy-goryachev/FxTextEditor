@@ -9,6 +9,7 @@ import goryachev.fxtexteditor.op.CopyPlainText;
 import goryachev.fxtexteditor.op.CopyRTF;
 import goryachev.fxtexteditor.op.Delete;
 import goryachev.fxtexteditor.op.MoveDocumentEnd;
+import goryachev.fxtexteditor.op.MoveDocumentEndAtPos0;
 import goryachev.fxtexteditor.op.MoveDocumentStart;
 import goryachev.fxtexteditor.op.MoveDown;
 import goryachev.fxtexteditor.op.MoveEnd;
@@ -37,6 +38,7 @@ public class Actions
 	private FxAction copyRtf;
 	private final FxAction delete;
 	private final FxAction moveDocumentEnd;
+	private MoveDocumentEndAtPos0 moveDocumentEndAtPos0;
 	private final FxAction moveDocumentStart;
 	private final FxAction moveDown;
 	private final FxAction moveEnd;
@@ -212,6 +214,16 @@ public class Actions
 	public FxAction moveDocumentEnd()
 	{
 		return moveDocumentEnd;
+	}
+	
+	
+	public MoveDocumentEndAtPos0 moveDocumentEndAtPos0()
+	{
+		if(moveDocumentEndAtPos0 == null)
+		{
+			moveDocumentEndAtPos0 = new MoveDocumentEndAtPos0(editor);
+		}
+		return moveDocumentEndAtPos0;
 	}
 	
 	

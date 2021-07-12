@@ -58,7 +58,7 @@ public class VFlow
 	protected final FxBoolean caretEnabledProperty = new FxBoolean(true);
 	protected final FxBoolean suppressBlink = new FxBoolean(false);
 	protected final BooleanExpression paintCaret;
-	protected final ScreenBuffer buffer = new ScreenBuffer(this);
+	protected final ScreenBuffer screenBuffer = new ScreenBuffer(this);
 	private Timeline cursorAnimation;
 	private boolean cursorEnabled = true;
 	private boolean cursorOn = true;
@@ -775,14 +775,14 @@ public class VFlow
 			
 			FX.later(() ->
 			{
-				long start = System.currentTimeMillis();
+				long start = System.nanoTime();
 				try
 				{
 					paintAll();
 				}
 				finally
 				{
-					long elapsed = System.currentTimeMillis() - start;
+					long elapsed = (System.nanoTime() - start) / 1_000_000L;
 					if(elapsed > 100)
 					{
 						log.warn("paintAll: %d", elapsed);
@@ -943,7 +943,7 @@ public class VFlow
 		{
 			try
 			{
-				ScreenRow r = buffer.getRow(y);
+				ScreenRow r = screenBuffer.getRow(y);
 				if(r.getLineNumber() < 0)
 				{
 					return true;
@@ -1022,7 +1022,7 @@ public class VFlow
 			updateHorizontalScrollBarSize();
 			updateVerticalScrollBarSize();
 		}
-		return buffer;
+		return screenBuffer;
 	}
 	
 	
@@ -1053,7 +1053,7 @@ public class VFlow
 	
 	public void reset()
 	{
-		buffer.reset();		
+		screenBuffer.reset();		
 		clearFlowLineCache();
 		
 		invalidate();
@@ -1091,7 +1091,7 @@ public class VFlow
 		
 		int bufferWidth = screenColumnCount + 1;
 		int bufferHeight = screenRowCount + 1;
-		buffer.setSize(bufferWidth, bufferHeight);
+		screenBuffer.setSize(bufferWidth, bufferHeight);
 		
 		ITabPolicy tabPolicy = editor.getTabPolicy();
 		int lineCount = getModelLineCount();
@@ -1134,7 +1134,7 @@ public class VFlow
 				
 				int lineNumber = (line <= lineCount) ? line : -1;
 				
-				ScreenRow r = buffer.getRow(y);
+				ScreenRow r = screenBuffer.getRow(y);
 				r.init(fline, wr, lineNumber, row, startGlyphIndex);
 				
 				++row;
@@ -1160,7 +1160,7 @@ public class VFlow
 				
 				int lineNumber = (line <= lineCount) ? line : -1;
 				
-				ScreenRow r = buffer.getRow(y);
+				ScreenRow r = screenBuffer.getRow(y);
 				r.init(fline, wr, lineNumber, 0, startGlyphIndex);
 				
 				line++;
@@ -1210,7 +1210,7 @@ public class VFlow
 		
 		boolean wrap = isWrapLines();
 		boolean showLineNumbers = editor.isShowLineNumbers();
-		ScreenBuffer b = buffer();
+		ScreenBuffer buffer = buffer();
 		
 		int xmax = screenColumnCount;
 		if(!wrap)
@@ -1231,7 +1231,7 @@ public class VFlow
 			// https://bugs.openjdk.java.net/browse/JDK-8103438
 			gx.clearRect(0, y * tm.cellHeight + 0.5, getWidth(), tm.cellHeight);
 			
-			ScreenRow row = b.getScreenRow(y);
+			ScreenRow row = buffer.getScreenRow(y);
 
 			if(showLineNumbers)
 			{

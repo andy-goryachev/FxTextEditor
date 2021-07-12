@@ -5,6 +5,7 @@ import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.text.FontSmoothingType;
 
 
 /**
@@ -75,6 +76,7 @@ public class StandardFxProperties
 	public static FxCssProp fixedCellSize(Object x) { return new FxCssProp("-fx-fixed-cell-size", x); }
 	public static FxCssProp fontFamily(Object x) { return new FxCssProp("-fx-font-family", x); }
 	public static FxCssProp fontSize(Object x) { return new FxCssProp("-fx-font-size", x); }
+	public static FxCssProp fontSmoothingType(FontSmoothingType x) { return new FxCssProp("-fx-font-smoothing-type", CssTools.toValue(x)); }
 	/** normal | italic | oblique */
 	public static FxCssProp fontStyle(Object x) { return new FxCssProp("-fx-font-style", x); }
 	/** [ normal | bold | bolder | lighter | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 ] */
@@ -83,6 +85,7 @@ public class StandardFxProperties
 	public static FxCssProp hBarPolicy(ScrollPane.ScrollBarPolicy x) { return new FxCssProp("-fx-hbar-policy", CssTools.toValue(x)); }
 	// L
 	public static FxCssProp labelPadding(Object x) { return new FxCssProp("-fx-label-padding", x); }
+	public static FxCssProp labelPadding(double top, double right, double bottom, double left) { return new FxCssProp("-fx-label-padding", spaces(top, right, bottom, left)); }
 	// M
 	public static FxCssProp maxHeight(double x) { return new FxCssProp("-fx-max-height", x); }
 	public static FxCssProp maxHeight(Object x) { return new FxCssProp("-fx-max-height", x); }
@@ -101,11 +104,13 @@ public class StandardFxProperties
 	public static FxCssProp padding(double top, double right, double bottom, double left) { return new FxCssProp("-fx-padding", spaces(top, right, bottom, left)); }
 	public static FxCssProp prefHeight(double x) { return new FxCssProp("-fx-pref-height", x); }
 	public static FxCssProp prefWidth(double x) { return new FxCssProp("-fx-pref-width", x); }
+	public static FxCssProp prefWidth(String x) { return new FxCssProp("-fx-pref-width", x); }
 	// R
 	public static FxCssProp regionBackground(Object x) { return new FxCssProp("-fx-region-background", CssTools.toValue(x)); }
 	// S
 	public static FxCssProp scaleShape(boolean x) { return new FxCssProp("-fx-shape", CssTools.toValue(x)); }
 	public static FxCssProp shape(Object x) { return new FxCssProp("-fx-shape", CssTools.toQuotedString(x)); }
+	public static FxCssProp smooth(boolean x) { return new FxCssProp("-fx-smooth", CssTools.toValue(x)); }
 	public static FxCssProp stroke(Object x) { return new FxCssProp("-fx-stroke", CssTools.toColor(x)); }
 	public static FxCssProp strokeLineCap(StrokeLineCap x) { return new FxCssProp("-fx-stroke-width", CssTools.toValue(x)); }
 	public static FxCssProp strokeWidth(double x) { return new FxCssProp("-fx-stroke-width", x); }

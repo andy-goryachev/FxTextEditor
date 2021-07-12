@@ -79,7 +79,7 @@ public class FxStyleSheet
 			}
 			else if(x != null)
 			{
-				throw new Error("?" + x);
+				sb.append(x);
 			}
 		}
 	}

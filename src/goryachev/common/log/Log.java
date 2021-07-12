@@ -63,8 +63,14 @@ public class Log
 	
 	public static void initForDebug()
 	{
+		initAll(LogLevel.DEBUG);
+	}
+	
+	
+	public static void initAll(LogLevel level)
+	{
 		SimpleLogConfig c = new SimpleLogConfig();
-		c.setDefaultLogLevel(LogLevel.INFO);
+		c.setDefaultLogLevel(level);
 		c.addAppender(new ConsoleAppender(System.out));
 		setConfig(c);
 	}
@@ -206,9 +212,11 @@ public class Log
 	}
 	
 	
-	public static void setLevel(String channel, LogLevel level)
+	/** sets log level for a specific log, does not update children */
+	public static synchronized void setLevel(String channel, LogLevel level)
 	{
-		// TODO
+		Log log = get(channel);
+		log.setLevel(level);
 	}
 	
 	

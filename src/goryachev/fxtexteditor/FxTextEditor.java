@@ -882,6 +882,12 @@ public class FxTextEditor
 	}
 	
 	
+	public void scrollCaretToView()
+	{
+		vflow.scrollCaretToView();
+	}
+	
+	
 	public void select(int startLine, int startPos, int endLine, int endPos)
 	{
 		Marker start = markers.newMarker(startLine, startPos);

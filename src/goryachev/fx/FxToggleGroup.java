@@ -22,4 +22,10 @@ public class FxToggleGroup
 	public FxToggleGroup()
 	{
 	}
+	
+	
+	public void add(ToggleButton b)
+	{
+		b.setToggleGroup(this);
+	}
 }

@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
  */
 public class ScreenRow
 {
-	private FlowLine fline = FlowLine.BLANK;
+	private FlowLine flowLine = FlowLine.BLANK;
 	private WrapInfo wrap;
 	private int lineNumber;
 	private int wrapRow;
@@ -26,7 +26,7 @@ public class ScreenRow
 	
 	public FlowLine getFlowLine()
 	{
-		return fline;
+		return flowLine;
 	}
 	
 	
@@ -38,7 +38,7 @@ public class ScreenRow
 
 	public ITextLine getTextLine()
 	{
-		return fline.getTextLine();
+		return flowLine.getTextLine();
 	}
 	
 	
@@ -65,7 +65,7 @@ public class ScreenRow
 
 	public void init(FlowLine fline, WrapInfo wrap, int lineNumber, int wrapRow, int startGlyphIndex)
 	{
-		this.fline = fline;
+		this.flowLine = fline;
 		this.wrap = wrap;
 		this.lineNumber = lineNumber;
 		this.wrapRow = wrapRow;
@@ -104,7 +104,7 @@ public class ScreenRow
 		}
 		
 		int gix = cell.getGlyphIndex();
-		return fline.glyphInfo().getGlyphText(gix);
+		return flowLine.glyphInfo().getGlyphText(gix);
 	}
 	
 
@@ -118,8 +118,8 @@ public class ScreenRow
 		}
 		
 		int gix = cell.getGlyphIndex();
-		int charIndex = fline.glyphInfo().getCharIndex(gix);
-		return fline.getCellStyle(charIndex);
+		int charIndex = flowLine.glyphInfo().getCharIndex(gix);
+		return flowLine.getCellStyle(charIndex);
 	}
 	
 	

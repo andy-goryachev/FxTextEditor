@@ -22,6 +22,13 @@ public class SKey
 	}
 	
 	
+	public static SKey format(String format, Object ... args)
+	{
+		String s = String.format(format, args);
+		return new SKey(s);
+	}
+	
+	
 	public String toString()
 	{
 		return key;
