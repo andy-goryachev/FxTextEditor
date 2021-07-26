@@ -168,6 +168,12 @@ public class ElasticByteArray
 	}
 	
 	
+	public String toString()
+	{
+		return super.toString();
+	}
+	
+	
 	public String toString(Charset cs)
 	{
 		return new String(array, 0, size, cs);

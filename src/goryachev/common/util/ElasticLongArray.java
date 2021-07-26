@@ -30,14 +30,14 @@ public class ElasticLongArray
 	
 	public long get(int index)
 	{
-		try
-		{
+//		try
+//		{
 			return array[index];
-		}
-		catch(ArrayIndexOutOfBoundsException e)
-		{
-			return 0;
-		}
+//		}
+//		catch(ArrayIndexOutOfBoundsException e)
+//		{
+//			return 0;
+//		}
 	}
 	
 	

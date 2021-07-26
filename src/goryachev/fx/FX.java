@@ -766,6 +766,12 @@ public final class FX
 	}
 	
 	
+	public static String getName(Node n)
+	{
+		return FxSchema.getName(n);
+	}
+	
+	
 	/** 
 	 * attaches a handler to be notified when settings for the node have been loaded.  
 	 * setting null clears the handler 

@@ -106,7 +106,7 @@ public class EditableModel
 				lines.remove(i);
 			}
 			
-			fireTextUpdated(line0, pos0, added.length(), line0-line2, line2, pos2, 0);
+			fireTextAltered(line0, pos0, line2, pos2, added.length(), line0-line2, 0);
 			// TODO reverse Edit
 			return null;
 		}
@@ -150,7 +150,7 @@ public class EditableModel
 				lines.remove(i);
 			}
 			
-			fireTextUpdated(line0, pos0, added[0].length(), line0-line2+added.length-1, line2, pos2, added[last].length());
+			fireTextAltered(line0, pos0, line2, pos2, added[0].length(), line0-line2+added.length-1, added[last].length());
 			// TODO reverse Edit
 			return null;
 		}
@@ -220,7 +220,7 @@ public class EditableModel
 					throw new Error("line=" + line0 + " lineCount=" + getLineCount());
 				}
 				
-				fireTextUpdated(line0, p0, add.length(), 0, line0, p1, 0);
+				fireTextAltered(line0, p0, p1, add.length());
 				return null;
 			}
 			else

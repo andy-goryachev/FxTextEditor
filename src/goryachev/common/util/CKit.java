@@ -1525,9 +1525,14 @@ public final class CKit
 	}
 
 
-	public static void checkCancelled() throws CancelledException
+	/** 
+	 * checks whether the current thread has been interrupted or low memory condition exists.
+	 * if interrupted - throws CancelledException
+	 * if low memory condition - throws LowMemoryException
+	 */
+	public static void checkCancelled() throws CancelledException,LowMemoryException
 	{
-		if(isCancelled())
+		if(Thread.interrupted())
 		{
 			throw new CancelledException();
 		}
@@ -1535,25 +1540,6 @@ public final class CKit
 		if(isLowMemory())
 		{
 			throw new LowMemoryException();
-		}
-	}
-	
-	
-	public static boolean isCancelled()
-	{
-		return isCancelled(Thread.currentThread());
-	}
-	
-	
-	public static boolean isCancelled(Thread t)
-	{
-		if(t instanceof CancellableThread)
-		{
-			return ((CancellableThread)t).isCancelled();
-		}
-		else
-		{
-			return t.isInterrupted();
 		}
 	}
 	

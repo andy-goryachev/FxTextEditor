@@ -556,11 +556,10 @@ public class FileTools
 	}
 
 
-	public static void createZeroLengthFile(File f) throws Exception
+	public static void createNewFile(File f) throws Exception
 	{
 		ensureParentFolder(f);
-		FileOutputStream os = new FileOutputStream(f);
-		CKit.close(os);
+		f.createNewFile();
 	}
 	
 	

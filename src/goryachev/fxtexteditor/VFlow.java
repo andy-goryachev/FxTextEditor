@@ -540,6 +540,14 @@ public class VFlow
 			{
 				Object x = fmt.formatLineNumber(lastLine);
 				count = Math.max(minLineNumberCellCount, x.toString().length());
+
+				// last line may not have a valid line or formatted value
+				if(lastLine >= 2)
+				{
+					x = fmt.formatLineNumber(lastLine - 2);
+					int ct = Math.max(minLineNumberCellCount, x.toString().length());
+					count = Math.max(count, ct);
+				}
 			}
 		}
 		else

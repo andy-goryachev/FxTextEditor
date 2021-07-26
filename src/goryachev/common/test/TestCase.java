@@ -73,7 +73,7 @@ public class TestCase
 	public static void print(Object x)
 	{
 		TestCase tc = get();
-		if(tc == null)
+		if((tc == null) || TF.isForcePrint())
 		{
 			System.out.println(x);	
 		}

@@ -11,6 +11,22 @@ import java.util.function.BiFunction;
 /** Simple test framework */
 public class TF
 {
+	private static boolean forcePrint;
+
+	
+	
+	public static void setForcePrint(boolean on)
+	{
+		forcePrint = on;
+	}
+	
+	
+	public static boolean isForcePrint()
+	{
+		return forcePrint;
+	}
+	
+
 	/** checks if two arguments are CKit.equals() and throws a meaningful exception if not */
 	public static void eq(Object value, Object expected)
 	{

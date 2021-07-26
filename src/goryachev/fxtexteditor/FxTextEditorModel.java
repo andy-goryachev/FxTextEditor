@@ -127,24 +127,52 @@ public abstract class FxTextEditorModel
 	
 	
 	/**
-	 * Informs the listeners about the model change.
+	 * Informs the listeners about the model text change.
 	 * 
-	 * A model mutation must be performed in the FX application thread, 
-	 * involve a single contiguous block, and be followed by calling this method.
+	 * <pre>
+	 * 1. the two positions in the model are noted: (line1, charIndex1) and (line2, charIndex2).
+	 * 2. all characters between these two positions are deleted.
+	 * 3. new characters are added, as described by (charsAdded1, linesAdded, charsAdded2).
 	 * 
-	 * @param startLine - line index where the change begins
-	 * @param startPos - character index where the change begins
-	 * @param startCharsInserted - the number of characters inserted at (startLine,startPos)
-	 * @param linesInserted - the number of lines inserted between startLine and endLine
-	 * @param endLine - line index where the change ends
-	 * @param endPos - character index where the change ends
-	 * @param endCharsInserted - the number of characters inserted at (endLine,endPos)
+	 * Before:
+	 *       line1 ->  TTTTTTT|DDDDD                      | charIndex1 = 7
+	 *                 DDDDDDDDDD                         |
+	 *       line2 ->  DDDD|TTTTTTTTTTTT                  | charIndex2 = 4
 	 * 
-	 * These arguments deal with indexes in order to avoid passing any text strings. 
+	 * After:
+	 *       line1 ->  TTTTTTT|II                         | charsAdded1 = 2
+	 *                 IIII                               | linesAdded = 2
+	 *     endLine ->  I|TTTTTTTTTTTT                     | charsAdded2 = 1
+	 *     
+	 * where endline = line1 + linesAdded
+	 * </pre>
+	 * 
+	 * @param line1 - first marker line
+	 * @param charIndex1 - first marker position (0 ... length)
+	 * @param line2 - second marker line
+	 * @param charIndex2 - second marker position
+	 * @param charsAdded1 - number of characters inserted after charIndex1 on line1
+	 * @param linesAdded - number of lines inserted between (and not counting) line1 and line2
+	 * @param charsAdded2 - number of characters inserted before (original) charIndex2 on line2
+	 * 
+	 * These arguments deal with indexes in order to avoid passing any text strings.
+	 * 
+	 * @see FxTextEditorModelListener#eventTextAltered
 	 */
-	public void fireTextUpdated(int startLine, int startPos, int startCharsInserted, int linesInserted, int endLine, int endPos, int endCharsInserted)
+	public void fireTextAltered(int line1, int charIndex1, int line2, int charIndex2, int charsInserted1, int linesInserted, int charsInserted2)
 	{
-		fireEvent((li) -> li.eventTextUpdated(startLine, startPos, startCharsInserted, linesInserted, endLine, endPos, endCharsInserted));
+		fireEvent((li) -> li.eventTextAltered(line1, charIndex1, line2, charIndex2, charsInserted1, linesInserted, charsInserted2));
+	}
+	
+	
+	/**
+	 * A simplified method to be used when the edit start and end points are on the same line.
+	 * 
+	 * @see #fireTextAltered(int line1, int charIndex1, int line2, int charIndex2, int charsInserted1, int linesInserted, int charsInserted2)
+	 */
+	public void fireTextAltered(int line, int charIndex1, int charIndex2, int charsInserted)
+	{
+		fireTextAltered(line, charIndex1, line, charIndex2, charsInserted, 0, 0);
 	}
 	
 	

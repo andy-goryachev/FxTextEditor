@@ -61,7 +61,8 @@ public abstract class WrapInfo
 	{
 		if(width == 0)
 		{
-			throw new Error("should not attempt to create WrapInfo with 0 width");
+//			throw new Error("should not attempt to create WrapInfo with 0 width");
+			return EMPTY;
 		}
 		
 		int lineIndex = fline.getModelIndex();

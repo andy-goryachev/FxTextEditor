@@ -452,7 +452,7 @@ public class FxSchema
 	}
 	
 	
-	private static String getName(Node n)
+	public static String getName(Node n)
 	{
 		Object x = n.getProperties().get(PROP_NAME);
 		if(x instanceof String)

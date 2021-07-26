@@ -97,4 +97,12 @@ public class FxToolBar
 		add(b);
 		return b;
 	}
+	
+	
+	public FxToggleButton addToggleButton(String text, String tooltip, Property<Boolean> prop)
+	{
+		FxToggleButton b =new FxToggleButton(text, tooltip, prop);
+		add(b);
+		return b;
+	}
 }

@@ -1,7 +1,7 @@
 // Copyright © 2016-2021 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx.table;
 import goryachev.common.util.CKit;
-import goryachev.common.util.D;
+import goryachev.fx.FX;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -62,6 +62,50 @@ public class FxTableColumn<ITEM,CELL>
 	{
 		alignment = a;
 		return this;
+	}
+	
+	
+	/** convenience method sets right cell alignment */
+	public FxTableColumn<ITEM,CELL> setRightAlignment()
+	{
+		setAlignment(Pos.CENTER_RIGHT);
+		return this;
+	}
+	
+	
+	/** sets the name of the column as its tooltip */
+	@Deprecated // FIX or remove
+	public void setToolTip()
+	{
+		String text = getText();
+		setToolTip(text);
+	}
+	
+	
+	/** sets a tooltip on the column header TODO: DOES NOT WORK */
+	@Deprecated // FIX or remove
+	public void setToolTip(String text)
+	{
+		/** 
+		 * oops not that easy: https://stackoverflow.com/questions/23224826/how-to-add-a-tooltip-to-a-tableview-header-cell-in-javafx-8
+		 * 
+	    TableColumn<Person, String> firstNameCol = new TableColumn<>();
+	    Label firstNameLabel = new Label("First Name");
+	    firstNameLabel.setTooltip(new Tooltip("This column shows the first name"));
+	    firstNameCol.setGraphic(firstNameLabel);
+	    
+	    nameLabel.textProperty().bindBidirectional(textProperty());
+		nameLabel.getStyleClass().add("column-header-label");
+		nameLabel.setMaxWidth(Double.MAX_VALUE); //Makes it take up the full width of the table column header and tooltip is shown more easily.
+		
+		.table-view .column-header .label{
+		    -fx-content-display: graphic-only;
+		}
+		.table-view .column-header .label .column-header-label{
+		    -fx-content-display: text-only;
+		}
+	    */
+		//FX.setTooltip(this, text);
 	}
 	
 	
@@ -130,6 +174,7 @@ public class FxTableColumn<ITEM,CELL>
 	public FxTableColumn<ITEM,CELL> setRealPrefWidth(double width)
 	{
 		setMaxWidth(width * 100);
+		setPrefWidth(width);
 		return this;
 	}
 	
