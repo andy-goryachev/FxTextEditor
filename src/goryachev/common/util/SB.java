@@ -1,6 +1,7 @@
 // Copyright © 2010-2021 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Formatter;
 import java.util.Map;
@@ -340,6 +341,19 @@ public class SB
 	public SB insert(int offset, char c)
 	{
 		sb.insert(offset, c);
+		return this;
+	}
+	
+	
+	public SB insert(int offset, char c, int count)
+	{
+		if(count > 0)
+		{
+			char[] cs = new char[count];
+			Arrays.fill(cs, c);
+			
+			sb.insert(offset, cs);
+		}
 		return this;
 	}
 

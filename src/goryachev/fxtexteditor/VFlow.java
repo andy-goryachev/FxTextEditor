@@ -75,6 +75,7 @@ public class VFlow
 	private int screenRowCount;
 	private int lineNumbersCellCount;
 	private int lineNumbersBarWidth;
+	private int[] lineNumbersColumnWidths;
 	private int minLineNumberCellCount = 3; // arbitrary number
 	private int lineNumbersGap = 5; // arbitrary number
 	private Color textColor = Color.BLACK;
@@ -520,7 +521,9 @@ public class VFlow
 	
 	
 	protected void updateLineNumbers()
-	{
+	{		
+		lineNumbersColumnWidths = null;
+
 		FxTextEditorModel m = editor.getModel();
 		if(m == null)
 		{
@@ -530,23 +533,63 @@ public class VFlow
 		int count;
 		if(editor.isShowLineNumbers())
 		{
-			int lastLine = getTopLine() + screenRowCount;
-			ILineNumberFormatter fmt = editor.getLineNumberFormatter();
+			ALineNumberFormatter fmt = editor.getLineNumberFormatter();
 			if(fmt == null)
 			{
 				count = 0;
 			}
 			else
 			{
-				Object x = fmt.formatLineNumber(lastLine);
-				count = Math.max(minLineNumberCellCount, x.toString().length());
-
-				// last line may not have a valid line or formatted value
-				if(lastLine >= 2)
+				// find out how wide is the line number area
+				// here we might be scanning more lines that strictly necessary, 
+				// to avoid re-creating buffer?
+				count = minLineNumberCellCount;
+				
+				int columns = fmt.getColumnCount();
+				if(columns == 1)
 				{
-					x = fmt.formatLineNumber(lastLine - 2);
-					int ct = Math.max(minLineNumberCellCount, x.toString().length());
-					count = Math.max(count, ct);
+					for(int i=0; i<screenRowCount; i++)
+					{
+						int ix = getTopLine() + i;
+						String s = fmt.formatLineNumber(ix);
+						if(s != null)
+						{
+							count = Math.max(count, s.length());
+						}
+					}
+				}
+				else
+				{
+					int[] widths = new int[columns];
+					
+					for(int i=0; i<screenRowCount; i++)
+					{
+						int ix = getTopLine() + i;
+						String[] ss = fmt.formatMultiColumn(ix);
+						for(int j=0; j<columns; j++)
+						{
+							String s = ss[j];
+							if(s != null)
+							{
+								int len = s.length();
+								if(len > widths[j])
+								{
+									widths[j] = len;
+								}
+							}
+						}
+						
+						int ct = 0;
+						for(int j=0; j<columns; j++)
+						{
+							ct += widths[j];
+						}
+						
+						count = Math.max(count, ct);
+						// TODO save widths
+					}
+					
+					lineNumbersColumnWidths = widths;
 				}
 			}
 		}
@@ -1196,6 +1239,7 @@ public class VFlow
 			// TODO repaint only damaged area, unless lines are inserted/removed
 			invalidate();
 			requestLayout();
+			updateLineNumbers();
 			return;
 		}
 		
@@ -1308,18 +1352,56 @@ public class VFlow
 			int ix = row.getLineNumber();
 			if((ix >= 0) && (ix < editor.getLineCount()))
 			{
-				String text = editor.getLineNumberFormatter().formatLineNumber(ix + 1);
-	
-				for(int i=0; i<lineNumbersCellCount; i++)
+				ALineNumberFormatter fmt = editor.getLineNumberFormatter();
+				
+				int columns = fmt.getColumnCount(); 
+				if(columns == 1)
 				{
-					String s = charAt(text, i, lineNumbersCellCount);
-					if(s != null)
+					String txt = fmt.formatLineNumber(ix + 1);
+		
+					for(int i=0; i<lineNumbersCellCount; i++)
 					{
-						double cx = i * tm.cellWidth + lineNumbersGap;
+						// I think I was trying to do right alignment here
+						String ch = charAt(txt, i, lineNumbersCellCount);
+						if(ch != null)
+						{
+							double cx = i * tm.cellWidth + lineNumbersGap;
+							
+							gx.setFont(font);
+							gx.setFill(fg);
+							gx.fillText(ch, cx, cy - tm.baseline, tm.cellWidth);
+						}
+					}
+				}
+				else
+				{
+					String[] values = fmt.formatMultiColumn(ix + 1);
+					gx.setFont(font);
+					gx.setFill(fg);
+					
+					int px = 0;
+					for(int i=0; i<columns; i++)
+					{
+						int width = lineNumbersColumnWidths[i];
+						boolean right = fmt.isRightAlignmentForColumn(i);
+						String txt = values[i];
 						
-						gx.setFont(font);
-						gx.setFill(fg);
-						gx.fillText(s, cx, cy - tm.baseline, tm.cellWidth);
+						if(right)
+						{
+							px += (width - txt.length());
+						}
+						
+						for(int j=0; j<txt.length(); j++)
+						{
+							char c = txt.charAt(j);
+							String ch = String.valueOf(c);
+							if(ch != null)
+							{
+								double cx = px * tm.cellWidth + lineNumbersGap;
+								gx.fillText(ch, cx, cy - tm.baseline, tm.cellWidth);
+							}
+							px++;
+						}
 					}
 				}
 			}

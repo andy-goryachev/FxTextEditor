@@ -56,7 +56,7 @@ public class FxTextEditor
 	protected final FxBoolean highlightCaretLineProperty = new FxBoolean(true);
 	protected final FxDouble scrollWheelStepSize = new FxDouble(-0.25);
 	protected final ReadOnlyObjectWrapper<Duration> caretBlinkRateProperty = new ReadOnlyObjectWrapper(Duration.millis(500));
-	protected final FxObject<ILineNumberFormatter> lineNumberFormatterProperty = new FxObject<>(ILineNumberFormatter.getDefault());
+	protected final FxObject<ALineNumberFormatter> lineNumberFormatterProperty = new FxObject<>(ALineNumberFormatter.getDefault());
 	protected final FxObject<ITabPolicy> tabPolicy = new FxObject();
 	// TODO lineCount r/o property
 	protected final FxTextEditorModelListener modelListener;
@@ -186,23 +186,23 @@ public class FxTextEditor
 	}
 	
 	
-	public FxObject<ILineNumberFormatter> lineNumberFormatterProperty()
+	public FxObject<ALineNumberFormatter> lineNumberFormatterProperty()
 	{
 		return lineNumberFormatterProperty;
 	}
 	
 	
-	public ILineNumberFormatter getLineNumberFormatter()
+	public ALineNumberFormatter getLineNumberFormatter()
 	{
 		return lineNumberFormatterProperty.get();
 	}
 	
 	
-	public void setLineNumberFormatter(ILineNumberFormatter f)
+	public void setLineNumberFormatter(ALineNumberFormatter f)
 	{
 		if(f == null)
 		{
-			f = ILineNumberFormatter.getDefault();
+			f = ALineNumberFormatter.getDefault();
 		}
 		lineNumberFormatterProperty.set(f);
 	}

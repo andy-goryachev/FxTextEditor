@@ -166,7 +166,7 @@ public abstract class FxTextEditorModel
 	
 	
 	/**
-	 * A simplified method to be used when the edit start and end points are on the same line.
+	 * A simplified method to be used when all the editing is happening on the same line.
 	 * 
 	 * @see #fireTextAltered(int line1, int charIndex1, int line2, int charIndex2, int charsInserted1, int linesInserted, int charsInserted2)
 	 */
