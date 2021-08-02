@@ -67,6 +67,7 @@ public class FxTextEditor
 	protected final ScrollBar hscroll;
 	protected final ChangeListener<LoadStatus> loadStatusListener;
 	private InputHandler inputHandler;
+	private boolean caretAtEofPriorToLastUpdate;
 
 	
 	// TODO perhaps pass final Capabilities object that defines basic parameters
@@ -258,6 +259,7 @@ public class FxTextEditor
 		}
 		
 		modelProperty.set(m);
+		caretAtEofPriorToLastUpdate = false;
 		
 		if(m != null)
 		{
@@ -900,6 +902,8 @@ public class FxTextEditor
 	{
 		log.debug("line1=%d charIndex1=%d line2=%d charIndex2=%d | charsAdded1=%d linesAdded=%d charsAdded2=%d", line1, charIndex1, line2, charIndex2, charsAdded1, linesAdded, charsAdded2);
 		
+		caretAtEofPriorToLastUpdate = isCaretAtEOF();
+		
 		markers.update(line1, charIndex1, charsAdded1, linesAdded, line2, charIndex2, charsAdded2);
 		selector.refresh();
 
@@ -923,5 +927,44 @@ public class FxTextEditor
 	{
 		SelectionSegment seg = selector.getSelectedSegment();
 		return seg == null ? 0 : seg.getCaretLine();
+	}
+	
+
+	public boolean isCaretAtEOF()
+	{
+		SelectionSegment seg = getSelectedSegment();
+		if(seg == null)
+		{
+			return true;
+		}
+		
+		if(seg.isEmpty())
+		{
+			if(seg.getCaretLine() == (getLineCount() - 1))
+			{
+				String txt = getPlainText(seg.getCaretLine());
+				int end = (txt == null ? 0 : txt.length());
+				if(seg.getMaxCharIndex() == end)
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	
+	public boolean isCaretAtEofPriorToLastUpdate()
+	{
+		return caretAtEofPriorToLastUpdate;
+	}
+	
+	
+	public void scrollToEOF()
+	{
+		log.debug("scrollToEOF");
+		
+		actions.moveDocumentEnd().fire();
+		scrollCaretToView();
 	}
 }

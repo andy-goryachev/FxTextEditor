@@ -9,6 +9,7 @@ import goryachev.common.util.GlobalSettings;
 import goryachev.common.util.SystemTask;
 import goryachev.fx.hacks.FxHacks;
 import goryachev.fx.internal.CssTools;
+import goryachev.fx.internal.DisconnectableIntegerListener;
 import goryachev.fx.internal.FxSchema;
 import goryachev.fx.internal.ParentWindow;
 import goryachev.fx.internal.WindowsFx;
@@ -21,6 +22,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntConsumer;
 import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.beans.Observable;
@@ -28,6 +30,7 @@ import javafx.beans.WeakListener;
 import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
@@ -1421,25 +1424,28 @@ public final class FX
 	
 	
 	/** adds a ChangeListener to the specified ObservableValue(s) */
-	public static void onChange(Runnable handler, ObservableValue<?> ... props)
+	public static Disconnectable onChange(Runnable callback, ObservableValue<?> ... props)
 	{
-		onChange(handler, false, props);
+		return onChange(callback, false, props);
 	}
 	
 	
 	/** adds a ChangeListener to the specified ObservableValue(s) */
-	public static void onChange(Runnable handler, boolean fireImmediately, ObservableValue<?> ... props)
+	public static Disconnectable onChange(Runnable callback, boolean fireImmediately, ObservableValue<?> ... props)
 	{
+		FxChangeListener li = new FxChangeListener(callback);
+
 		for(ObservableValue<?> p: props)
 		{
-			// weak listener gets collected... but why??
-			p.addListener((src,prev,cur) -> handler.run());
+			li.listen(p);
 		}
 		
 		if(fireImmediately)
 		{
-			handler.run();
+			li.fire();
 		}
+		
+		return li;
 	}
 	
 	
@@ -2109,5 +2115,11 @@ public final class FX
 	{
 		String uri = file.toURI().toString();
 		FxApplication.getInstance().getHostServices().showDocument(uri);
+	}
+
+
+	public static Disconnectable onChange(ReadOnlyIntegerProperty prop, IntConsumer onChange)
+	{
+		return new DisconnectableIntegerListener(prop, onChange);
 	}
 }
