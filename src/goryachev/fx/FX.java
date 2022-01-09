@@ -1,4 +1,4 @@
-// Copyright © 2016-2021 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2016-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
@@ -1164,27 +1164,38 @@ public final class FX
 	
 	
 	/** returns a parent of the specified type, or null.  if comp is an instance of the specified class, returns comp */
-	public static <T> T getAncestorOfClass(Class<T> c, Node comp)
+	public static <T> T getAncestorOfClass(Class<T> c, Node node)
 	{
 		if(Window.class.isAssignableFrom(c))
 		{
-			Scene sc = comp.getScene();
+			Scene sc = node.getScene();
 			if(sc != null)
 			{
 				Window w = sc.getWindow();
-				if(w.getClass().isAssignableFrom(c))
+				while(w != null)
 				{
-					return (T)w;
+					if(w.getClass().isAssignableFrom(c))
+					{
+						return (T)w;
+					}
+					
+					// the window can be a dialog, check the owner
+					if(w instanceof Stage)
+					{
+						Stage stage = (Stage)w;
+						w = stage.getOwner();
+					}
 				}
 			}
+			return null;
 		}
 		else
 		{
-			while(comp != null)
+			while(node != null)
 			{
-				if(c.isInstance(comp))
+				if(c.isInstance(node))
 				{
-					return (T)comp;
+					return (T)node;
 				}
 				
 	//			if(comp instanceof JPopupMenu)
@@ -1196,7 +1207,7 @@ public final class FX
 	//				}
 	//			}
 				
-				comp = comp.getParent();
+				node = node.getParent();
 			}
 		}
 		return null;
@@ -1650,27 +1661,6 @@ public final class FX
 		return li;
 	}
 	
-	
-	/** 
-	 * A simplified version of addChangeListener that only invokes the callback on change, 
-	 * uses FxDisconnector to allow for easy removal of the listener.
-	 */
-	public static void addChangeListener(FxDisconnector d, Runnable callback, boolean fireImmediately, ObservableValue<?> ... props)
-	{
-		FxChangeListener li = new FxChangeListener(callback);
-		for(ObservableValue<?> p: props)
-		{
-			li.listen(p);
-		}
-		
-		if(fireImmediately)
-		{
-			li.fire();
-		}
-		
-		d.addDisconnectable(li);
-	}
-
 
 	/** converts java fx Color to a 32 bit RGBA integer */
 	public static Integer toRGBA(Color c)

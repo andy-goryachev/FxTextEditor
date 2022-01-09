@@ -1,4 +1,4 @@
-// Copyright © 2004-2021 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2004-2022 Andy Goryachev <andy@goryachev.com>
 // Contains fragments of Apache FileNameUtils code
 // http://www.apache.org/licenses/LICENSE-2.0
 package goryachev.common.util;
@@ -898,14 +898,10 @@ public class FileTools
 	}
 	
 
-	/** returns true if the specified file is either an empty directory or does not exist */
+	/** returns true if the specified directory contains no files */
 	public static boolean isEmptyDirectory(File f)
 	{
-		if(!f.exists())
-		{
-			return true;
-		}
-		else if(f.isDirectory())
+		if(f.isDirectory())
 		{
 			File[] fs = f.listFiles();
 			if(fs == null)

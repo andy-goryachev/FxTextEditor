@@ -1,4 +1,4 @@
-// Copyright © 2019-2021 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2019-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.common.test.TF;
 import goryachev.common.test.Test;

@@ -1,4 +1,4 @@
-// Copyright © 2019-2021 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2019-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
@@ -17,7 +17,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -49,13 +48,13 @@ public class FxTextEditor
 	protected final FxObject<Color> lineNumberColor = new FxObject(Color.GRAY);
 	protected final FxObject<Font> fontProperty = new FxObject(Font.font("Monospace", 12));
 	protected final FxBoolean editableProperty = new FxBoolean(false);
-	protected final ReadOnlyObjectWrapper<FxTextEditorModel> modelProperty = new ReadOnlyObjectWrapper<>();
+	protected final FxObject<FxTextEditorModel> modelProperty = new FxObject<>();
 	protected final FxBoolean wrapLinesProperty = new FxBoolean(true);
 	protected final FxBoolean displayCaretProperty = new FxBoolean(true);
 	protected final FxBoolean showLineNumbersProperty = new FxBoolean(false);
 	protected final FxBoolean highlightCaretLineProperty = new FxBoolean(true);
 	protected final FxDouble scrollWheelStepSize = new FxDouble(-0.25);
-	protected final ReadOnlyObjectWrapper<Duration> caretBlinkRateProperty = new ReadOnlyObjectWrapper(Duration.millis(500));
+	protected final FxObject<Duration> caretBlinkRateProperty = new FxObject(Duration.millis(500));
 	protected final FxObject<ALineNumberFormatter> lineNumberFormatterProperty = new FxObject<>(ALineNumberFormatter.getDefault());
 	protected final FxObject<ITabPolicy> tabPolicy = new FxObject();
 	// TODO lineCount r/o property

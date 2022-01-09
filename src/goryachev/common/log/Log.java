@@ -1,4 +1,4 @@
-// Copyright © 2017-2021 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2017-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.log;
 import goryachev.common.log.internal.ConsoleAppender;
 import goryachev.common.util.CKit;
@@ -250,6 +250,7 @@ public class Log
 	}
 	
 	
+	// FIX this method should be fast.  avoid traversing the hierarchy
 	protected boolean isEnabled(LogLevel lv)
 	{
 		if(level == null)

@@ -1,7 +1,7 @@
-// Copyright © 2017-2021 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2017-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
+import goryachev.fx.FxObject;
 import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyProperty;
 
 
@@ -10,8 +10,8 @@ import javafx.beans.property.ReadOnlyProperty;
  */
 public class SelectionController
 {
-	private final ReadOnlyObjectWrapper<SelectionSegment> segment =  new ReadOnlyObjectWrapper(null);
-	private final ReadOnlyObjectWrapper<EditorSelection> selectionProperty = new ReadOnlyObjectWrapper(EditorSelection.EMPTY);
+	private final FxObject<SelectionSegment> segment =  new FxObject(null);
+	private final FxObject<EditorSelection> selectionProperty = new FxObject(EditorSelection.EMPTY);
 	private Marker anchor;
 	private SelectionSegment originalSelection;
 

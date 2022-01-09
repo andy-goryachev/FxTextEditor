@@ -1,4 +1,4 @@
-// Copyright © 2017-2021 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2017-2022 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
 import goryachev.common.util.CList;
 import goryachev.fxtexteditor.CellStyle;

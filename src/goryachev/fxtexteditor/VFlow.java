@@ -1,4 +1,4 @@
-// Copyright © 2019-2021 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2019-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
@@ -1326,10 +1326,13 @@ public class VFlow
 	
 	protected String charAt(String text, int pos, int width)
 	{
-		int ix = pos - lineNumbersCellCount + text.length();
-		if((ix >= 0) && (ix < (text.length() - 0)))
+		if(text != null)
 		{
-			return text.substring(ix, ix + 1);
+			int ix = pos - lineNumbersCellCount + text.length();
+			if((ix >= 0) && (ix < (text.length() - 0)))
+			{
+				return text.substring(ix, ix + 1);
+			}
 		}
 		return null;
 	}

@@ -1,7 +1,8 @@
-// Copyright © 2016-2021 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2016-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import goryachev.fx.internal.BaseFxWindow;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 
@@ -108,6 +109,12 @@ public class FxWindow
 	public Node getCenter()
 	{
 		return pane.getCenter();
+	}
+	
+	
+	public Parent getContentPane()
+	{
+		return getScene().getRoot();
 	}
 	
 	

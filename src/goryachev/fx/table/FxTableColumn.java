@@ -1,10 +1,9 @@
-// Copyright © 2016-2021 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2016-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx.table;
 import goryachev.common.util.CKit;
-import goryachev.fx.FX;
+import goryachev.fx.FxObject;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -54,7 +53,7 @@ public class FxTableColumn<ITEM,CELL>
 	private void init()
 	{
 		setCellFactory(cellFactory());
-		setCellValueFactory((cdf) -> new ReadOnlyObjectWrapper(CKit.toString(cdf.getValue())));
+		setCellValueFactory((cdf) -> new FxObject(CKit.toStringOrNull(cdf.getValue())));
 	}
 	
 	
@@ -164,7 +163,7 @@ public class FxTableColumn<ITEM,CELL>
 		{
 			ITEM item = cdf.getValue();
 			CELL v = func.apply(item);
-			return new ReadOnlyObjectWrapper<CELL>(v);
+			return new FxObject<CELL>(v);
 		});
 		return this;
 	}
