@@ -1,5 +1,6 @@
 // Copyright © 2019-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
+import goryachev.fx.TextCellStyle;
 import javafx.scene.paint.Color;
 
 
@@ -44,7 +45,7 @@ public class PlainTextLine
 	}
 	
 
-	public CellStyle getCellStyle(int offset)
+	public TextCellStyle getCellStyle(int offset)
 	{
 		return null;
 	}

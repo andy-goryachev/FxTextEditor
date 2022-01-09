@@ -1,5 +1,6 @@
 // Copyright © 2020-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
+import goryachev.fx.TextCellStyle;
 import javafx.scene.paint.Color;
 
 
@@ -10,11 +11,11 @@ public class SimpleTextLine
 	implements ITextLine
 {
 	private final int lineNumber;
-	private final CellStyle style;
+	private final TextCellStyle style;
 	private final String text;
 
 
-	public SimpleTextLine(int lineNumber, CellStyle style, String text)
+	public SimpleTextLine(int lineNumber, TextCellStyle style, String text)
 	{
 		this.lineNumber = lineNumber;
 		this.style = style;
@@ -46,7 +47,7 @@ public class SimpleTextLine
 	}
 
 
-	public CellStyle getCellStyle(int charOffset)
+	public TextCellStyle getCellStyle(int charOffset)
 	{
 		return style;
 	}

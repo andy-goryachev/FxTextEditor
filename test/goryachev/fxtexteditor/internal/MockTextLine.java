@@ -1,6 +1,6 @@
 // Copyright © 2020-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
-import goryachev.fxtexteditor.CellStyle;
+import goryachev.fx.TextCellStyle;
 import goryachev.fxtexteditor.ITextLine;
 import javafx.scene.paint.Color;
 
@@ -44,7 +44,7 @@ public class MockTextLine
 	}
 
 
-	public CellStyle getCellStyle(int charOffset)
+	public TextCellStyle getCellStyle(int charOffset)
 	{
 		return null;
 	}

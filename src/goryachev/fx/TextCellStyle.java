@@ -1,14 +1,14 @@
 // Copyright © 2019-2022 Andy Goryachev <andy@goryachev.com>
-package goryachev.fxtexteditor;
+package goryachev.fx;
 import goryachev.common.util.CKit;
 import goryachev.common.util.FH;
 import javafx.scene.paint.Color;
 
 
 /**
- * Captures text cell style.
+ * (Monospaced) text cell style.
  */
-public class CellStyle
+public class TextCellStyle
 	implements Cloneable
 {
 	private Color textColor;
@@ -19,7 +19,7 @@ public class CellStyle
 	private boolean underscore;
 	
 	
-	public CellStyle(Color fg, Color bg, boolean bold, boolean italic, boolean strikeThrough, boolean underscore)
+	public TextCellStyle(Color fg, Color bg, boolean bold, boolean italic, boolean strikeThrough, boolean underscore)
 	{
 		this.textColor = fg;
 		this.backgroundColor = bg;
@@ -30,26 +30,26 @@ public class CellStyle
 	}
 	
 	
-	public CellStyle(Color fg)
+	public TextCellStyle(Color fg)
 	{
 		this.textColor = fg;
 	}
 	
 	
-	public CellStyle()
+	public TextCellStyle()
 	{
 	}
 	
 	
-	public CellStyle copy()
+	public TextCellStyle copy()
 	{
-		return (CellStyle)clone();
+		return (TextCellStyle)clone();
 	}
 	
 	
 	public Object clone()
 	{
-		return new CellStyle(textColor, backgroundColor, bold, italic, strikeThrough, underscore);
+		return new TextCellStyle(textColor, backgroundColor, bold, italic, strikeThrough, underscore);
 	}
 	
 	
@@ -65,7 +65,7 @@ public class CellStyle
 	}
 	
 	
-	public void init(CellStyle x)
+	public void init(TextCellStyle x)
 	{
 		this.backgroundColor = x.backgroundColor;
 		this.textColor = x.textColor;
@@ -82,9 +82,9 @@ public class CellStyle
 		{
 			return true;
 		}
-		else if(x instanceof CellStyle)
+		else if(x instanceof TextCellStyle)
 		{
-			CellStyle c = (CellStyle)x;
+			TextCellStyle c = (TextCellStyle)x;
 			return
 				(bold == c.bold) &&
 				(italic == c.italic) &&
@@ -99,7 +99,7 @@ public class CellStyle
 	
 	public int hashCode()
 	{
-		int h = FH.hash(CellStyle.class);
+		int h = FH.hash(TextCellStyle.class);
 		h = FH.hash(h, backgroundColor);
 		h = FH.hash(h, textColor);
 		h = FH.hash(h, bold);

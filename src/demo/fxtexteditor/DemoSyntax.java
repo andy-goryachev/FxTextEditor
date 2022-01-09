@@ -1,7 +1,7 @@
 // Copyright © 2017-2022 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
 import goryachev.common.util.CList;
-import goryachev.fxtexteditor.CellStyle;
+import goryachev.fx.TextCellStyle;
 import java.util.List;
 import javafx.scene.paint.Color;
 
@@ -11,15 +11,15 @@ import javafx.scene.paint.Color;
  */
 public class DemoSyntax
 {
-	private static final CellStyle STYLE_TEXT = new CellStyle();
-	private static final CellStyle STYLE_ENCLOSED = new CellStyle(null, Color.YELLOW, false, false, false, false);
-	private static final CellStyle STYLE_NUMBER = new CellStyle(Color.RED, null, true, false, false, false);
-	private static final CellStyle STYLE_RTF = new CellStyle(Color.OLIVEDRAB, null, true, false, false, false);
+	private static final TextCellStyle STYLE_TEXT = new TextCellStyle();
+	private static final TextCellStyle STYLE_ENCLOSED = new TextCellStyle(null, Color.YELLOW, false, false, false, false);
+	private static final TextCellStyle STYLE_NUMBER = new TextCellStyle(Color.RED, null, true, false, false, false);
+	private static final TextCellStyle STYLE_RTF = new TextCellStyle(Color.OLIVEDRAB, null, true, false, false, false);
 
 	private final String text;
 	private final CList<TSegment> segments = new CList();
 	private int start;
-	private CellStyle style = STYLE_TEXT;
+	private TextCellStyle style = STYLE_TEXT;
 	
 	
 	public DemoSyntax(String text)
@@ -49,7 +49,7 @@ public class DemoSyntax
 				}
 			}
 			
-			CellStyle st = getCellStyle(c);
+			TextCellStyle st = getCellStyle(c);
 			if(!st.equals(style))
 			{
 				addSegment(i);
@@ -88,7 +88,7 @@ public class DemoSyntax
 	}
 	
 	
-	protected CellStyle getCellStyle(char c)
+	protected TextCellStyle getCellStyle(char c)
 	{
 		if(Character.isDigit(c))
 		{

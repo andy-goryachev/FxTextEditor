@@ -2,7 +2,7 @@
 package demo.fxtexteditor;
 import goryachev.common.util.CKit;
 import goryachev.common.util.text.IBreakIterator;
-import goryachev.fxtexteditor.CellStyle;
+import goryachev.fx.TextCellStyle;
 import goryachev.fxtexteditor.Edit;
 import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.ITextLine;
@@ -132,7 +132,7 @@ public class DemoTextEditorModel
 				private TAttributes attributes;
 				
 				
-				public CellStyle getCellStyle(int off)
+				public TextCellStyle getCellStyle(int off)
 				{
 					if(attributes == null)
 					{

@@ -3,7 +3,7 @@ package goryachev.fxtexteditor.internal;
 import goryachev.common.test.TF;
 import goryachev.common.test.Test;
 import goryachev.common.util.D;
-import goryachev.fxtexteditor.CellStyle;
+import goryachev.fx.TextCellStyle;
 import goryachev.fxtexteditor.ITabPolicy;
 import goryachev.fxtexteditor.ITextLine;
 

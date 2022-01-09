@@ -1,12 +1,12 @@
 // Copyright © 2018-2022 Andy Goryachev <andy@goryachev.com>
-package goryachev.fxtexteditor;
+package goryachev.fx;
 import javafx.scene.text.Font;
 
 
 /**
- * Text (Cell) Metrics.
+ * Monospaced Text Cell Metrics.
  */
-public class TextMetrics
+public class TextCellMetrics
 {
 	public final Font font;
 	public final double baseline;
@@ -14,7 +14,7 @@ public class TextMetrics
 	public final int cellHeight;
 	
 	
-	public TextMetrics(Font f, double baseline, int cellWidth, int cellHeight)
+	public TextCellMetrics(Font f, double baseline, int cellWidth, int cellHeight)
 	{
 		this.font = f;
 		this.cellHeight = cellHeight;

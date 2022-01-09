@@ -6,6 +6,7 @@ import goryachev.common.util.CMap;
 import goryachev.common.util.ElasticIntArray;
 import goryachev.common.util.SB;
 import goryachev.common.util.text.IBreakIterator;
+import goryachev.fx.TextCellStyle;
 import java.text.BreakIterator;
 import javafx.scene.paint.Color;
 
@@ -20,10 +21,10 @@ public class SimpleStyledTextEditorModel
 {
 	private final ElasticIntArray lines = new ElasticIntArray();
 	private final CList<Object> data = new CList();
-	private final CMap<CellStyle,CellStyle> styles = new CMap();
-	private final CellStyle style = new CellStyle();
+	private final CMap<TextCellStyle,TextCellStyle> styles = new CMap();
+	private final TextCellStyle style = new TextCellStyle();
 	private final IBreakIterator breakIterator; 
-	private CellStyle prevStyle;
+	private TextCellStyle prevStyle;
 	
 	
 	public SimpleStyledTextEditorModel(IBreakIterator bi)
@@ -69,8 +70,8 @@ public class SimpleStyledTextEditorModel
 		int end = (line < getLineCount()) ? lines.get(line) : data.size();
 		
 		SB sb = new SB(128);
-		CList<CellStyle> ss = new  CList();
-		CellStyle st = new CellStyle();
+		CList<TextCellStyle> ss = new  CList();
+		TextCellStyle st = new TextCellStyle();
 		
 		for(int i=start; i<end; i++)
 		{
@@ -85,14 +86,14 @@ public class SimpleStyledTextEditorModel
 					ss.add(st);
 				}
 			}
-			else if(x instanceof CellStyle)
+			else if(x instanceof TextCellStyle)
 			{
-				st = (CellStyle)x;
+				st = (TextCellStyle)x;
 			}
 		}
 		
 		String text = sb.toString();
-		CellStyle[] cs = ss.toArray(new CellStyle[ss.size()]);
+		TextCellStyle[] cs = ss.toArray(new TextCellStyle[ss.size()]);
 		return new SimpleStyledTextLine(line, text, null, cs);
 	}
 
@@ -103,9 +104,9 @@ public class SimpleStyledTextEditorModel
 	}
 	
 	
-	protected CellStyle style()
+	protected TextCellStyle style()
 	{
-		CellStyle s = styles.get(style);
+		TextCellStyle s = styles.get(style);
 		if(s == null)
 		{
 			s = style.copy();
@@ -115,7 +116,7 @@ public class SimpleStyledTextEditorModel
 	}
 	
 	
-	public SimpleStyledTextEditorModel setStyle(CellStyle st)
+	public SimpleStyledTextEditorModel setStyle(TextCellStyle st)
 	{
 		style.init(st);
 		return this;
@@ -124,7 +125,7 @@ public class SimpleStyledTextEditorModel
 	
 	public SimpleStyledTextEditorModel append(String text)
 	{
-		CellStyle s = style();
+		TextCellStyle s = style();
 		
 		if(!CKit.equals(prevStyle, s))
 		{
@@ -136,7 +137,7 @@ public class SimpleStyledTextEditorModel
 	}
 	
 	
-	public SimpleStyledTextEditorModel append(CellStyle st, String text)
+	public SimpleStyledTextEditorModel append(TextCellStyle st, String text)
 	{
 		setStyle(st);
 		return append(text);

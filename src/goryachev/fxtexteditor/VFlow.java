@@ -7,6 +7,8 @@ import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxBooleanBinding;
+import goryachev.fx.TextCellMetrics;
+import goryachev.fx.TextCellStyle;
 import goryachev.fxtexteditor.internal.FlowLine;
 import goryachev.fxtexteditor.internal.FlowLineCache;
 import goryachev.fxtexteditor.internal.ScreenBuffer;
@@ -66,9 +68,8 @@ public class VFlow
 	private Font boldFont;
 	private Font boldItalicFont;
 	private Font italicFont;
-	private TextMetrics metrics;
+	private TextCellMetrics metrics;
 	protected final Text proto = new Text();
-	private GraphicsContext lineNumberGx;
 	private Canvas canvas;
 	private GraphicsContext gx;
 	private int screenColumnCount;
@@ -89,7 +90,7 @@ public class VFlow
 	protected final FlowLineCache cache;
 	private int phantomColumn = -1;
 	protected boolean handleScrollEvents = true;
-	private static final CellStyle NO_STYLE = new CellStyle();
+	private static final TextCellStyle NO_STYLE = new TextCellStyle();
 	
 	
 	public VFlow(FxTextEditor ed)
@@ -407,7 +408,7 @@ public class VFlow
 	}
 	
 	
-	protected TextMetrics textMetrics()
+	protected TextCellMetrics textMetrics()
 	{
 		if(metrics == null)
 		{
@@ -418,7 +419,7 @@ public class VFlow
 			int w = CKit.round(b.getWidth());
 			int h = CKit.round(b.getHeight());
 			
-			metrics = new TextMetrics(font, b.getMinY(), w, h);
+			metrics = new TextCellMetrics(font, b.getMinY(), w, h);
 		}
 		return metrics;
 	}
@@ -608,7 +609,7 @@ public class VFlow
 			}
 			else
 			{
-				TextMetrics tm = textMetrics();
+				TextCellMetrics tm = textMetrics();
 				lineNumbersBarWidth = (count * tm.cellWidth + lineNumbersGap + lineNumbersGap);
 			}
 			
@@ -632,7 +633,7 @@ public class VFlow
 		double w = getWidth() - m.getLeft() - m.getRight();
 		double h = getHeight() - m.getTop() - m.getBottom();
 	
-		TextMetrics tm = textMetrics();
+		TextCellMetrics tm = textMetrics();
 		if(lineNumbersCellCount > 0)
 		{
 			w -= (lineNumbersCellCount * tm.cellWidth + lineNumbersGap + lineNumbersGap);
@@ -914,7 +915,7 @@ public class VFlow
 	}
 	
 	
-	protected Font getFont(CellStyle st)
+	protected Font getFont(TextCellStyle st)
 	{
 		if(st.isBold())
 		{
@@ -945,7 +946,7 @@ public class VFlow
 	public TextPos getInsertPosition(double screenx, double screeny)
 	{
 		Point2D p = canvas.screenToLocal(screenx, screeny);
-		TextMetrics tm = textMetrics();
+		TextCellMetrics tm = textMetrics();
 		
 		double sx = p.getX() - lineNumbersBarWidth;
 		if(sx < 0)
@@ -1270,7 +1271,7 @@ public class VFlow
 			xmax++;
 		}
 
-		TextMetrics tm = textMetrics();
+		TextCellMetrics tm = textMetrics();
 		TextCell cell = null;
 		int ymax = screenRowCount + 1;
 		
@@ -1338,7 +1339,7 @@ public class VFlow
 	}
 	
 	
-	protected void paintLineNumber(TextMetrics tm, ScreenRow row, int y)
+	protected void paintLineNumber(TextCellMetrics tm, ScreenRow row, int y)
 	{
 		double cy = y * tm.cellHeight;
 		
@@ -1412,7 +1413,7 @@ public class VFlow
 	}
 	
 	
-	protected void paintBlank(TextMetrics tm, ScreenRow row, TextCell cell, int x, int y, int count)
+	protected void paintBlank(TextCellMetrics tm, ScreenRow row, TextCell cell, int x, int y, int count)
 	{
 		double cx = x * tm.cellWidth + lineNumbersBarWidth;
 		double cy = y * tm.cellHeight;
@@ -1437,7 +1438,7 @@ public class VFlow
 	}
 	
 
-	protected void paintCell(TextMetrics tm, ScreenRow row, TextCell cell, int x, int y)
+	protected void paintCell(TextCellMetrics tm, ScreenRow row, TextCell cell, int x, int y)
 	{
 		double cx = x * tm.cellWidth + lineNumbersBarWidth;
 		double cy = y * tm.cellHeight;
@@ -1449,7 +1450,7 @@ public class VFlow
 		boolean selected = SelectionHelper.isSelected(flags);
 		
 		// style
-		CellStyle style = row.getCellStyles(cell);
+		TextCellStyle style = row.getCellStyles(cell);
 		if(style == null)
 		{
 			style = NO_STYLE;
@@ -1525,7 +1526,7 @@ public class VFlow
 	{
 		log.debug("blockScroll=%f", deltaInPixels);
 
-		TextMetrics tm = textMetrics();
+		TextCellMetrics tm = textMetrics();
 		double ch = tm.cellHeight;
 		
 		int delta;

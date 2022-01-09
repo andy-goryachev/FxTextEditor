@@ -2,7 +2,7 @@
 package goryachev.fxtexteditor.internal.html;
 import goryachev.common.util.CKit;
 import goryachev.fx.FX;
-import goryachev.fxtexteditor.CellStyle;
+import goryachev.fx.TextCellStyle;
 import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.ITextSource;
 import java.io.StringWriter;
@@ -90,7 +90,7 @@ public class HtmlWriter
 			return;
 		}
 		
-		CellStyle prevStyle = null;
+		TextCellStyle prevStyle = null;
 		Color color = null;
 		Color background = null;
 		boolean bold = false;
@@ -101,7 +101,7 @@ public class HtmlWriter
 		String text = t.getPlainText();
 		for(int i=startPos; i<endPos; i++)
 		{
-			CellStyle st = t.getCellStyle(i);
+			TextCellStyle st = t.getCellStyle(i);
 			if(prevStyle != st)
 			{
 				Color col;

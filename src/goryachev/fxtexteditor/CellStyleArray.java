@@ -1,6 +1,7 @@
 // Copyright © 2020-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.fx.FX;
+import goryachev.fx.TextCellStyle;
 import javafx.scene.paint.Color;
 
 
@@ -10,23 +11,23 @@ import javafx.scene.paint.Color;
  */
 public class CellStyleArray
 {
-	private final CellStyle[] cells;
+	private final TextCellStyle[] cells;
 	private Color lineColor;
 
 	
 	public CellStyleArray(int size)
 	{
-		cells = new CellStyle[size];
+		cells = new TextCellStyle[size];
 	}
 	
 	
-	public CellStyle get(int ix)
+	public TextCellStyle get(int ix)
 	{
 		return cells[ix];
 	}
 
 
-	public void setStyle(CellStyle style, int start, int end)
+	public void setStyle(TextCellStyle style, int start, int end)
 	{
 		for(int i=start; i<end; i++)
 		{
@@ -49,22 +50,22 @@ public class CellStyleArray
 
 	public void addHighlight(Color color, int start, int end)
 	{
-		CellStyle style = null;
+		TextCellStyle style = null;
 		
 		for(int i=start; i<end; i++)
 		{
-			CellStyle old = cells[i];
+			TextCellStyle old = cells[i];
 			if(old == null)
 			{
 				if(style == null)
 				{
-					style = new CellStyle(null, color, false, false, false, false);
+					style = new TextCellStyle(null, color, false, false, false, false);
 				}
 				cells[i] = style;
 			}
 			else
 			{
-				cells[i] = new CellStyle
+				cells[i] = new TextCellStyle
 				(
 					old.getTextColor(),
 					FX.mix(old.getBackgroundColor(), color, 0.85),

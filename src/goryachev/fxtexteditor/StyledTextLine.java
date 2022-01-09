@@ -2,6 +2,7 @@
 package goryachev.fxtexteditor;
 import goryachev.common.util.CList;
 import goryachev.common.util.SB;
+import goryachev.fx.TextCellStyle;
 import javafx.scene.paint.Color;
 
 
@@ -14,7 +15,7 @@ public class StyledTextLine
 	private final int lineNumber;
 	private final SB sb;
 	private Color lineColor;
-	private final CList<CellStyle> styles;
+	private final CList<TextCellStyle> styles;
 	
 	
 	public StyledTextLine(int lineNumber)
@@ -49,7 +50,7 @@ public class StyledTextLine
 	}
 	
 	
-	public CellStyle getCellStyle(int charOffset)
+	public TextCellStyle getCellStyle(int charOffset)
 	{
 		return styles.get(charOffset);
 	}
@@ -67,7 +68,7 @@ public class StyledTextLine
 	}
 	
 	
-	public void append(CellStyle st, String text)
+	public void append(TextCellStyle st, String text)
 	{
 		for(int i=0; i<text.length(); i++)
 		{
@@ -89,7 +90,7 @@ public class StyledTextLine
 	}
 	
 	
-	public void append(CellStyle st, char ch)
+	public void append(TextCellStyle st, char ch)
 	{
 		styles.add(st);
 		sb.append(ch);

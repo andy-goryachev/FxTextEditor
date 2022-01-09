@@ -3,7 +3,7 @@ package goryachev.fxtexteditor.internal.rtf;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
 import goryachev.fx.FX;
-import goryachev.fxtexteditor.CellStyle;
+import goryachev.fx.TextCellStyle;
 import goryachev.fxtexteditor.ITextLine;
 import goryachev.fxtexteditor.ITextSource;
 import java.io.ByteArrayOutputStream;
@@ -104,11 +104,11 @@ public class RtfWriter
 	{
 		CKit.checkCancelled();
 		
-		CellStyle prevStyle = null;
+		TextCellStyle prevStyle = null;
 		
 		for(int i=start; i<end; i++)
 		{
-			CellStyle st = t.getCellStyle(i);
+			TextCellStyle st = t.getCellStyle(i);
 			if(prevStyle != st)
 			{
 				if(st != null)
@@ -176,7 +176,7 @@ public class RtfWriter
 		
 		write("\\fi0\\ql ");
 		
-		CellStyle prevStyle = null;
+		TextCellStyle prevStyle = null;
 		Color color = null;
 		Color background = null;
 		boolean bold = false;
@@ -187,7 +187,7 @@ public class RtfWriter
 		String text = t.getPlainText();
 		for(int i=startPos; i<endPos; i++)
 		{
-			CellStyle st = t.getCellStyle(i);
+			TextCellStyle st = t.getCellStyle(i);
 			if(prevStyle != st)
 			{
 				Color col;

@@ -1,7 +1,7 @@
 // Copyright © 2019-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.common.util.SB;
-import goryachev.fxtexteditor.CellStyle;
+import goryachev.fx.TextCellStyle;
 import goryachev.fxtexteditor.ITextLine;
 import javafx.scene.paint.Color;
 
@@ -108,7 +108,7 @@ public class ScreenRow
 	}
 	
 
-	public CellStyle getCellStyles(TextCell cell)
+	public TextCellStyle getCellStyles(TextCell cell)
 	{
 		switch(cell.getGlyphType())
 		{

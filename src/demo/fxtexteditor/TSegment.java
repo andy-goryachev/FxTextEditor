@@ -1,6 +1,6 @@
 // Copyright © 2017-2022 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
-import goryachev.fxtexteditor.CellStyle;
+import goryachev.fx.TextCellStyle;
 
 
 /**
@@ -11,10 +11,10 @@ public class TSegment
 	public final String text;
 	public final int start;
 	public final int end;
-	public final CellStyle style;
+	public final TextCellStyle style;
 	
 	
-	public TSegment(String text, int start, int end, CellStyle style)
+	public TSegment(String text, int start, int end, TextCellStyle style)
 	{
 		this.text = text;
 		this.start = start;
