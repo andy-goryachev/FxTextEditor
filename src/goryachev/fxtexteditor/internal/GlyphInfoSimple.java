@@ -1,5 +1,6 @@
 // Copyright © 2020-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.fx.internal.GlyphCache;
 
 
 /**
@@ -18,7 +19,8 @@ public class GlyphInfoSimple
 	{
 		if((ix >= 0) && (ix < text.length()))
 		{
-			return text.substring(ix, ix + 1);
+			char c = text.charAt(ix);
+			return GlyphCache.get(c);
 		}
 		return null;
 	}

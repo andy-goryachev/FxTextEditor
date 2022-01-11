@@ -11,6 +11,8 @@ import javafx.scene.paint.Color;
 public class TextCellStyle
 	implements Cloneable
 {
+	public static final TextCellStyle NONE = new TextCellStyle();
+
 	private Color textColor;
 	private Color backgroundColor;
 	private boolean bold;

@@ -90,7 +90,6 @@ public class VFlow
 	protected final FlowLineCache cache;
 	private int phantomColumn = -1;
 	protected boolean handleScrollEvents = true;
-	private static final TextCellStyle NO_STYLE = new TextCellStyle();
 	
 	
 	public VFlow(FxTextEditor ed)
@@ -1453,7 +1452,7 @@ public class VFlow
 		TextCellStyle style = row.getCellStyles(cell);
 		if(style == null)
 		{
-			style = NO_STYLE;
+			style = TextCellStyle.NONE;
 		}
 		
 		// background
@@ -1486,7 +1485,7 @@ public class VFlow
 			Color fg = style.getTextColor();
 			if(fg == null)
 			{
-				fg = getTextColor();
+				fg = textColor;
 			}
 			
 			Font f = getFont(style);
