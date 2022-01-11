@@ -1,6 +1,7 @@
 // Copyright © 2020-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.fx.internal.GlyphCache;
+import goryachev.fxtexteditor.GlyphType;
 
 
 /**
@@ -23,6 +24,29 @@ public class GlyphInfoSimple
 			return GlyphCache.get(c);
 		}
 		return null;
+	}
+	
+	
+	/** returns the type of a glyph at the specified glyph index. */
+	public GlyphType getGlyphType(int ix)
+	{
+		if(ix < 0)
+		{
+			return GlyphType.EOL;
+		}
+		else if(ix >= text.length())
+		{
+			return GlyphType.EOL;
+		}
+		else
+		{
+			char c = text.charAt(ix);
+			if(c == '\t')
+			{
+				return GlyphType.TAB;
+			}
+		}
+		return GlyphType.REG;
 	}
 
 

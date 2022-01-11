@@ -1,6 +1,7 @@
 // Copyright © 2019-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.common.util.text.IBreakIterator;
+import goryachev.fxtexteditor.GlyphType;
 import java.util.Arrays;
 
 
@@ -11,6 +12,9 @@ import java.util.Arrays;
 public abstract class AGlyphInfo
 {
 	public abstract String getGlyphText(int glyphIndex);
+	
+	/** returns the type of a glyph at the specified glyph index. */
+	public abstract GlyphType getGlyphType(int glyphIndex);
 
 	public abstract int getCharIndex(int glyphIndex);
 	

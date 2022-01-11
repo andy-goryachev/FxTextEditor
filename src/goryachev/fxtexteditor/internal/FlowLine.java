@@ -121,21 +121,9 @@ public class FlowLine
 	}
 
 	
-	/** returns the type of a glyph at the specified cell index. */
+	/** returns the type of a glyph at the specified glyph index. */
 	public GlyphType getGlyphType(int glyphIndex)
 	{
-		String s = info.getGlyphText(glyphIndex);
-		if(s == null)
-		{
-			return GlyphType.EOL;
-		}
-		else if("\t".equals(s))
-		{
-			return GlyphType.TAB;
-		}
-		else
-		{
-			return GlyphType.REG;
-		}
+		return info.getGlyphType(glyphIndex);
 	}
 }

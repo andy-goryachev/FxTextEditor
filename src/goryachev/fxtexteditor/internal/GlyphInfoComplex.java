@@ -1,5 +1,6 @@
 // Copyright © 2020-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
+import goryachev.fxtexteditor.GlyphType;
 import java.util.Arrays;
 
 
@@ -78,6 +79,24 @@ public class GlyphInfoComplex
 		{
 			throw e; // FIX
 		}
+	}
+	
+	
+	public GlyphType getGlyphType(int glyphIndex)
+	{
+		String s = getGlyphText(glyphIndex);
+		if(s == null)
+		{
+			return GlyphType.EOL;
+		}
+		else if(s.length() == 1)
+		{
+			if("\t".equals(s))
+			{
+				return GlyphType.TAB;
+			}
+		}
+		return GlyphType.REG;
 	}
 
 
