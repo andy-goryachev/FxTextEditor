@@ -11,6 +11,7 @@ import goryachev.fx.hacks.FxHacks;
 import goryachev.fx.internal.CssTools;
 import goryachev.fx.internal.DisconnectableIntegerListener;
 import goryachev.fx.internal.FxSchema;
+import goryachev.fx.internal.FxStyleHandler;
 import goryachev.fx.internal.ParentWindow;
 import goryachev.fx.internal.WindowsFx;
 import goryachev.fx.table.FxTable;
@@ -2111,5 +2112,32 @@ public final class FX
 	public static Disconnectable onChange(ReadOnlyIntegerProperty prop, IntConsumer onChange)
 	{
 		return new DisconnectableIntegerListener(prop, onChange);
+	}
+	
+	
+	/** adds a new style */
+	public static void setStyle(Node n, String property, Object value)
+	{
+		if(n != null)
+		{
+			String s = n.getStyle();
+			FxStyleHandler m = new FxStyleHandler(s);
+			m.put(property, value);
+			String s2 = m.toStyleString();
+			n.setStyle(s2);
+		}
+	}
+	
+	
+	public static void removeStyle(Node n, String property)
+	{
+		if(n != null)
+		{
+			String s = n.getStyle();
+			FxStyleHandler m = new FxStyleHandler(s);
+			m.remove(property);
+			String s2 = m.toStyleString();
+			n.setStyle(s2);
+		}
 	}
 }
