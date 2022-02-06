@@ -299,13 +299,23 @@ public class RtfWriter
 					break;
 				}
 			}
-			else if(ch == '\\')
-			{
-				write("\\\\");
-			}
 			else if(ch < 0x80)
 			{
-				out.write(ch);
+				switch(ch)
+				{
+				case '\\':
+					write("\\\\");
+					break;
+				case '{':
+					write("\\{");
+					break;
+				case '}':
+					write("\\}");
+					break;
+				default:
+					out.write(ch);
+					break;
+				}
 			}
 			else
 			{
