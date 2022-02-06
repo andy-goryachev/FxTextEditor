@@ -14,7 +14,7 @@ public class GlobalDoubleProperty
 	private final String key;
 	
 	
-	public GlobalDoubleProperty(String key, int defaultValue)
+	public GlobalDoubleProperty(String key, double defaultValue)
 	{
 		super(defaultValue);
 		this.key = key;

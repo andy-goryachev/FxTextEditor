@@ -2,7 +2,6 @@
 package goryachev.fx.table;
 import goryachev.common.util.CKit;
 import goryachev.fx.FxObject;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
@@ -31,8 +30,7 @@ public class FxTableColumn<ITEM,CELL>
 	extends TableColumn<ITEM,CELL>
 {
 	protected Function<CELL,String> formatter;
-	protected Function<CELL,Node> renderer;
-	protected BiConsumer<TableCell,CELL> decorator;
+	protected ICellRenderer<CELL> renderer;
 	protected OverrunStyle overrunStyle = OverrunStyle.ELLIPSIS;
 	protected Pos alignment = Pos.CENTER_LEFT;
 	
@@ -59,7 +57,7 @@ public class FxTableColumn<ITEM,CELL>
 	
 	public FxTableColumn<ITEM,CELL> setAlignment(Pos a)
 	{
-		alignment = a;
+		alignment = (a == null ? Pos.CENTER_LEFT : a);
 		return this;
 	}
 	
@@ -108,6 +106,12 @@ public class FxTableColumn<ITEM,CELL>
 	}
 	
 	
+	public Pos getAlignment()
+	{
+		return alignment;
+	}
+	
+	
 	public FxTableColumn<ITEM,CELL> setFormatter(Function<CELL,String> formatter)
 	{
 		this.formatter = formatter;
@@ -123,19 +127,18 @@ public class FxTableColumn<ITEM,CELL>
 	
 	
 	/** WARNING: might cause infinite layout() loop if table is inside a split pane? */ 
-	public FxTableColumn<ITEM,CELL> setRenderer(Function<CELL,Node> r)
+	public FxTableColumn<ITEM,CELL> setRenderer(ICellRenderer<CELL> r)
 	{
 		renderer = r;
 		return this;
 	}
 	
 	
-	public FxTableColumn<ITEM,CELL> setDecorator(BiConsumer<TableCell,CELL> d)
+	public ICellRenderer<CELL> getRenderer()
 	{
-		decorator = d;
-		return this;
+		return renderer;
 	}
-
+	
 
 	/** 
 	 * A simplified alternative to setCellValueFactory().  
@@ -201,15 +204,8 @@ public class FxTableColumn<ITEM,CELL>
 
 						if(empty || (item == null))
 						{
-							if(decorator != null)
-							{
-								decorator.accept(this, null);
-							}
-							else
-							{
-								setText(null);
-								setGraphic(null);
-							}
+							setText(null);
+							setGraphic(null);
 						}
 						else
 						{
@@ -218,15 +214,25 @@ public class FxTableColumn<ITEM,CELL>
 								super.setText(null);
 								super.setGraphic((Node)item);
 							}
-							else if(decorator != null)
-							{
-								decorator.accept(this, (CELL)item);
-							}
 							else if(renderer != null)
 							{
-								Node n = renderer.apply((CELL)item);
-								super.setText(null);
-								super.setGraphic(n);
+								Object rendered = renderer.renderCell(this, (CELL)item);
+								if(rendered == null)
+								{
+									// renderer has configured the table cell
+								}
+								else if(rendered instanceof Node)
+								{
+									Node n = (Node)rendered;
+									super.setText(null);
+									super.setGraphic(n);
+								}
+								else
+								{
+									String text = rendered.toString();
+									super.setText(text);
+									super.setGraphic(null);
+								}
 							}
 							else
 							{

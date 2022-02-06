@@ -105,4 +105,10 @@ public class FxToolBar
 		add(b);
 		return b;
 	}
+	
+	
+	public void clear()
+	{
+		getItems().clear();
+	}
 }

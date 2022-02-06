@@ -192,6 +192,7 @@ public class FxStyleSheet
 					
 					sb.a("\t");
 					((FxCssProp)x).write(sb);
+					sb.nl();
 				}
 				else if(x != null)
 				{

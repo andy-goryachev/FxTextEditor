@@ -6,13 +6,11 @@ import goryachev.fx.FX;
 import goryachev.fx.FxObject;
 import goryachev.fx.internal.CssHack;
 import goryachev.fx.internal.CssTools;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
 import javafx.scene.text.Font;
-import javafx.util.Callback;
 
 
 /**
@@ -36,55 +34,52 @@ public class FxTextTable<T>
 	
 	public FxTextTable()
 	{
-		FX.addChangeListener(fontProperty, this::updateFontHeightPadding);
-		FX.addChangeListener(cellPaddingProperty, this::updateFontHeightPadding);
+		init();
 	}
 	
 	
 	public FxTextTable(ObservableList<T> items)
 	{
 		super(items);
+		init();
 	}
 	
 	
-	public <C> FxTableColumn<T,C> addColumn(String name)
+	private void init()
 	{
-		FxTableColumn<T,C> c = super.addColumn(name);
-		c.setCellFactory(cellFactory());
-		return c;
+		FX.addChangeListener(fontProperty, this::updateFontHeightPadding);
+		FX.addChangeListener(cellPaddingProperty, this::updateFontHeightPadding);
+		FX.addChangeListener(getColumns(), this::updateColumnCellFactory);
 	}
 	
 	
-	protected Callback cellFactory()
+	protected void updateColumnCellFactory(ListChangeListener.Change ch)
 	{
-		return new Callback<TableColumn<?,?>,TableCell<?,?>>()
+		while(ch.next())
 		{
-			@Override
-			public TableCell<?,?> call(TableColumn<?,?> column)
-			{
-				return new TableCell<Object,Object>()
+			ch.
+				getAddedSubList().
+				forEach((c) ->
 				{
-					@Override
-					protected void updateItem(Object item, boolean empty)
+					if(c instanceof FxTableColumn)
 					{
-						super.updateItem(item, empty);
-
-						if(empty || (item == null))
+						FxTableColumn tc = (FxTableColumn)c;
+						if(tc.getRenderer() == null)
 						{
-							setText(null);
-							setGraphic(null);
-						}
-						else
-						{
-							// TODO alignment?
-							Node n = new TextTableCellRenderer(FxTextTable.this, item);
-							super.setText(null);
-							super.setGraphic(n);
+							tc.setRenderer((tcell, item) ->
+							{
+								// FIX not?
+								HPos align = tc.getAlignment().getHpos();
+								return new CanvasTextTableCell(this, item, align);
+							});
 						}
 					}
-				};
-			}
-		};
+					else
+					{
+						throw new Error("not an FxTableColumn: " + c); 
+					}
+				});
+		}
 	}
 	
 	
@@ -201,6 +196,7 @@ public class FxTextTable<T>
 	{
 		CssHack.remove(table, TABLE_ROW_HEIGHT_KEY);
 
+		// FIX table row height is incorrect with fractional font sizes
 		if(size > 0)
 		{
 			String val = CssTools.format("%spt", size);

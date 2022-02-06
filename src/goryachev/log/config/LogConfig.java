@@ -1,7 +1,8 @@
 // Copyright © 2018-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.log.config;
-import goryachev.common.log.AbstractLogConfig;
+import goryachev.common.log.ILogConfig;
 import goryachev.common.log.AppenderBase;
+import goryachev.common.log.IAppender;
 import goryachev.common.log.LogLevel;
 import goryachev.common.log.LogUtil;
 import goryachev.common.log.internal.ConsoleAppender;
@@ -17,7 +18,7 @@ import java.util.List;
  */
 @Keep
 public class LogConfig
-	extends AbstractLogConfig
+	implements ILogConfig
 {
 	protected static final String STDOUT = "stdout";
 	protected static final String STDERR = "stderr";
@@ -134,15 +135,15 @@ public class LogConfig
 	}
 	
 	
-	public List<AppenderBase> getAppenders() throws Exception
+	public List<IAppender> getAppenders() throws Exception
 	{
-		CList<AppenderBase> rv = new CList();
+		CList<IAppender	> rv = new CList();
 		
 		if(appenders != null)
 		{
 			for(AppenderInfo inf: appenders)
 			{
-				AppenderBase a = createAppender(inf);
+				IAppender a = createAppender(inf);
 				rv.add(a);
 			}
 		}
@@ -151,7 +152,7 @@ public class LogConfig
 	}
 	
 	
-	protected static AppenderBase createAppender(AppenderInfo inf) throws Exception
+	protected static IAppender createAppender(AppenderInfo inf) throws Exception
 	{
 		if(inf.type == null)
 		{

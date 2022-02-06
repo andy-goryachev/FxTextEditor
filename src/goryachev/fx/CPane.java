@@ -27,7 +27,7 @@ import javafx.scene.layout.Region;
 public class CPane
 	extends Pane
 {
-	protected static final Log log = Log.get("CPane");
+	private static final Log log = Log.get("CPane");
 	public static final CssStyle STYLE = new CssStyle("CPane_PANE");
 	public static final double FILL = -1.0;
 	public static final double PREF = -2.0;

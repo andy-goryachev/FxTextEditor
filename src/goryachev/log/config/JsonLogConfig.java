@@ -1,6 +1,6 @@
 // Copyright © 2020-2022 Andy Goryachev <andy@goryachev.com>
 package goryachev.log.config;
-import goryachev.common.log.AbstractLogConfig;
+import goryachev.common.log.ILogConfig;
 import goryachev.common.log.Log;
 import goryachev.common.log.LogUtil;
 import goryachev.common.util.CKit;
@@ -22,7 +22,7 @@ public class JsonLogConfig
 	
 	public static void configure(String spec)
 	{
-		AbstractLogConfig cf;
+		ILogConfig cf;
 		try
 		{
 			cf = parseLogConfig(spec);

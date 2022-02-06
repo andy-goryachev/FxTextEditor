@@ -6,6 +6,7 @@ import goryachev.fx.TextCellMetrics;
 import goryachev.fx.TextCellStyle;
 import goryachev.fx.internal.GlyphCache;
 import javafx.geometry.Bounds;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -149,98 +150,140 @@ public class TextPainter
 		gx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 	
-
-	protected void paintCell(IStyledText styledText, TextCellMetrics tm, int ix)
+	
+	protected double computeStartX(int cellWidth, int textLength, HPos alignment)
 	{
-		double cx = ix * tm.cellWidth;
-		
-		// style
-		TextCellStyle style = styledText.getCellStyle(ix);
-		if(style == null)
+		double x;
+		switch(alignment)
 		{
-			style = TextCellStyle.NONE;
-		}
-		
-		// background
-//		Color bg = backgroundColor(caretLine, selected, row.getLineColor(), style.getBackgroundColor());
-//		gx.setFill(bg);
-//		gx.fillRect(cx, cy, tm.cellWidth, tm.cellHeight);
-		
-		if(style.isUnderscore())
-		{
-			// TODO special property, mix with background
-			gx.setFill(textColor);
-			gx.fillRect(cx, tm.cellHeight - 1, tm.cellWidth, 1);
-		}
-		
-		// text
-		char c = styledText.charAt(ix);
-		String s = GlyphCache.get(c);
-		if(s != null)
-		{
-			Color fg = style.getTextColor();
-			if(fg == null)
+		case CENTER:
+			x = (canvas.getWidth() - (textLength * cellWidth)) / 2.0;
+			if(x > 0.0)
 			{
-				fg = textColor;
+				return x;
 			}
-			
-			Font f = getFont(style);
-			gx.setFont(f);
-			gx.setFill(fg);
-			gx.fillText(s, cx, -tm.baseline, tm.cellWidth);
-		
-			if(style.isStrikeThrough())
+			break;
+		case RIGHT:
+			x = (canvas.getWidth() - (textLength * cellWidth));
+			if(x > 0.0)
 			{
-				// TODO special property, mix with background
-				gx.setFill(textColor);
-				gx.fillRect(cx, tm.cellHeight/2, tm.cellWidth, 1);
+				return x;
 			}
+			break;
+		case LEFT:
+		default:
+			break;
 		}
+		return 0.0;
 	}
 	
 	
-	protected void paintText(String text, TextCellMetrics tm, int ix)
-	{
-		double cx = ix * tm.cellWidth;
-		
-		// background
-//		Color bg = backgroundColor(caretLine, selected, row.getLineColor(), style.getBackgroundColor());
-//		gx.setFill(bg);
-//		gx.fillRect(cx, cy, tm.cellWidth, tm.cellHeight);
-		
-		// text
-		char c = text.charAt(ix);
-		String s = GlyphCache.get(c);
-		if(s != null)
-		{
-			gx.fillText(s, cx, -tm.baseline, tm.cellWidth);
-		}
-	}
-	
-	
-	public void paint(String text)
+	public void paint(String text, HPos alignment)
 	{
 		TextCellMetrics tm = textMetrics();
+		int len = text.length();
+		double xoffset = computeStartX(tm.cellWidth, len, alignment);
+		
+		// background
+//		Color bg = backgroundColor(caretLine, selected, row.getLineColor(), style.getBackgroundColor());
+//		gx.setFill(bg);
+//		gx.fillRect(cx, cy, tm.cellWidth, tm.cellHeight);
+
+		// text
 		gx.setFont(font);
 		gx.setFill(textColor);
 		
-		int sz = text.length();
-		for(int i=0; i<sz; i++)
+		for(int i=0; i<len; i++)
 		{
+			double x = xoffset + (i * tm.cellWidth);
+			if(x < 0)
+			{
+				if((x + tm.cellWidth) < 0)
+				{
+					continue;
+				}
+			}
+			else if(x > canvas.getWidth())
+			{
+				return;
+			}
+			
 			char c = text.charAt(i);
-			paintText(text, tm, i);
+			String s = GlyphCache.get(c);
+			if(s != null)
+			{
+				gx.fillText(s, x, -tm.baseline, tm.cellWidth);
+			}
 		}
 	}
 	
 	
-	public void paint(IStyledText text)
+	public void paint(IStyledText styledText, HPos alignment)
 	{
 		TextCellMetrics tm = textMetrics();
-		
-		int sz = text.getTextLength();
-		for(int i=0; i<sz; i++)
+		int len = styledText.getTextLength();
+		double xoffset = computeStartX(tm.cellWidth, len, alignment);
+
+		for(int i=0; i<len; i++)
 		{
-			paintCell(text, tm, i);
+			double x = xoffset + (i * tm.cellWidth);
+			if(x < 0)
+			{
+				if((x + tm.cellWidth) < 0)
+				{
+					continue;
+				}
+			}
+			else if(x > canvas.getWidth())
+			{
+				return;
+			}
+			
+			// style
+			TextCellStyle style = styledText.getCellStyle(i);
+			if(style == null)
+			{
+				style = TextCellStyle.NONE;
+			}
+			
+			// background
+			Color bg = style.getBackgroundColor();
+			if(bg != null)
+			{
+				gx.setFill(bg);
+				gx.fillRect(x, 0.0, tm.cellWidth, tm.cellHeight);
+			}
+			
+			if(style.isUnderscore())
+			{
+				// TODO special property, mix with background
+				gx.setFill(textColor);
+				gx.fillRect(x, tm.cellHeight - 1, tm.cellWidth, 1);
+			}
+			
+			// text
+			char c = styledText.charAt(i);
+			String s = GlyphCache.get(c);
+			if(s != null)
+			{
+				Color fg = style.getTextColor();
+				if(fg == null)
+				{
+					fg = textColor;
+				}
+				
+				Font f = getFont(style);
+				gx.setFont(f);
+				gx.setFill(fg);
+				gx.fillText(s, x, -tm.baseline, tm.cellWidth);
+			
+				if(style.isStrikeThrough())
+				{
+					// TODO special property, mix with background
+					gx.setFill(textColor);
+					gx.fillRect(x, tm.cellHeight/2, tm.cellWidth, 1);
+				}
+			}
 		}
 	}
 }

@@ -86,7 +86,13 @@ public class FxChangeListener
 	{
 		if(enabled)
 		{
-			callback.run();
+			invokeCallback();
 		}
+	}
+	
+	
+	protected void invokeCallback()
+	{
+		callback.run();
 	}
 }

@@ -5,61 +5,55 @@ import goryachev.fx.IStyledText;
 import goryachev.fx.util.TextPainter;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
 
 /**
- * FxTextTable Cell Renderer.
+ * Canvas-based Table Cell capable of rendering plain text and IStyledText
+ * inside of FxTextTable.
  */
-public class TextTableCellRenderer
+public class CanvasTextTableCell
 	extends CPane
 {
 	protected final TextPainter painter = new TextPainter();
 	protected final Object value;
+	protected final HPos alignment;
 	private final ObjectBinding binding;
 	
 	
-	public TextTableCellRenderer(FxTextTable parent, Object value)
+	public CanvasTextTableCell(FxTextTable table, Object value, HPos alignment)
 	{
 		this.value = value;
+		this.alignment = alignment;
 
 		// using object binding callback to create and paint the canvas 
 		binding = Bindings.createObjectBinding
 		(
 			() ->
 			{
-				Font f = parent.getFont();
+				Font f = table.getFont();
 				return updateCanvas(f);	
 			}, 
-			parent.fontProperty(), 
+			table.fontProperty(), 
 			widthProperty(), 
 			heightProperty()
 		);
-		binding.addListener((c,p,v) -> { }); // TODO lambda can be used to updateCanvas
+		binding.addListener((c,p,v) -> 
+		{
+			// need this listener for the binding to fire,
+			// even though the actual processing is done in updateCanvas() 
+		});
 		
-		Font f = parent.getFont();
+		Font f = table.getFont();
 		updateCanvas(f);
 	}
 	
 	
 	protected double computePrefHeight(double width)
 	{
-//		double h;
-//		Canvas c = painter.getCanvas();
-//		if(c == null)
-//		{
-//			h = 0.0; 
-//		}
-//		else
-//		{
-//			h = c.getHeight();
-//		}
-//		
-//		Insets m = getInsets();
-//		return m.getTop() + h + m.getBottom();
-		
 		return 10;
 	}
 
@@ -98,7 +92,7 @@ public class TextTableCellRenderer
 		
 		if(value instanceof IStyledText)
 		{
-			painter.paint((IStyledText)value);
+			painter.paint((IStyledText)value, alignment);
 		}
 		else
 		{
@@ -109,7 +103,7 @@ public class TextTableCellRenderer
 			else
 			{
 				String text = value.toString();
-				painter.paint(text);
+				painter.paint(text, alignment);
 			}
 		}
 		

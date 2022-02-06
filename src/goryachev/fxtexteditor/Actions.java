@@ -76,7 +76,7 @@ public class Actions
 		pageUp = new PageUp(ed);
 		selectAll = new SelectAll(ed);
 		
-		FX.addChangeListener(this::handleSelectionChange, true, ed.selectionProperty());
+		FX.onChange(this::handleSelectionChange, true, ed.selectionProperty());
 	}
 	
 	

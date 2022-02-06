@@ -2,6 +2,8 @@
 package goryachev.fx;
 import goryachev.common.util.CKit;
 import goryachev.common.util.FH;
+import goryachev.common.util.SB;
+import goryachev.fx.internal.StandardFxProperties;
 import javafx.scene.paint.Color;
 
 
@@ -19,6 +21,7 @@ public class TextCellStyle
 	private boolean italic;
 	private boolean strikeThrough;
 	private boolean underscore;
+	private String style;
 	
 	
 	public TextCellStyle(Color fg, Color bg, boolean bold, boolean italic, boolean strikeThrough, boolean underscore)
@@ -132,6 +135,7 @@ public class TextCellStyle
 	public void setBackgroundColor(Color c)
 	{
 		backgroundColor = c;
+		style = null;
 	}
 	
 	
@@ -144,6 +148,7 @@ public class TextCellStyle
 	public void setTextColor(Color c)
 	{
 		textColor = c;
+		style = null;
 	}
 
 
@@ -156,6 +161,7 @@ public class TextCellStyle
 	public void setBold(boolean on)
 	{
 		bold = on;
+		style = null;
 	}
 
 
@@ -168,6 +174,7 @@ public class TextCellStyle
 	public void setItalic(boolean on)
 	{
 		italic = on;
+		style = null;
 	}
 	
 	
@@ -180,6 +187,7 @@ public class TextCellStyle
 	public void setStrikeThrough(boolean on)
 	{
 		strikeThrough = on;
+		style = null;
 	}
 	
 	
@@ -192,5 +200,37 @@ public class TextCellStyle
 	public void setUnderscore(boolean on)
 	{
 		underscore = on;
+		style = null;
+	}
+	
+	
+	public String getStyle()
+	{
+		if(style == null)
+		{
+			SB sb = new SB(128);
+			
+			if(textColor != null)
+			{
+				StandardFxProperties.textFill(textColor).write(sb);
+			}
+//			private Color backgroundColor; TODO
+			
+			if(bold)
+			{
+				StandardFxProperties.fontWeight(StandardFxProperties.BOLD).write(sb);
+			}
+			
+			if(italic)
+			{
+				StandardFxProperties.fontStyle("italic").write(sb);
+			}
+			
+//			private boolean strikeThrough; // TODO
+//			private boolean underscore;
+			
+			style = sb.toString();
+		}
+		return style;
 	}
 }

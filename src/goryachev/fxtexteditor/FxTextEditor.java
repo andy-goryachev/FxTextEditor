@@ -148,6 +148,12 @@ public class FxTextEditor
 	}
 	
 	
+	public FxObject<Font> fontProperty()
+	{
+		return fontProperty;
+	}
+	
+	
 	public Font getFont()
 	{
 		return fontProperty.get();

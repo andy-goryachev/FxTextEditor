@@ -206,14 +206,12 @@ public class WindowsFx
 	public void storeNode(Node n)
 	{
 		FxWindow w = getFxWindow(n);
-		if(w == null)
+		if(w != null)
 		{
-			throw new Error();
+			String windowPrefix = lookupWindowPrefix(w);
+			Node root = w.getScene().getRoot();
+			FxSchema.storeNode(windowPrefix, root, n);
 		}
-		
-		String windowPrefix = lookupWindowPrefix(w);
-		Node root = w.getScene().getRoot();
-		FxSchema.storeNode(windowPrefix, root, n);
 	}
 	
 	

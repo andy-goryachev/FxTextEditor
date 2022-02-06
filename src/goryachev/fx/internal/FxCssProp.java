@@ -24,6 +24,14 @@ public class FxCssProp
 		sb.a(name);
 		sb.a(": ");
 		sb.a(CssTools.toValue(value));
-		sb.a(";\n");
+		sb.a("; ");
+	}
+	
+	
+	public String toString()
+	{
+		SB sb = new SB();
+		write(sb);
+		return sb.toString();
 	}
 }

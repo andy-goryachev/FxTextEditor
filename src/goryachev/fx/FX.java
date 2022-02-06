@@ -895,9 +895,9 @@ public final class FX
 	}
 	
 	
-	public static Color averageColors(List<Color> colors, double gamma)
+	public static Color mix(Color[] colors, double gamma)
 	{
-		int sz = colors.size();
+		int sz = colors.length;
 		
 		double red = 0.0;
 		double green = 0.0;
@@ -905,7 +905,7 @@ public final class FX
 		
 		for(int i=0; i<sz; i++)
 		{
-			Color c = colors.get(i);
+			Color c = colors[i];
 			double op = c.getOpacity();
 			
 			double r = c.getRed();
@@ -927,9 +927,9 @@ public final class FX
 	}
 
 	
-	public static Color averageColors(List<Color> colors)
+	public static Color mix(Color[] colors)
 	{
-		return averageColors(colors, GAMMA);
+		return mix(colors, GAMMA);
 	}
 	
 
@@ -1446,16 +1446,33 @@ public final class FX
 	public static Disconnectable onChange(Runnable callback, boolean fireImmediately, ObservableValue<?> ... props)
 	{
 		FxChangeListener li = new FxChangeListener(callback);
-
-		for(ObservableValue<?> p: props)
-		{
-			li.listen(p);
-		}
+		li.listen(props);
 		
 		if(fireImmediately)
 		{
 			li.fire();
 		}
+		
+		return li;
+	}
+	
+	
+	/** adds a ChangeListener to the specified ObservableValue(s).  The callback will be invokedLater() */
+	public static Disconnectable onChangeLater(Runnable callback, ObservableValue<?> ... props)
+	{
+		FxChangeListener li = new FxChangeListener(callback)
+		{
+			@Override
+			protected void invokeCallback()
+			{
+				later(() ->
+				{
+					super.invokeCallback();
+				});
+			}
+		};
+
+		li.listen(props);
 		
 		return li;
 	}
@@ -1642,24 +1659,6 @@ public final class FX
 		{
 			li.accept(prop.getValue());
 		}
-	}
-	
-	
-	/** simplified version of addChangeListener that only invokes the callback on change */
-	public static Disconnectable addChangeListener(Runnable callback, boolean fireImmediately, ObservableValue<?> ... props)
-	{
-		FxChangeListener li = new FxChangeListener(callback);
-		for(ObservableValue<?> p: props)
-		{
-			li.listen(p);
-		}
-		
-		if(fireImmediately)
-		{
-			li.fire();
-		}
-		
-		return li;
 	}
 	
 
