@@ -7,6 +7,7 @@ import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxDouble;
 import goryachev.fx.FxObject;
+import goryachev.fx.TextCellMetrics;
 import goryachev.fx.XScrollBar;
 import goryachev.fxtexteditor.internal.InputHandler;
 import goryachev.fxtexteditor.internal.Markers;
@@ -20,6 +21,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -189,6 +191,12 @@ public class FxTextEditor
 	public void setContentPadding(Insets m)
 	{
 		vflow.setPadding(m);
+	}
+	
+	
+	public Insets getContentPadding()
+	{
+		return vflow.getPadding();
 	}
 	
 	
@@ -971,5 +979,29 @@ public class FxTextEditor
 		
 		actions.moveDocumentEnd().fire();
 		scrollCaretToView();
+	}
+	
+	
+	/** computes preferred content diimensions, including padding, assuming wrap lines mode is off */
+	public Dimension2D computePreferredContentSize()
+	{
+		FxTextEditorModel m = getModel();
+		int w = 0;
+		int max = Math.min(1000, m.getLineCount());
+		for(int i=0; i<max; i++)
+		{
+			ITextLine t = m.getTextLine(i);
+			int len = t.getTextLength();
+			if(len > w)
+			{
+				w = len;
+			}
+		}
+		
+		Insets p = getContentPadding();
+		TextCellMetrics tm = vflow.textMetrics();
+		double width = (w * tm.cellWidth) + p.getLeft() + p.getRight();
+		double height = max * tm.cellHeight + p.getTop() + p.getBottom();
+		return new Dimension2D(width, height);
 	}
 }

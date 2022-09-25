@@ -61,7 +61,7 @@ public class WindowsFx
 	}
 	
 	
-	public int getWindowCount()
+	public int getEssentialWindowCount()
 	{
 		int ct = 0;
 		for(int i=windowStack.size()-1; i>=0; --i)
@@ -73,7 +73,7 @@ public class WindowsFx
 			}
 			else
 			{
-				if(w.isShowing())
+				if(w.isShowing() && w.isEssentialWindow())
 				{
 					ct++;
 				}
@@ -363,7 +363,7 @@ public class WindowsFx
 			windows.remove(id);
 		}
 		
-		if(getWindowCount() == 0)
+		if(getEssentialWindowCount() == 0) // FIX
 		{
 			exitPrivate();
 		}

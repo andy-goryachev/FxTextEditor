@@ -23,6 +23,9 @@ public class FxWindow
 	 */
 	public void confirmClosing(OnWindowClosing choice) { }
 	
+	/** closing last essential window exits the application, regardless of the number of open non-essential windows */
+	public boolean isEssentialWindow() { return true; }
+	
 	//
 	
 	public final FxAction closeWindowAction = new FxAction(this::closeWithConfirmation);
