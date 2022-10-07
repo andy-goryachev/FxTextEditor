@@ -1699,7 +1699,13 @@ public class VFlow
 			int gix = fline.getGlyphIndex(m.getCharIndex());
 			
 			ScreenRow r = buffer().getScreenRow(0);
-			if(compare(line, gix, r.getLineNumber(), r.getStartGlyphIndex()) < 0)
+			int ln = r.getLineNumber();
+			if(ln < 0)
+			{
+				return false;
+			}
+			
+			if(compare(line, gix, ln, r.getStartGlyphIndex()) < 0)
 			{
 				return false;
 			}
