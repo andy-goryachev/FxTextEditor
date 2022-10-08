@@ -168,7 +168,7 @@ public class Marker
 		}
 		else if(this.line == line)
 		{
-			if(getCharIndex() > pos)
+			if(this.charIndex > pos)
 			{
 				return true;
 			}

@@ -159,6 +159,13 @@ public class VFlow
 	}
 	
 	
+	/** returns the leftmost display cell index (glyph index) */
+	public int getTopCellIndex()
+	{
+		return topColumn;
+	}
+	
+	
 	/** shift viewport delta rows up (delta<0) or down (delta>0) */
 	public void shiftViewPort(int delta)
 	{
@@ -227,13 +234,6 @@ public class VFlow
 		}
 		
 		updateVerticalScrollBarPosition();
-	}
-	
-	
-	/** returns the leftmost display cell index (glyph index) */
-	public int getTopCellIndex()
-	{
-		return topColumn;
 	}
 	
 	

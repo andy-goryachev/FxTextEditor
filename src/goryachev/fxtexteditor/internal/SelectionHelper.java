@@ -54,13 +54,15 @@ public class SelectionHelper
 			}
 		}
 		
-		int selectionOffset = (selOff >= 0 ? selOff : off);
-		if(selectionOffset >= 0)
+		int ix = (selOff >= 0 ? selOff : off);
+		if(ix < 0)
 		{
-			if(seg.contains(line, selectionOffset))
-			{
-				flags |= SELECTED;
-			}
+			ix = vflow.getTopCellIndex();
+		}
+		
+		if(seg.contains(line, ix))
+		{
+			flags |= SELECTED;
 		}
 		
 		return flags;
