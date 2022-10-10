@@ -2,6 +2,7 @@
 package goryachev.fxtexteditor;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
+import goryachev.common.util.D;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
@@ -126,6 +127,9 @@ public class FxTextEditor
 		setFocusTraversable(true);
 		
 		setTabPolicy(TabPolicy.create(4));
+		
+		vflow.layoutXProperty().addListener((s,p,c) -> D.print("vflow", c));
+		layoutXProperty().addListener((s,p,c) -> D.print("editor", c));
 	}
 	
 	
@@ -364,9 +368,8 @@ public class FxTextEditor
 	
 	protected void layoutChildren()
 	{
-		Insets m = getPadding();
-		double x0 = m.getLeft();
-		double y0 = m.getTop();
+		double x0 = snappedLeftInset();
+		double y0 = snappedTopInset();
 		
 		double vscrollWidth = 0.0;
 		double hscrollHeight = 0.0;
@@ -384,8 +387,8 @@ public class FxTextEditor
 		
 		// TODO line numbers column
 		
-		double w = getWidth() - m.getLeft() - m.getRight() - vscrollWidth - 1;
-		double h = getHeight() - m.getTop() - m.getBottom() - hscrollHeight - 1;
+		double w = snapSizeX(getWidth() - vscrollWidth - 1) - snappedLeftInset() - snappedRightInset();
+		double h = getHeight() - snappedTopInset() - snappedBottomInset() - hscrollHeight - 1;
 
 		// layout children
 		layoutInArea(vscroll, w, y0 + 1, vscrollWidth, h, 0, null, true, true, HPos.RIGHT, VPos.TOP);

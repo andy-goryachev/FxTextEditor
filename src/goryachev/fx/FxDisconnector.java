@@ -210,7 +210,7 @@ public class FxDisconnector
 			}
 
 
-			public void changed(ObservableValue p, T oldValue, T newValue)
+			public void changed(ObservableValue<? extends T> p, T oldValue, T newValue)
 			{
 				ChangeListener<T> li = ref.get();
 				if(li == null)
