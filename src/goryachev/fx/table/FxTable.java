@@ -16,6 +16,9 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -268,6 +271,12 @@ public class FxTable<T>
 	public void addItem(T item)
 	{
 		table.getItems().add(item);
+	}
+	
+	
+	public void addItem(int ix, T item)
+	{
+		table.getItems().add(ix, item);
 	}
 	
 	
