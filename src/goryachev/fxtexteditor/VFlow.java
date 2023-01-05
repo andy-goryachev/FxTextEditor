@@ -69,7 +69,7 @@ public class VFlow
 	private Font boldItalicFont;
 	private Font italicFont;
 	private TextCellMetrics metrics;
-	protected final Text proto = new Text();
+	protected final Text proto;
 	private Canvas canvas;
 	private GraphicsContext gx;
 	private int screenColumnCount;
@@ -95,6 +95,9 @@ public class VFlow
 	public VFlow(FxTextEditor ed)
 	{
 		this.editor = ed;
+		
+		proto = new Text();
+		proto.setManaged(false);
 		
 		// TODO bind vflow background color to editor background color
 		
@@ -411,12 +414,16 @@ public class VFlow
 	{
 		if(metrics == null)
 		{
+			getChildren().add(proto);
+			
 			proto.setText("8");
 			proto.setFont(font);
 			
 			Bounds b = proto.getBoundsInLocal();
 			int w = CKit.round(b.getWidth());
 			int h = CKit.round(b.getHeight());
+			
+			getChildren().remove(proto);
 			
 			metrics = new TextCellMetrics(font, b.getMinY(), w, h);
 		}
