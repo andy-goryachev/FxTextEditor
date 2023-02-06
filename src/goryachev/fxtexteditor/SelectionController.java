@@ -1,4 +1,4 @@
-// Copyright © 2017-2022 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2017-2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.fx.FxObject;
 import javafx.beans.property.ReadOnlyObjectProperty;

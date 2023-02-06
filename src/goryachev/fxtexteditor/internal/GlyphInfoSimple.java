@@ -1,4 +1,4 @@
-// Copyright © 2020-2022 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.fx.internal.GlyphCache;
 import goryachev.fxtexteditor.GlyphType;
