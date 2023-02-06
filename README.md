@@ -32,7 +32,12 @@ Please refer to a simple demo application: [FxTextEditorDemoApp.java](https://gi
 ## Warning
 
 This project is currently in the early development stage.  Do not even think of using it in production.
- 
+
+
+## Requirements
+
+Requires JavaFX 17+.
+
 
 ## License
 
