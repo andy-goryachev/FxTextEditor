@@ -1,4 +1,4 @@
-// Copyright © 2017-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2017-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CMap;
@@ -290,6 +290,7 @@ public class KeyMap
 		}
 		
 		
+		@Override
 		public boolean equals(Object x)
 		{
 			if(x == this)
@@ -311,6 +312,7 @@ public class KeyMap
 		}
 		
 		
+		@Override
 		public int hashCode()
 		{
 			int h = FH.hash(KKey.class);

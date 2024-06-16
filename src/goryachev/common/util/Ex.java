@@ -1,4 +1,4 @@
-// Copyright © 2014-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2014-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 
 
@@ -44,6 +44,7 @@ public class Ex
 	}
 
 
+	@Override
 	public String getMessage()
 	{
 		SB sb = new SB();

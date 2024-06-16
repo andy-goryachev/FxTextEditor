@@ -1,4 +1,4 @@
-// Copyright © 2011-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2011-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.io;
 import java.io.EOFException;
 
@@ -20,18 +20,21 @@ public class BitStream
 	}
 	
 	
+	@Override
 	public int getIndex()
 	{
 		return index;
 	}
 	
 	
+	@Override
 	public boolean hasMoreBits()
 	{
 		return (index < (bytes.length * 8));
 	}
 	
 	
+	@Override
 	public int nextBits(int count) throws Exception
 	{
 		int d = 0;
@@ -44,6 +47,7 @@ public class BitStream
 	}
 		
 	
+	@Override
 	public int nextBit() throws Exception
 	{
 		int byteIndex = index/8;
@@ -65,6 +69,7 @@ public class BitStream
 	}
 	
 	
+	@Override
 	public void skip(int bits)
 	{
 		if(bits < 0)

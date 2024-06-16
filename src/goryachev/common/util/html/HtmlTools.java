@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2008-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util.html;
 import goryachev.common.log.Log;
 import goryachev.common.util.Base64;
@@ -251,6 +251,7 @@ public class HtmlTools
 	{
 		new CComparator<String>()
 		{
+			@Override
 			public int compare(String a, String b)
 			{
 				return compareAsStrings(a, b);

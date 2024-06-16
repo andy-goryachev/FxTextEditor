@@ -1,4 +1,4 @@
-// Copyright © 2018-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2018-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import java.util.List;
 
@@ -13,6 +13,7 @@ public class Choices<T>
 		protected C choice;
 		protected String text;
 		
+		@Override
 		public String toString() { return text; }
 	}
 	

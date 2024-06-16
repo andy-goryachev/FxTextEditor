@@ -26,12 +26,14 @@ public class EditableModel
 	}
 
 
+	@Override
 	public int getLineCount()
 	{
 		return lines.size();
 	}
 
 
+	@Override
 	public ITextLine getTextLine(int line)
 	{
 		String text = lines.get(line);
@@ -39,6 +41,7 @@ public class EditableModel
 	}
 	
 	
+	@Override
 	public IBreakIterator getBreakIterator()
 	{
 		return null;
@@ -63,6 +66,7 @@ public class EditableModel
 	
 	
 	// new version
+	@Override
 	public Edit edit(Edit edit) throws Exception
 	{
 		int line0 = edit.getMinLine();

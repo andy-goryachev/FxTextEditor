@@ -1,4 +1,4 @@
-// Copyright © 2011-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2011-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import java.util.Collection;
 import java.util.HashMap;
@@ -57,6 +57,7 @@ public class CMap<K,V>
 	}
 	
 	
+	@Override
 	public Object clone()
 	{
 		return copyCMap();

@@ -1,4 +1,4 @@
-// Copyright © 2019-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2019-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import goryachev.common.log.Log;
 import java.util.Timer;
@@ -65,12 +65,14 @@ public class DelayedAction
 		
 		task = new TimerTask()
 		{
+			@Override
 			public void run()
 			{
 				processTask();
 			}
 			
 			
+			@Override
 			public String toString()
 			{
 				return getName();
@@ -81,6 +83,7 @@ public class DelayedAction
 	}
 	
 	
+	@Override
 	public String toString()
 	{
 		return getName();

@@ -1,4 +1,4 @@
-// Copyright © 2005-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2005-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import java.io.Externalizable;
 import java.io.IOException;
@@ -97,6 +97,7 @@ public class LongArray
 	}
 	
 	
+	@Override
 	public void readExternal(ObjectInput in) throws ClassNotFoundException, IOException
 	{
 		size = in.readInt();
@@ -104,6 +105,7 @@ public class LongArray
 	}
 	
 	
+	@Override
 	public void writeExternal(ObjectOutput out) throws IOException
 	{
 		out.writeInt(size);

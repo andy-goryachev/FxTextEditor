@@ -1,4 +1,4 @@
-// Copyright © 2013-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2013-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util.text;
 import goryachev.common.util.CList;
 
@@ -39,6 +39,7 @@ public class ZQuery
 	}
 	
 	
+	@Override
 	public String toString()
 	{
 		return getExpression();

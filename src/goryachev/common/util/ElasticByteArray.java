@@ -1,4 +1,4 @@
-// Copyright © 2005-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2005-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import java.nio.charset.Charset;
 
@@ -168,6 +168,7 @@ public class ElasticByteArray
 	}
 	
 	
+	@Override
 	public String toString()
 	{
 		return super.toString();

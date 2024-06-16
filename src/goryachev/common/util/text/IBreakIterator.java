@@ -1,4 +1,4 @@
-// Copyright © 2019-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2019-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util.text;
 import java.text.BreakIterator;
 
@@ -39,18 +39,21 @@ public interface IBreakIterator
 	{
 		return new IBreakIterator()
 		{
+			@Override
 			public void setText(String text)
 			{
 				br.setText(text);
 			}
 
 
+			@Override
 			public int first()
 			{
 				return br.first();
 			}
 
 
+			@Override
 			public int next()
 			{
 				int rv = br.next();
@@ -62,6 +65,7 @@ public interface IBreakIterator
 			}
 			
 			
+			@Override
 			public IBreakIterator copy()
 			{
 				return (IBreakIterator)br.clone();

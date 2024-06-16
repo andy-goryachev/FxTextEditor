@@ -1,4 +1,4 @@
-// Copyright © 2021-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2021-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx.table;
 import goryachev.fx.CPane;
 import goryachev.fx.IStyledText;
@@ -52,12 +52,14 @@ public class CanvasTextTableCell
 	}
 	
 	
+	@Override
 	protected double computePrefHeight(double width)
 	{
 		return 10;
 	}
 
 
+	@Override
 	protected double computePrefWidth(double height)
 	{
 		double w;
@@ -76,6 +78,7 @@ public class CanvasTextTableCell
 	}
 	
 	
+	@Override
 	protected void layoutChildren()
 	{
 		super.layoutChildren();

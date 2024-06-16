@@ -6,10 +6,11 @@ import goryachev.fx.FX;
 import goryachev.fx.FxAction;
 import goryachev.fx.FxComboBox;
 import goryachev.fx.FxDump;
+import goryachev.fx.FxFramework;
 import goryachev.fx.FxMenuBar;
 import goryachev.fx.FxToolBar;
 import goryachev.fx.FxWindow;
-import goryachev.fx.internal.LocalSettings;
+import goryachev.fx.settings.LocalSettings;
 import goryachev.fxtexteditor.Actions;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.FxTextEditorModel;
@@ -27,17 +28,21 @@ public class MainWindow
 	public final MainPane mainPane;
 	public final CPane content;
 	public final StatusBar statusBar;
-	protected final FxComboBox modelSelector = new FxComboBox();
-	protected final FxComboBox fontSelector = new FxComboBox();
+	protected final FxComboBox modelSelector;
+	protected final FxComboBox fontSelector;
 	
 	
 	public MainWindow()
 	{
 		super("MainWindow");
 		
+		modelSelector = new FxComboBox();
+		FX.setName(modelSelector, "MODEL");
 		modelSelector.setItems((Object[])DemoModels.getAll());
 		modelSelector.valueProperty().addListener((s,p,c) -> onModelSelectionChange(c));
 		
+		fontSelector = new FxComboBox();
+		FX.setName(fontSelector, "FONT_SIZE");
 		fontSelector.setItems
 		(
 			"9",
@@ -66,9 +71,7 @@ public class MainWindow
 
 		LocalSettings.get(this).
 			add("LINE_WRAP", editor().wrapLinesProperty()).
-			add("SHOW_LINE_NUMBERS", editor().showLineNumbersProperty()).
-			add("MODEL", modelSelector).
-			add("FONT_SIZE", fontSelector);
+			add("SHOW_LINE_NUMBERS", editor().showLineNumbersProperty());
 		
 //		FX.setPopupMenu(editor(), this::createPopupMenu);
 		
@@ -97,7 +100,7 @@ public class MainWindow
 		m.separator();
 		m.item("Preferences");
 		m.separator();
-		m.item("Exit", FX.exitAction());
+		m.item("Exit", FxFramework::exit);
 		
 //		// edit
 		m.menu("Edit");

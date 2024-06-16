@@ -1,4 +1,4 @@
-// Copyright © 2012-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2012-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import java.io.File;
 import java.io.FileFilter;
@@ -102,6 +102,7 @@ public abstract class FileScanner
 				{
 					new CComparator<File>()
 					{
+						@Override
 						public int compare(File a, File b)
 						{
 							CKit.checkCancelled();

@@ -1,4 +1,4 @@
-// Copyright © 2019-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2019-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
@@ -127,6 +127,7 @@ public class VFlow
 		
 		paintCaret = new FxBooleanBinding(caretEnabledProperty, editor.displayCaretProperty, editor.focusedProperty(), editor.disabledProperty(), suppressBlink)
 		{
+			@Override
 			protected boolean computeValue()
 			{
 				return (caretEnabledProperty.get() || suppressBlink.get()) && editor.isDisplayCaret() && editor.isFocused() && (!editor.isDisabled());

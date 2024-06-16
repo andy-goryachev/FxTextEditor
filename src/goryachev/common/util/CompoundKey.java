@@ -1,4 +1,4 @@
-// Copyright © 2014-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2014-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 
 
@@ -38,6 +38,7 @@ public class CompoundKey
 	}
 	
 	
+	@Override
 	public boolean equals(Object x)
 	{
 		if(x == this)
@@ -55,6 +56,7 @@ public class CompoundKey
 	}
 
 
+	@Override
 	public int hashCode()
 	{
 		if(hash == 0)

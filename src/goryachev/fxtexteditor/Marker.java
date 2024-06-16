@@ -1,4 +1,4 @@
-// Copyright © 2017-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2017-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.Assert;
 import goryachev.common.util.FH;
@@ -34,6 +34,7 @@ public class Marker
 	}
 	
 
+	@Override
 	public int hashCode()
 	{
 		int h = FH.hash(Marker.class);
@@ -42,6 +43,7 @@ public class Marker
 	}
 
 	
+	@Override
 	public boolean equals(Object x)
 	{
 		if(x == this)
@@ -60,6 +62,7 @@ public class Marker
 	}
 
 	
+	@Override
 	public int compareTo(Marker m)
 	{
 		int d = line - m.line;
@@ -92,6 +95,7 @@ public class Marker
 	}
 	
 	
+	@Override
 	public String toString()
 	{
 		SB sb = new SB(16);

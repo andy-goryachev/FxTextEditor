@@ -1,4 +1,4 @@
-// Copyright © 2017-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2017-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.log;
 import goryachev.common.log.internal.LogEventFormatter;
 import goryachev.common.util.CList;
@@ -38,12 +38,14 @@ public abstract class AppenderBase
 	}
 	
 	
+	@Override
 	public int getThreshold()
 	{
 		return threshold;
 	}
 	
 	
+	@Override
 	public boolean needsCaller()
 	{
 		return formatter.needsCaller();
@@ -56,6 +58,7 @@ public abstract class AppenderBase
 	}
 	
 	
+	@Override
 	public void append(LogLevel level, long time, StackTraceElement caller, Throwable err, String msg)
 	{
 		if(level.ordinal() >= threshold)

@@ -1,4 +1,4 @@
-// Copyright © 2019-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2019-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
@@ -78,11 +78,13 @@ public class FxTextEditor
 	{
 		modelListener = new FxTextEditorModelListener()
 		{
+			@Override
 			public void eventAllLinesChanged()
 			{
 				handleAllLinesChanged();
 			}
 
+			@Override
 			public void eventTextAltered(int line1, int charIndex1, int endLine, int endPos, int charsAdded1, int linesAdded, int charsAdded2)
 			{
 				handleTextAltered(line1, charIndex1, endLine, endPos, charsAdded1, linesAdded, charsAdded2);
@@ -91,6 +93,7 @@ public class FxTextEditor
 		
 		loadStatusListener = new ChangeListener<LoadStatus>()
 		{
+			@Override
 			public void changed(ObservableValue<? extends LoadStatus> observable, LoadStatus prev, LoadStatus cur)
 			{
 				updateLoadStatus(cur);
@@ -366,6 +369,7 @@ public class FxTextEditor
 	}
 	
 	
+	@Override
 	protected void layoutChildren()
 	{
 		double x0 = snappedLeftInset();

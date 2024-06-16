@@ -1,4 +1,4 @@
-// Copyright © 2021 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2021-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import javafx.scene.paint.Color;
 
@@ -44,6 +44,7 @@ public class SimpleStyledText
 		
 		return new SimpleStyledText(text, s)
 		{
+			@Override
 			public Color getLineColor()
 			{
 				return lineColor;
@@ -52,30 +53,35 @@ public class SimpleStyledText
 	}
 
 
+	@Override
 	public String getPlainText()
 	{
 		return text;
 	}
 
 
+	@Override
 	public int getTextLength()
 	{
 		return text.length();
 	}
 
 
+	@Override
 	public TextCellStyle getCellStyle(int charOffset)
 	{
 		return style;
 	}
 
 
+	@Override
 	public Color getLineColor()
 	{
 		return null;
 	}
 
 
+	@Override
 	public char charAt(int charOffset)
 	{
 		return text.charAt(charOffset);

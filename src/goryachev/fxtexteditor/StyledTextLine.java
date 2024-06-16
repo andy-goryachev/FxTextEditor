@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.CList;
 import goryachev.common.util.SB;
@@ -26,36 +26,42 @@ public class StyledTextLine
 	}
 
 
+	@Override
 	public int getTextLength()
 	{
 		return sb.length();
 	}
 	
 	
+	@Override
 	public String getPlainText()
 	{
 		return sb.toString();
 	}
 	
 	
+	@Override
 	public int getModelIndex()
 	{
 		return lineNumber;
 	}
 	
 	
+	@Override
 	public int getLineNumber()
 	{
 		return lineNumber;
 	}
 	
 	
+	@Override
 	public TextCellStyle getCellStyle(int charOffset)
 	{
 		return styles.get(charOffset);
 	}
 
 
+	@Override
 	public Color getLineColor()
 	{
 		return lineColor;

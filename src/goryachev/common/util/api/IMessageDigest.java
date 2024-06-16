@@ -1,4 +1,4 @@
-// Copyright © 2021-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2021-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util.api;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -33,24 +33,28 @@ public interface IMessageDigest
 			
 			return new IMessageDigest()
 			{
+				@Override
 				public void update(byte[] buf, int offset, int length)
 				{
 					md.update(buf, offset, length);
 				}
 				
 				
+				@Override
 				public void update(byte b)
 				{
 					md.update(b);
 				}
 				
 				
+				@Override
 				public void reset()
 				{
 					md.reset();
 				}
 				
 				
+				@Override
 				public byte[] digest()
 				{
 					return md.digest();

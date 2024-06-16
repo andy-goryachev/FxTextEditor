@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.fxtexteditor.FxTextEditorModel;
 import goryachev.fxtexteditor.ITextLine;
@@ -32,6 +32,7 @@ public class SelectedTextSource
 	}
 	
 	
+	@Override
 	public String nextPlainTextLine()
 	{
 		if(current > endLine)
@@ -76,6 +77,7 @@ public class SelectedTextSource
 	}
 	
 	
+	@Override
 	public ITextLine nextLine()
 	{
 		if(current > endLine)
@@ -116,12 +118,14 @@ public class SelectedTextSource
 	}
 	
 
+	@Override
 	public int getStart()
 	{
 		return start;
 	}
 
 
+	@Override
 	public int getEnd()
 	{
 		return end;

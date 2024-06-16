@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.CList;
 import goryachev.common.util.text.IBreakIterator;
@@ -37,24 +37,28 @@ public class SimpleListTextEditorModel
 	}
 
 
+	@Override
 	public int getLineCount()
 	{
 		return lines.size();
 	}
 
 
+	@Override
 	public ITextLine getTextLine(int line)
 	{
 		return lines.get(line);
 	}
 
 
+	@Override
 	public Edit edit(Edit ed) throws Exception
 	{
 		throw new Exception();
 	}
 
 
+	@Override
 	public IBreakIterator getBreakIterator()
 	{
 		return null;

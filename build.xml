@@ -28,18 +28,18 @@
 
 	<target name="compile" depends="init">
 		<javac
-			srcdir="src"
 			destdir="build/classes"
 			debug="true"
 			encoding="utf-8"
 			fork="true"
 			nowarn="true"
 			optimize="false"
-			source="17"
-			target="17"
+			source="21"
+			target="21"
 			includeantruntime="false"
 		>
 			<compilerarg value="-Xlint:none"/>
+			<src path="src" />
 			<classpath refid="libs" />
 		</javac>
 	</target>

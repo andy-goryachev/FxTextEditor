@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITabPolicy;
@@ -22,6 +22,7 @@ public class SimpleWrapInfo
 	}
 
 
+	@Override
 	public int getWrapRowCount()
 	{
 		if(width == 0)
@@ -33,12 +34,14 @@ public class SimpleWrapInfo
 	}
 
 
+	@Override
 	public int getGlyphIndexForRow(int row)
 	{
 		return row * width;
 	}
 	
 
+	@Override
 	public boolean isCompatible(ITabPolicy tabPolicy, int width, boolean wrapLines)
 	{
 		return
@@ -47,6 +50,7 @@ public class SimpleWrapInfo
 	}
 
 
+	@Override
 	public int getWrapRowForCharIndex(int charIndex)
 	{
 		if(charIndex < 0)
@@ -67,12 +71,14 @@ public class SimpleWrapInfo
 	}
 	
 	
+	@Override
 	public int getWrapRowForGlyphIndex(int glyphIndex)
 	{
 		return getWrapRowForCharIndex(glyphIndex);
 	}
 
 
+	@Override
 	public int getColumnForCharIndex(int charIndex)
 	{
 		if(charIndex < 0)
@@ -89,6 +95,7 @@ public class SimpleWrapInfo
 	}
 	
 
+	@Override
 	public int getCharIndexForColumn(int wrapRow, int column)
 	{
 		int ix = (wrapRow * width) + column;
@@ -100,6 +107,7 @@ public class SimpleWrapInfo
 	}
 	
 
+	@Override
 	public int getGlyphCountAtRow(int wrapRow)
 	{
 		int rows = getWrapRowCount();
@@ -112,6 +120,7 @@ public class SimpleWrapInfo
 	}
 	
 	
+	@Override
 	public TextCell getCell(TextCell cell, int wrapRow, int column)
 	{
 		GlyphType type;

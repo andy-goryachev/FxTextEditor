@@ -1,4 +1,4 @@
-// Copyright © 2012-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2012-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import goryachev.common.log.Log;
 import java.util.concurrent.SynchronousQueue;
@@ -33,6 +33,7 @@ public class ParallelExecutor
 	}
 	
 	
+	@Override
 	public Thread newThread(Runnable r)
 	{
 		Thread t = new Thread(r, name + "." + number.getAndIncrement());

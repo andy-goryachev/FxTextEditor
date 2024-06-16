@@ -20,36 +20,42 @@ public class MockTextLine
 	}
 	
 	
+	@Override
 	public int getLineNumber()
 	{
 		return 0;
 	}
 
 
+	@Override
 	public int getModelIndex()
 	{
 		return 0;
 	}
 
 
+	@Override
 	public String getPlainText()
 	{
 		return text;
 	}
 
 
+	@Override
 	public int getTextLength()
 	{
 		return text.length();
 	}
 
 
+	@Override
 	public TextCellStyle getCellStyle(int charOffset)
 	{
 		return null;
 	}
 
 
+	@Override
 	public Color getLineColor()
 	{
 		return null;

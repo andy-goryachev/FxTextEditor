@@ -1,4 +1,4 @@
-// Copyright © 2012-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2012-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import goryachev.common.log.Log;
 import java.io.InputStream;
@@ -27,6 +27,7 @@ public class ClipPlayer
 			final Clip clip = (Clip)AudioSystem.getLine(info);
 			clip.addLineListener(new LineListener()
 			{
+				@Override
 				public void update(LineEvent ev)
 				{
 					LineEvent.Type t = ev.getType();

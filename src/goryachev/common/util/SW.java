@@ -1,4 +1,4 @@
-// Copyright © 2005-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2005-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 
 
@@ -34,6 +34,7 @@ public class SW
 	}
 
 
+	@Override
 	public String toString()
 	{
 		long elapsed = getElapsedTimeNano();

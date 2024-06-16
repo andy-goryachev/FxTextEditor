@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.fxtexteditor.internal.TextCell;
 import goryachev.fxtexteditor.internal.WrapInfo;
@@ -48,6 +48,7 @@ public class WrapPos
 	}
 	
 	
+	@Override
 	public int compareTo(WrapPos p)
 	{
 		int d = line - p.line;
@@ -65,6 +66,7 @@ public class WrapPos
 	}
 	
 	
+	@Override
 	public String toString()
 	{
 		return

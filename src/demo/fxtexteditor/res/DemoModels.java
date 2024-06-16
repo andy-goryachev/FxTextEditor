@@ -162,18 +162,21 @@ public class DemoModels
 			}
 			
 			
+			@Override
 			public IBreakIterator getBreakIterator()
 			{
 				return null;
 			}
 
 
+			@Override
 			public int getLineCount()
 			{
 				return 5_000;
 			}
 
 
+			@Override
 			public ITextLine getTextLine(int line)
 			{
 				String text = Formatters.integerFormatter().format(line + 1);
@@ -181,6 +184,7 @@ public class DemoModels
 			}
 
 
+			@Override
 			public Edit edit(Edit ed) throws Exception
 			{
 				throw new Error();

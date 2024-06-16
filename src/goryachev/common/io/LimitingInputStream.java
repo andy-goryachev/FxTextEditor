@@ -1,4 +1,4 @@
-// Copyright © 2013-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2013-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.io;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +20,7 @@ public class LimitingInputStream
 	}
 
 
+	@Override
 	public int read() throws IOException
 	{
 		if(read < length)
@@ -35,6 +36,7 @@ public class LimitingInputStream
 	}
 
 
+	@Override
 	public int read(byte b[], int off, int len) throws IOException
 	{
 		int rv;

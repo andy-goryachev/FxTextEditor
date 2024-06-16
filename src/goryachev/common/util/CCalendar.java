@@ -1,4 +1,4 @@
-// Copyright © 2014-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2014-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -228,6 +228,7 @@ public class CCalendar
 	}
 	
 	
+	@Override
 	public String toString()
 	{
 		return cal.toString();

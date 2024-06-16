@@ -1,4 +1,4 @@
-// Copyright © 2017-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2017-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import goryachev.common.log.Log;
 import goryachev.common.util.CTask;
@@ -16,6 +16,7 @@ public class FxTask<T>
 	}
 	
 	
+	@Override
 	protected void handleSuccess(T result)
 	{
 		if(onSuccess != null)
@@ -25,6 +26,7 @@ public class FxTask<T>
 	}
 	
 	
+	@Override
 	protected void handleError(Throwable e)
 	{
 		if(onError == null)
@@ -38,6 +40,7 @@ public class FxTask<T>
 	}
 	
 	
+	@Override
 	protected void handleFinish()
 	{
 		if(onFinish != null)

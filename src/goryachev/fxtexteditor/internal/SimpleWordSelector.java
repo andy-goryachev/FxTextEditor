@@ -1,4 +1,4 @@
-// Copyright © 2017-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2017-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.Marker;
@@ -92,6 +92,7 @@ public class SimpleWordSelector
 	}
 	
 
+	@Override
 	public void accept(FxTextEditor ed, Marker m)
 	{
 		int line = m.getLine();

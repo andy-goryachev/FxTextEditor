@@ -1,4 +1,4 @@
-// Copyright © 2016-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2016-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx.internal;
 import goryachev.common.util.SB;
 
@@ -28,6 +28,7 @@ public class FxCssProp
 	}
 	
 	
+	@Override
 	public String toString()
 	{
 		SB sb = new SB();

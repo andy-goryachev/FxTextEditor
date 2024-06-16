@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx.internal;
 import goryachev.fx.FxObject;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -29,6 +29,7 @@ public class ParentWindow
 	{
 		sceneListener = new ChangeListener<Scene>()
 		{
+			@Override
 			public void changed(ObservableValue<? extends Scene> observable, Scene prev, Scene cur)
 			{
 				handleSceneChange(prev, cur);
@@ -81,6 +82,7 @@ public class ParentWindow
 	{
 		return new ChangeListener<Boolean>()
 		{
+			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean prev, Boolean cur)
 			{
 				handleShowingChange(w, cur);

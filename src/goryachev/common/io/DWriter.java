@@ -1,4 +1,4 @@
-// Copyright © 2011-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2011-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.io;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -32,18 +32,21 @@ public class DWriter
 	}
 
 
+	@Override
 	public void write(int b) throws IOException
 	{
 		out.write(b);
 	}
 
 
+	@Override
 	public void write(byte b[], int off, int len) throws IOException
 	{
 		out.write(b, off, len);
 	}
 
 
+	@Override
 	public void flush() throws IOException
 	{
 		out.flush();
@@ -147,6 +150,7 @@ public class DWriter
 	}
 
 
+	@Override
 	public void close() throws IOException
 	{
 		out.close();

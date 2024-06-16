@@ -1,4 +1,4 @@
-// Copyright © 2016-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2016-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import javafx.beans.property.Property;
 import javafx.util.StringConverter;
@@ -11,6 +11,7 @@ public interface GlobalProperty<T>
 	extends Property<T>
 {
 	/** name will be used as key to store the value in the GlobalSettings */
+	@Override
 	public String getName();
 	
 	

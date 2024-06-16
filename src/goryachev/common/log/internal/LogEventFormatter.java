@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.log.internal;
 import goryachev.common.log.ILogEventFormatter;
 import goryachev.common.log.LogLevel;
@@ -23,6 +23,7 @@ public class LogEventFormatter
 	}
 
 
+	@Override
 	public String format(LogLevel level, long time, StackTraceElement caller, Throwable err, String msg)
 	{
 		SB sb = new SB(128);
@@ -35,6 +36,7 @@ public class LogEventFormatter
 	}
 
 
+	@Override
 	public boolean needsCaller()
 	{
 		return needsCaller;

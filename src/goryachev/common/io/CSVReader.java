@@ -1,4 +1,4 @@
-// Copyright © 2012-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2012-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.io;
 import goryachev.common.util.CList;
 import java.io.BufferedReader;
@@ -134,6 +134,7 @@ public class CSVReader
 	}
 
 
+	@Override
 	public void close() throws IOException
 	{
 		rd.close();

@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.fxtexteditor.EditorAction;
 import goryachev.fxtexteditor.EditorSelection;
@@ -60,6 +60,7 @@ public abstract class NavigationAction
 	}
 	
 	
+	@Override
 	protected void action()
 	{
 		move();

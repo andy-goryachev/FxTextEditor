@@ -22,6 +22,7 @@ public class FxTextEditorDemoApp
 	}
 
 
+	@Override
 	public void init() throws Exception
 	{
 		// TODO change to something visible in Documents? platform-specific?
@@ -37,6 +38,7 @@ public class FxTextEditorDemoApp
 	}
 
 
+	@Override
 	public void start(Stage stage) throws Exception
 	{
 		new MainWindow().open();

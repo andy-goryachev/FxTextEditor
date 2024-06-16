@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.op;
 import goryachev.common.log.Log;
 import goryachev.fxtexteditor.FxTextEditor;
@@ -23,12 +23,14 @@ public class PageUp
 	}
 	
 	
+	@Override
 	public void action()
 	{
 		super.action();
 	}
 	
 
+	@Override
 	protected Marker move(Marker m)
 	{
 		int screenHeight = vflow().getScreenRowCount();

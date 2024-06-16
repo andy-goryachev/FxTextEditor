@@ -1,4 +1,4 @@
-// Copyright © 2019-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2019-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.fx.TextCellStyle;
 import javafx.scene.paint.Color;
@@ -21,36 +21,42 @@ public class PlainTextLine
 	}
 
 
+	@Override
 	public int getLineNumber()
 	{
 		return line;
 	}
 	
 	
+	@Override
 	public int getModelIndex()
 	{
 		return line;
 	}
 
 
+	@Override
 	public String getPlainText()
 	{
 		return text;
 	}
 	
 	
+	@Override
 	public int getTextLength()
 	{
 		return text == null ? 0 : text.length();
 	}
 	
 
+	@Override
 	public TextCellStyle getCellStyle(int offset)
 	{
 		return null;
 	}
 
 
+	@Override
 	public Color getLineColor()
 	{
 		return null;

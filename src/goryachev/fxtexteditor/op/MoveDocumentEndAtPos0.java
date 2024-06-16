@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.op;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.Marker;
@@ -18,6 +18,7 @@ public class MoveDocumentEndAtPos0
 	}
 	
 
+	@Override
 	protected Marker move(Marker m)
 	{
 		int line = vflow().getModelLineCount() - 1;

@@ -1,4 +1,4 @@
-// Copyright © 2009-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2009-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import goryachev.common.io.CommaDelimitedParser;
 import java.io.File;
@@ -26,6 +26,7 @@ public class CompoundFileFilter
 	}
 	
 
+	@Override
 	public boolean accept(File f)
 	{
 		if(f != null)
@@ -88,6 +89,7 @@ public class CompoundFileFilter
 					// compound filter
 					return new FileFilter()
 					{
+						@Override
 						public boolean accept(File f)
 						{
 							for(int i=0; i<filters.size(); i++)

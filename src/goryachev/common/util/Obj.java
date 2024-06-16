@@ -1,4 +1,4 @@
-// Copyright © 2011-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2011-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 
 
@@ -13,6 +13,7 @@ public class Obj
 	}
 	
 	
+	@Override
 	public String toString()
 	{
 		return name;

@@ -38,18 +38,21 @@ public class DemoTextEditorModel
 	}
 	
 	
+	@Override
 	public IBreakIterator getBreakIterator()
 	{
 		return null;
 	}
 	
 	
+	@Override
 	public Edit edit(Edit ed) throws Exception
 	{
 		throw new Exception("not supported");
 	}
 
 
+	@Override
 	public int getLineCount()
 	{
 		return lineCount;
@@ -122,6 +125,7 @@ public class DemoTextEditorModel
 	}
 	
 	
+	@Override
 	public ITextLine getTextLine(int line)
 	{
 		String text = plainText(line);
@@ -132,6 +136,7 @@ public class DemoTextEditorModel
 				private TAttributes attributes;
 				
 				
+				@Override
 				public TextCellStyle getCellStyle(int off)
 				{
 					if(attributes == null)

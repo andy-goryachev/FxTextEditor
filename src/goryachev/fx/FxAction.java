@@ -1,4 +1,4 @@
-// Copyright © 2016-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2016-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import goryachev.common.log.Log;
 import java.util.function.Consumer;
@@ -219,6 +219,7 @@ public class FxAction
 
 
 	/** override to obtain the ActionEvent */
+	@Override
 	public void handle(ActionEvent ev)
 	{
 		if(isEnabled())

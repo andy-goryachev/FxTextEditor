@@ -1,4 +1,4 @@
-// Copyright © 2016-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2016-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
@@ -104,6 +104,7 @@ public class CPane
 	}
 
 
+	@Override
 	public List<CssMetaData<? extends Styleable,?>> getCssMetaData()
 	{
 		return SPF.getCssMetaData();
@@ -497,30 +498,35 @@ public class CPane
 	}
 	
 
+	@Override
 	protected double computePrefWidth(double height)
 	{
 		return new Helper().computeWidth(true);
 	}
 	
 	
+	@Override
 	protected double computePrefHeight(double width)
 	{
 		return new Helper().computeHeight(true);	
 	}
 
 
+	@Override
 	protected double computeMinWidth(double height)
 	{
 		return new Helper().computeWidth(false);
 	}
 	
 	
+	@Override
 	protected double computeMinHeight(double width)
 	{
 		return new Helper().computeHeight(false);
 	}
 	
 	
+	@Override
 	protected void layoutChildren()
 	{
 		try
@@ -645,7 +651,7 @@ public class CPane
 	
 	
 	/** component-constraint pair */
-	protected static class Entry
+	private static class Entry
 	{
 		public Node node;
 		public CC cc;
@@ -1107,9 +1113,12 @@ public class CPane
 		{
 			return new Axis(cols, getHGap())
 			{
+				@Override
 				public int start(CC cc) { return cc.col; }
+				@Override
 				public int end(CC cc) { return cc.col2; }
 				
+				@Override
 				public double sizingMethod(boolean pref, Node n, double other)
 				{
 					double d = n.minWidth(other);
@@ -1120,6 +1129,7 @@ public class CPane
 					return d;
 				}
 				
+				@Override
 				public double otherDimension(Entry en, boolean doingLayout)
 				{
 					// asymmetry: horizontal layout is first, and no other dimension is available
@@ -1133,9 +1143,12 @@ public class CPane
 		{
 			return new Axis(rows, getVGap())
 			{
+				@Override
 				public int start(CC cc) { return cc.row; }
+				@Override
 				public int end(CC cc) { return cc.row2; }
 				
+				@Override
 				public double sizingMethod(boolean pref, Node n, double other)
 				{
 					double d = n.minHeight(other);
@@ -1146,6 +1159,7 @@ public class CPane
 					return d;
 				}
 				
+				@Override
 				public double otherDimension(Entry en, boolean doingLayout)
 				{
 					if(doingLayout)

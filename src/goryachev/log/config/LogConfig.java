@@ -1,4 +1,4 @@
-// Copyright © 2018-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2018-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.log.config;
 import goryachev.common.log.ILogConfig;
 import goryachev.common.log.AppenderBase;
@@ -66,12 +66,14 @@ public class LogConfig
 	private transient CMap<String,LogLevel> levels;
 	
 
+	@Override
 	public boolean isVerbose()
 	{
 		return verbose;
 	}
 	
 	
+	@Override
 	public LogLevel getLogLevel(String name)
 	{
 		LogLevel lv;
@@ -90,6 +92,7 @@ public class LogConfig
 	}
 	
 	
+	@Override
 	public LogLevel getDefaultLogLevel()
 	{
 		return LogUtil.parseLevel(defaultLevel);
@@ -135,6 +138,7 @@ public class LogConfig
 	}
 	
 	
+	@Override
 	public List<IAppender> getAppenders() throws Exception
 	{
 		CList<IAppender	> rv = new CList();

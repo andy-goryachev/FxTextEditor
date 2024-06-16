@@ -1,4 +1,4 @@
-// Copyright © 2006-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2006-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import java.io.Externalizable;
 import java.io.IOException;
@@ -105,6 +105,7 @@ public class BooleanArray
 	}
 	
 	
+	@Override
 	public void readExternal(ObjectInput in) throws ClassNotFoundException, IOException
 	{
 		size = in.readInt();
@@ -112,6 +113,7 @@ public class BooleanArray
 	}
 	
 	
+	@Override
 	public void writeExternal(ObjectOutput out) throws IOException
 	{
 		out.writeInt(size);

@@ -1,4 +1,4 @@
-// Copyright © 2016-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2016-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import goryachev.common.util.CComparator;
 import goryachev.common.util.CKit;
@@ -117,6 +117,7 @@ public class FxDump
 		{
 			sorter = new CComparator<CssMetaData<? extends Styleable,?>>()
 			{
+				@Override
 				public int compare(CssMetaData<? extends Styleable,?> a, CssMetaData<? extends Styleable,?> b)
 				{
 					return compareAsStrings(a.getProperty(), b.getProperty());

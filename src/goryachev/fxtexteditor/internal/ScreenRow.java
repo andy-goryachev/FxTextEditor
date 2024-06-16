@@ -1,4 +1,4 @@
-// Copyright © 2019-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2019-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.common.util.SB;
 import goryachev.fx.TextCellStyle;
@@ -49,6 +49,7 @@ public class ScreenRow
 	}
 	
 
+	@Override
 	public String toString()
 	{
 		SB sb = new SB();

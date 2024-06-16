@@ -1,4 +1,4 @@
-// Copyright © 2009-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2009-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util.platform;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
@@ -224,18 +224,21 @@ public class SysInfo
 		}
 
 	
+		@Override
 		public void header(String title)
 		{
 			sb.a(title).nl();
 		}
 		
 		
+		@Override
 		public void nl()
 		{
 			sb.nl();
 		}
 		
 		
+		@Override
 		public void print(int count, String name, String value)
 		{
 			for(int i=0; i<count; i++)

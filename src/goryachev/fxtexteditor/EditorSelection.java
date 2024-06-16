@@ -1,4 +1,4 @@
-// Copyright © 2017-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2017-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.CKit;
 
@@ -19,6 +19,7 @@ public class EditorSelection
 	}
 	
 	
+	@Override
 	public String toString()
 	{
 		return CKit.toStringOrNull(segment);

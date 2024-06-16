@@ -1,4 +1,4 @@
-// Copyright © 2005-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2005-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import java.lang.reflect.Array;
 import java.util.Collection;
@@ -14,9 +14,12 @@ public class TextTools
 	{
 		public boolean isSeparator(char c);
 	}
-	public static final SeparatorFunction NOT_LETTER_OR_DIGIT = new SeparatorFunction() { public boolean isSeparator(char c) { return !Character.isLetterOrDigit(c); }};
-	public static final SeparatorFunction ANY_BLANK = new SeparatorFunction() { public boolean isSeparator(char c) { return CKit.isBlank(c); }};
-	public static final SeparatorFunction BLANK_OR_PUNCT = new SeparatorFunction() { public boolean isSeparator(char c) { return isBlankOrPunctuation(c); }};
+	public static final SeparatorFunction NOT_LETTER_OR_DIGIT = new SeparatorFunction() { @Override
+	public boolean isSeparator(char c) { return !Character.isLetterOrDigit(c); }};
+	public static final SeparatorFunction ANY_BLANK = new SeparatorFunction() { @Override
+	public boolean isSeparator(char c) { return CKit.isBlank(c); }};
+	public static final SeparatorFunction BLANK_OR_PUNCT = new SeparatorFunction() { @Override
+	public boolean isSeparator(char c) { return isBlankOrPunctuation(c); }};
 	
 	//
 
@@ -851,6 +854,53 @@ public class TextTools
 		
 		return TextTools.isWordDelimiter(c);
 	}
+	
+	
+	/** split text into tokens using whitespace as separator */
+	public static CList<String> splitWhitespace(String text)
+	{
+		CList<String> list = new CList<>();
+		if(text != null)
+		{
+			int start = 0;
+			int len = text.length();
+			boolean white = true;
+			
+			for(int i=0; i<len; i++)
+			{
+				char c = text.charAt(i);
+				if(CKit.isBlank(c))
+				{
+					if(!white)
+					{
+						if(i > start)
+						{
+							add(list, text.substring(start, i));
+						}
+						white = true;
+					}
+				}
+				else
+				{
+					if(white)
+					{
+						start = i;
+						white = false;
+					}
+				}
+			}
+			
+			if(!white)
+			{
+				if(start < len)
+				{
+					add(list, text.substring(start, len));
+				}
+			}
+		}
+		
+		return list;
+	}
 
 
 	/** split to words using whitespace and word-delimiting punctuation */
@@ -927,6 +977,18 @@ public class TextTools
 	
 	
 	public static String replace(String text, String pattern, String newPattern)
+	{
+		if(text != null)
+		{
+			SB sb = new SB(text);
+			sb.replace(pattern, newPattern);
+			return sb.toString();
+		}
+		return null;
+	}
+	
+	
+	public static String replace(String text, char pattern, char newPattern)
 	{
 		if(text != null)
 		{

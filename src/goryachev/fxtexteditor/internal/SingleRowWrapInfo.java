@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.fxtexteditor.GlyphType;
 import goryachev.fxtexteditor.ITabPolicy;
@@ -21,36 +21,42 @@ public class SingleRowWrapInfo
 	}
 
 
+	@Override
 	public int getWrapRowCount()
 	{
 		return 1;
 	}
 
 
+	@Override
 	public int getGlyphIndexForRow(int row)
 	{
 		return 0;
 	}
 	
 
+	@Override
 	public boolean isCompatible(ITabPolicy tabPolicy, int width, boolean wrapLines)
 	{
 		return (wrapLines == false);
 	}
 
 
+	@Override
 	public int getWrapRowForCharIndex(int charIndex)
 	{
 		return 0;
 	}
 	
 	
+	@Override
 	public int getWrapRowForGlyphIndex(int glyphIndex)
 	{
 		return 0;
 	}
 
 
+	@Override
 	public int getColumnForCharIndex(int charIndex)
 	{
 		if(charIndex > length)
@@ -71,6 +77,7 @@ public class SingleRowWrapInfo
 	}
 
 
+	@Override
 	public int getCharIndexForColumn(int wrapRow, int column)
 	{
 		checkRow(wrapRow);
@@ -84,6 +91,7 @@ public class SingleRowWrapInfo
 	}
 	
 	
+	@Override
 	public int getGlyphCountAtRow(int wrapRow)
 	{
 		checkRow(wrapRow);
@@ -92,6 +100,7 @@ public class SingleRowWrapInfo
 	}
 
 
+	@Override
 	public TextCell getCell(TextCell cell, int wrapRow, int column)
 	{
 		checkRow(wrapRow);

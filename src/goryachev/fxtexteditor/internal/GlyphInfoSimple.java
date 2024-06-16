@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.fx.internal.GlyphCache;
 import goryachev.fxtexteditor.GlyphType;
@@ -16,6 +16,7 @@ public class GlyphInfoSimple
 	}
 
 
+	@Override
 	public String getGlyphText(int ix)
 	{
 		if((ix >= 0) && (ix < text.length()))
@@ -28,6 +29,7 @@ public class GlyphInfoSimple
 	
 	
 	/** returns the type of a glyph at the specified glyph index. */
+	@Override
 	public GlyphType getGlyphType(int ix)
 	{
 		if(ix < 0)
@@ -50,6 +52,7 @@ public class GlyphInfoSimple
 	}
 
 
+	@Override
 	public int getCharIndex(int glyphIndex)
 	{
 		if(glyphIndex < 0)
@@ -64,18 +67,21 @@ public class GlyphInfoSimple
 	}
 	
 	
+	@Override
 	public int getGlyphIndex(int charIndex)
 	{
 		return charIndex;
 	}
 
 
+	@Override
 	public int getGlyphCount()
 	{
 		return text.length();
 	}
 
 
+	@Override
 	public boolean hasComplexGlyphs()
 	{
 		return false;

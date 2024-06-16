@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import javafx.scene.Node;
 
@@ -21,6 +21,7 @@ public class FxRadioToggleButton
 	}
 
 
+	@Override
 	public void fire()
 	{
 		// behave like RadioButton

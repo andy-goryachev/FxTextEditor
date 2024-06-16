@@ -1,4 +1,4 @@
-// Copyright © 2015-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2015-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.test;
 
 
@@ -35,6 +35,7 @@ public class TestException
 	}
 
 
+	@Override
 	public StackTraceElement[] getStackTrace()
 	{
 		StackTraceElement[] ss = super.getStackTrace();

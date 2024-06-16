@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import java.util.function.Supplier;
 import javafx.beans.value.ChangeListener;
@@ -34,6 +34,7 @@ public class FxTabPane
 
 		ChangeListener<Boolean> li = new ChangeListener<Boolean>()
 		{
+			@Override
 			public void changed(ObservableValue<? extends Boolean> src, Boolean old, Boolean val)
 			{
 				Node n = generator.get();

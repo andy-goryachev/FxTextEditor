@@ -1,4 +1,4 @@
-// Copyright © 2019-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2019-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import javafx.beans.Observable;
 import javafx.beans.binding.BooleanBinding;
@@ -10,6 +10,7 @@ import javafx.beans.binding.BooleanBinding;
 public abstract class FxBooleanBinding
 	extends BooleanBinding
 {
+	@Override
 	protected abstract boolean computeValue();
 	
 	

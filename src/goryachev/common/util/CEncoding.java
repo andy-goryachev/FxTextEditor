@@ -1,4 +1,4 @@
-// Copyright © 2009-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2009-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import goryachev.common.log.Log;
 import java.nio.charset.Charset;
@@ -29,12 +29,14 @@ public class CEncoding
 	}
 
 
+	@Override
 	public String getDisplayName()
 	{
 		return charset.displayName(Locale.getDefault());
 	}
 	
 	
+	@Override
 	public String toString()
 	{
 		return getDisplayName();
@@ -47,6 +49,7 @@ public class CEncoding
 	}
 	
 	
+	@Override
 	public String getProperty()
 	{
 		return getID();
@@ -93,6 +96,7 @@ public class CEncoding
 	}
 	
 	
+	@Override
 	public boolean equals(Object x)
 	{
 		if(x == this)
@@ -110,6 +114,7 @@ public class CEncoding
 	}
 	
 	
+	@Override
 	public int hashCode()
 	{
 		return getClass().hashCode() ^ charset.hashCode();

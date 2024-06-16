@@ -1,4 +1,4 @@
-// Copyright © 2016-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2016-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import goryachev.common.util.FH;
 
@@ -48,6 +48,7 @@ public class FxSize
 	}
 	
 	
+	@Override
 	public boolean equals(Object x)
 	{
 		if(x == this)
@@ -66,6 +67,7 @@ public class FxSize
 	}
 	
 	
+	@Override
 	public int hashCode()
 	{
 		int h = FH.hash(FxSize.class.hashCode(), width);

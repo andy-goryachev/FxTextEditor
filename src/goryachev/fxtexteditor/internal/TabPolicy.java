@@ -1,4 +1,4 @@
-// Copyright © 2019-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2019-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.fxtexteditor.ITabPolicy;
 
@@ -35,6 +35,7 @@ public class TabPolicy
 	}
 
 
+	@Override
 	public int nextTabStop(int position)
 	{
 		int d = distanceToNextTabStop(position);
@@ -42,6 +43,7 @@ public class TabPolicy
 	}
 
 
+	@Override
 	public boolean isSimple()
 	{
 		return tabWidth == 1;

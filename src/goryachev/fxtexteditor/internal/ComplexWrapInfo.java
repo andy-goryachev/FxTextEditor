@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.common.util.CList;
 import goryachev.common.util.ElasticIntArray;
@@ -36,12 +36,14 @@ public class ComplexWrapInfo
 	}
 	
 	
+	@Override
 	public int getWrapRowCount()
 	{
 		return cells.length;
 	}
 
 
+	@Override
 	public int getGlyphIndexForRow(int row)
 	{
 		int[] cs = cells[row];
@@ -49,6 +51,7 @@ public class ComplexWrapInfo
 	}
 	
 	
+	@Override
 	public boolean isCompatible(ITabPolicy tabPolicy, int width, boolean wrapLines)
 	{
 		return 
@@ -58,6 +61,7 @@ public class ComplexWrapInfo
 	}
 
 
+	@Override
 	public int getWrapRowForCharIndex(int charIndex)
 	{
 		int gix = fline.getGlyphIndex(charIndex);
@@ -65,6 +69,7 @@ public class ComplexWrapInfo
 	}
 	
 	
+	@Override
 	public int getWrapRowForGlyphIndex(int gix)
 	{
 		int row = 0;
@@ -80,12 +85,14 @@ public class ComplexWrapInfo
 	}
 	
 	
+	@Override
 	public int getGlyphCountAtRow(int wrapRow)
 	{
 		return cells[wrapRow].length;
 	}
 
 
+	@Override
 	public int getColumnForCharIndex(int charIndex)
 	{
 		int gix = fline.getGlyphIndex(charIndex);
@@ -111,6 +118,7 @@ public class ComplexWrapInfo
 	}
 	
 
+	@Override
 	public int getCharIndexForColumn(int wrapRow, int column)
 	{
 		if((wrapRow < 0) || (wrapRow >= cells.length))
@@ -130,6 +138,7 @@ public class ComplexWrapInfo
 	}
 	
 	
+	@Override
 	public TextCell getCell(TextCell cell, int wrapRow, int column)
 	{
 		if(wrapRow >= cells.length)
@@ -163,12 +172,14 @@ public class ComplexWrapInfo
 				// as these may not be always required
 				return new TextCell(type, caret, ix, ix, gx)
 				{
+					@Override
 					public int getLeadingEdgeCharIndex()
 					{
 						return leadIndex;
 					}
 					
 					
+					@Override
 					public int getInsertCharIndex()
 					{
 						int gi = findNearestInsertPoint(cs, column);
@@ -176,6 +187,7 @@ public class ComplexWrapInfo
 					}
 					
 					
+					@Override
 					public int getTabSpan()
 					{
 						return computeTabSpan(cs, column);

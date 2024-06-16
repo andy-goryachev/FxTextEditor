@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.fxtexteditor.GlyphType;
 import java.util.Arrays;
@@ -21,12 +21,14 @@ public class GlyphInfoComplex
 	}
 
 
+	@Override
 	public boolean hasComplexGlyphs()
 	{
 		return true;
 	}
 	
 
+	@Override
 	public int getCharIndex(int glyphIndex)
 	{
 		if(glyphIndex >= charOffsets.length)
@@ -38,6 +40,7 @@ public class GlyphInfoComplex
 	}
 	
 	
+	@Override
 	public int getGlyphIndex(int charIndex)
 	{
 		// this can be replaced either by a separate array
@@ -52,6 +55,7 @@ public class GlyphInfoComplex
 	}
 
 
+	@Override
 	public String getGlyphText(int ix)
 	{
 		try
@@ -82,6 +86,7 @@ public class GlyphInfoComplex
 	}
 	
 	
+	@Override
 	public GlyphType getGlyphType(int glyphIndex)
 	{
 		String s = getGlyphText(glyphIndex);
@@ -100,6 +105,7 @@ public class GlyphInfoComplex
 	}
 
 
+	@Override
 	public int getGlyphCount()
 	{
 		return charOffsets.length;

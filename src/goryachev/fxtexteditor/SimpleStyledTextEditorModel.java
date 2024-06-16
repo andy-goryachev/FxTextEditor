@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
@@ -43,18 +43,21 @@ public class SimpleStyledTextEditorModel
 	}
 	
 	
+	@Override
 	public IBreakIterator getBreakIterator()
 	{
 		return breakIterator;
 	}
 
 
+	@Override
 	public int getLineCount()
 	{
 		return lines.size();
 	}
 
 
+	@Override
 	public ITextLine getTextLine(int line)
 	{
 		if(line < 0)
@@ -98,6 +101,7 @@ public class SimpleStyledTextEditorModel
 	}
 
 
+	@Override
 	public Edit edit(Edit ed) throws Exception
 	{
 		throw new Error("this model is read only");

@@ -1,4 +1,4 @@
-// Copyright © 2016-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2016-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import javafx.beans.property.BooleanPropertyBase;
 import javafx.util.StringConverter;
@@ -30,18 +30,21 @@ public class GlobalBooleanProperty
 
 
 	/** who knows what this is for */
+	@Override
 	public Object getBean()
 	{
 		return null;
 	}
 
 
+	@Override
 	public String getName()
 	{
 		return key;
 	}
 	
 	
+	@Override
 	public StringConverter<Boolean> getConverter()
 	{
 		return Converters.BOOLEAN();

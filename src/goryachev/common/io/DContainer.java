@@ -1,4 +1,4 @@
-// Copyright © 2011-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2011-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.io;
 import goryachev.common.util.CList;
 
@@ -19,6 +19,7 @@ public class DContainer
 			return type;
 		}
 		
+		@Override
 		public String toString()
 		{
 			return "Object:" + getType();
@@ -42,6 +43,7 @@ public class DContainer
 	}
 	
 	
+	@Override
 	public Object clone()
 	{
 		return copyObjectList();

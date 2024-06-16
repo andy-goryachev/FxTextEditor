@@ -20,6 +20,7 @@ public class AnItem
 	}
 	
 	
+	@Override
 	public String toString()
 	{
 		return getDisplayText();

@@ -1,4 +1,4 @@
-// Copyright © 2009-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2009-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import java.text.Collator;
 import java.util.Arrays;
@@ -10,6 +10,7 @@ import java.util.List;
 public abstract class CComparator<T>
 	implements Comparator<T>
 {
+	@Override
 	public abstract int compare(T a, T b);
 
 	//

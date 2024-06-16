@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.log;
 import goryachev.common.log.internal.ConsoleAppender;
 import goryachev.common.util.CList;
@@ -29,6 +29,7 @@ public class SimpleLogConfig
 	}
 
 
+	@Override
 	public boolean isVerbose()
 	{
 		return verbose;
@@ -89,6 +90,7 @@ public class SimpleLogConfig
 	}
 
 
+	@Override
 	public LogLevel getLogLevel(String name)
 	{
 		LogLevel lv = channels.get(name);
@@ -106,6 +108,7 @@ public class SimpleLogConfig
 	}
 
 
+	@Override
 	public LogLevel getDefaultLogLevel()
 	{
 		return defaultLogLevel;
@@ -125,6 +128,7 @@ public class SimpleLogConfig
 	}
 
 
+	@Override
 	public List<IAppender> getAppenders() throws Exception
 	{
 		return appenders;

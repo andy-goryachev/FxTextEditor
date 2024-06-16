@@ -1,4 +1,4 @@
-// Copyright © 2017-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2017-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.FH;
 import goryachev.common.util.SB;
@@ -36,6 +36,7 @@ public class TextPos
 	}
 	
 
+	@Override
 	public int hashCode()
 	{
 		int h = FH.hash(TextPos.class);
@@ -44,6 +45,7 @@ public class TextPos
 	}
 
 	
+	@Override
 	public boolean equals(Object x)
 	{
 		if(x == this)
@@ -62,6 +64,7 @@ public class TextPos
 	}
 
 	
+	@Override
 	public int compareTo(TextPos p)
 	{
 		int d = line - p.line;
@@ -168,6 +171,7 @@ public class TextPos
 	}
 	
 	
+	@Override
 	public String toString()
 	{
 		SB sb = new SB(32);

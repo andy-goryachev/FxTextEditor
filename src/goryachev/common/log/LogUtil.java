@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.log;
 import goryachev.common.log.internal.FormatField;
 import goryachev.common.util.CKit;
@@ -21,9 +21,13 @@ public class LogUtil
 	{
 		return new ILogConfig()
 		{
+			@Override
 			public boolean isVerbose() { return true; }
+			@Override
 			public LogLevel getLogLevel(String name) { return LogLevel.OFF; }
+			@Override
 			public LogLevel getDefaultLogLevel() { return LogLevel.OFF; }
+			@Override
 			public List<IAppender> getAppenders() { return null; }
 		};
 	}

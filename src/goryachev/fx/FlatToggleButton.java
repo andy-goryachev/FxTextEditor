@@ -1,4 +1,4 @@
-// Copyright © 2019-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2019-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import java.util.function.Function;
 import javafx.beans.value.ChangeListener;
@@ -60,6 +60,7 @@ public class FlatToggleButton
 		
 		ChangeListener<Boolean> li = new ChangeListener<Boolean>()
 		{
+			@Override
 			public void changed(ObservableValue<? extends Boolean> src, Boolean prev, Boolean cur)
 			{
 				updateIcon(generator, cur);

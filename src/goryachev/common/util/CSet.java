@@ -1,4 +1,4 @@
-// Copyright © 2015-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2015-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import java.util.Collection;
 import java.util.HashSet;
@@ -61,6 +61,7 @@ public class CSet<T>
 	}
 
 
+	@Override
 	public boolean addAll(Collection<? extends T> items)
 	{
 		if(items != null)

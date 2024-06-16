@@ -1,4 +1,4 @@
-// Copyright © 2020-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor.internal;
 import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.Marker;
@@ -16,6 +16,7 @@ public class LineSelector
 	}
 	
 	
+	@Override
 	public void accept(FxTextEditor ed, Marker m)
 	{
 		selectLine(ed, m);

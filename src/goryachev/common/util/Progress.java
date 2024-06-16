@@ -1,4 +1,4 @@
-// Copyright © 2013-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2013-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 
 
@@ -36,6 +36,7 @@ public class Progress
 	}
 	
 	
+	@Override
 	public boolean equals(Object x)
 	{
 		if(x == this)
@@ -53,6 +54,7 @@ public class Progress
 	}
 	
 	
+	@Override
 	public int hashCode()
 	{
 		int h = FH.hash(0, Progress.class);
@@ -72,6 +74,7 @@ public class Progress
 	}
 
 	
+	@Override
 	public String toString()
 	{
 		return "Progress:" + progress;

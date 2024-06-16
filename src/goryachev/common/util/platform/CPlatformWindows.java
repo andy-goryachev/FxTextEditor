@@ -1,4 +1,4 @@
-// Copyright © 2007-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2007-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util.platform;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
@@ -43,6 +43,7 @@ public class CPlatformWindows
 	}
 	
 	
+	@Override
 	@Deprecated
 	public File getDefaultSettingsFolder()
 	{
@@ -50,6 +51,7 @@ public class CPlatformWindows
 	}
 
 
+	@Override
 	protected File getSettingsFolderPrivate()
 	{
 		// TODO "Documents"?

@@ -1,4 +1,4 @@
-// Copyright © 2010-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2010-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -23,18 +23,21 @@ public class CTimeZone
 	}
 
 
+	@Override
 	public String getDisplayName()
 	{
 		return tz.getDisplayName(Locale.getDefault());
 	}
 
 
+	@Override
 	public String getProperty()
 	{
 		return tz.getID();
 	}
 	
 	
+	@Override
 	public String toString()
 	{
 		return getDisplayName() + " - " + getID();
@@ -69,6 +72,7 @@ public class CTimeZone
 	}
 	
 	
+	@Override
 	public boolean equals(Object x)
 	{
 		if(this == x)
@@ -86,6 +90,7 @@ public class CTimeZone
 	}
 	
 	
+	@Override
 	public int hashCode()
 	{
 		return CTimeZone.class.hashCode() ^ tz.hashCode();

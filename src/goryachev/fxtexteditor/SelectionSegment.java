@@ -1,4 +1,4 @@
-// Copyright © 2016-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2016-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxtexteditor;
 import goryachev.common.util.Assert;
 import goryachev.common.util.FH;
@@ -52,6 +52,7 @@ public class SelectionSegment
 	}
 	
 	
+	@Override
 	public int hashCode()
 	{
 		int h = FH.hash(SelectionSegment.class);
@@ -61,6 +62,7 @@ public class SelectionSegment
 	}
 	
 	
+	@Override
 	public boolean equals(Object x)
 	{
 		if(x == this)
@@ -82,6 +84,7 @@ public class SelectionSegment
 	}
 
 
+	@Override
 	public String toString()
 	{
 		if(min.equals(max))
