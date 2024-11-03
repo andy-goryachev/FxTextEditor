@@ -56,7 +56,7 @@ public class FxMenu
 	}
 	
 	
-	public FxMenu submenu(String text)
+	public FxMenu menu(String text)
 	{
 		FxMenu m = new FxMenu(text);
 		getItems().add(m);
@@ -72,19 +72,19 @@ public class FxMenu
 	}
 	
 	
-	public MenuItem add(MenuItem m)
-	{
-		getItems().add(m);
-		return m;
-	}
-	
-	
 	/** adds a disabled menu item */
 	public MenuItem item(String text)
 	{
 		FxMenuItem m = new FxMenuItem(text);
 		m.setDisable(true);
 		return add(m);
+	}
+	
+	
+	public <M extends MenuItem> M add(M item)
+	{
+		getItems().add(item);
+		return item;
 	}
 	
 	

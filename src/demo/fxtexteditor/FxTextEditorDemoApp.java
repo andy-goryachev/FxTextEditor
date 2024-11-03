@@ -1,8 +1,10 @@
 // Copyright © 2016-2024 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
+import goryachev.common.util.ASettingsStore;
 import goryachev.common.util.FileSettingsProvider;
 import goryachev.common.util.GlobalSettings;
-import goryachev.fx.CssLoader;
+import goryachev.fx.FxFramework;
+import goryachev.fx.settings.FxSettingsSchema;
 import goryachev.log.config.JsonLogConfig;
 import java.io.File;
 import javafx.application.Application;
@@ -41,9 +43,24 @@ public class FxTextEditorDemoApp
 	@Override
 	public void start(Stage stage) throws Exception
 	{
-		new MainWindow().open();
-		
-		// init styles
-		CssLoader.setStyles(() -> new Styles());		
+		// generate stylesheet
+		FxFramework.setStyleSheet(Styles::new);
+
+		// support multiple windows
+		ASettingsStore store = GlobalSettings.instance();
+		FxFramework.openLayout(new FxSettingsSchema(store)
+		{
+			@Override
+			public Stage createDefaultWindow()
+			{
+				return new MainWindow();
+			}
+
+			@Override
+			protected Stage createWindow(String name)
+			{
+				return new MainWindow();
+			}
+		});		
 	}
 }

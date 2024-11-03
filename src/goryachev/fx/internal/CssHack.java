@@ -1,7 +1,6 @@
 // Copyright © 2021-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx.internal;
 import goryachev.common.util.SB;
-import goryachev.fx.CssLoader;
 import javafx.scene.Node;
 
 

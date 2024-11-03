@@ -54,6 +54,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
@@ -75,7 +77,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -468,7 +469,7 @@ public final class FX
 		{
 			return null;
 		}
-		return new Background(new BackgroundFill(c, null, null));
+		return Background.fill(c);
 	}
 	
 	
@@ -1454,10 +1455,10 @@ public final class FX
 	/** converts non-null Color to #RRGGBBAA */
 	public static String toFormattedColor(Color c)
 	{
-        int r = CKit.round(c.getRed() * 255.0);
-        int g = CKit.round(c.getGreen() * 255.0);
-        int b = CKit.round(c.getBlue() * 255.0);
-        int a = CKit.round(c.getOpacity() * 255.0);
+        int r = toInt8(c.getRed());
+        int g = toInt8(c.getGreen());
+        int b = toInt8(c.getBlue());
+        int a = toInt8(c.getOpacity());
 		return String.format("#%02X%02X%02X%02X", r, g, b, a);
 	}
 	
@@ -1465,10 +1466,64 @@ public final class FX
 	/** converts non-null Color to #RRGGBB */
 	public static String toFormattedColorRGB(Color c)
 	{
-        int r = CKit.round(c.getRed() * 255.0);
-        int g = CKit.round(c.getGreen() * 255.0);
-        int b = CKit.round(c.getBlue() * 255.0);
+        int r = toInt8(c.getRed());
+        int g = toInt8(c.getGreen());
+        int b = toInt8(c.getBlue());
 		return String.format("#%02X%02X%02X", r, g, b);
+	}
+	
+	
+	/** converts Color to RRGGBBAA, or null */
+	public static String toHexColor(Color c)
+	{
+		if(c == null)
+		{
+			return null;
+		}
+        int r = toInt8(c.getRed());
+        int g = toInt8(c.getGreen());
+        int b = toInt8(c.getBlue());
+        int a = toInt8(c.getOpacity());
+		return String.format("%02X%02X%02X%02X", r, g, b, a);
+	}
+	
+	
+	/** parses "RRGGBBAA" -> Color, or null */
+	public static Color parseHexColor(String s)
+	{
+		if(s != null)
+		{
+			if(s.length() == 8)
+			{
+				try
+				{
+					int r = Integer.parseInt(s, 0, 2, 16);
+					int g = Integer.parseInt(s, 2, 4, 16);
+					int b = Integer.parseInt(s, 4, 6, 16);
+					int a = Integer.parseInt(s, 6, 8, 16);
+					double op = a / 255.0;
+					return Color.rgb(r, g, b, op);
+				}
+				catch(Exception ignore)
+				{ }
+			}
+		}
+		return null;
+	}
+
+	
+	/** converts double value in the range 0.0 ... 1.0 to an int of range 0 ... 255 */
+	private static int toInt8(double value)
+	{
+		if(value < 0.0)
+		{
+			value = 0.0;
+		}
+		else if(value > 1.0)
+		{
+			value = 1.0;
+		}
+		return CKit.round(value * 255.0);
 	}
 
 
@@ -2209,5 +2264,38 @@ public final class FX
 				w.setY(y);
 			}
 		}
+	}
+	
+	
+	/** creates an image with the given color and dimensions */
+	public static Image image(Color color, int width, int height)
+	{
+		Canvas c = new Canvas(width, height);
+		GraphicsContext g = c.getGraphicsContext2D();
+		g.setFill(color);
+		g.fillRect(0, 0, width, height);
+		return c.snapshot(null, null);
+	}
+	
+	
+	/** sets both X/Y scales, node can be null */
+	public static void setScale(Node node, double scale)
+	{
+		if(node != null)
+		{
+			
+			node.setScaleX(scale);
+			node.setScaleY(scale);
+		}
+	}
+
+
+	/**
+	 * Returns the property value, or the default value if the property value is null.
+	 */
+	public static <T> T noNull(Property<T> p, T defaultValue)
+	{
+		T v = p.getValue();
+		return (v == null) ? defaultValue : v;
 	}
 }

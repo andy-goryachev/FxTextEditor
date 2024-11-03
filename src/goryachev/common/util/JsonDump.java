@@ -2,6 +2,7 @@
 package goryachev.common.util;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Collections;
@@ -384,8 +385,14 @@ public class JsonDump
 				int m = f.getModifiers();
 				if(!Modifier.isStatic(m))
 				{
-					f.setAccessible(true);
-					fields.add(f);
+					try
+					{
+						f.setAccessible(true);
+						fields.add(f);
+					}
+					catch(InaccessibleObjectException ignore)
+					{
+					}
 				}
 			}
 			

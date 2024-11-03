@@ -2,7 +2,6 @@
 package demo.fxtexteditor;
 import goryachev.common.util.Parsers;
 import goryachev.fx.CPane;
-import goryachev.fx.FX;
 import goryachev.fx.FxAction;
 import goryachev.fx.FxComboBox;
 import goryachev.fx.FxDump;
@@ -28,21 +27,17 @@ public class MainWindow
 	public final MainPane mainPane;
 	public final CPane content;
 	public final StatusBar statusBar;
-	protected final FxComboBox modelSelector;
-	protected final FxComboBox fontSelector;
+	protected final FxComboBox modelSelector = new FxComboBox();
+	protected final FxComboBox fontSelector = new FxComboBox();
 	
 	
 	public MainWindow()
 	{
 		super("MainWindow");
 		
-		modelSelector = new FxComboBox();
-		FX.setName(modelSelector, "MODEL");
 		modelSelector.setItems((Object[])DemoModels.getAll());
 		modelSelector.valueProperty().addListener((s,p,c) -> onModelSelectionChange(c));
 		
-		fontSelector = new FxComboBox();
-		FX.setName(fontSelector, "FONT_SIZE");
 		fontSelector.setItems
 		(
 			"9",
@@ -72,6 +67,9 @@ public class MainWindow
 		LocalSettings.get(this).
 			add("LINE_WRAP", editor().wrapLinesProperty()).
 			add("SHOW_LINE_NUMBERS", editor().showLineNumbersProperty());
+			// TODO
+			//add("MODEL", modelSelector).
+			//add("FONT_SIZE", fontSelector);
 		
 //		FX.setPopupMenu(editor(), this::createPopupMenu);
 		

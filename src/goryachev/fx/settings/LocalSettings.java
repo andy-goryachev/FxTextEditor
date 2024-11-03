@@ -142,6 +142,36 @@ public class LocalSettings
 	}
 	
 	
+	public <T extends Enum> LocalSettings add(String subKey, Property<T> p, Class<T> type, T defaultValue)
+	{
+		entries.put(subKey, new Entry()
+		{
+			StringConverter<T> conv = Converters.enumConverter(type);
+			
+			
+			@Override
+			public void saveValue(String prefix, ASettingsStore store)
+			{
+				T v = p.getValue();
+				String s = (v == null ? null : conv.toString(v));
+				store.setString(prefix + "." + subKey, s);
+			}
+
+			@Override
+			public void loadValue(String prefix, ASettingsStore store)
+			{
+				String s = store.getString(prefix + "." + subKey);
+				if(s != null)
+				{
+					T v = conv.fromString(s);
+					p.setValue(v);
+				}
+			}
+		});
+		return this;
+	}
+	
+	
 	public LocalSettings add(String subKey, Property<String> p)
 	{
 		entries.put(subKey, new Entry()
