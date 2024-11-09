@@ -24,8 +24,8 @@ Please refer to a simple demo application: [FxTextEditorDemoApp.java](https://gi
 
 * supports up to 2^31 lines of text
 * efficiently handles very long lines
-* supports syntax highlight
-* basic text attributes: bold, italic, underline, strikethrough
+* supports syntax highlighting
+* basic text attributes: bold, italic, underline, strike-through
 * variable tab width
 
 
@@ -36,7 +36,7 @@ This project is currently in the early development stage.  Do not even think of 
 
 ## Requirements
 
-Requires JavaFX 17+.
+Requires JavaFX 23+.
 
 
 ## License
