@@ -3,7 +3,6 @@ package goryachev.fxtexteditor;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
 import goryachev.common.util.D;
-import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxDouble;
@@ -31,6 +30,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -40,7 +40,7 @@ import javafx.util.Duration;
  * Monospaced Text Editor.
  */
 public class FxTextEditor
-	extends CPane
+	extends BorderPane
 {
 	protected static final Log log = Log.get("FxTextEditor");
 	public final Actions actions;

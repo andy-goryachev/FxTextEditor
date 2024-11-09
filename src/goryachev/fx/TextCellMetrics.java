@@ -6,15 +6,15 @@ import javafx.scene.text.Font;
 /**
  * Monospaced Text Cell Metrics.
  */
-public class TextCellMetrics
+public final class TextCellMetrics
 {
 	public final Font font;
 	public final double baseline;
-	public final int cellWidth;
-	public final int cellHeight;
+	public final double cellWidth;
+	public final double cellHeight;
 	
 	
-	public TextCellMetrics(Font f, double baseline, int cellWidth, int cellHeight)
+	public TextCellMetrics(Font f, double baseline, double cellWidth, double cellHeight)
 	{
 		this.font = f;
 		this.cellHeight = cellHeight;

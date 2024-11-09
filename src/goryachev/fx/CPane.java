@@ -23,6 +23,7 @@ import javafx.scene.layout.Region;
  * CPane is like my Swing CPanel, lays out nodes with an outer border layout and an inner table layout.
  * 
  * TODO ignore unmanaged components
+ * TODO snap to pixel!
  */
 public class CPane
 	extends Pane

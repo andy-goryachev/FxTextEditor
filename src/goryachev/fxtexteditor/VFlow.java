@@ -3,7 +3,6 @@ package goryachev.fxtexteditor;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
 import goryachev.common.util.text.IBreakIterator;
-import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxBoolean;
 import goryachev.fx.FxBooleanBinding;
@@ -25,10 +24,12 @@ import javafx.beans.binding.BooleanExpression;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -43,7 +44,7 @@ import javafx.util.Duration;
  * Visual flow container lays out cells inside the screen buffer and paints the canvas. 
  */
 public class VFlow
-	extends CPane
+	extends BorderPane
 {
 	protected static final Log log = Log.get("VFlow");
 	
@@ -75,7 +76,7 @@ public class VFlow
 	private int screenColumnCount;
 	private int screenRowCount;
 	private int lineNumbersCellCount;
-	private int lineNumbersBarWidth;
+	private double lineNumbersBarWidth;
 	private int[] lineNumbersColumnWidths;
 	private int minLineNumberCellCount = 3; // arbitrary number
 	private int lineNumbersGap = 5; // arbitrary number
@@ -120,6 +121,7 @@ public class VFlow
 		FX.onChange(this::updateLineNumbers, ed.showLineNumbersProperty, ed.lineNumberFormatterProperty, ed.modelProperty);
 		FX.onChange(this::updateFont, true, ed.fontProperty);
 		FX.onChange(this::handleWrapChange, ed.wrapLinesProperty);
+		FX.onChange(this::handleScaleChange, ed.scaleXProperty(), ed.scaleYProperty());
 		
 		ed.getVerticalScrollBar().valueProperty().addListener((s,p,c) -> handleVerticalScroll(c.doubleValue()));
 		ed.getHorizontalScrollBar().valueProperty().addListener((s,p,c) -> handleHorizontalScroll(c.doubleValue()));
@@ -612,7 +614,7 @@ public class VFlow
 			
 			if(count == 0)
 			{
-				lineNumbersBarWidth = 0;
+				lineNumbersBarWidth = 0.0;
 			}
 			else
 			{
@@ -866,6 +868,14 @@ public class VFlow
 		
 		requestLayout();
 		invalidate();
+	}
+	
+	
+	protected void handleScaleChange()
+	{
+		log.trace();
+		// re-create canvas to adjust for new scale
+		handleSizeChange();
 	}
 	
 	

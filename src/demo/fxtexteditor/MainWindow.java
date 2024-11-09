@@ -93,14 +93,13 @@ public class MainWindow
 		
 		// file
 		m.menu("File");
-//		m.item("Growing Model", tailMode);
 		m.item("New Window, Same Model", new FxAction(this::newWindow));
 		m.separator();
 		m.item("Preferences");
 		m.separator();
 		m.item("Exit", FxFramework::exit);
 		
-//		// edit
+		// edit
 		m.menu("Edit");
 		m.item("Undo");
 		m.item("Redo");
@@ -120,7 +119,7 @@ public class MainWindow
 		m.item("Move Line Up");
 		m.item("Move Line Down");
 
-//		// find
+		// find
 		m.menu("Find");
 		m.item("Find");
 		m.item("Regex");
@@ -148,8 +147,8 @@ public class MainWindow
 	protected Node createToolbar()
 	{
 		FxToolBar t = new FxToolBar();
-		t.addToggleButton("wrap", editor().wrapLinesProperty());
-		t.addToggleButton("num", editor().showLineNumbersProperty());
+		t.addToggleButton("wr", "wrap lines", editor().wrapLinesProperty());
+		t.addToggleButton("ln", "line numbers", editor().showLineNumbersProperty());
 		t.fill();
 		t.add(new Label("Font:"));
 		t.add(fontSelector);

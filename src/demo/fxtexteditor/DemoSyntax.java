@@ -12,8 +12,8 @@ import javafx.scene.paint.Color;
 public class DemoSyntax
 {
 	private static final TextCellStyle STYLE_TEXT = new TextCellStyle();
-	private static final TextCellStyle STYLE_ENCLOSED = new TextCellStyle(null, Color.YELLOW, false, false, false, false);
-	private static final TextCellStyle STYLE_NUMBER = new TextCellStyle(Color.RED, null, true, false, false, false);
+	private static final TextCellStyle STYLE_ENCLOSED = new TextCellStyle(null, Color.rgb(0, 255, 0, 0.3), false, false, false, false);
+	private static final TextCellStyle STYLE_NUMBER = new TextCellStyle(Color.BLUE, null, true, false, false, false);
 	private static final TextCellStyle STYLE_RTF = new TextCellStyle(Color.OLIVEDRAB, null, true, false, false, false);
 
 	private final String text;

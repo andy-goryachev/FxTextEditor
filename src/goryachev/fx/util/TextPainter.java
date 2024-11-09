@@ -151,7 +151,7 @@ public class TextPainter
 	}
 	
 	
-	protected double computeStartX(int cellWidth, int textLength, HPos alignment)
+	protected double computeStartX(double cellWidth, int textLength, HPos alignment)
 	{
 		double x;
 		switch(alignment)
