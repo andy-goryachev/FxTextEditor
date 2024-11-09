@@ -13,7 +13,6 @@ import goryachev.fxtexteditor.LoadStatus;
 import goryachev.fxtexteditor.PlainTextLine;
 import goryachev.fxtexteditor.SimpleStyledTextEditorModel;
 import java.text.DecimalFormat;
-import demo.fxtexteditor.AnItem;
 import demo.fxtexteditor.DemoTextEditorModel;
 import javafx.scene.paint.Color;
 
@@ -21,53 +20,71 @@ import javafx.scene.paint.Color;
 /**
  * Demo Text Models.
  */
-public class DemoModels
+public enum DemoModels
 {
-	public static final AnItem NO_TABS_NO_UNICODE = new AnItem("NO_TABS_NO_UNICODE", "No Tabs, No Unicode");
-	public static final AnItem TABS_NO_UNICODE = new AnItem("TABS_NO_UNICODE", "Tabs, No Unicode");
-	public static final AnItem EDITABLE = new AnItem("EDITABLE", "Editable Model");
-	public static final AnItem JAVA_LARGE = new AnItem("JAVA", "CKit.java");
-	public static final AnItem JAVA_SMALL = new AnItem("JAVA_SMALL", "A small java file");
-	public static final AnItem LONG_LINES = new AnItem("LONG_LINES", "Long lines (1M characters)");
-	public static final AnItem BILLION_LINES = new AnItem("BILLION_LINES", "One billion lines");
-	public static final AnItem SIMPLE_STYLED = new AnItem("SimpleStyledTextEditorModel", "SimpleStyledTextEditorModel");
-	public static final AnItem LOADING = new AnItem("LOADING", "Loading...");
-	public static final AnItem NULL = new AnItem("null", "null");
+	NO_TABS_NO_UNICODE,
+	TABS_NO_UNICODE,
+	EDITABLE,
+	JAVA_LARGE,
+	JAVA_SMALL,
+	LONG_LINES,
+	BILLION_LINES,
+	SIMPLE_STYLED,
+	LOADING,
+	NULL;
 	
 	
-	public static AnItem[] getAll()
+	@Override
+	public String toString()
 	{
-		return new AnItem[]
+		switch(this)
 		{
-			JAVA_SMALL,
-			NO_TABS_NO_UNICODE,
-			EDITABLE,
-			TABS_NO_UNICODE,
-			JAVA_LARGE,
-			LOADING,
-			LONG_LINES,
-			BILLION_LINES,
-			SIMPLE_STYLED,
-			NULL
-//			full
-//			also large
-//			also bidirectional
-		};
+		case BILLION_LINES:
+			return "2 billion lines";
+		case EDITABLE:
+			return "Editable Model";
+		case JAVA_LARGE:
+			return "CKit.java";
+		case JAVA_SMALL:
+			return "Small java file";
+		case LOADING:
+			return "Loading...";
+		case LONG_LINES:
+			return "Long lines (1M characters)";
+		case NO_TABS_NO_UNICODE:
+			return "No Tabs, No Unicode";
+		case SIMPLE_STYLED:
+			return "SimpleStyledTextEditorModel";
+		case TABS_NO_UNICODE:
+			return "Tabs, No Unicode";
+		case NULL:
+		default:
+			return "<null>";
+		}
 	}
 	
 	
 	public static FxTextEditorModel getModel(Object x)
 	{
-		if(x == NO_TABS_NO_UNICODE)
+		DemoModels choice;
+		if(x instanceof DemoModels ch)
 		{
+			choice = ch;
+		}
+		else
+		{
+			choice = DemoModels.NULL;
+		}
+		
+		switch(choice)
+		{
+		case NO_TABS_NO_UNICODE:
 			return toSimpleModel
 			(
 				" h 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
 				" //end"
 			);
-		}
-		else if(x == TABS_NO_UNICODE)
-		{
+		case TABS_NO_UNICODE:
 			return toSimpleModel
 			(
 				"\t1\t2\t3\t4\t5\t6\t7\n" +
@@ -76,41 +93,25 @@ public class DemoModels
 				" h 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
 				" //end"
 			);
-		}
-		else if(x == JAVA_LARGE)
-		{
+		case JAVA_LARGE:
 			return new DemoTextEditorModel(loadResource("CKit.java.txt"));
-		}
-		else if(x == JAVA_SMALL)
-		{
+		case JAVA_SMALL:
 			return new DemoTextEditorModel(loadResource("Edit.java.txt"));
-		}
-		else if(x == LONG_LINES)
-		{
+		case LONG_LINES:
 			return makeLongLinesModel();
-		}
-		else if(x == BILLION_LINES)
-		{
+		case BILLION_LINES:
 			String text = loadResource("demo.txt");
-			return new DemoTextEditorModel(text, 1_000_000_000);
-		}
-		else if(x == SIMPLE_STYLED)
-		{
+			return new DemoTextEditorModel(text, 2_000_000_000);
+		case SIMPLE_STYLED:
 			return makeSimpleStyled();
-		}
-		else if(x == NULL)
-		{
+		case LOADING:
+			return makeLoadingModel();
+		case EDITABLE:
+			return new EditableModel();
+		case NULL:
+		default:
 			return null;
 		}
-		else if(x == LOADING)
-		{
-			return makeLoadingModel();
-		}
-		else if(x == EDITABLE)
-		{
-			return new EditableModel();
-		}
-		return null;
 	}
 	
 

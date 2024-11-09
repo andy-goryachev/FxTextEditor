@@ -26,6 +26,7 @@ import javafx.util.Duration;
 
 /**
  * Keyboard and mouse input handler.
+ * TODO: use InputMap and move to behavior
  */
 public class InputHandler
 {

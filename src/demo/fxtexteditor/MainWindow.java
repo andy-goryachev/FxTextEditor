@@ -27,7 +27,7 @@ public class MainWindow
 	public final MainPane mainPane;
 	public final CPane content;
 	public final StatusBar statusBar;
-	protected final FxComboBox modelSelector = new FxComboBox();
+	protected final FxComboBox<DemoModels> modelSelector = new FxComboBox();
 	protected final FxComboBox fontSelector = new FxComboBox();
 	
 	
@@ -35,7 +35,7 @@ public class MainWindow
 	{
 		super("MainWindow");
 		
-		modelSelector.setItems((Object[])DemoModels.getAll());
+		modelSelector.setItems(DemoModels.values());
 		modelSelector.valueProperty().addListener((s,p,c) -> onModelSelectionChange(c));
 		
 		fontSelector.setItems
@@ -173,7 +173,7 @@ public class MainWindow
 	}
 	
 	
-	protected void onModelSelectionChange(Object x)
+	protected void onModelSelectionChange(DemoModels x)
 	{
 		FxTextEditorModel m = DemoModels.getModel(x);
 		mainPane.setModel(m);

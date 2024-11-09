@@ -49,14 +49,11 @@ public class StatusBar
 				FxFormatter fmt = Formatters.integerFormatter();
 				
 				Marker m = seg.getCaret();
+				String line = fmt.format(m.getLine() + 1);
+				String col = fmt.format(ed.getColumnAt(m) + 1);
+				String ix = fmt.format(m.getCharIndex());
 				
-				return 
-					"line:" +
-					fmt.format(m.getLine() + 1) +
-					"  column:" +
-					fmt.format(ed.getColumnAt(m) + 1) +
-					"  char:" + 
-					fmt.format(m.getCharIndex());
+				return String.format("line: %s  column: %s  char: %s", line, col, ix);  
 			},
 			ed.selectionSegmentProperty()
 		));

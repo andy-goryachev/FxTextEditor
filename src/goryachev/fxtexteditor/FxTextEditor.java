@@ -49,7 +49,7 @@ public class FxTextEditor
 	protected final FxObject<Color> caretLineColor = new FxObject(FX.rgb(255, 200, 255));
 	protected final FxObject<Color> selectionBackgroundColor = new FxObject(FX.rgb(255, 255, 128));
 	protected final FxObject<Color> lineNumberColor = new FxObject(Color.GRAY);
-	protected final FxObject<Font> fontProperty = new FxObject(Font.font("Monospace", 12));
+	protected final FxObject<Font> fontProperty = new FxObject(Font.font("Monospace", -1));
 	protected final FxBoolean editableProperty = new FxBoolean(false);
 	protected final FxObject<FxTextEditorModel> modelProperty = new FxObject<>();
 	protected final FxBoolean wrapLinesProperty = new FxBoolean(true);
