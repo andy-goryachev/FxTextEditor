@@ -14,9 +14,9 @@ public final class TextCellMetrics
 	public final double cellHeight;
 	
 	
-	public TextCellMetrics(Font f, double baseline, double cellWidth, double cellHeight)
+	public TextCellMetrics(Font font, double baseline, double cellWidth, double cellHeight)
 	{
-		this.font = f;
+		this.font = font;
 		this.cellHeight = cellHeight;
 		this.baseline = baseline;
 		this.cellWidth = cellWidth;

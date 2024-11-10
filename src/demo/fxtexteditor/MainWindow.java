@@ -43,9 +43,17 @@ public class MainWindow
 		fontSelector.setItems
 		(
 			"9",
+			"10",
+			"11",
 			"12",
+			"13",
+			"14",
+			"16",
 			"18",
-			"24"
+			"20",
+			"24",
+			"28",
+			"32"
 		);
 		fontSelector.valueProperty().addListener((s,p,c) -> onFontChange(c));
 		FX.setName(fontSelector, "fontSelector");

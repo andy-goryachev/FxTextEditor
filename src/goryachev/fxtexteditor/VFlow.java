@@ -79,7 +79,7 @@ public class VFlow
 	private double lineNumbersBarWidth;
 	private int[] lineNumbersColumnWidths;
 	private int minLineNumberCellCount = 3; // arbitrary number
-	private int lineNumbersGap = 5; // arbitrary number
+	private int lineNumbersGap = 5; // arbitrary number TODO snap!
 	private Color textColor = Color.BLACK;
 	private Color caretColor = Color.BLACK;
 	private int topLine;
@@ -418,17 +418,22 @@ public class VFlow
 		if(metrics == null)
 		{
 			getChildren().add(proto);
-			
-			proto.setText("8");
-			proto.setFont(font);
-			
-			Bounds b = proto.getBoundsInLocal();
-			int w = CKit.round(b.getWidth());
-			int h = CKit.round(b.getHeight());
-			
-			getChildren().remove(proto);
-			
-			metrics = new TextCellMetrics(font, b.getMinY(), w, h);
+			try
+			{
+				proto.setText("8");
+				proto.setFont(font);
+				
+				double fontAspect = 0.8; // TODO property
+				Bounds b = proto.getBoundsInLocal();
+				double w = snapSizeX(b.getWidth() * fontAspect);
+				double h = snapSizeY(b.getHeight());
+				double baseLine = b.getMinY();
+				metrics = new TextCellMetrics(font, baseLine, w, h);
+			}
+			finally
+			{
+				getChildren().remove(proto);
+			}
 		}
 		return metrics;
 	}
@@ -619,7 +624,7 @@ public class VFlow
 			else
 			{
 				TextCellMetrics tm = textMetrics();
-				lineNumbersBarWidth = (count * tm.cellWidth + lineNumbersGap + lineNumbersGap);
+				lineNumbersBarWidth = snapSizeX(count * tm.cellWidth + lineNumbersGap + lineNumbersGap);
 			}
 			
 			invalidate();
@@ -1432,8 +1437,8 @@ public class VFlow
 	
 	protected void paintBlank(TextCellMetrics tm, ScreenRow row, TextCell cell, int x, int y, int count)
 	{
-		double cx = x * tm.cellWidth + lineNumbersBarWidth;
-		double cy = y * tm.cellHeight;
+		double cx = snapPositionX(x * tm.cellWidth + lineNumbersBarWidth);
+		double cy = snapPositionY(y * tm.cellHeight);
 		
 		int line = row.getLineNumber();
 		int flags = SelectionHelper.getFlags(this, editor.selector.getSelectedSegment(), line, cell, x);
@@ -1457,8 +1462,8 @@ public class VFlow
 
 	protected void paintCell(TextCellMetrics tm, ScreenRow row, TextCell cell, int x, int y)
 	{
-		double cx = x * tm.cellWidth + lineNumbersBarWidth;
-		double cy = y * tm.cellHeight;
+		double cx = snapPositionX(x * tm.cellWidth + lineNumbersBarWidth);
+		double cy = snapPositionY(y * tm.cellHeight);
 		
 		int line = row.getLineNumber();
 		int flags = SelectionHelper.getFlags(this, editor.selector.getSelectedSegment(), line, cell, x);
