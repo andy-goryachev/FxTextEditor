@@ -1,6 +1,7 @@
 /build/
 /out/
 /user.home*/
+/user.data*/
 /*.jar
 /*.log
 /*.conf
