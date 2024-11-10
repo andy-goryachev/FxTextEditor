@@ -17,6 +17,9 @@ import javafx.stage.Stage;
 public class FxTextEditorDemoApp
 	extends Application
 {
+	public static final String COPYRIGHT = "copyright © andy goryachev";
+	
+	
 	public static void main(String[] args)
 	{
 		JsonLogConfig.configure(new File("log-conf.json"), 1000);

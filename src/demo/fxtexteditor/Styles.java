@@ -20,9 +20,13 @@ public class Styles
 			// common fx styles
 			new CommonStyles(),
 			
-			selector(StatusBar.LABEL).defines
+			selector(StatusBar.LABEL_LEADING).defines
 			(
 				padding(1, 1, 1, 5)
+			),
+			selector(StatusBar.LABEL_TRAILING).defines
+			(
+				padding(1, 15, 1, 1)
 			)
 		);
 	}

@@ -9,34 +9,41 @@ import goryachev.fxtexteditor.FxTextEditor;
 import goryachev.fxtexteditor.Marker;
 import goryachev.fxtexteditor.SelectionSegment;
 import javafx.beans.binding.Bindings;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 
 
 /**
- * Status Bar.
+ * FxTextEditor Status Bar.
  */
 public class StatusBar
 	extends HPane
 {
 	public static final CssStyle PANE = new CssStyle("StatusBar_PANE");
-	public static final CssStyle LABEL = new CssStyle("StatusBar_LABEL");
-	public final Label caret;
+	public static final CssStyle LABEL_LEADING = new CssStyle("StatusBar_LABEL");
+	public static final CssStyle LABEL_TRAILING = new CssStyle("StatusBar_LABEL");
+
+	private final Label leading;
+	private final Label trailing;
 	
 	
 	public StatusBar()
 	{
 		FX.style(this, PANE);
 		
-		caret = FX.label(LABEL);
+		leading = FX.label(LABEL_LEADING);
 		
-		add(caret);
+		trailing = FX.label(LABEL_TRAILING, Pos.CENTER_RIGHT, FxTextEditorDemoApp.COPYRIGHT);
+		
+		add(leading);
 		fill();
+		add(trailing);
 	}
 
 
 	public void attach(FxTextEditor ed)
 	{
-		caret.textProperty().bind(Bindings.createStringBinding
+		leading.textProperty().bind(Bindings.createStringBinding
 		(
 			() ->
 			{

@@ -19,11 +19,11 @@ import javafx.scene.layout.Region;
 public class HPane
 	extends Pane
 {
-	protected static final Log log = Log.get("HPane");
+	private static final Log log = Log.get("HPane");
 	public static final double FILL = -1.0;
 	public static final double PREF = -2.0;
-	protected int gap;
-	protected static final Object KEY_CONSTRAINT = new Object();
+	private int gap;
+	private static final Object KEY_CONSTRAINT = new Object();
 	
 	
 	public HPane(int hgap)
