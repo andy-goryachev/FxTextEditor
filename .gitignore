@@ -1,9 +1,9 @@
-~*
 /build/
-/*.conf
-hs_err_pid*
-/*.jar
-/*.log
 /out/
 /user.home*/
-/reference/reference.css
+/*.jar
+/*.log
+/*.conf
+~*
+hs_err_pid*
+.DS_Store

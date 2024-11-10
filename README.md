@@ -27,6 +27,7 @@ Please refer to a simple demo application: [FxTextEditorDemoApp.java](https://gi
 * supports syntax highlighting
 * basic text attributes: bold, italic, underline, strike-through
 * variable tab width
+* left-to-right orientation only, and no bidi text
 
 
 ## Warning

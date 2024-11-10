@@ -1,7 +1,6 @@
 // Copyright © 2017-2024 Andy Goryachev <andy@goryachev.com>
 package demo.fxtexteditor;
 import goryachev.common.util.Parsers;
-import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxAction;
 import goryachev.fx.FxComboBox;
@@ -17,6 +16,7 @@ import goryachev.fxtexteditor.FxTextEditorModel;
 import demo.fxtexteditor.res.DemoModels;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 
 
 /**
@@ -26,7 +26,7 @@ public class MainWindow
 	extends FxWindow
 {
 	public final MainPane mainPane;
-	public final CPane content;
+	public final BorderPane content;
 	public final StatusBar statusBar;
 	protected final FxComboBox<DemoModels> modelSelector = new FxComboBox();
 	protected final FxComboBox fontSelector = new FxComboBox();
@@ -52,7 +52,7 @@ public class MainWindow
 		
 		mainPane = new MainPane();
 		
-		content = new CPane();
+		content = new BorderPane();
 		content.setTop(createToolbar());
 		content.setCenter(mainPane);
 		
