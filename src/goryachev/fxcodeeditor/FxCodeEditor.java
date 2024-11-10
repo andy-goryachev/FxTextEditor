@@ -2,6 +2,7 @@
 package goryachev.fxcodeeditor;
 import goryachev.fxcodeeditor.internal.SelectionModel;
 import goryachev.fxcodeeditor.model.CodeModel;
+import goryachev.fxcodeeditor.skin.FxCodeEditorSkin;
 import goryachev.fxtexteditor.TextPos;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -23,17 +24,30 @@ import javafx.scene.control.Control;
 public class FxCodeEditor
 	extends Control
 {
-	private final FxCodeEditorConfig config;
+	private final Config config;
     private final ReadOnlyObjectWrapper<TextPos> anchorPosition = new ReadOnlyObjectWrapper<>();
     private final ReadOnlyObjectWrapper<TextPos> caretPosition = new ReadOnlyObjectWrapper<>();
 	private SimpleObjectProperty<CodeModel> model;
 	private final SelectionModel selectionModel = new SelectionModel();
 
 
-	public FxCodeEditor(FxCodeEditorConfig config, CodeModel model)
+	public FxCodeEditor(Config config, CodeModel model)
 	{
 		this.config = config.copy();
 		setModel(model);
+	}
+	
+
+	public FxCodeEditor(CodeModel model)
+	{
+		this(Config.getDefault(), model);
+	}
+
+
+	@Override
+	protected FxCodeEditorSkin createDefaultSkin()
+	{
+		return new FxCodeEditorSkin(this);
 	}
 
 

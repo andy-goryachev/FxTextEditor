@@ -1,21 +1,28 @@
 // Copyright © 2024-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxcodeeditor;
 
+
 /**
  * FxCodeEditor Config.
  */
-public final class FxCodeEditorConfig implements Cloneable
+public final class Config implements Cloneable
 {
-	public FxCodeEditorConfig()
+	public Config()
 	{
 	}
 	
+
+	public static Config getDefault()
+	{
+		return new Config();
+	}
 	
-	public FxCodeEditorConfig copy()
+	
+	public Config copy()
 	{
 		try
 		{
-			return (FxCodeEditorConfig)super.clone();
+			return (Config)super.clone();
 		}
 		catch(Exception e)
 		{
