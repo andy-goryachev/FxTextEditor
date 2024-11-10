@@ -13,6 +13,12 @@ public abstract class CodeParagraph
 	 * Returns the model index of this paragraph.
 	 */
 	public abstract int getIndex();
+	
+	
+	/**
+	 * Returns the background color of this paragraph, or {@code null}.
+	 */
+	public abstract Color getBackgroundColor();
 
 
 	/**
@@ -27,15 +33,13 @@ public abstract class CodeParagraph
 	public abstract int getTextLength();
 
 
-	/** 
-	 * returns cell styles at the given char index, or null if no styling exists.
-	 * The styles should not include view-specific styles such as current line or cursor.
-	 */
-	//public TextCellStyle getCellStyle(int charOffset);
-	
-	
 	/**
-	 * Returns the background color of this paragraph, or {@code null}.
+	 * Retrieves the text cell attributes into the specified instance of
+	 * {@link CellAttributes}.
+	 * 
+	 * @implNote
+	 * The implementation must not cache the instance passed to it, because
+	 * the same instance is likely to be used for performance reasons.
 	 */
-	public abstract Color getBackgroundColor();
+	public abstract void getCellStyle(int offset, CellAttributes a);
 }
