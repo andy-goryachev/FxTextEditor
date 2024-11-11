@@ -1,9 +1,17 @@
 // Copyright © 2024-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxcodeeditor.internal;
+import goryachev.common.log.Log;
 import goryachev.fx.FX;
 import goryachev.fxcodeeditor.skin.FxCodeEditorSkin;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.VPos;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 
 /**
@@ -16,9 +24,14 @@ import javafx.scene.layout.Pane;
 public class CellGrid
 	extends Pane
 {
+	private static final Log log = Log.get("CellGrid");
 	private final FxCodeEditorSkin skin;
 	private final ScrollBar vscroll;
 	private final ScrollBar hscroll;
+	private final SimpleObjectProperty<Origin> origin = new SimpleObjectProperty<>(Origin.ZERO);
+	private Canvas canvas;
+	private GraphicsContext gx;
+	private FlowInfo flow;
 
 
 	public CellGrid(FxCodeEditorSkin skin, ScrollBar vscroll, ScrollBar hscroll)
@@ -33,6 +46,9 @@ public class CellGrid
 		
 		FX.addInvalidationListener(widthProperty(), this::handleWidthChange);
 		FX.addInvalidationListener(heightProperty(), this::handleHeightChange);
+		FX.addInvalidationListener(scaleXProperty(), this::handleScaleChange);
+		FX.addInvalidationListener(scaleYProperty(), this::handleScaleChange);
+		FX.addInvalidationListener(origin, this::requestLayout);
 	}
 
 
@@ -60,10 +76,32 @@ public class CellGrid
 	}
 	
 	
-	private LayoutInfo computeLayout()
+	void handleScaleChange()
 	{
-		// TODO
-		return new LayoutInfo();
+		requestLayout();
+	}
+	
+	
+	private Canvas createCanvas()
+	{
+		Insets m = getInsets();
+		double w = snapSizeX(getWidth() - snappedLeftInset() - snappedRightInset());
+		double h = snapSizeY(getHeight() - snappedTopInset() - snappedBottomInset());
+		
+		log.trace("w=%.1f, h=%.1f", w, h);
+		
+		return new Canvas(w, h);
+	}
+	
+	
+	private FlowInfo computeLayout()
+	{
+		// compute:
+		// - canvas size
+		// - flow cells
+		// - scroll bar visibility
+		// TODO need origin, need LI field
+		return new FlowInfo();
 	}
 
 
@@ -87,7 +125,18 @@ public class CellGrid
 		// TODO compute geometry in order to determine whether any of the properties (scroll bars, origin) need to be changed
 		// if so, change them and bail out early.  changing any of the properties results in another layout request.
 		// 
-		LayoutInfo la = computeLayout();
+		FlowInfo f = computeLayout();
+		if(f.isCanvasDifferent(flow))
+		{
+			if(canvas != null)
+			{
+				getChildren().remove(canvas);
+			}
+			canvas = createCanvas(); // TODO get the new size from LayoutInfo?
+			gx = canvas.getGraphicsContext2D();
+			
+			getChildren().add(canvas);
+		}
 		
 		boolean vsb = true;
 		boolean hsb = true;
@@ -109,15 +158,27 @@ public class CellGrid
 		// geometry is fine at this point
 		// TODO recreate the canvas if necessary
 		// TODO repaint damaged areas on the canvas
+		// FIX debug
+		{
+			gx.setFill(Color.LIGHTGRAY);
+			gx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		}
+		
+		double x0 = snappedLeftInset();
+		double y0 = snappedTopInset();
+		double cw = canvas.getWidth();
+		double ch = canvas.getHeight();
 
 		if(vsb)
 		{
-			//layoutInArea();
+			layoutInArea(vscroll, x0 + cw, y0, vsbWidth, ch, 0.0, null, true, true, HPos.CENTER, VPos.CENTER);
 		}
 		
 		if(hsb)
 		{
-			// layout hscroll
+			layoutInArea(hscroll, x0, y0 + ch, cw, hsbHeight, 0.0, null, true, true, HPos.CENTER, VPos.CENTER);
 		}
+		
+		layoutInArea(canvas, x0, y0, cw, ch, 0.0, null, true, true, HPos.CENTER, VPos.CENTER);
 	}
 }
