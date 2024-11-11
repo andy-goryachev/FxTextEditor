@@ -3,6 +3,7 @@ package goryachev.fxcodeeditor.skin;
 import goryachev.fx.FX;
 import goryachev.fx.FxDisconnector;
 import goryachev.fxcodeeditor.FxCodeEditor;
+import goryachev.fxcodeeditor.internal.CellGrid;
 import goryachev.fxcodeeditor.internal.Defaults;
 import goryachev.fxcodeeditor.internal.FxCodeEditorBehavior;
 import javafx.geometry.Orientation;

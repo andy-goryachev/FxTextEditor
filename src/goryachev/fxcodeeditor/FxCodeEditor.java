@@ -17,6 +17,7 @@ import javafx.css.StyleableProperty;
 import javafx.css.StyleablePropertyFactory;
 import javafx.geometry.Insets;
 import javafx.scene.control.Control;
+import javafx.scene.text.Font;
 
 
 /**
@@ -40,6 +41,7 @@ public class FxCodeEditor
 	// styleable properties are not created lazily
 	private static final StyleablePropertyFactory<FxCodeEditor> SPF = new StyleablePropertyFactory<>(Control.getClassCssMetaData());
 	private final StyleableProperty<Insets> contentPadding = SPF.createStyleableInsetsProperty(this, "contentPadding", "-ag-content-padding", (c) -> c.contentPadding, Defaults.CONTENT_PADDING);
+	private final StyleableProperty<Font> font = SPF.createStyleableFontProperty(this, "font", "-ag-font", (c) -> c.font, Defaults.FONT);
 	private final StyleableProperty<Boolean> wrapText = SPF.createStyleableBooleanProperty(this, "wrapText", "-ag-wrap-text", (c) -> c.wrapText, Defaults.WRAP_TEXT);
 
 

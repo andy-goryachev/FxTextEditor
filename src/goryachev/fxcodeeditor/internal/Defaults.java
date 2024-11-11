@@ -1,6 +1,7 @@
 // Copyright © 2024-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxcodeeditor.internal;
 import javafx.geometry.Insets;
+import javafx.scene.text.Font;
 
 
 /**
@@ -9,6 +10,8 @@ import javafx.geometry.Insets;
 public class Defaults
 {
 	public static final Insets CONTENT_PADDING = null;
+	
+	public static final Font FONT = Font.font("Monospaced", -1);
 	
 	public static final double MIN_HEIGHT = 20;
 	
