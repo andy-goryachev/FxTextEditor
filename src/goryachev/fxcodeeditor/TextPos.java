@@ -22,15 +22,39 @@ public final class TextPos
 	}
 
 
+	/**
+	 * Returns 0-based model index.
+	 */
 	public int index()
 	{
 		return index;
 	}
 
 
+	/**
+	 * Returns 0-based character offset.
+	 */
 	public int offset()
 	{
 		return offset;
+	}
+	
+	
+	/**
+	 * Returns 1-based line number, equaling to {@link #index} + 1.
+	 */
+	public int getLineNumber()
+	{
+		return index + 1;
+	}
+	
+	
+	/**
+	 * Returns 1-based visual column number, equaling to {@link #offset} + 1.
+	 */
+	public int getColumn()
+	{
+		return offset + 1;
 	}
 
 

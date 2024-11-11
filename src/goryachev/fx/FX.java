@@ -45,7 +45,9 @@ import javafx.collections.ObservableMap;
 import javafx.collections.transformation.TransformationList;
 import javafx.css.Styleable;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -101,10 +103,9 @@ public final class FX
 	public static final double ONE_OVER_GAMMA = 1.0 / GAMMA;
 	private static Text helper;
 	private static final Object PROP_TOOLTIP = new Object();
-	
-	// TODO move both to FxSettings?
 	private static final Object PROP_NAME = new Object();
 	private static final Object PROP_SKIP_SETTINGS = new Object();
+	private static EventHandler consumeAll;
 	
 	
 	public static FxWindow getWindow(Node n)
@@ -1577,6 +1578,20 @@ public final class FX
 	
 	
 	/** avoid ambiguous signature warning when using addListener */
+	public static void addInvalidationListener(Observable p, Runnable r)
+	{
+		p.addListener(new InvalidationListener()
+		{
+			@Override
+			public void invalidated(Observable observable)
+			{
+				r.run();
+			}
+		});
+	}
+	
+	
+	/** avoid ambiguous signature warning when using addListener */
 	public static <T> void addChangeListener(ObservableList<T> list, ListChangeListener<? super T> li)
 	{
 		list.addListener(li);
@@ -2297,5 +2312,18 @@ public final class FX
 	{
 		T v = p.getValue();
 		return (v == null) ? defaultValue : v;
+	}
+
+
+	/**
+	 * Adds an event filter which consumes all events of the specified type.
+	 */
+	public static <T extends Event> void consumeAllEvents(EventType<T> type, Node n)
+	{
+		if(consumeAll == null)
+		{
+			consumeAll = (ev) -> ev.consume();
+		}
+		n.addEventFilter(type, consumeAll);
 	}
 }

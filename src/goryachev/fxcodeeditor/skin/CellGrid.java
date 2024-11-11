@@ -1,5 +1,6 @@
 // Copyright © 2024-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxcodeeditor.skin;
+import goryachev.fx.FX;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.Pane;
 
@@ -28,6 +29,9 @@ public class CellGrid
 		getChildren().addAll(vscroll, hscroll);
 		
 		// TODO paragraph cache
+		
+		FX.addInvalidationListener(widthProperty(), this::handleWidthChange);
+		FX.addInvalidationListener(heightProperty(), this::handleHeightChange);
 	}
 
 
@@ -39,5 +43,27 @@ public class CellGrid
 		b.setUnitIncrement(0.01);
 		b.setBlockIncrement(0.05);
 		return b;
+	}
+	
+	
+	void handleWidthChange()
+	{
+		// TODO scroll horizontally
+		requestLayout();
+	}
+	
+	
+	void handleHeightChange()
+	{
+		requestLayout();
+	}
+
+
+	@Override
+	protected void layoutChildren()
+	{
+		// TODO two separate steps:
+		// 1. compute layout (check if canvas needs to be re-created, origin, scroll bars, ...)
+		// 2. paint the canvas
 	}
 }

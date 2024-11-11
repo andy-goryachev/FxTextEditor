@@ -8,9 +8,9 @@ import javafx.beans.property.ReadOnlyProperty;
 /**
  * Selection Model.
  */
-public class SelectionModel
+public final class SelectionModel
 {
-    private final ReadOnlyObjectWrapper<SelectionRange> segment = new ReadOnlyObjectWrapper<>();
+    private final ReadOnlyObjectWrapper<SelectionRange> range = new ReadOnlyObjectWrapper<>();
     
     
 	public SelectionModel()
@@ -25,12 +25,12 @@ public class SelectionModel
 
 	public ReadOnlyProperty<SelectionRange> selectionProperty()
 	{
-		return null;
+		return range.getReadOnlyProperty();
 	}
 
 
 	public SelectionRange getSelection()
 	{
-		return null;
+		return range.get();
 	}
 }
