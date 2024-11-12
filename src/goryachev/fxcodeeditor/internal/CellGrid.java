@@ -9,7 +9,6 @@ import goryachev.fxcodeeditor.skin.FxCodeEditorSkin;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -43,6 +42,7 @@ public class CellGrid
 	private Font boldFont;
 	private Font boldItalicFont;
 	private Font italicFont;
+	private Arrangement arrangement;
 
 
 	public CellGrid(FxCodeEditorSkin skin, ScrollBar vscroll, ScrollBar hscroll)
@@ -70,6 +70,7 @@ public class CellGrid
 		boldFont = null;
 		boldItalicFont = null;
 		italicFont = null;
+		metrics = null;
 	}
 	
 	
@@ -158,11 +159,16 @@ public class CellGrid
 			return;
 		}
 		
+		// we have all the information, so we can re-flow in one pass!  steps:
+		// - get the canvas size w/o scroll bars, rowCount
+		// - is vsb needed? (easy answers: origin > ZERO, rowCount > model.size)
+		// - if vsb not needed, lay out w/o vsb.  if does not fit, must use vsb.
+		// - determine if hsb is needed.  easy answers(wrap on, unwrapped width > grid.width)
+		// - if vsb not needed, but hsb is needed, lay out one more time, vsb may be needed after all
+		// - do the layout: view port, N lines after, M lines before (adjusting N,M when close to the model edges)
+
 		boolean wrap = editor.isWrapText();
-		
-		// FIX move down
-		double vsbWidth = 0.0; // vscroll.isVisible() ? 0.0 : vscroll.prefWidth(-1);
-		double hsbHeight = 0.0; //hscroll.isVisible() ? 0.0 : hscroll.prefHeight(-1);
+		int tabSize = editor.getTabSize();
 		
 		Origin or = origin.get();
 		double canvasWidth = snapSizeX(getWidth() - snappedLeftInset() - snappedRightInset());
@@ -180,8 +186,10 @@ public class CellGrid
 		boolean vsb = (size > viewRows) || (or.index() > 0);
 		if(!vsb)
 		{
+			// TODO adjust origin if too much whitespace at the end
+			
 			// attempt to lay out w/o the vertical scroll bar
-			arr = new Arrangement(model, viewCols);
+			arr = new Arrangement(model, viewCols, viewRows, tabSize, wrap);
 			arr.layout(viewRows, or.index(), or.glyphIndex());
 			// layout and see if vsb is needed
 			if(arr.isVsbNeeded())
@@ -190,6 +198,9 @@ public class CellGrid
 				arr = null;
 			}
 		}
+		
+		double vsbWidth = 0.0;
+		double hsbHeight = 0.0;
 		
 		if(vsb)
 		{
@@ -201,7 +212,7 @@ public class CellGrid
 		
 		if(arr == null)
 		{
-			arr = new Arrangement(model, viewCols);
+			arr = new Arrangement(model, viewCols, viewRows, tabSize, wrap);
 			arr.layout(viewRows, or.index(), or.glyphIndex());
 		}
 		
@@ -233,42 +244,6 @@ public class CellGrid
 			hsbHeight = snapSizeY(hscroll.prefHeight(-1));
 			canvasHeight -= hsbHeight;
 		}
-		
-//		double y = 0.0;
-//		int gix = or.glyphIndex();
-//		int row = 0;
-//		boolean first = true;
-//		//FlowCache cache = getFlowCache(wrap, ??);
-//		int ix=or.index();
-//		for( ; ix<size; ix++)
-//		{
-//			FlowPar p = getFlowCell(ix);
-//			if(first)
-//			{
-//				int r = p.rowAtGlyphIndex(gix);
-//				row += (p.rowCount() - r);
-//				first = false;
-//			}
-//			else
-//			{
-//				row += p.rowCount();
-//			}
-//			
-//			if(row >= viewRows)
-//			{
-//				break;
-//			}
-//		}
-
-
-		// we have all the information, so we can re-flow in one pass!  steps:
-		// - get the canvas size w/o scroll bars, rowCount
-		// - is vsb needed? (easy answers: origin > ZERO, rowCount > model.size)
-		// - if vsb not needed, lay out w/o vsb.  if does not fit, must use vsb.
-		// - determine if hsb is needed.  easy answers(wrap on, unwrapped width > grid.width)
-		// - if vsb not needed, but hsb is needed, lay out one more time, vsb may be needed after all
-		// - do the layout: view port, N lines after, M lines before (adjusting N,M when close to the model edges)
-		// the new flow contains all the parameters
 
 		boolean recreateCanvas =
 			(canvas == null) || 
@@ -290,6 +265,9 @@ public class CellGrid
 		
 		vscroll.setVisible(vsb);
 		hscroll.setVisible(hsb);
+
+		arr.paintAll(gx);
+		arrangement = arr;
 		
 		// geometry is fine at this point
 		// TODO recreate the canvas if necessary

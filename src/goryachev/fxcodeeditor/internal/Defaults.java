@@ -27,5 +27,9 @@ public class Defaults
 	 */
 	public static final int SLIDING_WINDOW_HALF = 100;
 	
+	public static final int TAB_SIZE = 8;
+	
+	public static final int TAB_SIZE_MAX = 32;
+	
 	public static final boolean WRAP_TEXT = false;
 }

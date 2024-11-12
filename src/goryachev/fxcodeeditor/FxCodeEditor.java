@@ -42,6 +42,7 @@ public class FxCodeEditor
 	private static final StyleablePropertyFactory<FxCodeEditor> SPF = new StyleablePropertyFactory<>(Control.getClassCssMetaData());
 	private final StyleableProperty<Insets> contentPadding = SPF.createStyleableInsetsProperty(this, "contentPadding", "-ag-content-padding", (c) -> c.contentPadding, Defaults.CONTENT_PADDING);
 	private final StyleableProperty<Font> font = SPF.createStyleableFontProperty(this, "font", "-ag-font", (c) -> c.font, Defaults.FONT);
+	private final StyleableProperty<Number> tabSize = SPF.createStyleableNumberProperty(this, "tabSize", "-ag-tab-size", (c) -> c.tabSize, Defaults.TAB_SIZE);
 	private final StyleableProperty<Boolean> wrapText = SPF.createStyleableBooleanProperty(this, "wrapText", "-ag-wrap-text", (c) -> c.wrapText, Defaults.WRAP_TEXT);
 
 
@@ -174,8 +175,50 @@ public class FxCodeEditor
 	{
 		return selectionModel.getSelection();
 	}
+	
+	
+    /**
+     * The size of a tab stop.
+     * The values are converted to an {@code int}.
+     * Values less than 1 are treated as 1.  Values greater than 32 are treated as 32.
+     * @defaultValue 8
+     */
+	// TODO this property should be initialized lazily and be an IntegerProperty styleable property should be extracted into a separate class.
+	public final ObservableValue<Number> tabSizeProperty()
+	{
+		return (ObservableValue<Number>)tabSize;
+	}
 
 
+	public final int getTabSize()
+	{
+		int n = tabSize.getValue().intValue();
+		if(n < 1)
+		{
+			return 1;
+		}
+		else if(n > Defaults.TAB_SIZE_MAX)
+		{
+			return Defaults.TAB_SIZE_MAX;
+		}
+		return n;
+	}
+
+
+	public final void setTabSize(int v)
+	{
+		tabSize.setValue(v);
+	}
+
+
+    /**
+     * Determines whether the text should be wrapped to fin the viewable area width.
+     * <p>
+     * The horizontal scrolling will be disabled when this property is set to {@code true},
+     * and the horizontal scroll bar will be hidden.
+     * 
+     * @defaultValue {@code false}
+     */
 	public final ObservableValue<Boolean> wrapTextProperty()
 	{
 		return (ObservableValue<Boolean>)wrapText;

@@ -42,4 +42,44 @@ public abstract class CodeParagraph
 	 * the same instance is likely to be used for performance reasons.
 	 */
 	public abstract void getCellStyle(int offset, CellAttributes a);
+
+
+	public static CodeParagraph of(int index, String text)
+	{
+		return new CodeParagraph()
+		{
+			@Override
+			public int getTextLength()
+			{
+				return text.length();
+			}
+			
+			
+			@Override
+			public String getPlainText()
+			{
+				return text;
+			}
+			
+			
+			@Override
+			public int getIndex()
+			{
+				return index;
+			}
+			
+			
+			@Override
+			public void getCellStyle(int offset, CellAttributes a)
+			{
+			}
+			
+			
+			@Override
+			public Color getBackgroundColor()
+			{
+				return null;
+			}
+		};
+	}
 }

@@ -1,6 +1,5 @@
 // Copyright © 2024-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxcodeeditor.internal;
-import goryachev.common.util.text.IBreakIterator;
 import goryachev.fxcodeeditor.model.CodeParagraph;
 
 
@@ -20,7 +19,7 @@ public class FlowPar
 	}
 	
 	
-	public static FlowPar create(CodeParagraph p, int tabSize, int wrapLimit, IBreakIterator bi)
+	public static FlowPar create(CodeParagraph p, int tabSize, int wrapLimit)
 	{
 		String text = p.getPlainText();
 		// TODO tabs, complex glyphs, multiple lines
