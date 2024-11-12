@@ -43,6 +43,7 @@ public class FxCodeEditorSkin
 		behavior = new FxCodeEditorBehavior(ed);
 		
 		disconnector = new FxDisconnector();
+		disconnector.addChangeListener(ed.fontProperty(), true, grid::setFont);
 	}
 	
 	

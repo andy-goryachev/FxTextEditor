@@ -3,6 +3,7 @@ package goryachev.fx;
 import goryachev.common.util.CList;
 import goryachev.common.util.IDisconnectable;
 import java.lang.ref.WeakReference;
+import java.util.function.Consumer;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
@@ -142,6 +143,37 @@ public class FxDisconnector
 		}
 		
 		return d;
+	}
+	
+	
+	public <T> IDisconnectable addChangeListener(ObservableValue<T> p, boolean fireImmediately, Consumer<T> callback)
+	{
+		ChLi<T> li = new ChLi<>()
+		{
+			@Override
+			public void disconnect()
+			{
+				p.removeListener(this);
+			}
+
+			
+			@Override
+			public void changed(ObservableValue p, T oldValue, T newValue)
+			{
+				callback.accept(newValue);
+			}
+		};
+		
+		items.add(li);
+		p.addListener(li);
+		
+		if(fireImmediately)
+		{
+			T v = p.getValue();
+			callback.accept(v);
+		}
+		
+		return li;
 	}
 
 

@@ -21,5 +21,11 @@ public class Defaults
 	
 	public static final double PREF_WIDTH = 100;
 	
+	/**
+	 * Number of paragraphs to lay out before and after the view port
+	 * to form a sliding window, for the purpose of smoother scrolling.
+	 */
+	public static final int SLIDING_WINDOW_HALF = 100;
+	
 	public static final boolean WRAP_TEXT = false;
 }

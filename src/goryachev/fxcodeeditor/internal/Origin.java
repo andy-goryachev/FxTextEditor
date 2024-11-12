@@ -5,7 +5,7 @@ package goryachev.fxcodeeditor.internal;
 /**
  * Viewport Origin.
  */
-public record Origin(int index, int offset, int xpan)
+public record Origin(int index, int glyphIndex)
 {
-	public static final Origin ZERO = new Origin(0, 0, 0);
+	public static final Origin ZERO = new Origin(0, 0);
 }

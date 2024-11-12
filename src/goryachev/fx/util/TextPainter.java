@@ -212,7 +212,7 @@ public class TextPainter
 			String s = GlyphCache.get(c);
 			if(s != null)
 			{
-				gx.fillText(s, x, -tm.baseline, tm.cellWidth);
+				gx.fillText(s, x, -tm.baseLine, tm.cellWidth);
 			}
 		}
 	}
@@ -275,7 +275,7 @@ public class TextPainter
 				Font f = getFont(style);
 				gx.setFont(f);
 				gx.setFill(fg);
-				gx.fillText(s, x, -tm.baseline, tm.cellWidth);
+				gx.fillText(s, x, -tm.baseLine, tm.cellWidth);
 			
 				if(style.isStrikeThrough())
 				{

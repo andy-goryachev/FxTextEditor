@@ -5,26 +5,26 @@ import goryachev.fxcodeeditor.model.CodeParagraph;
 
 
 /**
- * Flow Cell contains information necessary for the paragraph presentation,
+ * Flow Paragraph contains information necessary for the paragraph presentation,
  * such as conversion between the paragraph's characters and glyph cells,
  * wrapping lines
  */
-public class FlowCell
+public class FlowPar
 {
 	private final CodeParagraph paragraph;
 	
 	
-	private FlowCell(CodeParagraph p)
+	private FlowPar(CodeParagraph p)
 	{
 		this.paragraph = p;
 	}
 	
 	
-	public static FlowCell create(CodeParagraph p, int tabSize, int wrapLimit, IBreakIterator bi)
+	public static FlowPar create(CodeParagraph p, int tabSize, int wrapLimit, IBreakIterator bi)
 	{
 		String text = p.getPlainText();
 		// TODO tabs, complex glyphs, multiple lines
 		// possible outputs: SingleLine, SimpleWrap, ComplexSingleLine, ComplexMultiLine
-		return new FlowCell(p);
+		return new FlowPar(p);
 	}
 }

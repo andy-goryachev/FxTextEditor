@@ -2,8 +2,12 @@
 package goryachev.fxcodeeditor.internal;
 import goryachev.common.log.Log;
 import goryachev.fx.FX;
+import goryachev.fx.TextCellMetrics;
+import goryachev.fxcodeeditor.FxCodeEditor;
+import goryachev.fxcodeeditor.model.CodeModel;
 import goryachev.fxcodeeditor.skin.FxCodeEditorSkin;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Bounds;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -12,6 +16,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 
 /**
@@ -26,17 +32,23 @@ public class CellGrid
 {
 	private static final Log log = Log.get("CellGrid");
 	private final FxCodeEditorSkin skin;
+	private final FxCodeEditor editor;
 	private final ScrollBar vscroll;
 	private final ScrollBar hscroll;
 	private final SimpleObjectProperty<Origin> origin = new SimpleObjectProperty<>(Origin.ZERO);
 	private Canvas canvas;
 	private GraphicsContext gx;
-	private FlowInfo flow;
+	private TextCellMetrics metrics;
+	private Font baseFont;
+	private Font boldFont;
+	private Font boldItalicFont;
+	private Font italicFont;
 
 
 	public CellGrid(FxCodeEditorSkin skin, ScrollBar vscroll, ScrollBar hscroll)
 	{
 		this.skin = skin;
+		this.editor = skin.getSkinnable();
 		this.vscroll = configureScrollBar(vscroll);
 		this.hscroll = configureScrollBar(hscroll);
 
@@ -50,6 +62,21 @@ public class CellGrid
 		FX.addInvalidationListener(scaleYProperty(), this::handleScaleChange);
 		FX.addInvalidationListener(origin, this::requestLayout);
 	}
+	
+	
+	public void setFont(Font f)
+	{
+		baseFont = f;
+		boldFont = null;
+		boldItalicFont = null;
+		italicFont = null;
+	}
+	
+	
+	private Font font()
+	{
+		return baseFont;
+	}
 
 
 	private static ScrollBar configureScrollBar(ScrollBar b)
@@ -59,6 +86,7 @@ public class CellGrid
 		b.setMax(1.0);
 		b.setUnitIncrement(0.01);
 		b.setBlockIncrement(0.05);
+		b.setVisible(false);
 		return b;
 	}
 	
@@ -82,28 +110,39 @@ public class CellGrid
 	}
 	
 	
-	private Canvas createCanvas()
+	private int paragraphCount()
 	{
-		Insets m = getInsets();
-		double w = snapSizeX(getWidth() - snappedLeftInset() - snappedRightInset());
-		double h = snapSizeY(getHeight() - snappedTopInset() - snappedBottomInset());
-		
-		log.trace("w=%.1f, h=%.1f", w, h);
-		
-		return new Canvas(w, h);
+		CodeModel m = editor.getModel();
+		return (m == null) ? 0 : m.size();
 	}
 	
 	
-	private FlowInfo computeLayout()
+	private TextCellMetrics textCellMetrics()
 	{
-		// compute:
-		// - canvas size
-		// - flow cells
-		// - scroll bar visibility
-		// TODO need origin, need LI field
-		return new FlowInfo();
+		if(metrics == null)
+		{
+			Font font = font();
+			Text t = new Text("8");
+			t.setFont(font);
+			
+			getChildren().add(t);
+			try
+			{
+				double fontAspect = 0.8; // TODO property
+				Bounds b = t.getBoundsInLocal();
+				double w = snapSizeX(b.getWidth() * fontAspect);
+				double h = snapSizeY(b.getHeight());
+				double baseLine = b.getMinY();
+				metrics = new TextCellMetrics(font, baseLine, w, h);
+			}
+			finally
+			{
+				getChildren().remove(t);
+			}
+		}
+		return metrics;
 	}
-
+	
 
 	@Override
 	protected void layoutChildren()
@@ -119,48 +158,145 @@ public class CellGrid
 			return;
 		}
 		
-		double vsbWidth = vscroll.isVisible() ? 0.0 : vscroll.prefWidth(-1);
-		double hsbHeight = hscroll.isVisible() ? 0.0 : hscroll.prefHeight(-1);
+		boolean wrap = editor.isWrapText();
+		
+		// FIX move down
+		double vsbWidth = 0.0; // vscroll.isVisible() ? 0.0 : vscroll.prefWidth(-1);
+		double hsbHeight = 0.0; //hscroll.isVisible() ? 0.0 : hscroll.prefHeight(-1);
+		
+		Origin or = origin.get();
+		double canvasWidth = snapSizeX(getWidth() - snappedLeftInset() - snappedRightInset());
+		double canvasHeight = snapSizeY(getHeight() - snappedTopInset() - snappedBottomInset());
+		TextCellMetrics tm = textCellMetrics();
+		
+		int size = paragraphCount();
+		int viewCols = (int)(canvasWidth / tm.cellWidth);
+		int viewRows = (int)(canvasHeight / tm.cellHeight);
+		Arrangement arr = null;
+		CodeModel model = editor.getModel();
+		
+		// determine if the vertical scroll bar is needed
+		// easy answers first
+		boolean vsb = (size > viewRows) || (or.index() > 0);
+		if(!vsb)
+		{
+			// attempt to lay out w/o the vertical scroll bar
+			arr = new Arrangement(model, viewCols);
+			arr.layout(viewRows, or.index(), or.glyphIndex());
+			// layout and see if vsb is needed
+			if(arr.isVsbNeeded())
+			{
+				vsb = true;
+				arr = null;
+			}
+		}
+		
+		if(vsb)
+		{
+			// view got narrower due to vsb
+			vsbWidth = snapSizeX(vscroll.prefWidth(-1));
+			canvasWidth -= vsbWidth;
+			viewCols = (int)(canvasWidth / tm.cellWidth);
+		}
+		
+		if(arr == null)
+		{
+			arr = new Arrangement(model, viewCols);
+			arr.layout(viewRows, or.index(), or.glyphIndex());
+		}
+		
+		// lay out bottom half of the sliding window
+		int last = arr.getLastIndex();
+		int max = Math.min(size, last + Defaults.SLIDING_WINDOW_HALF);
+		int ct = arr.layout(Defaults.SLIDING_WINDOW_HALF, last, 0); 
+		if(ct < Defaults.SLIDING_WINDOW_HALF)
+		{
+			ct = (Defaults.SLIDING_WINDOW_HALF - ct) + Defaults.SLIDING_WINDOW_HALF;
+		}
+		else
+		{
+			ct = Defaults.SLIDING_WINDOW_HALF;
+		}
+		
+		// layout upper half of the sliding window
+		int top = Math.max(0, or.index() - ct);
+		ct = or.index() - top;
+		if(ct > 0)
+		{
+			arr.layout(top, ct, 0);
+		}
 
-		// TODO compute geometry in order to determine whether any of the properties (scroll bars, origin) need to be changed
-		// if so, change them and bail out early.  changing any of the properties results in another layout request.
-		// 
-		FlowInfo f = computeLayout();
-		if(f.isCanvasDifferent(flow))
+		// we now have the layout
+		boolean hsb = arr.isHsbNeeded();
+		if(hsb)
+		{
+			hsbHeight = snapSizeY(hscroll.prefHeight(-1));
+			canvasHeight -= hsbHeight;
+		}
+		
+//		double y = 0.0;
+//		int gix = or.glyphIndex();
+//		int row = 0;
+//		boolean first = true;
+//		//FlowCache cache = getFlowCache(wrap, ??);
+//		int ix=or.index();
+//		for( ; ix<size; ix++)
+//		{
+//			FlowPar p = getFlowCell(ix);
+//			if(first)
+//			{
+//				int r = p.rowAtGlyphIndex(gix);
+//				row += (p.rowCount() - r);
+//				first = false;
+//			}
+//			else
+//			{
+//				row += p.rowCount();
+//			}
+//			
+//			if(row >= viewRows)
+//			{
+//				break;
+//			}
+//		}
+
+
+		// we have all the information, so we can re-flow in one pass!  steps:
+		// - get the canvas size w/o scroll bars, rowCount
+		// - is vsb needed? (easy answers: origin > ZERO, rowCount > model.size)
+		// - if vsb not needed, lay out w/o vsb.  if does not fit, must use vsb.
+		// - determine if hsb is needed.  easy answers(wrap on, unwrapped width > grid.width)
+		// - if vsb not needed, but hsb is needed, lay out one more time, vsb may be needed after all
+		// - do the layout: view port, N lines after, M lines before (adjusting N,M when close to the model edges)
+		// the new flow contains all the parameters
+
+		boolean recreateCanvas =
+			(canvas == null) || 
+			GridUtils.notClose(canvasWidth, canvas.getWidth()) ||
+			GridUtils.notClose(canvasHeight, canvas.getHeight());
+		if(recreateCanvas)
 		{
 			if(canvas != null)
 			{
 				getChildren().remove(canvas);
 			}
-			canvas = createCanvas(); // TODO get the new size from LayoutInfo?
+			
+			// create new canvas
+			canvas = new Canvas(canvasWidth, canvasHeight);
 			gx = canvas.getGraphicsContext2D();
 			
 			getChildren().add(canvas);
 		}
 		
-		boolean vsb = true;
-		boolean hsb = true;
-
-		if(vsb != vscroll.isVisible())
-		{
-			// causes another layout pass
-			vscroll.setVisible(vsb);
-			return;
-		}
-
-		if(hsb != hscroll.isVisible())
-		{
-			// causes another layout pass
-			hscroll.setVisible(hsb);
-			return;
-		}
+		vscroll.setVisible(vsb);
+		hscroll.setVisible(hsb);
 		
 		// geometry is fine at this point
 		// TODO recreate the canvas if necessary
 		// TODO repaint damaged areas on the canvas
 		// FIX debug
 		{
-			gx.setFill(Color.LIGHTGRAY);
+			gx.setFill(Color.LIGHTSALMON);
 			gx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		}
 		

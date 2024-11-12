@@ -9,7 +9,7 @@ import javafx.scene.text.Font;
 public final class TextCellMetrics
 {
 	public final Font font;
-	public final double baseline;
+	public final double baseLine;
 	public final double cellWidth;
 	public final double cellHeight;
 	
@@ -18,7 +18,7 @@ public final class TextCellMetrics
 	{
 		this.font = font;
 		this.cellHeight = cellHeight;
-		this.baseline = baseline;
+		this.baseLine = baseline;
 		this.cellWidth = cellWidth;
 	}
 }

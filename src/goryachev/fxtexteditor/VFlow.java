@@ -1395,7 +1395,7 @@ public class VFlow
 							
 							gx.setFont(font);
 							gx.setFill(fg);
-							gx.fillText(ch, cx, cy - tm.baseline, tm.cellWidth);
+							gx.fillText(ch, cx, cy - tm.baseLine, tm.cellWidth);
 						}
 					}
 				}
@@ -1424,7 +1424,7 @@ public class VFlow
 							if(ch != null)
 							{
 								double cx = px * tm.cellWidth + lineNumbersGap;
-								gx.fillText(ch, cx, cy - tm.baseline, tm.cellWidth);
+								gx.fillText(ch, cx, cy - tm.baseLine, tm.cellWidth);
 							}
 							px++;
 						}
@@ -1514,7 +1514,7 @@ public class VFlow
 			Font f = getFont(style);
 			gx.setFont(f);
 			gx.setFill(fg);
-			gx.fillText(text, cx, cy - tm.baseline, tm.cellWidth);
+			gx.fillText(text, cx, cy - tm.baseLine, tm.cellWidth);
 		
 			if(style.isStrikeThrough())
 			{

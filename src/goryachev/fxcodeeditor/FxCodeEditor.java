@@ -89,7 +89,12 @@ public class FxCodeEditor
 		return caretPosition.getReadOnlyProperty();
 	}
 	
-	
+
+	/**
+	 * Determines the padding between the text content and the edges of the document.
+	 * 
+	 * @defaultValue {@code null}
+	 */
 	public final ObservableValue<Insets> contentPaddingProperty()
 	{
 		return (ObservableValue<Insets>)contentPadding;
@@ -105,6 +110,28 @@ public class FxCodeEditor
 	public final void setContentPadding(Insets v)
 	{
 		contentPadding.setValue(v);
+	}
+	
+
+	/**
+	 * The font to be used by the editor.
+	 * @defaultValue Monospaced font ot the {@link Font#defaultSystemFontSize default size}
+	 */
+	public final ObservableValue<Font> fontProperty()
+	{
+		return (ObservableValue<Font>)font;
+	}
+
+
+	public final Font getFont()
+	{
+		return font.getValue();
+	}
+
+
+	public final void setFont(Font f)
+	{
+		font.setValue(f);
 	}
 	
 
