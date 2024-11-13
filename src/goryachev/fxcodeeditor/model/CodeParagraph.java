@@ -31,17 +31,23 @@ public abstract class CodeParagraph
 	 * Returns the length of the paragraph plain text.
 	 */
 	public abstract int getTextLength();
+	
+	
+	/**
+	 * Returns the number of cells.
+	 */
+	public abstract int getCellCount();
 
 
 	/**
-	 * Retrieves the text cell attributes into the specified instance of
-	 * {@link CellAttributes}.
+	 * Retrieves the text cell into the specified instance of
+	 * {@link CellInfo}.
 	 * 
 	 * @implNote
 	 * The implementation must not cache the instance passed to it, because
 	 * the same instance is likely to be used for performance reasons.
 	 */
-	public abstract void getCellStyle(int offset, CellAttributes a);
+	public abstract void getCell(int cellIndex, CellInfo a);
 
 
 	public static CodeParagraph of(int index, String text)
@@ -50,6 +56,13 @@ public abstract class CodeParagraph
 		{
 			@Override
 			public int getTextLength()
+			{
+				return text.length();
+			}
+			
+			
+			@Override
+			public int getCellCount()
 			{
 				return text.length();
 			}
@@ -70,7 +83,7 @@ public abstract class CodeParagraph
 			
 			
 			@Override
-			public void getCellStyle(int offset, CellAttributes a)
+			public void getCell(int offset, CellInfo a)
 			{
 			}
 			

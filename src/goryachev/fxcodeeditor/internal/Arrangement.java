@@ -1,5 +1,6 @@
 // Copyright © 2024-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxcodeeditor.internal;
+import goryachev.common.util.CList;
 import goryachev.fxcodeeditor.model.CodeModel;
 import goryachev.fxcodeeditor.model.CodeParagraph;
 import javafx.scene.canvas.GraphicsContext;
@@ -16,6 +17,7 @@ public class Arrangement
 	private final int viewRows;
 	private final int tabSize;
 	private final boolean wrap;
+	private final CList<WrapInfo> flows = new CList<>();
 	
 	
 	public Arrangement(CodeModel m, int viewCols, int viewRows, int tabSize, boolean wrap)
@@ -37,12 +39,18 @@ public class Arrangement
 	{
 		int wrapLimit = wrap ? viewCols : -1;
 		int i = 0;
+		int rows = 0;
 		for( ; i<rowCount; i++)
 		{
 			CodeParagraph par = model.getParagraph(startIndex + i);
-			FlowPar p = FlowPar.create(par, tabSize, wrapLimit);
+			WrapInfo p = WrapInfo.create(par, tabSize, wrapLimit);
+			rows += p.getRowCount();
+			if(rows > rowCount)
+			{
+				break;
+			}
 		}
-		// TODO
+		// TODO need to save [rows]
 		return i;
 	}
 
