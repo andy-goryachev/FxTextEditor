@@ -2,10 +2,10 @@
 package goryachev.fxcodeeditor.skin;
 import goryachev.fx.FX;
 import goryachev.fx.FxDisconnector;
-import goryachev.fxcodeeditor.FxCodeEditor;
+import goryachev.fxcodeeditor.CodePad;
 import goryachev.fxcodeeditor.internal.CellGrid;
 import goryachev.fxcodeeditor.internal.Defaults;
-import goryachev.fxcodeeditor.internal.FxCodeEditorBehavior;
+import goryachev.fxcodeeditor.internal.CodePadBehavior;
 import javafx.geometry.Orientation;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.SkinBase;
@@ -16,16 +16,16 @@ import javafx.scene.input.ScrollEvent;
  * FxCodeEditor Skin.
  */
 public class FxCodeEditorSkin
-	extends SkinBase<FxCodeEditor>
+	extends SkinBase<CodePad>
 {
 	private final ScrollBar vscroll;
 	private final ScrollBar hscroll;
 	private final CellGrid grid;
-	private final FxCodeEditorBehavior behavior;
+	private final CodePadBehavior behavior;
 	private FxDisconnector disconnector;
 
 
-	public FxCodeEditorSkin(FxCodeEditor ed)
+	public FxCodeEditorSkin(CodePad ed)
 	{
 		super(ed);
 
@@ -40,7 +40,7 @@ public class FxCodeEditorSkin
 		grid = new CellGrid(this, vscroll, hscroll);
 		getChildren().add(grid);
 
-		behavior = new FxCodeEditorBehavior(ed);
+		behavior = new CodePadBehavior(ed);
 		
 		disconnector = new FxDisconnector();
 		disconnector.addChangeListener(ed.fontProperty(), true, grid::setFont);

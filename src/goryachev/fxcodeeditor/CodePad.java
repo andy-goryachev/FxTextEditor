@@ -21,16 +21,16 @@ import javafx.scene.text.Font;
 
 
 /**
- * Fx Code Editor.
+ * CodePad is a high performance monospaced text editor for JavaFX.
  * 
  * Supports:
- * - large virtualized models
- * - long paragraphs
+ * - large virtualized models up to ~2 billion paragraphs
+ * - long paragraphs (millions on symbols)
  * - fixed-cell grid rendering
- * - limited text attributes
+ * - limited set of text attributes
  * - limited decorations
  */
-public class FxCodeEditor
+public class CodePad
 	extends Control
 {
 	private final Config config;
@@ -39,21 +39,21 @@ public class FxCodeEditor
 	private SimpleObjectProperty<CodeModel> model;
 	private final SelectionModel selectionModel = new SelectionModel();
 	// styleable properties are not created lazily
-	private static final StyleablePropertyFactory<FxCodeEditor> SPF = new StyleablePropertyFactory<>(Control.getClassCssMetaData());
+	private static final StyleablePropertyFactory<CodePad> SPF = new StyleablePropertyFactory<>(Control.getClassCssMetaData());
 	private final StyleableProperty<Insets> contentPadding = SPF.createStyleableInsetsProperty(this, "contentPadding", "-ag-content-padding", (c) -> c.contentPadding, Defaults.CONTENT_PADDING);
 	private final StyleableProperty<Font> font = SPF.createStyleableFontProperty(this, "font", "-ag-font", (c) -> c.font, Defaults.FONT);
 	private final StyleableProperty<Number> tabSize = SPF.createStyleableNumberProperty(this, "tabSize", "-ag-tab-size", (c) -> c.tabSize, Defaults.TAB_SIZE);
 	private final StyleableProperty<Boolean> wrapText = SPF.createStyleableBooleanProperty(this, "wrapText", "-ag-wrap-text", (c) -> c.wrapText, Defaults.WRAP_TEXT);
 
 
-	public FxCodeEditor(Config config, CodeModel model)
+	public CodePad(Config config, CodeModel model)
 	{
 		this.config = config.copy();
 		setModel(model);
 	}
 	
 
-	public FxCodeEditor(CodeModel model)
+	public CodePad(CodeModel model)
 	{
 		this(Config.getDefault(), model);
 	}

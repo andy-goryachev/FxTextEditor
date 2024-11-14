@@ -4,7 +4,7 @@ import goryachev.fx.CPane;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
 import goryachev.fx.FxPopupMenu;
-import goryachev.fxcodeeditor.FxCodeEditor;
+import goryachev.fxcodeeditor.CodePad;
 import goryachev.fxcodeeditor.model.CodeModel;
 
 
@@ -15,14 +15,14 @@ public class FxCodeEditorDemoPane
 	extends CPane
 {
 	public static final CssStyle PANE = new CssStyle("FxCodeEditorDemoPane_PANE");
-	public final FxCodeEditor editor;
+	public final CodePad editor;
 
 	
 	public FxCodeEditorDemoPane()
 	{
 		FX.style(this, PANE);
 		
-		editor = new FxCodeEditor(null);
+		editor = new CodePad(null);
 		editor.setContentPadding(FX.insets(2, 4));
 //		editor.setBlinkRate(Duration.millis(600));
 //		editor.setWrapLines(false);

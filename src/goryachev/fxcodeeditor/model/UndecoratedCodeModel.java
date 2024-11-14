@@ -37,6 +37,6 @@ public class UndecoratedCodeModel extends CodeModel
 	public CodeParagraph getParagraph(int index)
 	{
 		String text = lines[index];
-		return CodeParagraph.of(index, text);
+		return CodeParagraph.fast(index, text);
 	}
 }

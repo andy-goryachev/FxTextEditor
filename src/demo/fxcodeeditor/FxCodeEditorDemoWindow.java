@@ -8,7 +8,7 @@ import goryachev.fx.FxFramework;
 import goryachev.fx.FxMenuBar;
 import goryachev.fx.FxToolBar;
 import goryachev.fx.FxWindow;
-import goryachev.fxcodeeditor.FxCodeEditor;
+import goryachev.fxcodeeditor.CodePad;
 import goryachev.fxcodeeditor.model.CodeModel;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -82,7 +82,7 @@ public class FxCodeEditorDemoWindow
 	}
 	
 	
-	protected FxCodeEditor editor()
+	protected CodePad editor()
 	{
 		return mainPane.editor;
 	}

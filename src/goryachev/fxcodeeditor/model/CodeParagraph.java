@@ -1,5 +1,6 @@
 // Copyright © 2024-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fxcodeeditor.model;
+import java.util.concurrent.atomic.AtomicReference;
 import javafx.scene.paint.Color;
 
 
@@ -17,6 +18,8 @@ public abstract class CodeParagraph
 	
 	/**
 	 * Returns the background color of this paragraph, or {@code null}.
+	 * This method may return a non-opaque color in which case it will be mixed
+	 * with the view port background.
 	 */
 	public abstract Color getBackgroundColor();
 
@@ -37,20 +40,26 @@ public abstract class CodeParagraph
 	 * Returns the number of cells.
 	 */
 	public abstract int getCellCount();
+	
+	
+	/**
+	 * Returns true when the text contains tab characters.
+	 */
+	public abstract boolean containsTabs();
 
 
 	/**
-	 * Retrieves the text cell into the specified instance of
-	 * {@link CellInfo}.
-	 * 
-	 * @implNote
-	 * The implementation must not cache the instance passed to it, because
-	 * the same instance is likely to be used for performance reasons.
+	 * This method is called by the view to retrieve the cell content: text and style.
+	 * The two references are set to {@code null} value before calling this method.  
 	 */
-	public abstract void getCell(int cellIndex, CellInfo a);
+	public abstract void updateCell(int cellIndex, AtomicReference<String> symbol, AtomicReference<CellStyle> style);
 
 
-	public static CodeParagraph of(int index, String text)
+	// TODO provide several methods:
+	// 1. simple (1:1 chars to cells)
+	// 2. complex (with the break iterator)
+	// 3. standard with the platform break iterator
+	public static CodeParagraph fast(int index, String text)
 	{
 		return new CodeParagraph()
 		{
@@ -83,8 +92,10 @@ public abstract class CodeParagraph
 			
 			
 			@Override
-			public void getCell(int offset, CellInfo a)
+			public void updateCell(int cellIndex, AtomicReference<String> symbol, AtomicReference<CellStyle> style)
 			{
+				char c = text.charAt(cellIndex);
+				symbol.set(String.valueOf(c));
 			}
 			
 			
@@ -92,6 +103,13 @@ public abstract class CodeParagraph
 			public Color getBackgroundColor()
 			{
 				return null;
+			}
+
+
+			@Override
+			public boolean containsTabs()
+			{
+				return false;
 			}
 		};
 	}

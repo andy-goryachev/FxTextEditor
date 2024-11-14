@@ -3,7 +3,7 @@ package goryachev.fxcodeeditor.internal;
 import goryachev.common.log.Log;
 import goryachev.fx.FX;
 import goryachev.fx.TextCellMetrics;
-import goryachev.fxcodeeditor.FxCodeEditor;
+import goryachev.fxcodeeditor.CodePad;
 import goryachev.fxcodeeditor.model.CodeModel;
 import goryachev.fxcodeeditor.skin.FxCodeEditorSkin;
 import javafx.beans.property.SimpleObjectProperty;
@@ -31,7 +31,7 @@ public class CellGrid
 {
 	private static final Log log = Log.get("CellGrid");
 	private final FxCodeEditorSkin skin;
-	private final FxCodeEditor editor;
+	private final CodePad editor;
 	private final ScrollBar vscroll;
 	private final ScrollBar hscroll;
 	private final SimpleObjectProperty<Origin> origin = new SimpleObjectProperty<>(Origin.ZERO);

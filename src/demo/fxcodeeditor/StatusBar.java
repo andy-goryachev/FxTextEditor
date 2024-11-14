@@ -5,7 +5,7 @@ import goryachev.fx.FX;
 import goryachev.fx.Formatters;
 import goryachev.fx.FxFormatter;
 import goryachev.fx.HPane;
-import goryachev.fxcodeeditor.FxCodeEditor;
+import goryachev.fxcodeeditor.CodePad;
 import goryachev.fxcodeeditor.SelectionRange;
 import goryachev.fxcodeeditor.TextPos;
 import javafx.beans.binding.Bindings;
@@ -41,7 +41,7 @@ public class StatusBar
 	}
 
 
-	public void attach(FxCodeEditor ed)
+	public void attach(CodePad ed)
 	{
 		leading.textProperty().bind(Bindings.createStringBinding
 		(
