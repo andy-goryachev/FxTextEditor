@@ -1,5 +1,7 @@
 // Copyright © 2017-2024 Andy Goryachev <andy@goryachev.com>
-package demo.fxcodeeditor;
+package demo.codepad;
+import goryachev.codepad.CodePad;
+import goryachev.codepad.model.CodeModel;
 import goryachev.fx.FX;
 import goryachev.fx.FxAction;
 import goryachev.fx.FxComboBox;
@@ -8,29 +10,27 @@ import goryachev.fx.FxFramework;
 import goryachev.fx.FxMenuBar;
 import goryachev.fx.FxToolBar;
 import goryachev.fx.FxWindow;
-import goryachev.fxcodeeditor.CodePad;
-import goryachev.fxcodeeditor.model.CodeModel;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 
 
 /**
- * FxEditor Demo Window.
+ * CodePad Demo Window.
  */
-public class FxCodeEditorDemoWindow
+public class CodePadDemoWindow
 	extends FxWindow
 {
-	public final FxCodeEditorDemoPane mainPane;
+	public final CodePadDemoPane mainPane;
 	public final BorderPane content;
 	public final StatusBar statusBar;
 	protected final FxComboBox<DemoModels> modelSelector = new FxComboBox();
 	protected final FxComboBox fontSelector = new FxComboBox();
 	
 	
-	public FxCodeEditorDemoWindow()
+	public CodePadDemoWindow()
 	{
-		super("FxCodeEditorDemoWindow");
+		super("CodePadDemoWindow");
 		
 		modelSelector.setItems(DemoModels.values());
 		modelSelector.valueProperty().addListener((s,p,c) -> onModelSelectionChange(c));
@@ -54,7 +54,7 @@ public class FxCodeEditorDemoWindow
 		fontSelector.valueProperty().addListener((s,p,c) -> onFontChange(c));
 		FX.setName(fontSelector, "fontSelector");
 		
-		mainPane = new FxCodeEditorDemoPane();
+		mainPane = new CodePadDemoPane();
 		
 		content = new BorderPane();
 		content.setTop(createToolbar());
@@ -62,7 +62,7 @@ public class FxCodeEditorDemoWindow
 		
 		statusBar = new StatusBar();
 		
-		setTitle("FxCodeEditor Demo");
+		setTitle("CodePad Demo");
 		setTop(createMenu());
 		setCenter(content);
 		setBottom(statusBar);
@@ -169,7 +169,7 @@ public class FxCodeEditorDemoWindow
 	
 	protected void newWindow()
 	{
-		FxCodeEditorDemoWindow w = new FxCodeEditorDemoWindow();
+		CodePadDemoWindow w = new CodePadDemoWindow();
 		w.mainPane.setModel(mainPane.getModel());
 		w.open();
 	}

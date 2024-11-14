@@ -1,9 +1,9 @@
 // Copyright © 2024-2024 Andy Goryachev <andy@goryachev.com>
-package goryachev.fxcodeeditor;
+package goryachev.codepad;
 
 
 /**
- * FxCodeEditor Config.
+ * CodePad Config.
  */
 public final class Config implements Cloneable
 {

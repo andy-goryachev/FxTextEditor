@@ -1,8 +1,8 @@
 // Copyright © 2024-2024 Andy Goryachev <andy@goryachev.com>
-package goryachev.fxcodeeditor.internal;
+package goryachev.codepad.internal;
+import goryachev.codepad.model.CodeModel;
+import goryachev.codepad.model.CodeParagraph;
 import goryachev.common.util.CList;
-import goryachev.fxcodeeditor.model.CodeModel;
-import goryachev.fxcodeeditor.model.CodeParagraph;
 import javafx.scene.canvas.GraphicsContext;
 
 

@@ -1,11 +1,11 @@
 // Copyright © 2024-2024 Andy Goryachev <andy@goryachev.com>
-package goryachev.fxcodeeditor.internal;
+package goryachev.codepad.internal;
+import goryachev.codepad.CodePad;
+import goryachev.codepad.model.CodeModel;
+import goryachev.codepad.skin.CodePadSkin;
 import goryachev.common.log.Log;
 import goryachev.fx.FX;
 import goryachev.fx.TextCellMetrics;
-import goryachev.fxcodeeditor.CodePad;
-import goryachev.fxcodeeditor.model.CodeModel;
-import goryachev.fxcodeeditor.skin.FxCodeEditorSkin;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
 import javafx.geometry.HPos;
@@ -30,7 +30,7 @@ public class CellGrid
 	extends Pane
 {
 	private static final Log log = Log.get("CellGrid");
-	private final FxCodeEditorSkin skin;
+	private final CodePadSkin skin;
 	private final CodePad editor;
 	private final ScrollBar vscroll;
 	private final ScrollBar hscroll;
@@ -45,7 +45,7 @@ public class CellGrid
 	private Arrangement arrangement;
 
 
-	public CellGrid(FxCodeEditorSkin skin, ScrollBar vscroll, ScrollBar hscroll)
+	public CellGrid(CodePadSkin skin, ScrollBar vscroll, ScrollBar hscroll)
 	{
 		this.skin = skin;
 		this.editor = skin.getSkinnable();

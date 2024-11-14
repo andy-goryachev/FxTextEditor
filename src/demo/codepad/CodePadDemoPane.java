@@ -1,24 +1,24 @@
 // Copyright © 2017-2024 Andy Goryachev <andy@goryachev.com>
-package demo.fxcodeeditor;
+package demo.codepad;
+import goryachev.codepad.CodePad;
+import goryachev.codepad.model.CodeModel;
 import goryachev.fx.CPane;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
 import goryachev.fx.FxPopupMenu;
-import goryachev.fxcodeeditor.CodePad;
-import goryachev.fxcodeeditor.model.CodeModel;
 
 
 /**
- * FxCodeEditor Demo Pane.
+ * CodePad Demo Pane.
  */
-public class FxCodeEditorDemoPane
+public class CodePadDemoPane
 	extends CPane
 {
-	public static final CssStyle PANE = new CssStyle("FxCodeEditorDemoPane_PANE");
+	public static final CssStyle PANE = new CssStyle("CodePadDemoPane_PANE");
 	public final CodePad editor;
 
 	
-	public FxCodeEditorDemoPane()
+	public CodePadDemoPane()
 	{
 		FX.style(this, PANE);
 		

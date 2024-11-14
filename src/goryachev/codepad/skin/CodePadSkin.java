@@ -1,11 +1,11 @@
 // Copyright © 2024-2024 Andy Goryachev <andy@goryachev.com>
-package goryachev.fxcodeeditor.skin;
+package goryachev.codepad.skin;
+import goryachev.codepad.CodePad;
+import goryachev.codepad.internal.CellGrid;
+import goryachev.codepad.internal.CodePadBehavior;
+import goryachev.codepad.internal.Defaults;
 import goryachev.fx.FX;
 import goryachev.fx.FxDisconnector;
-import goryachev.fxcodeeditor.CodePad;
-import goryachev.fxcodeeditor.internal.CellGrid;
-import goryachev.fxcodeeditor.internal.Defaults;
-import goryachev.fxcodeeditor.internal.CodePadBehavior;
 import javafx.geometry.Orientation;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.SkinBase;
@@ -13,9 +13,9 @@ import javafx.scene.input.ScrollEvent;
 
 
 /**
- * FxCodeEditor Skin.
+ * CodePad Skin.
  */
-public class FxCodeEditorSkin
+public class CodePadSkin
 	extends SkinBase<CodePad>
 {
 	private final ScrollBar vscroll;
@@ -25,7 +25,7 @@ public class FxCodeEditorSkin
 	private FxDisconnector disconnector;
 
 
-	public FxCodeEditorSkin(CodePad ed)
+	public CodePadSkin(CodePad ed)
 	{
 		super(ed);
 

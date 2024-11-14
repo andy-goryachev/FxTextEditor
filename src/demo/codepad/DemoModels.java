@@ -1,7 +1,7 @@
 // Copyright © 2019-2024 Andy Goryachev <andy@goryachev.com>
-package demo.fxcodeeditor;
-import goryachev.fxcodeeditor.model.CodeModel;
-import goryachev.fxcodeeditor.model.UndecoratedCodeModel;
+package demo.codepad;
+import goryachev.codepad.model.CodeModel;
+import goryachev.codepad.model.UndecoratedCodeModel;
 
 
 /**

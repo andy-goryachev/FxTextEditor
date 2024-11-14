@@ -1,5 +1,5 @@
 // Copyright © 2024-2024 Andy Goryachev <andy@goryachev.com>
-package goryachev.fxcodeeditor.model;
+package goryachev.codepad.model;
 import java.util.concurrent.atomic.AtomicReference;
 import javafx.scene.paint.Color;
 

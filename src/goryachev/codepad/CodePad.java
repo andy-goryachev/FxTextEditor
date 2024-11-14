@@ -1,9 +1,9 @@
 // Copyright © 2024-2024 Andy Goryachev <andy@goryachev.com>
-package goryachev.fxcodeeditor;
-import goryachev.fxcodeeditor.internal.Defaults;
-import goryachev.fxcodeeditor.internal.SelectionModel;
-import goryachev.fxcodeeditor.model.CodeModel;
-import goryachev.fxcodeeditor.skin.FxCodeEditorSkin;
+package goryachev.codepad;
+import goryachev.codepad.internal.Defaults;
+import goryachev.codepad.internal.SelectionModel;
+import goryachev.codepad.model.CodeModel;
+import goryachev.codepad.skin.CodePadSkin;
 import goryachev.fxtexteditor.TextPos;
 import java.util.List;
 import javafx.beans.property.ObjectProperty;
@@ -60,9 +60,9 @@ public class CodePad
 
 
 	@Override
-	protected FxCodeEditorSkin createDefaultSkin()
+	protected CodePadSkin createDefaultSkin()
 	{
-		return new FxCodeEditorSkin(this);
+		return new CodePadSkin(this);
 	}
 
 

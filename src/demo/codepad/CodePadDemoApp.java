@@ -1,5 +1,5 @@
 // Copyright © 2016-2024 Andy Goryachev <andy@goryachev.com>
-package demo.fxcodeeditor;
+package demo.codepad;
 import goryachev.common.util.ASettingsStore;
 import goryachev.common.util.FileSettingsProvider;
 import goryachev.common.util.GlobalSettings;
@@ -12,12 +12,12 @@ import javafx.stage.Stage;
 
 
 /**
- * FxCodeEditor Demo Application.
+ * CodePad Demo Application.
  */
-public class FxCodeEditorDemoApp
+public class CodePadDemoApp
 	extends Application
 {
-	public static final String COPYRIGHT = "copyright © andy goryachev";
+	public static final String COPYRIGHT = "copyright © 2024 andy goryachev";
 	
 	
 	public static void main(String[] args)
@@ -31,7 +31,7 @@ public class FxCodeEditorDemoApp
 	public void init() throws Exception
 	{
 		// TODO change to something visible in Documents? platform-specific?
-		File baseDir = new File(System.getProperty("user.home"), ".goryachev.com/FxCodeEditorDemoApp");
+		File baseDir = new File(System.getProperty("user.home"), ".goryachev.com/CodePadDemo");
 			
 //		File logFolder = new File(baseDir, "logs"); 
 //		Log.init(logFolder);
@@ -56,13 +56,13 @@ public class FxCodeEditorDemoApp
 			@Override
 			public Stage createDefaultWindow()
 			{
-				return new FxCodeEditorDemoWindow();
+				return new CodePadDemoWindow();
 			}
 
 			@Override
 			protected Stage createWindow(String name)
 			{
-				return new FxCodeEditorDemoWindow();
+				return new CodePadDemoWindow();
 			}
 		});		
 	}

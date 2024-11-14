@@ -1,20 +1,20 @@
 // Copyright © 2020-2024 Andy Goryachev <andy@goryachev.com>
-package demo.fxcodeeditor;
+package demo.codepad;
+import goryachev.codepad.CodePad;
+import goryachev.codepad.SelectionRange;
+import goryachev.codepad.TextPos;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
 import goryachev.fx.Formatters;
 import goryachev.fx.FxFormatter;
 import goryachev.fx.HPane;
-import goryachev.fxcodeeditor.CodePad;
-import goryachev.fxcodeeditor.SelectionRange;
-import goryachev.fxcodeeditor.TextPos;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 
 
 /**
- * FxCodeEditor Status Bar.
+ * CodePad Status Bar.
  */
 public class StatusBar
 	extends HPane
@@ -33,7 +33,7 @@ public class StatusBar
 		
 		leading = FX.label(LABEL_LEADING);
 		
-		trailing = FX.label(LABEL_TRAILING, Pos.CENTER_RIGHT, FxCodeEditorDemoApp.COPYRIGHT);
+		trailing = FX.label(LABEL_TRAILING, Pos.CENTER_RIGHT, CodePadDemoApp.COPYRIGHT);
 		
 		add(leading);
 		fill();
